@@ -4,18 +4,17 @@ import Head from 'next/head';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider } from '@emotion/react';
-import theme from '../src/theme';
-import createEmotionCache from '../src/createEmotionCache';
-
-import { Hydrate, QueryClient, QueryClientProvider } from 'react-query'
+import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
+import theme from 'src/theme';
+import createEmotionCache from 'src/createEmotionCache';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
-export default function MyApp(props) {
+export default function MyApp (props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
 
-  const [queryClient] = React.useState(() => new QueryClient())
+  const [queryClient] = React.useState(() => new QueryClient());
 
   return (
     <CacheProvider value={emotionCache}>
@@ -30,7 +29,6 @@ export default function MyApp(props) {
             <Component {...pageProps} />
           </Hydrate>
         </QueryClientProvider>
-       
       </ThemeProvider>
     </CacheProvider>
   );
@@ -39,5 +37,5 @@ export default function MyApp(props) {
 MyApp.propTypes = {
   Component: PropTypes.elementType.isRequired,
   emotionCache: PropTypes.object,
-  pageProps: PropTypes.object.isRequired,
+  pageProps: PropTypes.object.isRequired
 };
