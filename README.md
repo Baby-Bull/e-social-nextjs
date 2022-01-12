@@ -1,6 +1,6 @@
-Install it and run:
+# Next.js with TypeScript
 
-```sh
+```sh for development
 yarn install
 yarn dev
 ```
