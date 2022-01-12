@@ -1,21 +1,23 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import Head from 'next/head';
+import { AppProps } from 'next/app';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { CacheProvider } from '@emotion/react';
-import { Hydrate, QueryClient, QueryClientProvider } from 'react-query';
+import { CacheProvider, EmotionCache } from '@emotion/react';
+
 import theme from 'src/theme';
 import createEmotionCache from 'src/createEmotionCache';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
-export default function MyApp (props) {
+interface MyAppProps extends AppProps {
+  emotionCache?: EmotionCache;
+}
+
+// eslint-disable-next-line no-undef
+const MyApp = (props: MyAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
-
-  const [queryClient] = React.useState(() => new QueryClient());
-
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -24,18 +26,10 @@ export default function MyApp (props) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <QueryClientProvider client={queryClient}>
-          <Hydrate state={pageProps.dehydratedState}>
-            <Component {...pageProps} />
-          </Hydrate>
-        </QueryClientProvider>
+        <Component {...pageProps} />
       </ThemeProvider>
     </CacheProvider>
   );
-}
-
-MyApp.propTypes = {
-  Component: PropTypes.elementType.isRequired,
-  emotionCache: PropTypes.object,
-  pageProps: PropTypes.object.isRequired
 };
+
+export default MyApp;
