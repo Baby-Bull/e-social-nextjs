@@ -1,3 +1,15 @@
 {
-  "header-title": "KIAI-JA"
+  "header-title": "KIAI-JA",
+  "header": {
+    "search-pc": "言語、地域などで検索",
+    "search-mb": "言語"
+  },
+  "footer": {
+    "signin": "ログイン",
+    "signout": "新規登録",
+    "terms-service": "利用規約",
+    "privacy-policy": "プライバシーポリシー",
+    "inquiry": "お問い合わせ",
+    "operating-company": "運営会社"
+  }
 }

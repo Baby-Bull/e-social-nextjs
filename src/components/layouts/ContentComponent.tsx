@@ -1,20 +1,20 @@
-import React from "react";
-import Head from "next/head";
-import Container from "@mui/material/Container";
+import React from "react"
+import Head from "next/head"
 
-import styles from 'src/components/layouts/layout.module.scss';
-import HeaderComponent from "src/components/layouts/HeaderComponent";
+import FooterComponent from "src/components/layouts/FooterComponent"
+import HeaderComponent from "src/components/layouts/HeaderComponent"
 
 interface ContentComponentProps {
-  children: any;
+    children: any;
 }
 const ContentComponent: React.SFC<ContentComponentProps> = ({ children }) => (
-  <Container maxWidth="lg" className={styles.containerContent}>
-    <Head>
-      <title>Good Tech Hub</title>
-    </Head>
-    <HeaderComponent />
-    {children}
-  </Container>
+    <div>
+        <Head>
+            <title>Good Tech Hub 2222</title>
+        </Head>
+        <HeaderComponent />
+        {children}
+        <FooterComponent />
+    </div>
 );
 export default ContentComponent;
