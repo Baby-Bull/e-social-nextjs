@@ -12,6 +12,7 @@ const HomeIndexComponents = () => (
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
+        mb:62.3
       }}
     >
       <Typography variant="h4" component="h1" gutterBottom>
