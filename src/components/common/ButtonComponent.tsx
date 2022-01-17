@@ -55,7 +55,7 @@ function renderSwitch(mode, children, rest) {
           <Avatar
             variant="square"
             sx={{ width: "100%", height: "100%" }}
-            src="/image/twitter.svg"
+            src="/assets/images/svg/twitter.svg"
           />
         }
       >
@@ -68,7 +68,7 @@ function renderSwitch(mode, children, rest) {
         startIcon={
           <Avatar
             sx={{ width: "100%", height: "100%" }}
-            src="/image/google.svg"
+            src="/assets/images/svg/google.svg"
           />
         }
       >
@@ -81,7 +81,7 @@ function renderSwitch(mode, children, rest) {
           <Avatar
             variant="square"
             sx={{ width: "100%", height: "100%" }}
-            src="/image/github.svg"
+            src="/assets/images/svg/github.svg"
           />
         }>
         {children}

@@ -194,7 +194,10 @@ const FormRegisterComponents = () => {
                 display: "flex",
                 justifyContent: "center"
               }}
-              src={!isTutorialDone ? "/image/arrow-right-circle.svg" : "/image/delete-circle.svg"}
+              src={!isTutorialDone 
+                ? "/assets/images/svg/arrow-right-circle.svg" 
+                : "/assets/images/svg/delete-circle.svg"
+              }
             />
           </Fab>
         </DialogTitle>
@@ -272,7 +275,7 @@ const FormRegisterComponents = () => {
                             display: "flex",
                             justifyContent: "center"
                           }}
-                          src="/image/goodhub.svg"
+                          src="/assets/images/svg/goodhub.svg"
                         />
                       </Box>
                       <Box
@@ -380,7 +383,7 @@ const FormRegisterComponents = () => {
                         alignItems: "center"
                       }}
                     >
-                      <img src="/image/message.svg" alt="message"/>
+                      <img src="/assets/images/svg/message.svg" alt="message"/>
 
                       <Typography
                         sx={{
@@ -447,7 +450,7 @@ const FormRegisterComponents = () => {
                     height: "100%",
                     display: ["", "none"],
                   }}
-                  src="/image/register_tutorial_card.svg"
+                  src="/assets/images/svg/register_tutorial_card.svg"
                 />
               </Box>
 
@@ -497,7 +500,7 @@ const FormRegisterComponents = () => {
                     display: "flex",
                     justifyContent: "center"
                   }}
-                  src="/image/register_turtorial.svg"
+                  src="/assets/images/svg/register_turtorial.svg"
                 />
               </Box>
             </DialogContent>

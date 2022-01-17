@@ -89,7 +89,7 @@ const GridLeftComponent: React.SFC<GridLeftComponentProps> = ({
             width: ["50.2%", "43.5%"],
             height: "100%"
           }}
-          src="/image/register_account.svg"
+          src="/assets/images/svg/register_account.svg"
         />
         <Stack spacing={{ xs: "20px", sm: 4 }}
           sx={{
