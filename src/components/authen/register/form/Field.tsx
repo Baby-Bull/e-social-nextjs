@@ -63,10 +63,10 @@ const SelectCustom = styled(Select)(() => ({
     borderRadius: 12,
     fontFamily: 'Noto Sans',
     '@media (max-width: 425px)': {
-      height: 38
+      height: 40
     },
     '@media (min-width: 769px)': {
-      height: 28,
+      height: 28
     },
     '&:focus': {
       boxShadow: `#03BCDB 0 0 0 0.1rem`,
@@ -121,6 +121,9 @@ export const Field: React.SFC<FieldProps> = ({
           },
           '@media (min-width: 768px)': {
             maxWidth: 220
+          },
+          '@media (min-width: 1024px)': {
+            maxWidth: 320
           },
         }
       }}
@@ -186,12 +189,12 @@ export const Field: React.SFC<FieldProps> = ({
       )}
 
       {editor!.toLowerCase() === "multi-selection" && (
-        <FormControl 
+        <FormControl
           variant="standard"
-          sx={{ 
-            pt: "20px", 
-            mt: ["25px", "20px"] 
-          }} 
+          sx={{
+            pt: "20px",
+            mt: ["25px", "20px"]
+          }}
         >
           <Box
             sx={{
