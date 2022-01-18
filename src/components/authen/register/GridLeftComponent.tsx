@@ -3,6 +3,8 @@ import { Box, Grid, Typography, Avatar, Stack, Paper } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { useTranslation } from "next-i18next";
 
+import theme from "src/theme";
+
 const Item = styled(Paper)`
   display: flex;
   align-items: center;
@@ -25,7 +27,7 @@ const Item = styled(Paper)`
 const TypoNumber = styled(Typography)`
   font-size: 20px;
   font-weight: 700;
-  color: #03BCDB;
+  color: ${theme.blue};
 `;
 
 const BoxDescription = styled(Box)`
@@ -59,7 +61,7 @@ const GridLeftComponent: React.SFC<GridLeftComponentProps> = ({
       xs={12}
       sm={6}
       sx={{
-        background: "#03BCDB",
+        background: theme.blue,
         display: [smAndUp ? 'none' : 'block', 'block']
       }}
     >
@@ -77,7 +79,7 @@ const GridLeftComponent: React.SFC<GridLeftComponentProps> = ({
           sx={{
             pb: ["40px", "48px"],
             fontSize: 20,
-            color: "#fff",
+            color: "white",
             fontWeight: 700
           }}
         >

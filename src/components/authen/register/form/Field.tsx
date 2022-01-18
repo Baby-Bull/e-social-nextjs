@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 import { styled } from '@mui/material/styles'
 
+import theme from "src/theme";
+
 type Editor = "textbox" | "dropdown" | "checkbox" | "multi-selection";
 
 export interface FieldProps {
@@ -23,11 +25,11 @@ export interface FieldProps {
   value?: any;
 }
 
-const InputCustom = styled(InputBase)(() => ({
+const InputCustom = styled(InputBase)({
   '& .MuiInputBase-input': {
     position: 'relative',
-    backgroundColor: '#fff',
-    border: '1px solid #03BCDB',
+    backgroundColor: 'white',
+    border: `1px solid ${theme.blue}`,
     fontSize: 16,
     padding: '10px 12px',
     borderRadius: 12,
@@ -41,23 +43,23 @@ const InputCustom = styled(InputBase)(() => ({
       height: 28
     },
     '&:focus': {
-      boxShadow: `#03BCDB 0 0 0 0.1rem`,
-      borderColor: '#03BCDB',
+      boxShadow: `${theme.blue} 0 0 0 0.1rem`,
+      borderColor: theme.blue,
     },
   },
-}));
+});
 
-const SelectCustom = styled(Select)(() => ({
+const SelectCustom = styled(Select)({
   borderRadius: 12,
-  borderColor: '#03BCDB',
+  borderColor: theme.blue,
   '&:hover': {
     borderRadius: 12,
-    borderColor: '#03BCDB'
+    borderColor: theme.blue
   },
   '& .MuiSelect-select': {
     position: 'relative',
-    backgroundColor: '#fff',
-    border: '1px solid #03BCDB',
+    backgroundColor: 'white',
+    border: `1px solid ${theme.blue}`,
     fontSize: 16,
     padding: '10px 12px',
     borderRadius: 12,
@@ -69,15 +71,15 @@ const SelectCustom = styled(Select)(() => ({
       height: 28
     },
     '&:focus': {
-      boxShadow: `#03BCDB 0 0 0 0.1rem`,
-      borderColor: '#03BCDB',
+      boxShadow: `${theme.blue} 0 0 0 0.1rem`,
+      borderColor: theme.blue,
     },
   },
-}));
+});
 
-const ListItem = styled('li')(({ theme }) => ({
+const ListItem = styled('li')({
   margin: theme.spacing(0.5),
-}));
+});
 
 export const Field: React.SFC<FieldProps> = ({
   required,
@@ -136,7 +138,7 @@ export const Field: React.SFC<FieldProps> = ({
             sx={{
               display: "flex",
               alignItems: "center",
-              color: '#000'
+              color: 'black'
             }}
           >
             <Box display="flex">
@@ -150,8 +152,8 @@ export const Field: React.SFC<FieldProps> = ({
                   height: "22px",
                   fontSize: 12,
                   fontWeight: 600,
-                  color: "#fff",
-                  backgroundColor: "#FF9458"
+                  color: "white",
+                  backgroundColor: theme.orange
                 }}
               />
             </Box>
@@ -200,7 +202,7 @@ export const Field: React.SFC<FieldProps> = ({
             sx={{
               pl: "18px",
               pt: "2px",
-              color: "#03BCDB",
+              color: theme.blue,
               fontSize: 12,
               fontWeight: 400,
               textAlign: "left",
@@ -235,7 +237,7 @@ export const Field: React.SFC<FieldProps> = ({
                       sx={{
                         fontSize: 12,
                         fontWeight: 400,
-                        color: "#989EA8",
+                        color: theme.gray,
                         borderRadius: "4px"
                       }}
                     />
@@ -251,7 +253,7 @@ export const Field: React.SFC<FieldProps> = ({
             sx={{
               display: "flex",
               alignItems: "center",
-              color: '#000'
+              color: 'black'
             }}
           >
             <Box display="flex">
@@ -265,8 +267,8 @@ export const Field: React.SFC<FieldProps> = ({
                   height: "20px",
                   fontSize: 12,
                   fontWeight: 600,
-                  color: "#fff",
-                  backgroundColor: "#FF9458"
+                  color: "white",
+                  backgroundColor: theme.orange
                 }}
               />
             </Box>
@@ -302,9 +304,9 @@ export const Field: React.SFC<FieldProps> = ({
                       pr: 1,
                       fontSize: 12,
                       fontWeight: 500,
-                      color: "#fff",
+                      color: "white",
                       height: "22px",
-                      backgroundColor: "#03BCDB",
+                      backgroundColor: theme.blue,
                       borderRadius: "4px",
                       display: "flex",
                       alignItems: "center"
@@ -326,8 +328,8 @@ export const Field: React.SFC<FieldProps> = ({
                 defaultChecked
                 size="small"
                 sx={{
-                  color: "#03BCDB",
-                  "&.Mui-checked": { color: "#03BCDB" }
+                  color: theme.blue,
+                  "&.Mui-checked": { color: theme.blue }
                 }}
               />
             }
