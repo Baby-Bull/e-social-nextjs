@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
+import theme from "src/theme";
 
 import GridLeftComponent from "./GridLeftComponent";
 
@@ -30,7 +31,7 @@ const RegisterComponents = () => {
                 sx={{
                   fontSize: 20,
                   fontWeight: 700,
-                  color: "#1A2944"
+                  color: theme.navy
                 }}
               >
                 { t('register:title') }
@@ -40,7 +41,7 @@ const RegisterComponents = () => {
                 sx={{
                   pt: "20px",
                   fontWeight: 300,
-                  color: "#1A2944"
+                  color: theme.navy
                 }}
               >
                 { t('register:sub-title') }
@@ -61,12 +62,12 @@ const RegisterComponents = () => {
                     pt: ["48px", "102px"],
                     fontSize: 16,
                     fontWeight: 400,
-                    color: "#1A2944",
+                    color: theme.navy,
                     display: "flex",
                   }}
                 >
                   <Typography>{ t('register:login-text-1') }</Typography>
-                  <Typography color="#03BCDB">{ t('register:login-text-2') }</Typography>
+                  <Typography color={theme.blue}>{ t('register:login-text-2') }</Typography>
                 </Box>
               </Link>
             </Box>

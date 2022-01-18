@@ -15,14 +15,15 @@ import { useTranslation } from "next-i18next";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
+import theme from "src/theme";
 
 import GridLeftComponent from "../GridLeftComponent";
 
 import { Field } from "./Field";
 
-const ListItem = styled('li')(({ theme }) => ({
+const ListItem = styled('li')({
   marginRight: theme.spacing(0),
-}));
+});
 
 const FormRegisterComponents = () => {
   const { t } = useTranslation();
@@ -87,7 +88,7 @@ const FormRegisterComponents = () => {
                     pb: ["20px", "23px"],
                     fontSize: 20,
                     fontWeight: 700,
-                    color: "#1A2944"
+                    color: theme.navy
                   }}
                 >
                   {t('register:form.title')}
@@ -171,7 +172,7 @@ const FormRegisterComponents = () => {
         <DialogTitle
           id="scroll-dialog-title"
           sx={{
-            backgroundColor: "#03BCDB",
+            backgroundColor: theme.blue,
             textAlign: "right",
             p: [0, "16px"]
           }}
@@ -206,7 +207,7 @@ const FormRegisterComponents = () => {
           <DialogContent
             sx={{
               pb: "46px",
-              backgroundColor: "#03BCDB"
+              backgroundColor: theme.blue
             }}
           >
             <Box
@@ -237,11 +238,11 @@ const FormRegisterComponents = () => {
                         sx={{
                           width: 130,
                           height: 30,
-                          color: "#fff",
-                          backgroundColor: "#FF9458",
+                          color: "white",
+                          backgroundColor: theme.orange,
                           "&:hover": {
                             opacity: 0.9,
-                            backgroundColor: "#FF9458"
+                            backgroundColor: theme.orange
                           }
                         }}
                       >
@@ -300,7 +301,7 @@ const FormRegisterComponents = () => {
                           sx={{
                             pl: "13px",
                             pb: "5px",
-                            color: "#03BCDB",
+                            color: theme.blue,
                             fontSize: 12,
                             fontWeight: 400
                           }}
@@ -322,7 +323,7 @@ const FormRegisterComponents = () => {
                     </Box>
                     <Typography
                       sx={{
-                        color: "#1A2944",
+                        color: theme.navy,
                         fontSize: 12,
                         fontWeight: 700
                       }}
@@ -332,7 +333,7 @@ const FormRegisterComponents = () => {
 
                     <Typography
                       sx={{
-                        color: "#1A2944",
+                        color: theme.navy,
                         fontSize: 12,
                         fontWeight: 400,
                         textTransform: ""
@@ -364,9 +365,9 @@ const FormRegisterComponents = () => {
                                 sx={{
                                   fontSize: 12,
                                   fontWeight: 400,
-                                  backgroundColor: "#F4FDFF",
+                                  backgroundColor: theme.whiteBlue,
                                   border: "none",
-                                  color: "#1A2944",
+                                  color: theme.navy,
                                   borderRadius: "4px"
                                 }}
                               />
@@ -419,8 +420,8 @@ const FormRegisterComponents = () => {
                         sx={{
                           width: 240,
                           height: 32,
-                          color: "#03BCDB",
-                          borderColor: "#03BCDB",
+                          color: theme.blue,
+                          borderColor: theme.blue,
                           textAlign: "center"
                         }}
                       >
@@ -432,9 +433,9 @@ const FormRegisterComponents = () => {
                   <CardActions>
                     <ButtonComponent
                       sx={{
-                        color: "#fff",
-                        backgroundColor: "#1BD0B0",
-                        "&:hover": { backgroundColor: "#1BD0B0" }
+                        color: "white",
+                        backgroundColor: theme.green,
+                        "&:hover": { backgroundColor: theme.green }
                       }}
                     >
                       {t('register:form.tutorial.send-request')}
@@ -458,7 +459,7 @@ const FormRegisterComponents = () => {
                 sx={{
                   flex: 1,
                   pl: [0, 3],
-                  color: "#fff",
+                  color: "white",
                   fontSize: [16, 20],
                   fontWeight: 700
                 }}
@@ -471,14 +472,14 @@ const FormRegisterComponents = () => {
           <React.Fragment>
             <DialogContent
               sx={{
-                backgroundColor: "#03BCDB",
+                backgroundColor: theme.blue,
                 textAlign: "center",
               }}
             >
               <Box
                 sx={{
                   display: "flex",
-                  color: "#fff",
+                  color: "white",
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
@@ -507,7 +508,7 @@ const FormRegisterComponents = () => {
 
             <DialogActions
               sx={{
-                backgroundColor: "#03BCDB",
+                backgroundColor: theme.blue,
                 display: "flex",
                 justifyContent: "center",
                 pt: ["39px", "inherit"],
@@ -519,8 +520,8 @@ const FormRegisterComponents = () => {
                 sx={{
                   width: "240px",
                   height: "56px",
-                  color: "#03BCDB",
-                  backgroundColor: "#fff",
+                  color: theme.blue,
+                  backgroundColor: "white",
                 }}
               >
                 {t('register:form.submit')}

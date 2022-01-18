@@ -2,6 +2,8 @@ import React from "react";
 import { Button, ButtonProps, Avatar } from "@mui/material";
 import { styled } from '@mui/material/styles';
 
+import theme from "src/theme";
+
 const ButtonRounded = styled(Button)({
   height: 48,
   width: 280,
@@ -23,11 +25,11 @@ const ButtonTwitter = styled(ButtonRounded)({
 });
 
 const ButtonGoogle = styled(ButtonRounded)({
-  background: '#fff',
+  background: 'white',
   "&:hover": {
-    borderColor: '#000'
+    borderColor: 'black'
   },
-  color: "#1A2944",
+  color: theme.navy,
   borderColor: '#DADADA'
 });
 
@@ -36,14 +38,14 @@ const ButtonGithub = styled(ButtonRounded)({
   "&:hover": {
     background: "#101010"
   },
-  color: "#fff",
+  color: "white",
   borderColor: '#DADADA'
 });
 
 const ButtonGradient = styled(ButtonRounded)({
   width: 200,
-  color: "#fff",
-  background: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)"
+  color: "white",
+  background: theme.gd
 });
 
 function renderSwitch(mode, children, rest) {
