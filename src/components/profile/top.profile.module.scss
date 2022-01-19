@@ -1,0 +1,33 @@
+.icFacebook {
+  margin: 0 20px;
+}
+
+.boxInfoProfile {
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1px solid #DADADA;
+  box-sizing: border-box;
+  border-radius: 12px;
+  width: 240px;
+  height: 64px;
+  justify-content: space-between;
+  padding: 0 12px;
+  color: #1A2944;
+  font-size: 16px;
+}
+
+.topProfileMB {
+  display: none;
+}
+
+@media only screen and (max-width: 820px) {
+  .topProfilePC {
+    display: none;
+  }
+
+  .topProfileMB {
+    display: block;
+  }
+}
+

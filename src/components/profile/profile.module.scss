@@ -1,0 +1,19 @@
+@media only screen and (max-width: 820px) {
+  .boxTopProfile {
+    padding: 0 20px;
+  }
+  .titleNoData {
+    font-size: 16px;
+  }
+  .boxRecommendMember {
+    margin-left: 20px;
+    margin-right: 0;
+    overflow-x: scroll;
+    div div {
+      margin-right: 20px;
+    }
+    div:last-child div {
+      margin-right: 0;
+    }
+  }
+}
