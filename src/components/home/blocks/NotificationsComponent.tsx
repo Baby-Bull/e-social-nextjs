@@ -1,0 +1,65 @@
+import classNames from "classnames";
+import React, { useState } from "react";
+import Slider from "react-slick";
+
+import styles from "src/components/home/home.module.scss";
+
+import { notificationsMockData } from "../mockData/mockData";
+
+const NextArrow = (props: any) => {
+  const { className, style, onClick } = props;
+  return (
+    <div className={className} style={style} onClick={onClick}>
+      <div className={styles.slickArrow}>
+        {!className?.includes("slick-disabled") && <img src="/assets/images/home_page/ic_arrow_small.svg" alt="next" />}
+      </div>
+    </div>
+  );
+};
+
+const PrevArrow = (props: any) => {
+  const { className, style, onClick } = props;
+
+  return (
+    <div className={className} style={style} onClick={onClick}>
+      <div className={styles.slickArrow}>
+        {!className?.includes("slick-disabled") && (
+          <img src="/assets/images/home_page/ic_arrow_small.svg" alt="prev" className="rotate-180" />
+        )}
+      </div>
+    </div>
+  );
+};
+
+const NotificationComponent = () => {
+  const [notifications] = useState([...notificationsMockData]);
+
+  const settingsSlickOfNotification = {
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    loop: false,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+  };
+
+  return (
+    <div className={classNames(styles.notificationsBlock, "homepage-notification-slick", "slick-custom")}>
+      <div className="box-content">
+        <Slider {...settingsSlickOfNotification}>
+          {notifications?.map((notification, index) => (
+            <div key={index} className="slider-item">
+              <img src="/assets/images/home_page/ic_warning.svg" alt="warning" className="icon" />
+              <span className="title">{notification?.title}</span>
+              <span className="content">{notification?.content}</span>
+            </div>
+          ))}
+        </Slider>
+      </div>
+    </div>
+  );
+};
+
+export default NotificationComponent;

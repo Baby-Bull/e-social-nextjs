@@ -24,27 +24,27 @@ const RegisterComponents = () => {
                 px: ["8%", "20.7%"],
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
               <Typography
                 sx={{
                   fontSize: 20,
                   fontWeight: 700,
-                  color: theme.navy
+                  color: theme.navy,
                 }}
               >
-                { t('register:title') }
+                {t("register:title")}
               </Typography>
 
               <Typography
                 sx={{
                   pt: "20px",
                   fontWeight: 300,
-                  color: theme.navy
+                  color: theme.navy,
                 }}
               >
-                { t('register:sub-title') }
+                {t("register:sub-title")}
               </Typography>
               <Box pt="63px">
                 <ButtonComponent mode="twitter">Twitterで登録</ButtonComponent>
@@ -66,8 +66,8 @@ const RegisterComponents = () => {
                     display: "flex",
                   }}
                 >
-                  <Typography>{ t('register:login-text-1') }</Typography>
-                  <Typography color={theme.blue}>{ t('register:login-text-2') }</Typography>
+                  <Typography>{t("register:login-text-1")}</Typography>
+                  <Typography color={theme.blue}>{t("register:login-text-2")}</Typography>
                 </Box>
               </Link>
             </Box>
@@ -75,6 +75,6 @@ const RegisterComponents = () => {
         </Grid>
       </Box>
     </ContentComponent>
-  )
+  );
 };
 export default RegisterComponents;

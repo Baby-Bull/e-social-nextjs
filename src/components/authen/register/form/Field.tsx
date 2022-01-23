@@ -3,12 +3,18 @@ import {
   InputLabel,
   InputBase,
   FormControl,
-  Select, MenuItem,
-  FormGroup, Checkbox, FormControlLabel,
-  Box, Typography,
-  Chip, Paper, Avatar
+  Select,
+  MenuItem,
+  FormGroup,
+  Checkbox,
+  FormControlLabel,
+  Box,
+  Typography,
+  Chip,
+  Paper,
+  Avatar,
 } from "@mui/material";
-import { styled } from '@mui/material/styles'
+import { styled } from "@mui/material/styles";
 
 import theme from "src/theme";
 
@@ -26,23 +32,23 @@ export interface FieldProps {
 }
 
 const InputCustom = styled(InputBase)({
-  '& .MuiInputBase-input': {
-    position: 'relative',
-    backgroundColor: 'white',
+  "& .MuiInputBase-input": {
+    position: "relative",
+    backgroundColor: "white",
     border: `1px solid ${theme.blue}`,
     fontSize: 16,
-    padding: '10px 12px',
+    padding: "10px 12px",
     borderRadius: 12,
-    fontFamily: 'Noto Sans',
-    '@media (max-width: 425px)': {
+    fontFamily: "Noto Sans",
+    "@media (max-width: 425px)": {
       width: 294,
-      height: 38
+      height: 38,
     },
-    '@media (min-width: 769px)': {
+    "@media (min-width: 769px)": {
       width: 360,
-      height: 28
+      height: 28,
     },
-    '&:focus': {
+    "&:focus": {
       boxShadow: `${theme.blue} 0 0 0 0.1rem`,
       borderColor: theme.blue,
     },
@@ -52,48 +58,39 @@ const InputCustom = styled(InputBase)({
 const SelectCustom = styled(Select)({
   borderRadius: 12,
   borderColor: theme.blue,
-  '&:hover': {
+  "&:hover": {
     borderRadius: 12,
-    borderColor: theme.blue
+    borderColor: theme.blue,
   },
-  '& .MuiSelect-select': {
-    position: 'relative',
-    backgroundColor: 'white',
+  "& .MuiSelect-select": {
+    position: "relative",
+    backgroundColor: "white",
     border: `1px solid ${theme.blue}`,
     fontSize: 16,
-    padding: '10px 12px',
+    padding: "10px 12px",
     borderRadius: 12,
-    fontFamily: 'Noto Sans',
-    '@media (max-width: 425px)': {
-      height: 40
+    fontFamily: "Noto Sans",
+    "@media (max-width: 425px)": {
+      height: 40,
     },
-    '@media (min-width: 769px)': {
-      height: 28
+    "@media (min-width: 769px)": {
+      height: 28,
     },
-    '&:focus': {
+    "&:focus": {
       boxShadow: `${theme.blue} 0 0 0 0.1rem`,
       borderColor: theme.blue,
     },
   },
 });
 
-const ListItem = styled('li')({
+const ListItem = styled("li")({
   margin: theme.spacing(0.5),
 });
 
-export const Field: React.SFC<FieldProps> = ({
-  required,
-  id,
-  label,
-  placeholder,
-  editor,
-  options,
-  value
-}) => {
-
+export const Field: React.SFC<FieldProps> = ({ required, id, label, placeholder, editor, options, value }) => {
   const [chipData, setChipData] = React.useState([
-    { key: 0, label: 'デザイナー' },
-    { key: 1, label: 'エンジニア' },
+    { key: 0, label: "デザイナー" },
+    { key: 1, label: "エンジニア" },
   ]);
 
   const handleDelete = (chipToDelete) => () => {
@@ -101,14 +98,14 @@ export const Field: React.SFC<FieldProps> = ({
   };
 
   const [listChipData] = React.useState([
-    { key: 0, label: 'React' },
-    { key: 1, label: 'Ruby on Rails' },
-    { key: 2, label: 'Python' },
-    { key: 3, label: '要件定義' },
-    { key: 4, label: '駆け出しエンジニアと繋がりたい' },
-    { key: 5, label: '技術相談をしたい' },
-    { key: 6, label: 'サーバーサイドエンジニア' },
-    { key: 7, label: 'レビュー' }
+    { key: 0, label: "React" },
+    { key: 1, label: "Ruby on Rails" },
+    { key: 2, label: "Python" },
+    { key: 3, label: "要件定義" },
+    { key: 4, label: "駆け出しエンジニアと繋がりたい" },
+    { key: 5, label: "技術相談をしたい" },
+    { key: 6, label: "サーバーサイドエンジニア" },
+    { key: 7, label: "レビュー" },
   ]);
 
   return (
@@ -118,16 +115,16 @@ export const Field: React.SFC<FieldProps> = ({
         display: "flex",
         justifyContent: "center",
         "&": {
-          '@media (max-width: 425px)': {
-            maxWidth: 320
+          "@media (max-width: 425px)": {
+            maxWidth: 320,
           },
-          '@media (min-width: 768px)': {
-            maxWidth: 220
+          "@media (min-width: 768px)": {
+            maxWidth: 220,
           },
-          '@media (min-width: 1024px)': {
-            maxWidth: 320
+          "@media (min-width: 1024px)": {
+            maxWidth: 320,
           },
-        }
+        },
       }}
     >
       {editor!.toLowerCase() === "textbox" && (
@@ -138,7 +135,7 @@ export const Field: React.SFC<FieldProps> = ({
             sx={{
               display: "flex",
               alignItems: "center",
-              color: 'black'
+              color: "black",
             }}
           >
             <Box display="flex">
@@ -146,14 +143,14 @@ export const Field: React.SFC<FieldProps> = ({
               <Chip
                 label="必須"
                 sx={{
-                  display: required ? '' : "none",
+                  display: required ? "" : "none",
                   ml: 1,
                   width: "54px",
                   height: "22px",
                   fontSize: 12,
                   fontWeight: 600,
                   color: "white",
-                  backgroundColor: theme.orange
+                  backgroundColor: theme.orange,
                 }}
               />
             </Box>
@@ -168,7 +165,7 @@ export const Field: React.SFC<FieldProps> = ({
             sx={{
               mt: 2,
               mx: 1,
-              textAlign: "left"
+              textAlign: "left",
             }}
           >
             {label}
@@ -182,10 +179,11 @@ export const Field: React.SFC<FieldProps> = ({
             defaultValue=""
           >
             {options &&
-              options.map(option => (
-                <MenuItem key={option} value={option}>{option}</MenuItem>
-              ))
-            }
+              options.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
           </SelectCustom>
         </FormControl>
       )}
@@ -195,7 +193,7 @@ export const Field: React.SFC<FieldProps> = ({
           variant="standard"
           sx={{
             pt: "20px",
-            mt: ["25px", "20px"]
+            mt: ["25px", "20px"],
           }}
         >
           <Box
@@ -206,21 +204,19 @@ export const Field: React.SFC<FieldProps> = ({
               fontSize: 12,
               fontWeight: 400,
               textAlign: "left",
-
             }}
           >
             よく使用されているタグ
-
             <Paper
               sx={{
                 pl: 0,
                 mt: 1,
                 mb: 4,
                 maxWidth: "360px",
-                display: 'flex',
-                flexWrap: 'wrap',
-                listStyle: 'none',
-                boxShadow: 'none'
+                display: "flex",
+                flexWrap: "wrap",
+                listStyle: "none",
+                boxShadow: "none",
               }}
               component="ul"
             >
@@ -238,7 +234,7 @@ export const Field: React.SFC<FieldProps> = ({
                         fontSize: 12,
                         fontWeight: 400,
                         color: theme.gray,
-                        borderRadius: "4px"
+                        borderRadius: "4px",
                       }}
                     />
                   </ListItem>
@@ -253,7 +249,7 @@ export const Field: React.SFC<FieldProps> = ({
             sx={{
               display: "flex",
               alignItems: "center",
-              color: 'black'
+              color: "black",
             }}
           >
             <Box display="flex">
@@ -261,14 +257,14 @@ export const Field: React.SFC<FieldProps> = ({
               <Chip
                 label="必須"
                 sx={{
-                  display: required ? '' : "none",
+                  display: required ? "" : "none",
                   ml: 1,
                   width: "54px",
                   height: "20px",
                   fontSize: 12,
                   fontWeight: 600,
                   color: "white",
-                  backgroundColor: theme.orange
+                  backgroundColor: theme.orange,
                 }}
               />
             </Box>
@@ -280,10 +276,10 @@ export const Field: React.SFC<FieldProps> = ({
               pl: 0,
               mt: 1,
               mb: 5,
-              display: 'flex',
-              flexWrap: 'wrap',
-              listStyle: 'none',
-              boxShadow: 'none'
+              display: "flex",
+              flexWrap: "wrap",
+              listStyle: "none",
+              boxShadow: "none",
             }}
             component="ul"
           >
@@ -296,10 +292,7 @@ export const Field: React.SFC<FieldProps> = ({
                     icon={icon}
                     label={data.label}
                     onDelete={handleDelete(data)}
-                    deleteIcon={<Avatar
-                      sx={{ width: "16px", height: "16px" }}
-                      src="/assets/images/svg/delete.svg"
-                    />}
+                    deleteIcon={<Avatar sx={{ width: "16px", height: "16px" }} src="/assets/images/svg/delete.svg" />}
                     sx={{
                       pr: 1,
                       fontSize: 12,
@@ -309,7 +302,7 @@ export const Field: React.SFC<FieldProps> = ({
                       backgroundColor: theme.blue,
                       borderRadius: "4px",
                       display: "flex",
-                      alignItems: "center"
+                      alignItems: "center",
                     }}
                   />
                 </ListItem>
@@ -329,7 +322,7 @@ export const Field: React.SFC<FieldProps> = ({
                 size="small"
                 sx={{
                   color: theme.blue,
-                  "&.Mui-checked": { color: theme.blue }
+                  "&.Mui-checked": { color: theme.blue },
                 }}
               />
             }

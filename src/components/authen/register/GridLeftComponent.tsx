@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Grid, Typography, Avatar, Stack, Paper } from "@mui/material";
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
@@ -9,15 +9,15 @@ const Item = styled(Paper)`
   display: flex;
   align-items: center;
   border-radius: 10px;
-  ${props => props.theme.breakpoints.up("xs")} {
+  ${(props) => props.theme.breakpoints.up("xs")} {
     height: 96px;
     padding-left: 8px;
     padding-right: 8px;
   }
-  ${props => props.theme.breakpoints.up("sm")} {
+  ${(props) => props.theme.breakpoints.up("sm")} {
     height: 64px;
   }
-  ${props => props.theme.breakpoints.up("md")} {
+  ${(props) => props.theme.breakpoints.up("md")} {
     height: 50px;
     padding-left: 20px;
     padding-right: 20px;
@@ -38,10 +38,10 @@ const BoxDescription = styled(Box)`
 
 const TypoContent = styled(Typography)`
   font-weight: 700;
-  ${props => props.theme.breakpoints.up("xs")} {
+  ${(props) => props.theme.breakpoints.up("xs")} {
     padding-left: 14px;
   }
-  ${props => props.theme.breakpoints.up("md")} {
+  ${(props) => props.theme.breakpoints.up("md")} {
     padding-left: 20px;
   }
 `;
@@ -50,9 +50,7 @@ interface GridLeftComponentProps {
   smAndUp?: boolean;
 }
 
-const GridLeftComponent: React.SFC<GridLeftComponentProps> = ({
-  smAndUp,
-}) => {
+const GridLeftComponent: React.SFC<GridLeftComponentProps> = ({ smAndUp }) => {
   const { t } = useTranslation();
 
   return (
@@ -62,7 +60,7 @@ const GridLeftComponent: React.SFC<GridLeftComponentProps> = ({
       sm={6}
       sx={{
         background: theme.blue,
-        display: [smAndUp ? 'none' : 'block', 'block']
+        display: [smAndUp ? "none" : "block", "block"],
       }}
     >
       <Box
@@ -80,24 +78,25 @@ const GridLeftComponent: React.SFC<GridLeftComponentProps> = ({
             pb: ["40px", "48px"],
             fontSize: 20,
             color: "white",
-            fontWeight: 700
+            fontWeight: 700,
           }}
         >
-          { t('register:description.title') }
+          {t("register:description.title")}
         </Typography>
         <Avatar
           variant="square"
           sx={{
             width: ["50.2%", "43.5%"],
-            height: "100%"
+            height: "100%",
           }}
           src="/assets/images/svg/register_account.svg"
         />
-        <Stack spacing={{ xs: "20px", sm: 4 }}
+        <Stack
+          spacing={{ xs: "20px", sm: 4 }}
           sx={{
             pt: ["40px", "57px"],
             width: ["90%", "92%"],
-            height: "100%"
+            height: "100%",
           }}
         >
           <Item>
@@ -110,21 +109,14 @@ const GridLeftComponent: React.SFC<GridLeftComponentProps> = ({
                   display: "flex",
                   flexDirection: ["column", "column", "row"],
                   alignItems: ["space-between", "space-between", "center"],
-                  justifyContent: ["space-between", "space-between", "center"]
+                  justifyContent: ["space-between", "space-between", "center"],
                 }}
               >
-                <Typography 
-                  fontWeight="700" 
-                  pl={{ md: "20px" }}
-                >
-                  { t('register:description.text-1.1') }
-                  </Typography>
-                <Typography 
-                  fontSize="12px" 
-                  fontWeight="400"
-                  pl={{ md: "20px" }} 
-                >
-                  { t('register:description.text-1.2') }
+                <Typography fontWeight="700" pl={{ md: "20px" }}>
+                  {t("register:description.text-1.1")}
+                </Typography>
+                <Typography fontSize="12px" fontWeight="400" pl={{ md: "20px" }}>
+                  {t("register:description.text-1.2")}
                 </Typography>
               </Box>
             </BoxDescription>
@@ -133,19 +125,19 @@ const GridLeftComponent: React.SFC<GridLeftComponentProps> = ({
           <Item>
             <BoxDescription color="#000">
               <TypoNumber>02</TypoNumber>
-              <TypoContent>{ t('register:description.text-2') }</TypoContent>
+              <TypoContent>{t("register:description.text-2")}</TypoContent>
             </BoxDescription>
           </Item>
 
           <Item>
             <BoxDescription color="#000">
               <TypoNumber>03</TypoNumber>
-              <TypoContent>{ t('register:description.text-3') }</TypoContent>
+              <TypoContent>{t("register:description.text-3")}</TypoContent>
             </BoxDescription>
           </Item>
         </Stack>
       </Box>
     </Grid>
-  )
+  );
 };
 export default GridLeftComponent;

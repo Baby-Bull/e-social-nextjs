@@ -1,16 +1,22 @@
 import React from "react";
 import {
-  Box, Grid, Typography,
+  Box,
+  Grid,
+  Typography,
   Avatar,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Fab,
-  Card, CardActions, CardContent, Button,
-  Paper, Chip
+  Card,
+  CardActions,
+  CardContent,
+  Button,
+  Paper,
+  Chip,
 } from "@mui/material";
-import { styled } from '@mui/material/styles'
+import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
@@ -21,13 +27,13 @@ import GridLeftComponent from "../GridLeftComponent";
 
 import { Field } from "./Field";
 
-const ListItem = styled('li')({
+const ListItem = styled("li")({
   marginRight: theme.spacing(0),
 });
 
 const FormRegisterComponents = () => {
   const { t } = useTranslation();
-  
+
   const [open, setOpen] = React.useState(false);
   const [fullWidth] = React.useState(true);
   const [isTutorialDone, setStep] = React.useState(false);
@@ -49,11 +55,11 @@ const FormRegisterComponents = () => {
   };
 
   const [listChipData] = React.useState([
-    { key: 0, label: 'React' },
-    { key: 1, label: 'PHP勉強中' },
-    { key: 2, label: 'コードレビュー' },
-    { key: 3, label: '駆け出しエンジニアと繋がりたい' },
-    { key: 4, label: '要件定義' }
+    { key: 0, label: "React" },
+    { key: 1, label: "PHP勉強中" },
+    { key: 2, label: "コードレビュー" },
+    { key: 3, label: "駆け出しエンジニアと繋がりたい" },
+    { key: 4, label: "要件定義" },
   ]);
 
   const descriptionElementRef = React.useRef(null);
@@ -80,7 +86,7 @@ const FormRegisterComponents = () => {
                   px: ["5%", "10%"],
                   display: "flex",
                   flexDirection: "column",
-                  alignItems: "center"
+                  alignItems: "center",
                 }}
               >
                 <Typography
@@ -88,68 +94,60 @@ const FormRegisterComponents = () => {
                     pb: ["20px", "23px"],
                     fontSize: 20,
                     fontWeight: 700,
-                    color: theme.navy
+                    color: theme.navy,
                   }}
                 >
-                  {t('register:form.title')}
+                  {t("register:form.title")}
                 </Typography>
 
                 <form style={{ textAlign: "center", marginBottom: "63px" }}>
                   <Field
                     id="name"
                     required
-                    label={t('register:form.label.name')}
-                    placeholder={t('register:form.placeholder.name')}
+                    label={t("register:form.label.name")}
+                    placeholder={t("register:form.placeholder.name")}
                     editor="textbox"
                   />
                   <Field
                     id="birthday"
                     required
-                    label={t('register:form.label.birthday')}
-                    placeholder={t('register:form.placeholder.birthday')}
+                    label={t("register:form.label.birthday")}
+                    placeholder={t("register:form.placeholder.birthday")}
                     editor="textbox"
                   />
                   <Field
                     id="status"
                     required
-                    label={t('register:form.label.status')}
-                    placeholder={t('register:form.placeholder.status')}
+                    label={t("register:form.label.status")}
+                    placeholder={t("register:form.placeholder.status")}
                     options={["", "Marketing"]}
                     editor="dropdown"
                   />
                   <Field
                     id="email"
                     required
-                    label={t('register:form.label.email')}
-                    placeholder={t('register:form.placeholder.email')}
+                    label={t("register:form.label.email")}
+                    placeholder={t("register:form.placeholder.email")}
                     editor="textbox"
                   />
                   <Field
                     id="place"
                     required
-                    label={t('register:form.label.place')}
-                    placeholder={t('register:form.placeholder.place')}
+                    label={t("register:form.label.place")}
+                    placeholder={t("register:form.placeholder.place")}
                     editor="textbox"
                   />
                   <Field
                     id="tag"
                     required
-                    label={t('register:form.label.tag')}
-                    placeholder={t('register:form.placeholder.tag')}
+                    label={t("register:form.label.tag")}
+                    placeholder={t("register:form.placeholder.tag")}
                     editor="multi-selection"
                   />
-                  <Field
-                    id="checkbox"
-                    label=
-                    {t('register:form.label.checkbox')}
-                    editor="checkbox"
-                  />
+                  <Field id="checkbox" label={t("register:form.label.checkbox")} editor="checkbox" />
 
-                  <ButtonComponent 
-                    onClick={handleClickOpen} 
-                    mode="gradient"
-                  >
-                    {t('register:form.submit')}
+                  <ButtonComponent onClick={handleClickOpen} mode="gradient">
+                    {t("register:form.submit")}
                   </ButtonComponent>
                 </form>
               </Box>
@@ -160,7 +158,7 @@ const FormRegisterComponents = () => {
 
       <Dialog
         PaperProps={{
-          style: { borderRadius: 12 }
+          style: { borderRadius: 12 },
         }}
         open={open}
         onClose={handleClose}
@@ -174,7 +172,7 @@ const FormRegisterComponents = () => {
           sx={{
             backgroundColor: theme.blue,
             textAlign: "right",
-            p: [0, "16px"]
+            p: [0, "16px"],
           }}
         >
           <Fab
@@ -184,7 +182,7 @@ const FormRegisterComponents = () => {
               width: ["30px", "inherit"],
               height: ["30px", "inherit"],
               backgroundColor: "transparent",
-              boxShadow: "unset"
+              boxShadow: "unset",
             }}
           >
             <Avatar
@@ -193,11 +191,10 @@ const FormRegisterComponents = () => {
                 width: ["20px", "50px"],
                 height: ["20px", "50px"],
                 display: "flex",
-                justifyContent: "center"
+                justifyContent: "center",
               }}
-              src={!isTutorialDone 
-                ? "/assets/images/svg/arrow-right-circle.svg" 
-                : "/assets/images/svg/delete-circle.svg"
+              src={
+                !isTutorialDone ? "/assets/images/svg/arrow-right-circle.svg" : "/assets/images/svg/delete-circle.svg"
               }
             />
           </Fab>
@@ -207,14 +204,14 @@ const FormRegisterComponents = () => {
           <DialogContent
             sx={{
               pb: "46px",
-              backgroundColor: theme.blue
+              backgroundColor: theme.blue,
             }}
           >
             <Box
               sx={{
                 display: "flex",
                 flexDirection: ["column-reverse", "row"],
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
               <Box sx={{ maxWidth: 320, flex: 2 }}>
@@ -223,7 +220,7 @@ const FormRegisterComponents = () => {
                   sx={{
                     display: ["none", "inherit"],
                     px: "8px",
-                    pb: "16px"
+                    pb: "16px",
                   }}
                 >
                   <CardContent>
@@ -231,7 +228,7 @@ const FormRegisterComponents = () => {
                       sx={{
                         display: "flex",
                         justifyContent: "space-between",
-                        alignItems: "center"
+                        alignItems: "center",
                       }}
                     >
                       <Button
@@ -242,21 +239,21 @@ const FormRegisterComponents = () => {
                           backgroundColor: theme.orange,
                           "&:hover": {
                             opacity: 0.9,
-                            backgroundColor: theme.orange
-                          }
+                            backgroundColor: theme.orange,
+                          },
                         }}
                       >
-                        {t('register:form.tutorial.button-status')}
+                        {t("register:form.tutorial.button-status")}
                       </Button>
 
                       <Typography
                         sx={{
                           color: "#D8D8D8",
                           fontSize: 10,
-                          fontWeight: 700
+                          fontWeight: 700,
                         }}
                       >
-                        {t('register:form.tutorial.last-login')}
+                        {t("register:form.tutorial.last-login")}
                       </Typography>
                     </Box>
 
@@ -274,7 +271,7 @@ const FormRegisterComponents = () => {
                             width: ["80%", "60px"],
                             height: "75%",
                             display: "flex",
-                            justifyContent: "center"
+                            justifyContent: "center",
                           }}
                           src="/assets/images/svg/goodhub.svg"
                         />
@@ -282,7 +279,7 @@ const FormRegisterComponents = () => {
                       <Box
                         sx={{
                           display: "flex",
-                          flexDirection: "column"
+                          flexDirection: "column",
                         }}
                       >
                         <Typography
@@ -291,10 +288,10 @@ const FormRegisterComponents = () => {
                             pb: "5px",
                             color: "#262A30",
                             fontSize: 14,
-                            fontWeight: 700
+                            fontWeight: 700,
                           }}
                         >
-                          {t('register:form.tutorial.name')}
+                          {t("register:form.tutorial.name")}
                         </Typography>
 
                         <Typography
@@ -303,10 +300,10 @@ const FormRegisterComponents = () => {
                             pb: "5px",
                             color: theme.blue,
                             fontSize: 12,
-                            fontWeight: 400
+                            fontWeight: 400,
                           }}
                         >
-                          {t('register:form.tutorial.major')}
+                          {t("register:form.tutorial.major")}
                         </Typography>
 
                         <Typography
@@ -314,10 +311,10 @@ const FormRegisterComponents = () => {
                             pl: "13px",
                             color: "#262A30",
                             fontSize: 10,
-                            fontWeight: 400
+                            fontWeight: 400,
                           }}
                         >
-                          {t('register:form.tutorial.vote')}
+                          {t("register:form.tutorial.vote")}
                         </Typography>
                       </Box>
                     </Box>
@@ -325,10 +322,10 @@ const FormRegisterComponents = () => {
                       sx={{
                         color: theme.navy,
                         fontSize: 12,
-                        fontWeight: 700
+                        fontWeight: 700,
                       }}
                     >
-                      {t('register:form.tutorial.intro')}
+                      {t("register:form.tutorial.intro")}
                     </Typography>
 
                     <Typography
@@ -336,7 +333,7 @@ const FormRegisterComponents = () => {
                         color: theme.navy,
                         fontSize: 12,
                         fontWeight: 400,
-                        textTransform: ""
+                        textTransform: "",
                       }}
                     >
                       <Paper
@@ -345,10 +342,10 @@ const FormRegisterComponents = () => {
                           mt: 1,
                           mb: 4,
                           maxWidth: "360px",
-                          display: 'flex',
-                          flexWrap: 'wrap',
-                          listStyle: 'none',
-                          boxShadow: 'none'
+                          display: "flex",
+                          flexWrap: "wrap",
+                          listStyle: "none",
+                          boxShadow: "none",
                         }}
                         component="ul"
                       >
@@ -368,7 +365,7 @@ const FormRegisterComponents = () => {
                                   backgroundColor: theme.whiteBlue,
                                   border: "none",
                                   color: theme.navy,
-                                  borderRadius: "4px"
+                                  borderRadius: "4px",
                                 }}
                               />
                             </ListItem>
@@ -381,20 +378,20 @@ const FormRegisterComponents = () => {
                       sx={{
                         pt: "20px",
                         display: "flex",
-                        alignItems: "center"
+                        alignItems: "center",
                       }}
                     >
-                      <img src="/assets/images/svg/message.svg" alt="message"/>
+                      <img src="/assets/images/svg/message.svg" alt="message" />
 
                       <Typography
                         sx={{
                           pl: "13px",
                           color: "#000",
                           fontSize: 14,
-                          fontWeight: 700
+                          fontWeight: 700,
                         }}
                       >
-                        {t('register:form.tutorial.pr')}
+                        {t("register:form.tutorial.pr")}
                       </Typography>
                     </Box>
 
@@ -403,16 +400,16 @@ const FormRegisterComponents = () => {
                         pt: "5px",
                         fontSize: 12,
                         fontWeight: 400,
-                        color: "#262A30"
+                        color: "#262A30",
                       }}
                     >
-                      {t('register:form.tutorial.text-demo')}
+                      {t("register:form.tutorial.text-demo")}
                     </Typography>
 
                     <Box
                       sx={{
                         pt: "20px",
-                        textAlign: "center"
+                        textAlign: "center",
                       }}
                     >
                       <ButtonComponent
@@ -422,23 +419,22 @@ const FormRegisterComponents = () => {
                           height: 32,
                           color: theme.blue,
                           borderColor: theme.blue,
-                          textAlign: "center"
+                          textAlign: "center",
                         }}
                       >
-                        {t('register:form.tutorial.button-add')}
+                        {t("register:form.tutorial.button-add")}
                       </ButtonComponent>
                     </Box>
-
                   </CardContent>
                   <CardActions>
                     <ButtonComponent
                       sx={{
                         color: "white",
                         backgroundColor: theme.green,
-                        "&:hover": { backgroundColor: theme.green }
+                        "&:hover": { backgroundColor: theme.green },
                       }}
                     >
-                      {t('register:form.tutorial.send-request')}
+                      {t("register:form.tutorial.send-request")}
                     </ButtonComponent>
                   </CardActions>
                 </Card>
@@ -447,7 +443,7 @@ const FormRegisterComponents = () => {
                   variant="square"
                   sx={{
                     pt: "17px",
-                    width:"100%",
+                    width: "100%",
                     height: "100%",
                     display: ["", "none"],
                   }}
@@ -461,10 +457,10 @@ const FormRegisterComponents = () => {
                   pl: [0, 3],
                   color: "white",
                   fontSize: [16, 20],
-                  fontWeight: 700
+                  fontWeight: 700,
                 }}
               >
-                {t('register:form.tutorial.description')}
+                {t("register:form.tutorial.description")}
               </Typography>
             </Box>
           </DialogContent>
@@ -499,7 +495,7 @@ const FormRegisterComponents = () => {
                     width: ["80%", "40%"],
                     height: "100%",
                     display: "flex",
-                    justifyContent: "center"
+                    justifyContent: "center",
                   }}
                   src="/assets/images/svg/register_turtorial.svg"
                 />
@@ -512,7 +508,7 @@ const FormRegisterComponents = () => {
                 display: "flex",
                 justifyContent: "center",
                 pt: ["39px", "inherit"],
-                pb: ["80px", "50px"]
+                pb: ["80px", "50px"],
               }}
             >
               <ButtonComponent
@@ -524,14 +520,13 @@ const FormRegisterComponents = () => {
                   backgroundColor: "white",
                 }}
               >
-                {t('register:form.submit')}
+                {t("register:form.submit")}
               </ButtonComponent>
-
             </DialogActions>
           </React.Fragment>
         )}
       </Dialog>
     </React.Fragment>
-  )
+  );
 };
 export default FormRegisterComponents;

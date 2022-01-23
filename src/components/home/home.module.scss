@@ -1,0 +1,447 @@
+.sliderContainer {
+  width: 100%;
+  :global {
+    @media screen and (max-width: 992px) {
+      .slick-slider {
+        height: 44vw;
+      }
+    }
+  }
+}
+
+.sliderItem {
+  height: 100%;
+  vertical-align: middle;
+  :global {
+    img {
+      object-fit: cover;
+      @media screen and (min-width: 993px) {
+        width: 47vw;
+        min-width: 680px;
+        object-fit: cover;
+        min-height: 320px;
+        height: 23vw;
+      }
+      @media screen and (max-width: 992px) {
+        width: 95vw;
+      }
+    }
+  }
+}
+
+.notificationBanner {
+  height: 40px;
+  padding-left: 80px;
+  display: flex;
+  align-items: center;
+  background: white;
+  white-space: nowrap;
+  overflow: hidden;
+
+  @media screen and (max-width: 992px) {
+    padding-left: 27px;
+  }
+
+  :global {
+    .title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-left: 8px;
+      margin-right: 20px;
+
+      @media screen and (max-width: 992px) {
+        font-size: 12px;
+        margin-right: 8px;
+      }
+    }
+  
+    .content {
+      font-size: 12px;
+    }
+  }
+}
+
+.notificationsBlock {
+  margin: 40px;
+  width: 100%;
+  padding-left: 40px;
+  padding-right: 40px;
+
+  @media screen and (max-width: 992px) {
+    display: none;
+  }
+
+  :global {
+    .box-content {
+      border-radius: 12px;
+      height: 56px;
+      background: white;
+      display: flex;
+      align-items: center;
+      padding-left: 24px;
+      padding-right: 16px;
+
+      .slick-slider {
+        width: 100%;
+      }
+
+      .slider-item {
+        img.icon {
+          display: initial;
+          margin-right: 3px;
+        }
+      }
+
+      .title {
+        font-size: 16px;
+        font-weight: 700;
+        margin-right: 20px;
+      }
+
+      .content {
+        font-size: 21px;
+      }
+    }
+  }
+}
+
+.matchingGridContainer {
+  padding-left: 40px;
+  margin-bottom: 45px;
+
+  .boxMatching {
+    width: 240px;
+    height: 80px;
+    border-radius: 12px;
+    border: 2px solid rgba(196, 196, 196, 0.4);
+    background: white;
+    padding-left: 12px;
+    padding-right: 16px;
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+    justify-content: space-between;
+
+    :global {
+      .label {
+        white-space: pre-line;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .div-data {
+        .data {
+          font-size: 48px;
+          font-weight: 700;
+          color: #03BCDB;
+          ;
+        }
+        .unit {
+          font-size: 16px;
+          color: #1A2944;
+        }
+      }
+    }
+  }
+}
+
+
+.matchingGridContainerMobile {
+  margin-bottom: 45px;
+
+  .matchingGridItem {
+    width: 20%;
+    text-align: center;
+  }
+  .boxMatchingMobile {
+    height: 80px;
+    border: 1px solid rgba(196, 196, 196, 0.4);
+    border-right: none;
+    background: white;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: 13px;
+    padding-bottom: 15px;
+    position: relative;
+
+    :global {
+      .label-type {
+        white-space: pre-line;
+        font-size: 8px;
+        font-weight: 500;
+        margin-top: 10px;
+      }
+
+      .span-has-data {
+        width: 8px;
+        height: 8px;
+        background: #FF5454;
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        border-radius: 50%;
+      }
+    }
+  }
+}
+
+.recommendList {
+  padding-left: 40px;
+  margin-bottom: 80px;
+  padding-right: 40px;
+
+  :global {
+    .div-title {
+      margin-bottom: 33px;
+      @media screen and (max-width: 992px) {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 19px;
+      }
+      .title {
+        color: #1A2944;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 35px;
+
+        @media screen and (max-width: 992px) {
+          font-size: 20px;
+        }
+      }
+    }
+    .link-see-more {
+      font-size: 20px;
+      color: #03BCDB;
+      margin-left: 10px;
+
+      @media screen and (max-width: 992px) {
+        font-size: 17px;
+        color: #03BCDB;
+        width: 100%;
+        text-align: center;
+        margin-top: 20px;
+      }
+    }
+    .content {
+      width: 100%;
+    }
+  }
+}
+
+.boxRecommend {
+  background: white;
+  border: 1px solid rgba(196, 196, 196, 0.4);
+  border-radius: 12px;
+  box-sizing: border-box;
+  padding: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+
+  @media screen and (max-width: 992px) {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.boxRecommendCommunity {
+  :global {
+    .label-number-of-register {
+      font-size: 10px;
+      font-weight: 700;
+      color: #D8D8D8;
+  
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: #1BD0B0;
+        border-radius: 50%;
+        margin-right: 4px;
+      }
+    }
+  
+    .image-community {
+      display: flex;
+      justify-content: center;
+    }
+  
+    .name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #262A30;
+      margin-top: 8px;
+    }
+    
+    .label-number-of-members {
+      color: #03BCDB;
+      font-size: 10px;
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    .tags {
+      ul {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0;
+
+        li {
+          display: inline-block;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          background: #F4FDFF;
+          padding: 4px 8px;
+          font-size: 12px;
+          color: #1A2944;
+          margin-left: 2px;
+          margin-right: 2px;
+        }
+      }
+    }
+
+    .description {
+      font-size: 12px;
+      color: #262A30;
+      line-height: 24px;
+      text-align: justify;
+      word-break: break-word;
+      min-height: 72px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      display: -webkit-box;
+    }
+  }
+}
+
+.boxRecommendMember {
+  :global {
+    .status-summary {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+
+      .label-login-status {
+        font-size: 10px;
+        color: #989EA8;
+        font-weight: 500;
+      }
+    }
+    .info-summary {
+      display: flex;
+      justify-content: space-between;
+
+      img {
+        width: 56px;
+        margin-right: 13px;
+      }
+
+      .member-info {
+        .name {
+          font-size: 14px;
+          font-weight: 700;
+          color: #262A30;
+          width: calc(100% - 56px);
+          text-overflow: ellipsis;
+          overflow: hidden;
+          display: block;
+          white-space: nowrap;
+          margin: 0;
+        }
+
+        .career {
+          font-size: 12px;
+          font-weight: 500;
+          color: #989EA8;
+          line-height: 18px;
+          margin: 6px 0;
+        }
+        .review {
+          font-size: 10px;
+          font-weight: 400;
+          color: #262A30; 
+          margin: 0;
+        }
+      }
+    }
+    .introduce {
+      margin-top: 11px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      padding: 8px;
+      background: #F5F5F5;
+      font-weight: bold;
+      font-size: 12px;
+      line-height: 24px;
+      display: flex;
+      align-items: center;
+      color: #1A2944;
+    }
+    .tags {
+      ul {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0;
+
+        li {
+          display: inline-block;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          background: #F4FDFF;
+          padding: 4px 8px;
+          font-size: 12px;
+          color: #1A2944;
+          margin-left: 2px;
+          margin-right: 2px;
+        }
+      }
+    }
+
+    .label-description {
+      display: inline-flex;
+      margin: 0;
+      font-weight: 700;
+      font-size: 14px;
+      color: #262A30;
+      line-height: 24px;
+
+      img {
+        width: 22px;
+        margin-right: 7px;
+      }
+    }
+
+    .description {
+      margin: 6px 0 20px;
+      font-weight: 400;
+      font-size: 12px;
+      color: #262A30;
+      line-height: 24px;
+    }
+
+    .div-review {
+      background: #F4FDFF;
+      border: 1px solid #03BCDB;
+      box-sizing: border-box;
+      border-radius: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #03BCDB;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 24px;
+
+      img {
+        margin-right: 10px;
+      }
+    }
+  }
+}

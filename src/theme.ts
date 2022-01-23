@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { createTheme } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
 
@@ -42,6 +43,30 @@ const theme = createTheme({
     error: {
       main: red.A400,
     },
+  },
+  components: {
+    MuiButton: { 
+      styleOverrides: {
+        "root": {
+          "&.Mui-disabled": {
+            "background": "#F5F5F5",
+            "color": "#989EA8"
+          }
+        },
+        sizeSmall: {
+          fontSize: "10px",
+          height: "20px",
+          lineHeight: "24px",
+          fontWeight: 700
+        },
+        sizeMedium: {
+          fontSize: "16px",
+          height: "48px",
+          lineHeight: "24px",
+          fontWeight: 700
+        }
+      } 
+    }
   },
   lightBlue: "#A9F3FF",
   blue: "#03BCDB",
