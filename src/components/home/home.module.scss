@@ -445,3 +445,17 @@
     }
   }
 }
+
+.modalMatchingRequest {
+  :global {
+    .title-modal {
+      display: flex;
+      align-items: center;
+      .name {
+        font-size: 20px;
+        font-weight: 700;
+        margin-left: 20px;
+      }
+    }
+  }
+}

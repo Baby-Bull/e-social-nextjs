@@ -29,14 +29,16 @@ interface IRecommendDataItem {
 
 interface IRecommendItemProps {
   data: IRecommendDataItem;
+  setOpenMatchingModal: Function;
 }
 
 interface IRecommendMembersComponentProps {
   title: string;
   dataRecommends: Array<IRecommendDataItem>;
+  setOpenMatchingModal: Function;
 }
 
-const RecommendItem: React.SFC<IRecommendItemProps> = ({ data }) => {
+const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, setOpenMatchingModal }) => {
   const { t } = useTranslation();
 
   return (
@@ -96,6 +98,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data }) => {
         </div>
 
         <ButtonComponent
+          onClick={() => setOpenMatchingModal(true)}
           mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[data?.status]?.mode}
           fullWidth
           disabled={data?.status === 2}
@@ -107,12 +110,20 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data }) => {
   );
 };
 
-const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({ title, dataRecommends }) => {
+const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
+  title,
+  dataRecommends,
+  setOpenMatchingModal,
+}) => {
   const { t } = useTranslation();
   const [dataElements, setDataElements] = useState([]);
 
   useEffect(() => {
-    setDataElements(dataRecommends?.map((item, index) => <RecommendItem data={item} key={index} />));
+    setDataElements(
+      dataRecommends?.map((item, index) => (
+        <RecommendItem data={item} key={index} setOpenMatchingModal={setOpenMatchingModal} />
+      )),
+    );
   }, [dataRecommends]);
 
   return (
@@ -123,7 +134,6 @@ const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
           {t("home:see-more")}
         </Link>
       </div>
-
       <div className="content">
         <SlickSliderRecommendComponent items={dataElements} />
       </div>
