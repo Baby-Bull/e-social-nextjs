@@ -1,6 +1,5 @@
 module.exports = {
-    // Change your rules accordingly to your coding style preferences.
-    // https://prettier.io/docs/en/options.html
+    singleQuote: false,
     semi: true,
     trailingComma: 'all',
     printWidth: 120,

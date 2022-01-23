@@ -10,6 +10,10 @@ import { appWithTranslation } from "next-i18next";
 import theme from "src/theme";
 import createEmotionCache from "src/createEmotionCache";
 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import "src/styles/index.scss";
+
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
