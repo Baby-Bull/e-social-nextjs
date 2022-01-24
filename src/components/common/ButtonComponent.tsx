@@ -4,62 +4,76 @@ import { styled } from "@mui/material/styles";
 
 import theme from "src/theme";
 
-const ButtonRounded = styled(Button)({
-  height: 48,
-  width: 280,
-  borderRadius: 40,
-  fontSize: 16,
-  fontWeight: 700,
-  textTransform: "capitalize",
-  "&:hover": {
-    opacity: 0.9,
-  },
-});
+type Dimension = "x-small" | "small" | "x-medium" | "medium" | "large";
+interface ButtonComponentProps extends ButtonProps {
+  children: any;
+  props?: {
+    mode?: string;
+    dimension?: Dimension;
+    color?: string;
+    bgColor?: string;
+  };
+  nestedCondition?: any;
+}
 
-const ButtonTwitter = styled(ButtonRounded)({
-  background: "#55ACEE",
-  "&:hover": {
-    background: "#55ACEE",
-  },
-  color: "white",
-});
+const ButtonRounded = styled(Button)<ButtonComponentProps>(
+  ({ props, nestedCondition = (condition: any, then: any, otherwise: any) => (condition ? then : otherwise) }) => ({
+    backgroundColor: props?.bgColor ? props?.bgColor : "white",
+    "&:hover": {
+      backgroundColor: props?.bgColor ? props?.bgColor : "white",
+      opacity: 0.9,
+    },
+    color: props?.color ? props?.color : "white",
+    width: nestedCondition(
+      props?.dimension === "x-small",
+      "160px",
+      nestedCondition(
+        props?.dimension === "small",
+        "184px",
+        nestedCondition(
+          props?.dimension === "x-medium",
+          "200px",
+          nestedCondition(props?.dimension === "medium", "240px", "280px"),
+        ),
+      ),
+    ),
+    height: 48,
+    borderRadius: 40,
+    fontSize: 16,
+    fontWeight: 700,
+    textTransform: "capitalize",
+    "&.Mui-disabled": {
+      color: theme.gray,
+    },
+  }),
+);
 
 const ButtonGoogle = styled(ButtonRounded)({
-  background: "white",
+  color: theme.navy,
+  backgroundColor: "white",
+  borderColor: "#DADADA",
   "&:hover": {
     borderColor: "black",
   },
-  color: theme.navy,
-  borderColor: "#DADADA",
-});
-
-const ButtonGithub = styled(ButtonRounded)({
-  background: "#101010",
-  "&:hover": {
-    background: "#101010",
-  },
-  color: "white",
-  borderColor: "#DADADA",
 });
 
 const ButtonGradient = styled(ButtonRounded)({
-  width: 200,
-  color: "white",
   background: theme.gd,
 });
 
-function renderSwitch(mode, children, rest) {
-  switch (mode) {
+function renderSwitch(children, props, rest) {
+  switch (props?.mode) {
     case "twitter":
       return (
-        <ButtonTwitter
+        <ButtonRounded
+          props={{ bgColor: "#55ACEE" }}
           disableElevation
           startIcon={
             <Avatar variant="square" sx={{ width: "100%", height: "100%" }} src="/assets/images/svg/twitter.svg" />
           }
         >
           {children}
-        </ButtonTwitter>
+        </ButtonRounded>
       );
     case "google":
       return (
@@ -73,29 +87,33 @@ function renderSwitch(mode, children, rest) {
       );
     case "github":
       return (
-        <ButtonGithub
+        <ButtonRounded
+          props={{ bgColor: "#101010" }}
           disableElevation
           startIcon={
             <Avatar variant="square" sx={{ width: "100%", height: "100%" }} src="/assets/images/svg/github.svg" />
           }
         >
           {children}
-        </ButtonGithub>
+        </ButtonRounded>
       );
     case "gradient":
-      return <ButtonGradient {...rest}>{children}</ButtonGradient>;
+      return (
+        <ButtonGradient props={props} {...rest}>
+          {children}
+        </ButtonGradient>
+      );
     default:
-      return <ButtonRounded {...rest}>{children}</ButtonRounded>;
+      return (
+        <ButtonRounded props={props} {...rest}>
+          {children}
+        </ButtonRounded>
+      );
   }
 }
 
-interface ButtonComponentProps extends ButtonProps {
-  children: any;
-  mode?: string;
-}
-
-const ButtonComponent: React.SFC<ButtonComponentProps> = ({ children, mode, ...rest }) => (
-  <React.Fragment>{renderSwitch(mode, children, rest)}</React.Fragment>
+const ButtonComponent: React.SFC<ButtonComponentProps> = ({ children, props, ...rest }) => (
+  <React.Fragment>{renderSwitch(children, props, rest)}</React.Fragment>
 );
 
 export default ButtonComponent;

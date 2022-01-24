@@ -146,7 +146,13 @@ const FormRegisterComponents = () => {
                   />
                   <Field id="checkbox" label={t("register:form.label.checkbox")} editor="checkbox" />
 
-                  <ButtonComponent onClick={handleClickOpen} mode="gradient">
+                  <ButtonComponent
+                    props={{
+                      mode: "gradient",
+                      dimension: "x-medium",
+                    }}
+                    onClick={handleClickOpen}
+                  >
                     {t("register:form.submit")}
                   </ButtonComponent>
                 </form>
@@ -414,12 +420,15 @@ const FormRegisterComponents = () => {
                     >
                       <ButtonComponent
                         variant="outlined"
-                        sx={{
-                          width: 240,
-                          height: 32,
+                        props={{
+                          dimension: "medium",
                           color: theme.blue,
-                          borderColor: theme.blue,
+                        }}
+                        sx={{
+                          height: 32,
                           textAlign: "center",
+                          borderColor: theme.blue,
+                          "&:hover": { borderColor: "black" },
                         }}
                       >
                         {t("register:form.tutorial.button-add")}
@@ -428,9 +437,10 @@ const FormRegisterComponents = () => {
                   </CardContent>
                   <CardActions>
                     <ButtonComponent
+                      props={{
+                        bgColor: theme.green,
+                      }}
                       sx={{
-                        color: "white",
-                        backgroundColor: theme.green,
                         "&:hover": { backgroundColor: theme.green },
                       }}
                     >
@@ -497,7 +507,7 @@ const FormRegisterComponents = () => {
                     display: "flex",
                     justifyContent: "center",
                   }}
-                  src="/assets/images/svg/register_turtorial.svg"
+                  src="/assets/images/svg/account_with_phone.svg"
                 />
               </Box>
             </DialogContent>
@@ -513,11 +523,12 @@ const FormRegisterComponents = () => {
             >
               <ButtonComponent
                 onClick={handleClose}
-                sx={{
-                  width: "240px",
-                  height: "56px",
+                props={{
+                  dimension: "medium",
                   color: theme.blue,
-                  backgroundColor: "white",
+                }}
+                sx={{
+                  height: "56px",
                 }}
               >
                 {t("register:form.submit")}
