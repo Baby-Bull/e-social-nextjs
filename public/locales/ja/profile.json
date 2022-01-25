@@ -30,5 +30,17 @@
   "you-speak": "話せること/聞きたいこと",
   "talk-now": "今すぐ話せます",
   "find-friend": "友達募集しています",
-  "consult-me": "相談に乗って欲しいです"
+  "consult-me": "相談に乗って欲しいです",
+  "anonymous": "匿名さん",
+  "it-good": "良かった",
+  "it-bad": "悪かった",
+  "man": "人",
+  "number-participants": "参加人数",
+  "language": "言語",
+  "framework": "フレームワーク",
+  "infrastructure": "インフラ",
+  "upstream-process": "上流工程",
+  "english-experience": "英語経験",
+  "language-experience": "英語以外の外国語経験",
+  "year": "年"
 }

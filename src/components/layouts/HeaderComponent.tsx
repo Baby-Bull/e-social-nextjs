@@ -17,7 +17,6 @@ const HeaderComponent = () => {
           <div className={styles.boxSearch}>
             <input type="text" placeholder={t("header.search-pc")} className={styles.isPc} />
             <img src="/assets/images/icon/ic_search.png" className={styles.isPc} alt="ic_search" />
-
             <img src="/assets/images/icon/ic_search.png" className={styles.isMobile} alt="ic_search" />
             <input type="text" placeholder={t("header.search-mb")} className={styles.isMobile} />
           </div>

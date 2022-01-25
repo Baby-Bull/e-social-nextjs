@@ -1,10 +1,18 @@
-import { Box, Tabs, Tab, Typography } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import React from "react";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import TabsUnstyled from "@mui/base/TabsUnstyled";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import TabsListUnstyled from "@mui/base/TabsListUnstyled";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import TabPanelUnstyled from "@mui/base/TabPanelUnstyled";
+// eslint-disable-next-line import/no-extraneous-dependencies
+import TabUnstyled, { tabUnstyledClasses } from "@mui/base/TabUnstyled";
 import { useTranslation } from "next-i18next";
 // eslint-disable-next-line import/no-extraneous-dependencies
-import PropTypes from "prop-types";
+import { styled } from "@mui/material/styles";
 
-import styles from "src/components/profile/profile.kill.module.scss";
+import theme from "src/theme";
 
 interface ProfileSkillComponentProps {
   profileStatus: string;
@@ -16,39 +24,84 @@ interface ProfileSkillComponentProps {
   profileIntroduceYourself: string;
   profileAddress: string;
   profileTag: Array<string>;
+  ProfileSkillLanguage: Array<any>;
+  ProfileSkillFramework: Array<any>;
+  ProfileSkillInfrastructure: string;
+  ProfileSkillUpstreamProcess: string;
+  ProfileSkillEnglishExperience: string;
+  ProfileSkillLanguageExperience: string;
 }
 
-const TabPanel = (props) => {
-  const { children, value, index } = props;
+const BoxContentTab = styled(Box)`
+  display: flex;
+  margin-bottom: 35px;
+  color: ${theme.navy};
+  ${(props) => props.theme.breakpoints.up("xs")} {
+    display: block;
+  }
 
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-};
+  ${(props) => props.theme.breakpoints.up("lg")} {
+    display: flex;
+  }
+`;
 
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
+const TitleContentTab = styled(Box)`
+  width: 238px;
+  font-size: 18px;
+  font-weight: 700;
+  ${(props) => props.theme.breakpoints.up("xs")} {
+    font-size: 16px;
+  }
 
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
+  ${(props) => props.theme.breakpoints.up("lg")} {
+    font-size: 18px;
+  }
+`;
+
+const ContentTab = styled(Box)`
+  width: 680px;
+  ${(props) => props.theme.breakpoints.up("xs")} {
+    font-size: 14px;
+    width: 100%;
+  }
+
+  ${(props) => props.theme.breakpoints.up("lg")} {
+    font-size: 16px;
+    width: 65.38%;
+  }
+`;
+
+const Tab = styled(TabUnstyled)`
+  color: ${theme.blue};
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 29px;
+  font-weight: bold;
+  background-color: #fff;
+  width: 240px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: center;
+  border: 1px solid #03bcdb;
+  border-radius: 12px 12px 0 0;
+  border-bottom: none !important;
+  height: 56px;
+
+  &.${tabUnstyledClasses.selected} {
+    background-color: ${theme.blue};
+    color: #fff;
+  }
+`;
+
+const TabPanel = styled(TabPanelUnstyled)`
+  width: 100%;
+`;
+
+const TabsList = styled(TabsListUnstyled)`
+  min-width: 320px;
+  display: flex;
+  align-items: center;
+`;
 
 const ProfileSkillComponent: React.SFC<ProfileSkillComponentProps> = ({
   profileStatus,
@@ -60,141 +113,228 @@ const ProfileSkillComponent: React.SFC<ProfileSkillComponentProps> = ({
   profileIntroduceYourself,
   profileAddress,
   profileTag,
+  ProfileSkillLanguage,
+  ProfileSkillFramework,
+  ProfileSkillInfrastructure,
+  ProfileSkillUpstreamProcess,
+  ProfileSkillEnglishExperience,
+  ProfileSkillLanguageExperience,
 }) => {
   const { t } = useTranslation();
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
   return (
-    <Box
-      sx={{
-        background: "#ffffff",
-        px: "80px",
-        pb: "78px",
-        pt: "20px",
-      }}
-      className={styles.wrapBoxProfileSkill}
-    >
+    <Grid item xs={12} sm={12} lg={12} xl={12}>
       <Box
         sx={{
-          background: "#ffffff",
-          border: "1px solid #03BCDB",
-          borderRadius: "40px",
-          width: "240px",
-          height: "32px",
-          margin: "0 auto",
-          mb: "63px",
-          fontSize: "14px",
-          fontWeight: 700,
-          color: "#03BCDB",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          background: { xs: "unset", lg: "#ffffff" },
+          p: { xs: "0", lg: "20px 80px 78px 80px" },
+          m: { xs: "40px 0", lg: "0" },
         }}
-        className={styles.boxAddFriend}
       >
-        <img src="/assets/images/icon/ic_heart.png" alt="" />
+        <Box
+          sx={{
+            background: "#ffffff",
+            border: "1px solid #03BCDB",
+            borderRadius: "40px",
+            width: "240px",
+            height: "32px",
+            margin: "0 auto",
+            mb: "63px",
+            fontSize: "14px",
+            fontWeight: 700,
+            color: "#03BCDB",
+            display: { xs: "none", lg: "flex" },
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <img src="/assets/images/icon/ic_heart.png" alt="" />
 
-        <Box sx={{ ml: 1 }}>{t("profile:add-friend")}</Box>
-      </Box>
-      <Box sx={{ width: "100%" }} className={styles.boxTabProfile}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label={t("profile:profile")} {...a11yProps(0)} className={styles.tabProfile} />
-            <Tab label={t("profile:skill")} {...a11yProps(1)} className={styles.tabProfile} />
-          </Tabs>
+          <Box sx={{ ml: 1 }}>{t("profile:add-friend")}</Box>
         </Box>
-        <Box sx={{ border: "2px solid #03BCDB" }}>
-          <TabPanel value={value} index={0}>
-            <Box className={styles.boxContentTab}>
-              <Box className={styles.titleContentTab}>{t("profile:status")}</Box>
-              <Box
-                sx={{
-                  background: "#FF9458",
-                  borderRadius: "4px",
-                  color: "#ffffff",
-                  fontSize: "10px",
-                  fontWeight: 700,
-                  width: "138.13px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-                className={styles.boxContentStatus}
-              >
-                {profileStatus}
-              </Box>
-            </Box>
-            <Box className={styles.boxContentTab}>
-              <Box className={styles.titleContentTab}>{t("profile:one-thing")}</Box>
-              <Box className={styles.contentTab}>{profileOneThing}</Box>
-            </Box>
-            <Box className={styles.boxContentTab}>
-              <Box className={styles.titleContentTab}>{t("profile:self-introduction")}</Box>
-              <Box className={styles.contentTab}>{profileSelfIntroduction}</Box>
-            </Box>
-            <Box className={styles.boxContentTab}>
-              <Box className={styles.titleContentTab}>{t("profile:occupation")}</Box>
-              <Box className={styles.contentTab}>{profileOccupation}</Box>
-            </Box>
-            <Box className={styles.boxContentTab}>
-              <Box className={styles.titleContentTab}>{t("profile:position")}</Box>
-              <Box className={styles.contentTab}>{profilePosition}</Box>
-            </Box>
-            <Box className={styles.boxContentTab}>
-              <Box className={styles.titleContentTab}>{t("profile:employment-status")}</Box>
-              <Box className={styles.contentTab}>{profileEmploymentStatus}</Box>
-            </Box>
-            <Box className={styles.boxContentTab}>
-              <Box className={styles.titleContentTab}>{t("profile:introduce-yourself")}</Box>
-              <Box className={styles.contentTab}>{profileIntroduceYourself}</Box>
-            </Box>
-            <Box className={styles.boxContentTab}>
-              <Box className={styles.titleContentTab}>{t("profile:address")}</Box>
-              <Box className={styles.contentTab}>{profileAddress}</Box>
-            </Box>
-            <Box className={styles.boxContentTab}>
-              <Box className={styles.titleContentTab}>{t("profile:tag")}</Box>
-              <Box className={styles.contentTab}>
-                <Box sx={{ display: "flex" }}>
-                  {profileTag?.map((item) => (
-                    <Box
-                      sx={{
-                        background: "#F4FDFF",
-                        fontSize: "12px",
-                        mr: 1,
-                        px: 1,
-                      }}
-                    >
-                      {item}
-                    </Box>
-                  ))}
+        <Box sx={{ width: "100%" }}>
+          <TabsUnstyled defaultValue={0}>
+            <TabsList>
+              <Tab>{t("profile:profile")}</Tab>
+              <Tab>{t("profile:skill")}</Tab>
+            </TabsList>
+            <Box
+              sx={{
+                border: "2px solid #03BCDB",
+                p: "37px 42px",
+              }}
+            >
+              <TabPanel value={0}>
+                <Box
+                  sx={{
+                    display: { xs: "block", lg: "flex" },
+                    marginBottom: "35px",
+                    color: "#1A2944",
+                  }}
+                >
+                  <TitleContentTab>{t("profile:status")}</TitleContentTab>
+                  <Box
+                    sx={{
+                      background: "#FF9458",
+                      borderRadius: "4px",
+                      color: "#ffffff",
+                      fontSize: "10px",
+                      fontWeight: 700,
+                      width: "138.13px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {profileStatus}
+                  </Box>
                 </Box>
-                <Box sx={{ display: "flex", mt: 1 }}>
-                  {profileTag?.map((item) => (
-                    <Box
-                      sx={{
-                        background: "#F4FDFF",
-                        fontSize: "12px",
-                        mr: 1,
-                        px: 1,
-                      }}
-                    >
-                      {item}
+                <BoxContentTab>
+                  <TitleContentTab>{t("profile:one-thing")}</TitleContentTab>
+                  <ContentTab>{profileOneThing}</ContentTab>
+                </BoxContentTab>
+                <BoxContentTab>
+                  <TitleContentTab>{t("profile:self-introduction")}</TitleContentTab>
+                  <ContentTab>{profileSelfIntroduction}</ContentTab>
+                </BoxContentTab>
+                <BoxContentTab>
+                  <TitleContentTab>{t("profile:occupation")}</TitleContentTab>
+                  <ContentTab>{profileOccupation}</ContentTab>
+                </BoxContentTab>
+                <BoxContentTab>
+                  <TitleContentTab>{t("profile:position")}</TitleContentTab>
+                  <ContentTab>{profilePosition}</ContentTab>
+                </BoxContentTab>
+                <BoxContentTab>
+                  <TitleContentTab>{t("profile:employment-status")}</TitleContentTab>
+                  <ContentTab>{profileEmploymentStatus}</ContentTab>
+                </BoxContentTab>
+                <BoxContentTab>
+                  <TitleContentTab>{t("profile:introduce-yourself")}</TitleContentTab>
+                  <ContentTab>{profileIntroduceYourself}</ContentTab>
+                </BoxContentTab>
+                <BoxContentTab>
+                  <TitleContentTab>{t("profile:address")}</TitleContentTab>
+                  <ContentTab>{profileAddress}</ContentTab>
+                </BoxContentTab>
+                <BoxContentTab>
+                  <TitleContentTab>{t("profile:tag")}</TitleContentTab>
+                  <ContentTab>
+                    <Box sx={{ display: "flex" }}>
+                      {profileTag?.map((item) => (
+                        <Box
+                          sx={{
+                            background: "#F4FDFF",
+                            fontSize: "12px",
+                            mr: 1,
+                            px: 1,
+                          }}
+                        >
+                          {item}
+                        </Box>
+                      ))}
                     </Box>
-                  ))}
-                </Box>
-              </Box>
+                    <Box sx={{ display: "flex", mt: 1 }}>
+                      {profileTag?.map((item) => (
+                        <Box
+                          sx={{
+                            background: "#F4FDFF",
+                            fontSize: "12px",
+                            mr: 1,
+                            px: 1,
+                          }}
+                        >
+                          {item}
+                        </Box>
+                      ))}
+                    </Box>
+                  </ContentTab>
+                </BoxContentTab>
+              </TabPanel>
+              <TabPanel value={1}>
+                <BoxContentTab>
+                  <TitleContentTab>{t("profile:language")}</TitleContentTab>
+                  <ContentTab>
+                    {ProfileSkillLanguage?.map((item) => (
+                      <Box>
+                        <Box
+                          sx={{
+                            display: "flex",
+                          }}
+                        >
+                          <Box>
+                            {item.star?.map((star) => (
+                              <img src={star} alt="star" />
+                            ))}
+                          </Box>
+                          <Box
+                            sx={{
+                              mx: 1,
+                            }}
+                          >
+                            {item.language}
+                          </Box>
+
+                          <Box>
+                            {item.languageExperience} {t("profile:year")}
+                          </Box>
+                        </Box>
+                      </Box>
+                    ))}
+                  </ContentTab>
+                </BoxContentTab>
+                <BoxContentTab>
+                  <TitleContentTab>{t("profile:framework")}</TitleContentTab>
+                  <ContentTab>
+                    {ProfileSkillFramework?.map((item) => (
+                      <Box>
+                        <Box
+                          sx={{
+                            display: "flex",
+                          }}
+                        >
+                          <Box>
+                            {item.star?.map((star) => (
+                              <img src={star} alt="star" />
+                            ))}
+                          </Box>
+                          <Box
+                            sx={{
+                              mx: 1,
+                            }}
+                          >
+                            {item.language}
+                          </Box>
+
+                          <Box>
+                            {item.languageExperience} {t("profile:year")}
+                          </Box>
+                        </Box>
+                      </Box>
+                    ))}
+                  </ContentTab>
+                </BoxContentTab>
+                <BoxContentTab>
+                  <TitleContentTab>{t("profile:infrastructure")}</TitleContentTab>
+                  <ContentTab>{ProfileSkillInfrastructure}</ContentTab>
+                </BoxContentTab>
+                <BoxContentTab>
+                  <TitleContentTab>{t("profile:upstream-process")}</TitleContentTab>
+                  <ContentTab>{ProfileSkillUpstreamProcess}</ContentTab>
+                </BoxContentTab>
+                <BoxContentTab>
+                  <TitleContentTab>{t("profile:english-experience")}</TitleContentTab>
+                  <ContentTab>{ProfileSkillEnglishExperience}</ContentTab>
+                </BoxContentTab>
+                <BoxContentTab>
+                  <TitleContentTab>{t("profile:language-experience")}</TitleContentTab>
+                  <ContentTab>{ProfileSkillLanguageExperience}</ContentTab>
+                </BoxContentTab>
+              </TabPanel>
             </Box>
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            スキル
-          </TabPanel>
+          </TabsUnstyled>
         </Box>
       </Box>
-    </Box>
+    </Grid>
   );
 };
 export default ProfileSkillComponent;

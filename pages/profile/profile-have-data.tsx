@@ -2,9 +2,9 @@ import * as React from "react";
 import type { NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import ProfileComponent from "../../src/components/profile/ProfileComponent";
+import ProfileHaveDataComponent from "../../src/components/profile/ProfileHaveDataComponent";
 
-const Profile: NextPage = () => <ProfileComponent />;
+const Profile: NextPage = () => <ProfileHaveDataComponent />;
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {
