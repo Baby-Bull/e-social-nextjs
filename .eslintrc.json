@@ -31,10 +31,6 @@
       "error",
       "element"
     ],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
     "import/extensions": [
       "error",
       {
