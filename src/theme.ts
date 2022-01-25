@@ -15,6 +15,7 @@ declare module '@mui/material/styles' {
     navy: string;
     red: string;
     gd: string;
+    black: string;
   }
 
   interface ThemeOptions {
@@ -29,6 +30,7 @@ declare module '@mui/material/styles' {
     navy?: string;
     red?: string;
     gd?: string;
+    black?: string;
   }
 }
 
@@ -78,7 +80,8 @@ const theme = createTheme({
   cleam: "#FFF9E5",
   navy: "#1A2944",
   red: "#FF5454",
-  gd: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)"
+  gd: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)".big(),
+  black: "#262A30"
 });
 
 export default theme;

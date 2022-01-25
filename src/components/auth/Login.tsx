@@ -27,7 +27,12 @@ const LoginComponents = () => {
               {t("login:left.title")}
             </Box>
           </Typography>
-          <Box sx={{ textAlign: "center", mt: 4 }}>
+          <Box
+            sx={{
+              textAlign: "center",
+              mt: 4,
+            }}
+          >
             <img src="assets/images/img_working.png" alt="img_working" className={styles.imgWorking} />
           </Box>
 
@@ -60,7 +65,13 @@ const LoginComponents = () => {
                       01
                     </Box>
                   </Typography>
-                  <Box sx={{ display: "flex", alignItems: "center" }} className={styles.boxLeftContent01}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                    className={styles.boxLeftContent01}
+                  >
                     <Typography component="div">
                       <Box
                         sx={{
@@ -227,7 +238,6 @@ const LoginComponents = () => {
               </Box>
             </Button>
           </Box>
-
           <Box
             sx={{
               textAlign: "center",
@@ -252,7 +262,6 @@ const LoginComponents = () => {
               </Box>
             </Button>
           </Box>
-
           <Box
             sx={{
               textAlign: "center",

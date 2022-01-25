@@ -156,7 +156,12 @@ const BoxRecommendMemberComponent: React.SFC<recommendMemberProps> = ({
               my: "20px",
             }}
           >
-            <Box sx={{ display: "flex", mb: 1 }}>
+            <Box
+              sx={{
+                display: "flex",
+                mb: 1,
+              }}
+            >
               {recommendMemberTag?.map((item) => (
                 <Box
                   sx={{
@@ -239,7 +244,7 @@ const BoxRecommendMemberComponent: React.SFC<recommendMemberProps> = ({
                 height: "32px",
               }}
             >
-              <img src={img} alt="ic_heart_blue" />
+              <img src={img} alt="img" />
               <Box
                 sx={{
                   ml: 1,
@@ -262,7 +267,7 @@ const BoxRecommendMemberComponent: React.SFC<recommendMemberProps> = ({
                 height: "48px",
               }}
             >
-              {txtBtn}
+              {t(txtBtn)}
             </Button>
           </Box>
         </Box>
