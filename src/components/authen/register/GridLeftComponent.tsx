@@ -18,7 +18,6 @@ const Item = styled(Paper)`
     height: 64px;
   }
   ${(props) => props.theme.breakpoints.up("md")} {
-    height: 50px;
     padding-left: 20px;
     padding-right: 20px;
   }
@@ -95,6 +94,7 @@ const GridLeftComponent: React.SFC<GridLeftComponentProps> = ({ smAndUp }) => {
           spacing={{ xs: "20px", sm: 4 }}
           sx={{
             pt: ["40px", "57px"],
+            px: { sm: "32px" },
             width: ["90%", "92%"],
             height: "100%",
           }}
@@ -104,7 +104,7 @@ const GridLeftComponent: React.SFC<GridLeftComponentProps> = ({ smAndUp }) => {
               <TypoNumber>01</TypoNumber>
               <Box
                 sx={{
-                  pl: ["14px", "14px", "0"],
+                  pl: ["14px", "14px", 0],
                   color: "#000",
                   display: "flex",
                   flexDirection: ["column", "column", "row"],

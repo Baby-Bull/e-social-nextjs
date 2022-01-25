@@ -47,13 +47,13 @@ const RegisterComponents = () => {
                 {t("register:sub-title")}
               </Typography>
               <Box pt="63px">
-                <ButtonComponent mode="twitter">Twitterで登録</ButtonComponent>
+                <ButtonComponent props={{ mode: "twitter" }}>Twitterで登録</ButtonComponent>
               </Box>
               <Box pt="48px">
-                <ButtonComponent mode="google">Googleで登録</ButtonComponent>
+                <ButtonComponent props={{ mode: "google" }}>Googleで登録</ButtonComponent>
               </Box>
               <Box pt="48px">
-                <ButtonComponent mode="github">Githubで登録</ButtonComponent>
+                <ButtonComponent props={{ mode: "github" }}>Githubで登録</ButtonComponent>
               </Box>
 
               <Link href="/about" color="secondary">

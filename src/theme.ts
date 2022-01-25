@@ -9,6 +9,7 @@ declare module '@mui/material/styles' {
     whiteBlue: string;
     whiteGray: string;
     gray: string;
+    lightGray: string;
     green: string;
     orange: string;
     cleam: string;
@@ -16,6 +17,10 @@ declare module '@mui/material/styles' {
     red: string;
     gd: string;
     black: string;
+    filter: {
+      blue: string,
+      white: string
+    }
   }
 
   interface ThemeOptions {
@@ -24,6 +29,7 @@ declare module '@mui/material/styles' {
     whiteBlue?: string;
     whiteGray?: string;
     gray?: string;
+    lightGray?: string;
     green?: string;
     orange?: string;
     cleam?: string;
@@ -31,6 +37,10 @@ declare module '@mui/material/styles' {
     red?: string;
     gd?: string;
     black?: string;
+    filter?: {
+      blue?: string;
+      white?: string;
+    };
   }
 }
 
@@ -75,13 +85,18 @@ const theme = createTheme({
   whiteBlue: "#F4FDFF",
   whiteGray: "#F5F5F5",
   gray: "#989EA8",
+  lightGray: "#E6E6E6",
   green: "#1BD0B0",
   orange: "#FF9458",
   cleam: "#FFF9E5",
   navy: "#1A2944",
   red: "#FF5454",
-  gd: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)".big(),
-  black: "#262A30"
+  black: "#262A30",
+  gd: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)",
+  filter: {
+    blue: "brightness(0) saturate(100%) invert(68%) sepia(84%) saturate(4101%) hue-rotate(150deg) brightness(100%) contrast(98%)",
+    white: "brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(299deg) brightness(101%) contrast(100%)"
+  }
 });
 
 export default theme;
