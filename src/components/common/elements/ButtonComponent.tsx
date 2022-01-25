@@ -52,6 +52,14 @@ const ButtonBlue = styled(ButtonRounded)({
   color: "white",
 });
 
+const ButtonGradient = styled(ButtonRounded)({
+  background: theme.gd,
+  "&:hover": {
+    background: theme.gd,
+  },
+  color: "white",
+});
+
 function renderSwitch(mode, children, rest) {
   switch (mode) {
     case "green":
@@ -62,6 +70,8 @@ function renderSwitch(mode, children, rest) {
       return <ButtonBlue {...rest}>{children}</ButtonBlue>;
     case "cleam":
       return <ButtonCleam {...rest}>{children}</ButtonCleam>;
+    case "gradient":
+      return <ButtonGradient {...rest}>{children}</ButtonGradient>;
     default:
       return <ButtonDefault {...rest}>{children}</ButtonDefault>;
   }

@@ -6,6 +6,7 @@ import ContentComponent from "src/components/layouts/ContentComponent";
 
 import BannerComponent from "./blocks/BannerComponent";
 import MatchingComponent from "./blocks/MatchingComponent";
+import ModalMatchingComponent from "./blocks/ModalMatchingComponent";
 import NotificationComponent from "./blocks/NotificationsComponent";
 import RecommendCommunityComponent from "./blocks/RecommendCommunityComponent";
 import RecommendMembersComponent from "./blocks/RecommendMembersComponent";
@@ -43,6 +44,8 @@ const HomeIndexComponents = () => {
     ]);
   }, []);
 
+  const [openModal, setOpenModal] = useState(false);
+
   return (
     <ContentComponent>
       <Box
@@ -59,8 +62,15 @@ const HomeIndexComponents = () => {
 
         <RecommendCommunityComponent />
         {memberRecommends?.map((item, index) => (
-          <RecommendMembersComponent title={item?.title} dataRecommends={item?.data} key={index} />
+          <RecommendMembersComponent
+            title={item?.title}
+            dataRecommends={item?.data}
+            key={index}
+            setOpenMatchingModal={setOpenModal}
+          />
         ))}
+
+        {openModal && <ModalMatchingComponent open={openModal} setOpen={setOpenModal} />}
       </Box>
     </ContentComponent>
   );

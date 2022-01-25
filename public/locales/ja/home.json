@@ -28,5 +28,14 @@
         "review": "レビュー",
         "label-description": "話せること/聞きたいこと",
         "like-string": "話したい人リストに登録"
+    },
+    "modal-matching": {
+        "purpose": "目的",
+        "purpose-placeholder": "選択してください",
+        "frequency": "面接希望日",
+        "frequency-placeholder": "例）◯月◯日希望",
+        "message": "メッセージ",
+        "message-placeholder": "その他話したい内容などをご記載ください。",
+        "button": "リクエストを送信"
     }
 }
