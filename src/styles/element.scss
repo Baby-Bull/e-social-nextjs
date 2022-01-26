@@ -4,13 +4,13 @@
 
 @media screen and (max-width: 992px) {
   .content-pc {
-    display: none;
+    display: none!important;
   }
 }
 
 @media screen and (min-width: 993px) {
   .content-mobile {
-    display: none;
+    display: none!important;
   }
 }
 

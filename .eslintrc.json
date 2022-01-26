@@ -92,7 +92,9 @@
         "usePrettierrc": true
       }
     ],
-    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }]
+    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "consistent-return": 0,
+    "no-inner-declarations": 0
   },
   "settings": {
     "react": {

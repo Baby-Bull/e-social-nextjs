@@ -1,0 +1,238 @@
+.chatContainerPC {
+  height: calc(100vh - 64px);
+  width: 1039px;
+  max-width: 100%;
+  margin: auto;
+  background: white;
+  display: flex;
+  flex-direction: row;
+
+  .chatBoxLeft {
+    width: 359px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    @media screen and (max-width: 992px) {
+      width: 100vw;
+    }
+
+    :global {
+      .box-title {
+        height: 54px;
+        padding: 12px 9px;
+        border: 1px solid #E4E6EB;
+
+        .title {
+          font-size: 20px;
+          font-weight: 500;
+          color: #1A2944;
+        }
+      }
+
+      .box-search {
+        padding: 20px 19px;
+        border: 1px solid #E4E6EB;
+        border-top: none;
+
+        .input-search {
+          background: #F5F5F5;
+          border-radius: 12px;
+          padding: 12px;
+          box-shadow: none;
+          font-size: 14px;
+          font-weight: 400;
+          color: #989EA8;
+        }
+      }
+
+      .box-content {
+        overflow: auto;
+        flex-grow: 1;
+        border: 1px solid #E4E6EB;
+        border-top: none;
+      }
+    }
+  }
+
+  .chatBoxRight {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+
+    :global {
+      .box-title {
+        height: 54px;
+        border: 1px solid #E4E6EB;
+      }
+
+      .box-content {
+        flex-grow: 1;
+        border: 1px solid #E4E6EB;
+        border-top: none;
+        overflow-y: auto;
+        position: relative;
+
+        .box-chat {
+          border-top: 1px solid #E4E6EB;
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          left: 0;
+          padding: 8px 12px;
+
+          .paper-chat {
+            border: none;
+            box-shadow: none;
+
+            .input-chat {
+              background: #F6F7F9;
+              border-radius: 12px;
+              padding: 9px 20px;
+              box-shadow: none;
+              font-size: 14px;
+              font-weight: 400;
+              color: #989EA8;
+            }
+          }
+        }
+      }
+    }
+
+    .boxNoData {
+      display: flex;
+      align-items: center;
+      padding-top: 80px;
+      flex-direction: column;
+
+      :global {
+        .title {
+          white-space: pre-line;
+          text-align: center;
+          font-size: 24px;
+          font-weight: 700;
+          line-height: 34.75px;
+          margin-bottom: 40px;
+        }
+        .btn-find {
+          margin-top: 76px;
+          width: 280px;
+        }
+      }
+    }
+  }
+}
+
+.chatContainerMobile {
+  width: 100vw;
+  background: white;
+  height: calc(100vh - 48px);
+
+  :global {
+    .box-title {
+      height: 54px;
+      border-top: 1px solid #E4E6EB;
+      border-bottom: 1px solid #E4E6EB;
+      display: flex;
+      width: 100%;
+      align-items: center;
+      padding: 8px 19px;
+      font-size: 20px;
+      font-weight: 400;
+      color: "#1A2944";
+      margin-top: 8px;
+    }
+
+    .box-search {
+      padding: 20px 19px;
+      border-bottom: 1px solid #E4E6EB;
+
+      .input-search {
+        background: #F5F5F5;
+        border-radius: 12px;
+        padding: 12px;
+        box-shadow: none;
+        font-size: 14px;
+        font-weight: 400;
+        color: #989EA8;
+        height: 48px;
+      }
+    }
+  }
+  .boxNoData {
+    display: flex;
+    align-items: center;
+    padding-top: 45px;
+    flex-direction: column;
+
+    :global {
+      .title {
+        white-space: pre-line;
+        text-align: center;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 34.75px;
+        margin-bottom: 24px;
+      }
+
+      .btn-find {
+        margin-top: 32px;
+        width: 280px;
+      }
+    }
+  }
+}
+
+.boxThreads {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  :global {
+    .thread-item {
+      border-bottom: 1px solid #E4E6EB;
+      padding: 10px 19px;
+      display: flex;
+      align-items: center;
+
+      &.active {
+        background: #F5F5F5;
+      }
+
+      .avatar img{
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        margin-right: 16px;
+      }
+
+      .thread-content {
+        .name {
+          font-size: 14px;
+          font-weight: 700;
+          line-height: 21px;
+          color: #262A30;
+        }
+        .message-hide {
+          font-size: 14px;
+          font-weight: 400;
+          color: #989EA8;
+          width: 223px;
+          display: block;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+      }
+      .more-options {
+        margin-left: auto;
+
+        .MuiIconButton-root {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+}
