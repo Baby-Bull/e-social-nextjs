@@ -41,8 +41,11 @@ const a11yProps = (index: number) => ({
   id: `simple-tab-${index}`,
   "aria-controls": `simple-tabpanel-${index}`,
 });
+interface ChildTabCustomProps {
+  maxWidth?: string;
+}
 
-const ChildTabCustom = styled(Tab)({
+const ChildTabCustom = styled(Tab)<ChildTabCustomProps>(({ maxWidth }) => ({
   padding: 0,
   color: "black",
   fontWeight: 500,
@@ -59,17 +62,19 @@ const ChildTabCustom = styled(Tab)({
   "@media (min-width: 1440px)": {
     marginRight: "12px",
     fontSize: "21px",
-    minWidth: "18%",
-    maxWidth: "18%",
+    maxWidth: maxWidth || "230px",
+    "&.Mui-selected": {
+      textDecoration: "underline",
+    },
   },
-});
-
+}));
 interface TabComponentProps {
   dataId: number;
   dataChild: any;
+  maxWidth?: string;
 }
 
-const TabComponent: React.SFC<TabComponentProps> = ({ dataId, dataChild }) => {
+const TabComponent: React.SFC<TabComponentProps> = ({ dataId, dataChild, maxWidth }) => {
   const { t } = useTranslation();
 
   const [valueChildTab, setValueChildTab] = React.useState(0);
@@ -85,28 +90,25 @@ const TabComponent: React.SFC<TabComponentProps> = ({ dataId, dataChild }) => {
         value={valueChildTab}
         onChange={onChangeChildTab}
         aria-label="tab children"
-        TabIndicatorProps={{
-          style: {
-            backgroundColor: theme.blue,
-          },
-        }}
         sx={{
           mx: { sm: "42px" },
           mt: { sm: "38px" },
           borderBottom: [`1px solid ${theme.lightGray}`, "none"],
+          ".MuiTabs-indicator": {
+            backgroundColor: [theme.blue, "transparent"],
+          },
         }}
       >
-        {dataChild?.map(
-          (tab: { text: boolean | React.ReactChild | React.ReactFragment | React.ReactPortal }, index: number) => (
-            <ChildTabCustom
-              key={index.toString()}
-              color="success"
-              iconPosition="top"
-              label={tab.text}
-              {...a11yProps(index)}
-            />
-          ),
-        )}
+        {dataChild?.map((tab: any, index: number) => (
+          <ChildTabCustom
+            key={index.toString()}
+            maxWidth={maxWidth}
+            color="success"
+            iconPosition="top"
+            label={tab.text + (tab?.count ? `（${tab?.count}）` : "")}
+            {...a11yProps(index)}
+          />
+        ))}
       </Tabs>
 
       <TabPanel value={valueChildTab} index={0}>

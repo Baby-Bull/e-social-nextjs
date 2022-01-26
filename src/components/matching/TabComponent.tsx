@@ -118,11 +118,11 @@ const TabComponent: React.SFC<TabComponentProps> = ({ data }) => {
       </Tabs>
 
       <TabPanel value={valueParentTab} index={0}>
-        <ChildTabComponent dataId={1} dataChild={data[0]?.children} />
+        <ChildTabComponent dataId={1} dataChild={data[0]?.children} maxWidth="230px" />
       </TabPanel>
 
       <TabPanel value={valueParentTab} index={1}>
-        <ChildTabComponent dataId={2} dataChild={data[1]?.children} />
+        <ChildTabComponent dataId={2} dataChild={data[1]?.children} maxWidth="160px" />
       </TabPanel>
 
       <TabPanel value={valueParentTab} index={2}>

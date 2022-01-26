@@ -65,7 +65,7 @@ const GridLeftComponent: React.SFC<GridLeftComponentProps> = ({ smAndUp }) => {
       <Box
         sx={{
           pt: [5, 9],
-          pb: [5, "176px"],
+          pb: [5, "186px"],
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",

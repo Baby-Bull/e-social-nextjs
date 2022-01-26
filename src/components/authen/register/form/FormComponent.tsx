@@ -178,24 +178,32 @@ const FormRegisterComponents = () => {
           sx={{
             backgroundColor: theme.blue,
             textAlign: "right",
-            p: [0, "16px"],
+            p: [0, "27px"],
+            position: "relative",
           }}
         >
           <Fab
             variant="circular"
             onClick={handleTutorialDone}
             sx={{
+              position: "absolute",
+              top: ["7px", "20px"],
+              right: ["7px", "20px"],
               width: ["30px", "inherit"],
               height: ["30px", "inherit"],
               backgroundColor: "transparent",
               boxShadow: "unset",
+              "&:hover": {
+                backgroundColor: "transparent",
+                opacity: 0.8,
+              },
             }}
           >
             <Avatar
               variant="square"
               sx={{
-                width: ["20px", "50px"],
-                height: ["20px", "50px"],
+                width: ["24px", "56px"],
+                height: ["24px", "56px"],
                 display: "flex",
                 justifyContent: "center",
               }}
@@ -218,6 +226,8 @@ const FormRegisterComponents = () => {
                 display: "flex",
                 flexDirection: ["column-reverse", "row"],
                 alignItems: "center",
+                mt: ["53px", 0],
+                position: "relative",
               }}
             >
               <Box sx={{ maxWidth: 320, flex: 2 }}>
@@ -239,8 +249,9 @@ const FormRegisterComponents = () => {
                     >
                       <Button
                         sx={{
+                          fontSize: 10,
                           width: 130,
-                          height: 30,
+                          height: 20,
                           color: "white",
                           backgroundColor: theme.orange,
                           "&:hover": {
@@ -270,12 +281,11 @@ const FormRegisterComponents = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Box height={90}>
+                      <Box height={80}>
                         <Avatar
-                          variant="square"
                           sx={{
-                            width: ["80%", "60px"],
-                            height: "75%",
+                            width: ["56px", "56px"],
+                            height: ["56px", "56px"],
                             display: "flex",
                             justifyContent: "center",
                           }}
@@ -462,6 +472,7 @@ const FormRegisterComponents = () => {
               </Box>
 
               <Typography
+                component="span"
                 sx={{
                   flex: 1,
                   pl: [0, 3],
@@ -470,8 +481,42 @@ const FormRegisterComponents = () => {
                   fontWeight: 700,
                 }}
               >
-                {t("register:form.tutorial.description")}
+                <Typography
+                  component="span"
+                  sx={{
+                    display: ["none", "flex"],
+                    flexDirection: "column",
+                  }}
+                >
+                  <Typography component="span" fontWeight={700} fontSize={[16, 20]}>
+                    まずは
+                  </Typography>
+                  <Typography component="span" fontWeight={700} fontSize={[16, 20]}>
+                    マッチングリクエスト
+                  </Typography>
+                  <Typography component="span" fontWeight={700} fontSize={[16, 20]}>
+                    を送って気になる人と
+                  </Typography>
+                  <Typography component="span" fontWeight={700} fontSize={[16, 20]}>
+                    マッチしてみよう！
+                  </Typography>
+                </Typography>
+                <Typography component="span" display={["inherit", "none"]}>
+                  {t("register:form.tutorial.description")}
+                </Typography>
               </Typography>
+
+              <Box
+                sx={{
+                  display: ["none", "inherit"],
+                  position: "absolute",
+                  height: "30%",
+                  bottom: "8%",
+                  right: "28%",
+                }}
+              >
+                <img src="/assets/images/svg/line-white.svg" alt="line-white" />
+              </Box>
             </Box>
           </DialogContent>
         ) : (
@@ -484,6 +529,7 @@ const FormRegisterComponents = () => {
             >
               <Box
                 sx={{
+                  pt: ["63px", "85px"],
                   display: "flex",
                   color: "white",
                   flexDirection: "column",
@@ -491,7 +537,7 @@ const FormRegisterComponents = () => {
                   alignItems: "center",
                 }}
               >
-                <Typography fontWeight={700} fontSize={[16, 20]}>
+                <Typography pb="10px" fontWeight={700} fontSize={[16, 20]}>
                   マッチングが成立したら、メッセージで日程調整をして
                 </Typography>
                 <Typography fontWeight={700} fontSize={[16, 20]}>
@@ -531,7 +577,7 @@ const FormRegisterComponents = () => {
                   height: "56px",
                 }}
               >
-                {t("register:form.submit")}
+                {t("register:form.tutorial.button-redirect-home")}
               </ButtonComponent>
             </DialogActions>
           </React.Fragment>

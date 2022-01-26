@@ -42,6 +42,7 @@ const RegisterComponents = () => {
                   pt: "20px",
                   fontWeight: 300,
                   color: theme.navy,
+                  textAlign: "center",
                 }}
               >
                 {t("register:sub-title")}
@@ -56,7 +57,13 @@ const RegisterComponents = () => {
                 <ButtonComponent props={{ mode: "github" }}>Githubで登録</ButtonComponent>
               </Box>
 
-              <Link href="/about" color="secondary">
+              <Link
+                href="/about"
+                color="secondary"
+                sx={{
+                  textDecoration: "none",
+                }}
+              >
                 <Box
                   sx={{
                     pt: ["48px", "102px"],
