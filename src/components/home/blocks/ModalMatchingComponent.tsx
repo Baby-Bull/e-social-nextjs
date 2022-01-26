@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import React, { useState } from "react";
 
-import ButtonComponent from "src/components/common/ButtonComponent";
+import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import { Field } from "src/components/common/Form/_Field";
 import styles from "src/components/home/home.module.scss";
 
