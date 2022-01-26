@@ -1,58 +1,88 @@
 import React from "react";
-import { Link } from "@mui/material";
+import { Link, Box } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import { styled } from "@mui/material/styles";
 
-import styles from "src/components/layouts/layout.module.scss";
+const TagA = styled(Link)`
+  color: #ffffff;
+  text-decoration: none;
+  ${(props) => props.theme.breakpoints.up("xs")} {
+    margin-left: 0;
+    margin-right: 45px;
+  }
 
+  ${(props) => props.theme.breakpoints.up("lg")} {
+    margin-left: 0;
+  }
+`;
 const FooterComponent = () => {
   const { t } = useTranslation();
   return (
-    <div className={styles.footer}>
-      <div className={styles.boxFooterContent}>
-        <div className={styles.footerContentLeft}>
-          <div className={styles.contentTopLeft}>
-            <Link href="/#" color="secondary">
+    <Box sx={{ backgroundColor: "#1A2944" }}>
+      <Box
+        sx={{
+          display: { xs: "block", lg: "flex" },
+          justifyContent: "space-between",
+          p: { xs: "24px 28px", lg: "40px 200px 20px 200px" },
+          color: "#FFFFFF",
+        }}
+      >
+        <Box>
+          <Box
+            sx={{
+              fontWeight: 700,
+              fontSize: "14px",
+            }}
+          >
+            <TagA href="/#" color="secondary">
               {t("footer.signin")}
-            </Link>
-            <Link href="/#" color="secondary">
+            </TagA>
+            <TagA href="/#" color="secondary">
               {t("footer.signout")}
-            </Link>
-          </div>
-          <div className={styles.contentBottomLeft}>
-            <div className={styles.contentBottomLeftMenu}>
-              <div>
-                <Link href="/#" color="secondary">
+            </TagA>
+          </Box>
+          <Box
+            sx={{
+              mt: { xs: "30px", lg: "97px" },
+              display: "flex",
+            }}
+          >
+            <Box sx={{ display: { xs: "block", lg: "flex" }, fontSize: "12px" }}>
+              <Box sx={{ mb: { xs: "12px", lg: "0" } }}>
+                <TagA href="/#" color="secondary">
                   {t("footer.terms-service")}
-                </Link>
-              </div>
-              <div>
-                <Link href="/#" color="secondary">
+                </TagA>
+              </Box>
+              <Box>
+                <TagA href="/#" color="secondary">
                   {t("footer.privacy-policy")}
-                </Link>
-              </div>
-            </div>
-            <div className={styles.contentBottomLeftMenu}>
-              <div>
-                <Link href="/#" color="secondary">
+                </TagA>
+              </Box>
+            </Box>
+            <Box sx={{ display: { xs: "block", lg: "flex" }, fontSize: "12px" }}>
+              <Box sx={{ mb: { xs: "12px", lg: "0" } }}>
+                <TagA href="/#" color="secondary">
                   {t("footer.inquiry")}
-                </Link>
-              </div>
-              <div>
-                <Link href="/#" color="secondary">
+                </TagA>
+              </Box>
+              <Box>
+                <TagA href="/#" color="secondary">
                   {t("footer.operating-company")}
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className={styles.footerContentRight}>
-          <div className={styles.contentTopRight}>
+                </TagA>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+        <Box sx={{ mt: { xs: "39px", lg: "0" } }}>
+          <Box sx={{ textAlign: { xs: "center", lg: "right" } }}>
             <img src="/assets/images/logo/logo_footer.png" alt="logo" />
-          </div>
-          <div className={styles.contentBottomRight}>Copyright © AilaB inc. All Rights Reserved.</div>
-        </div>
-      </div>
-    </div>
+          </Box>
+          <Box sx={{ mt: { xs: "5px", lg: "77px" }, fontSize: "12px", textAlign: { xs: "center", lg: "right" } }}>
+            Copyright © AilaB inc. All Rights Reserved.
+          </Box>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 export default FooterComponent;

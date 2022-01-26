@@ -91,7 +91,7 @@ function renderSwitch(children, props, rest) {
           props={{ bgColor: "#101010" }}
           disableElevation
           startIcon={
-            <Avatar variant="square" sx={{ width: "100%", height: "100%" }} src="/assets/images/svg/github.svg" />
+            <Avatar variant="square" sx={{ width: "100%", height: "100%" }} src="/assets/images/logo/logo_github.png" />
           }
         >
           {children}

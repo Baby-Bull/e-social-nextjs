@@ -2,9 +2,9 @@ import * as React from "react";
 import type { NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import LoginComponents from "src/components/auth/Login";
+import LoginComponent from "src/components/authen/login/LoginComponent";
 
-const Login: NextPage = () => <LoginComponents />;
+const Login: NextPage = () => <LoginComponent />;
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {

@@ -154,8 +154,12 @@ const ProfileSkillComponent: React.SFC<ProfileSkillComponentProps> = ({
         <Box sx={{ width: "100%" }}>
           <TabsUnstyled defaultValue={0}>
             <TabsList>
-              <Tab>{t("profile:profile")}</Tab>
-              <Tab>{t("profile:skill")}</Tab>
+              <Tab sx={{ width: { xs: "169px", lg: "240px" }, height: { xs: "45.46px", lg: "56px" } }}>
+                {t("profile:profile")}
+              </Tab>
+              <Tab sx={{ width: { xs: "169px", lg: "240px" }, height: { xs: "45.46px", lg: "56px" } }}>
+                {t("profile:skill")}
+              </Tab>
             </TabsList>
             <Box
               sx={{
