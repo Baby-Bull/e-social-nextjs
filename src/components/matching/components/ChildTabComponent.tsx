@@ -37,12 +37,10 @@ const TabPanel = (props: TabPanelProps) => {
   );
 };
 
-const a11yProps = (index: number) => {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
+const a11yProps = (index: number) => ({
+  id: `simple-tab-${index}`,
+  "aria-controls": `simple-tabpanel-${index}`,
+});
 
 const ChildTabCustom = styled(Tab)({
   padding: 0,

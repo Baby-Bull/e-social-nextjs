@@ -2,6 +2,7 @@ import * as React from "react";
 import { Box, Tabs, Tab, Typography, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
+
 import theme from "src/theme";
 
 import EmptyMatchingComponent from "./components/EmptyMatchingComponent";
@@ -29,12 +30,10 @@ const TabPanel = (props: TabPanelProps) => {
   );
 };
 
-const a11yProps = (index: number) => {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
+const a11yProps = (index: number) => ({
+  id: `simple-tab-${index}`,
+  "aria-controls": `simple-tabpanel-${index}`,
+});
 
 const TabCustom = styled(Tab)({
   minWidth: "20%",

@@ -81,7 +81,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: ["Noto Sans", "sans-serif"].join(","),
+    fontFamily: ["Noto Sans JP", "sans-serif"].join(","),
   },
   lightBlue: "#A9F3FF",
   blue: "#03BCDB",
