@@ -41,7 +41,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
         <Grid item xs={12} sm={12} lg={12} xl={12}>
           <Box
             sx={{
-              display: { xs: "none", xl: "block" },
+              display: { xs: "none", lg: "block" },
             }}
           >
             <Box

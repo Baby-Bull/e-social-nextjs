@@ -1,6 +1,6 @@
 {
   "left": {
-    "title": "Rebaseからのお願い",
+    "title": "Goodhubからのお願い",
     "box-01": {
       "left": "エンジニアonly",
       "right": "※エージェント様などののご登録はご遠慮ください"
@@ -16,5 +16,8 @@
     "register-twitter": "Twitterで登録",
     "click-at": "アカウントをお持ちの方は",
     "register": "こちら"
-  }
+  },
+  "cannot-login": "ログインができないかたは",
+  "contact-us": "からお問い合わせください。",
+  "register": "こちら"
 }
