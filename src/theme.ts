@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
-import { createTheme } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
+import { createTheme } from "@mui/material/styles";
+import { red } from "@mui/material/colors";
 
-declare module '@mui/material/styles' {
+declare module "@mui/material/styles" {
   interface Theme {
     lightBlue: string;
     blue: string;
@@ -18,9 +18,9 @@ declare module '@mui/material/styles' {
     gd: string;
     black: string;
     filter: {
-      blue: string,
-      white: string
-    }
+      blue: string;
+      white: string;
+    };
   }
 
   interface ThemeOptions {
@@ -47,38 +47,41 @@ declare module '@mui/material/styles' {
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#556cd6',
+      main: "#556cd6",
     },
     secondary: {
-      main: '#19857b',
+      main: "#19857b",
     },
     error: {
       main: red.A400,
     },
   },
   components: {
-    MuiButton: { 
+    MuiButton: {
       styleOverrides: {
-        "root": {
+        root: {
           "&.Mui-disabled": {
-            "background": "#F5F5F5",
-            "color": "#989EA8"
-          }
+            background: "#F5F5F5",
+            color: "#989EA8",
+          },
         },
         sizeSmall: {
           fontSize: "10px",
           height: "20px",
           lineHeight: "24px",
-          fontWeight: 700
+          fontWeight: 700,
         },
         sizeMedium: {
           fontSize: "16px",
           height: "48px",
           lineHeight: "24px",
-          fontWeight: 700
-        }
-      } 
-    }
+          fontWeight: 700,
+        },
+      },
+    },
+  },
+  typography: {
+    fontFamily: ["Noto Sans", "sans-serif"].join(","),
   },
   lightBlue: "#A9F3FF",
   blue: "#03BCDB",
@@ -95,8 +98,9 @@ const theme = createTheme({
   gd: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)",
   filter: {
     blue: "brightness(0) saturate(100%) invert(68%) sepia(84%) saturate(4101%) hue-rotate(150deg) brightness(100%) contrast(98%)",
-    white: "brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(299deg) brightness(101%) contrast(100%)"
-  }
+    white:
+      "brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(299deg) brightness(101%) contrast(100%)",
+  },
 });
 
 export default theme;
