@@ -170,21 +170,7 @@ export const Field: React.SFC<FieldProps> = ({ required, id, label, placeholder,
               alignItems: "flex-start",
             }}
           >
-            <Typography component="span">{label}</Typography>
-
-            <Chip
-              label="必須"
-              sx={{
-                display: required ? "" : "none",
-                ml: 1,
-                width: "54px",
-                height: "22px",
-                fontSize: 12,
-                fontWeight: 600,
-                color: "white",
-                backgroundColor: theme.orange,
-              }}
-            />
+            {label}
           </Typography>
 
           <SelectCustom
