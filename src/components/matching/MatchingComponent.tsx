@@ -49,6 +49,7 @@ class MatchingComponent extends React.Component<IProps, IState> {
                   コメントがここに全文表示されますコメントがここに全文表示されます。`,
                 },
               ],
+              count: 6,
             },
             {
               text: "承認済みリクエスト",
@@ -152,6 +153,7 @@ class MatchingComponent extends React.Component<IProps, IState> {
                   is_cancel: true,
                 },
               ],
+              count: 4,
             },
             {
               text: "マッチング済み",

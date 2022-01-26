@@ -46,7 +46,7 @@ const InputCustom = styled(InputBase)({
     },
     "@media (min-width: 769px)": {
       width: 360,
-      height: 28,
+      height: 18,
     },
     "&:focus": {
       boxShadow: `${theme.blue} 0 0 0 0.1rem`,
@@ -74,7 +74,7 @@ const SelectCustom = styled(Select)({
       height: 40,
     },
     "@media (min-width: 769px)": {
-      height: 28,
+      height: 18,
     },
     "&:focus": {
       boxShadow: `${theme.blue} 0 0 0 0.1rem`,
@@ -164,11 +164,27 @@ export const Field: React.SFC<FieldProps> = ({ required, id, label, placeholder,
           <Typography
             sx={{
               mt: 2,
-              mx: 1,
+              mb: "5px",
               textAlign: "left",
+              display: "flex",
+              alignItems: "flex-start",
             }}
           >
-            {label}
+            <Typography component="span">{label}</Typography>
+
+            <Chip
+              label="必須"
+              sx={{
+                display: required ? "" : "none",
+                ml: 1,
+                width: "54px",
+                height: "22px",
+                fontSize: 12,
+                fontWeight: 600,
+                color: "white",
+                backgroundColor: theme.orange,
+              }}
+            />
           </Typography>
 
           <SelectCustom
@@ -316,6 +332,13 @@ export const Field: React.SFC<FieldProps> = ({ required, id, label, placeholder,
         <FormGroup>
           <FormControlLabel
             label={label}
+            sx={{
+              mr: 0,
+              fontSize: "12px",
+              "& .MuiFormControlLabel-label": {
+                fontSize: 12,
+              },
+            }}
             control={
               <Checkbox
                 defaultChecked
