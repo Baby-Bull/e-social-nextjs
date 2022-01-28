@@ -10,6 +10,7 @@ interface TopProfileComponentProps {
   cumulativMatching: number;
   participatingCommunity: number;
   lastLogin: number;
+  myProfile: boolean;
 }
 
 const BoxInfoProfile = styled(Box)`
@@ -33,12 +34,29 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
   cumulativMatching,
   participatingCommunity,
   lastLogin,
+  myProfile,
 }) => {
   const { t } = useTranslation();
   return (
     <Box>
       <Grid container>
         <Grid item xs={12} sm={12} lg={12} xl={12}>
+          <Box sx={{ display: myProfile ? { xs: "block", lg: "none" } : "none" }}>
+            <Button
+              sx={{
+                background: theme.blue,
+                width: "100%",
+                borderRadius: "12px",
+                mt: "28px",
+                color: "#fff",
+                fontSize: "16px",
+                fontWeight: 700,
+                lineHeight: "24px",
+              }}
+            >
+              {t("profile:profile-editing")}
+            </Button>
+          </Box>
           <Box
             sx={{
               display: { xs: "none", lg: "block" },
@@ -48,6 +66,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
               sx={{
                 textAlign: "right",
                 mb: 1,
+                display: myProfile ? "none" : "inherit",
               }}
             >
               <Button
@@ -58,6 +77,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                   border: "1px solid #989EA8",
                   width: "240px",
                   height: "40px",
+                  fontSize: "14px",
                 }}
               >
                 <Box
@@ -79,10 +99,104 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
             </Box>
             <Box
               sx={{
+                mb: "22px",
+                display: myProfile ? "flex" : "none",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                sx={{
+                  background: "#ffffff",
+                  boxShadow: "unset",
+                  border: "1px solid #55ACEE",
+                  color: "#55ACEE",
+                  width: "240px",
+                  height: "40px",
+                  fontSize: "14px",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    textAlign: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <img src="/assets/images/icon/ic_twitter.png" alt="" width="18" height="13.71" />
+                  <Box
+                    sx={{
+                      ml: 1,
+                    }}
+                  >
+                    {t("profile:twitter")}
+                  </Box>
+                </Box>
+              </Button>
+
+              <Button
+                sx={{
+                  background: "#ffffff",
+                  boxShadow: "unset",
+                  border: "1px solid #395185",
+                  color: "#395185",
+                  width: "240px",
+                  height: "40px",
+                  mx: "40px",
+                  fontSize: "14px",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    textAlign: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <img src="/assets/images/icon/ic_facebook.png" alt="" width="16" height="15.74" />
+                  <Box
+                    sx={{
+                      ml: 1,
+                    }}
+                  >
+                    {t("profile:facebook")}
+                  </Box>
+                </Box>
+              </Button>
+
+              <Button
+                sx={{
+                  background: "#ffffff",
+                  color: "#989EA8",
+                  boxShadow: "unset",
+                  border: "1px solid #989EA8",
+                  width: "240px",
+                  height: "40px",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    textAlign: "center",
+                  }}
+                >
+                  <img src="/assets/images/icon/ic_link.png" alt="" width="20" height="22" />
+                  <Box
+                    sx={{
+                      ml: 1,
+                    }}
+                  >
+                    {t("profile:url")}
+                  </Box>
+                </Box>
+              </Button>
+            </Box>
+            <Box
+              sx={{
                 background: "#ffffff",
                 px: "80px",
                 pt: "45px",
                 pb: "78px",
+                position: "relative",
               }}
             >
               <Box
@@ -108,9 +222,10 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                       height: "160px",
                     }}
                   />
-                  <Box>
+                  <Box sx={{ display: myProfile ? "none" : "block" }}>
                     {t("profile:login")}：{lastLogin} {t("profile:minutes-ago")}
                   </Box>
+                  <Box sx={{ display: myProfile ? "block" : "none" }}>{t("profile:login-2")}</Box>
                 </Box>
                 <Box
                   sx={{
@@ -152,11 +267,35 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                         <img src="/assets/images/icon/ic_github.png" alt="ic_git" />
                       </Box>
                     </Box>
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        right: 22,
+                        top: 34,
+                        display: myProfile ? { xs: "none", lg: "block" } : "none",
+                      }}
+                    >
+                      <Button
+                        sx={{
+                          background: theme.blue,
+                          color: "#fff",
+                          fontWeight: 700,
+                          lineHeight: "23.17",
+                          width: "96px",
+                          height: "40px",
+                          dispaly: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <img src="/assets/images/icon/ic_edit.png" alt="ic_edit" />
+                        <Box sx={{ ml: "2px" }}>{t("profile:edit")}</Box>
+                      </Button>
+                    </Box>
                   </Box>
                   <Box
                     sx={{
                       mt: "13px",
-                      display: "flex",
+                      display: myProfile ? "none" : "flex",
                     }}
                   >
                     <Button
@@ -175,6 +314,30 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                     <Box>
                       <img src="/assets/images/icon/ic_question_mark.png" alt="ic_question_mark" />
                     </Box>
+                  </Box>
+                  <Box
+                    sx={{
+                      mt: "13px",
+                      display: myProfile ? "flex" : "none",
+                      position: "relative",
+                    }}
+                  >
+                    <Button
+                      sx={{
+                        boxShadow: "unset",
+                        width: "280px",
+                        height: "48px",
+                        background: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)",
+                        borderRadius: "12px",
+                        color: "#ffffff",
+                        mr: "9.3px",
+                      }}
+                    >
+                      <Box>佐藤太郎さんのキャラクター</Box>
+                      <Box sx={{ position: "absolute", top: 1, right: 7 }}>
+                        <img src="/assets/images/icon/ic_question_2.png" alt="ic_question_mark" />
+                      </Box>
+                    </Button>
                   </Box>
                   <Box
                     sx={{
@@ -281,6 +444,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                     position: "absolute",
                     top: 51,
                     right: 10,
+                    display: myProfile ? "none" : "block",
                   }}
                 >
                   <img src="/assets/images/icon/ic_heart.png" alt="ic_heart" />
@@ -483,7 +647,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
 
             <Box
               sx={{
-                display: "flex",
+                display: myProfile ? "none" : "flex",
                 justifyContent: "center",
                 mt: "40px",
               }}
@@ -511,6 +675,100 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                     }}
                   >
                     {t("profile:url")}
+                  </Box>
+                </Box>
+              </Button>
+            </Box>
+            <Box
+              sx={{
+                display: myProfile ? "flex" : "none",
+                justifyContent: "center",
+                mt: "40px",
+              }}
+            >
+              <Button
+                sx={{
+                  background: "#ffffff",
+                  color: "#55ACEE",
+                  boxShadow: "unset",
+                  border: "1px solid #55ACEE",
+                  width: "28.57%",
+                  height: "40px",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    textAlign: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <img src="/assets/images/icon/ic_twitter.png" alt="" width="18" height="13.94" />
+                  <Box
+                    sx={{
+                      ml: 1,
+                      fontSite: "14px",
+                    }}
+                  >
+                    {t("profile:share")}
+                  </Box>
+                </Box>
+              </Button>
+              <Button
+                sx={{
+                  background: "#ffffff",
+                  color: "#395185",
+                  boxShadow: "unset",
+                  border: "1px solid #395185",
+                  width: "28.57%",
+                  height: "40px",
+                  mx: "24px",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    textAlign: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <img src="/assets/images/icon/ic_facebook.png" alt="" width="16" height="16" />
+                  <Box
+                    sx={{
+                      ml: 1,
+                      fontSize: "14px",
+                    }}
+                  >
+                    {t("profile:share")}
+                  </Box>
+                </Box>
+              </Button>
+              <Button
+                sx={{
+                  background: "#ffffff",
+                  color: "#989EA8",
+                  boxShadow: "unset",
+                  border: "1px solid #989EA8",
+                  width: "28.57%",
+                  height: "40px",
+                  fontSize: "14px",
+                }}
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    textAlign: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <img src="/assets/images/icon/ic_link.png" alt="" width="20" height="22" />
+                  <Box
+                    sx={{
+                      ml: 1,
+                      fontSize: "14px",
+                    }}
+                  >
+                    {t("profile:copy")}
                   </Box>
                 </Box>
               </Button>

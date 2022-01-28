@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
 import { useTranslation } from "next-i18next";
 
@@ -33,14 +33,14 @@ import {
   ProfileSkillLanguageExperience,
 } from "./mockData";
 
-const ProfileNoDataComponent = () => {
+const MyProfileComponent = () => {
   const { t } = useTranslation();
 
   return (
     <ContentComponent>
       <Box
         sx={{
-          p: { xs: "0 20px", lg: "140px 120px 120px 120px" },
+          p: { xs: "0 20px", lg: "70px 120px 120px 120px" },
         }}
       >
         <TopProfileComponent
@@ -48,7 +48,7 @@ const ProfileNoDataComponent = () => {
           cumulativMatching={cumulativMatching}
           participatingCommunity={participatingCommunity}
           lastLogin={lastLogin}
-          myProfile={false}
+          myProfile
         />
         <ProfileSkillComponent
           profileStatus={profileStatus}
@@ -134,36 +134,7 @@ const ProfileNoDataComponent = () => {
           ))}
         </Box>
       </Box>
-      <Box
-        sx={{
-          background: "#F5F5F5",
-          display: "flex",
-          justifyContent: "center",
-          position: "fixed",
-          top: "91.5%",
-          opacity: 0.8,
-          width: "100%",
-        }}
-      >
-        <Button
-          sx={{
-            width: "280px",
-            height: "56px",
-            fontSize: "16px",
-            fontWeight: 700,
-            color: "#ffffff",
-            display: "flex",
-            alignItems: "center",
-            textAlign: "center",
-            lineHeight: "24px",
-            background: "#1BD0B0",
-            borderRadius: "40px",
-          }}
-        >
-          {t("profile:send-request")}
-        </Button>
-      </Box>
     </ContentComponent>
   );
 };
-export default ProfileNoDataComponent;
+export default MyProfileComponent;

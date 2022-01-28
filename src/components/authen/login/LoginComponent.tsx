@@ -5,8 +5,7 @@ import { useTranslation } from "next-i18next";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import theme from "src/theme";
-
-import GridLeftComponent from "./GridLeftComponent";
+import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 
 const LoginComponent = () => {
   const { t } = useTranslation();

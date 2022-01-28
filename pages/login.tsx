@@ -8,7 +8,7 @@ const Login: NextPage = () => <LoginComponent />;
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ["common", "login"])),
+    ...(await serverSideTranslations(locale, ["common", "login", "register"])),
   },
 });
 
