@@ -49,6 +49,7 @@ const ProfileHaveDataComponent = () => {
           cumulativMatching={cumulativMatching}
           participatingCommunity={participatingCommunity}
           lastLogin={lastLogin}
+          myProfile={false}
         />
         <ProfileSkillComponent
           profileStatus={profileStatus}
