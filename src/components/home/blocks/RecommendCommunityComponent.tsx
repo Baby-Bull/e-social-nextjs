@@ -32,18 +32,23 @@ const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data 
   return (
     <Grid item xs={12} className={classNames(styles.boxRecommend, "box-recommend-community")}>
       <Box className={styles.boxRecommendCommunity}>
-        <div className="label-number-of-register">
-          {replaceLabelByTranslate(t("home:box-community-recommend.number-of-register"), data?.numberOfRegister)}
-        </div>
-
+        <Grid container style={{ padding: 10 }}>
+          <Grid item xs={9}>
+            <div className="label-number-of-register">
+              {replaceLabelByTranslate(t("home:box-community-recommend.number-of-register"), data?.numberOfRegister)}
+            </div>
+          </Grid>
+          <Grid item xs={3}>
+            <div className="label-number-of-members">
+              {replaceLabelByTranslate(t("home:box-community-recommend.number-of-members"), data?.numberOfMembers)}
+            </div>
+          </Grid>
+        </Grid>
         <div className="image-community">
-          <img src={data?.image} alt="community" />
+          <img className="image" src={data?.image} alt="community" />
         </div>
         <p className="name">{data?.name}</p>
-
-        <p className="label-number-of-members">
-          {replaceLabelByTranslate(t("home:box-community-recommend.number-of-members"), data?.numberOfMembers)}
-        </p>
+        <p className="description">{data?.description}</p>
 
         <div className="tags">
           <ul>
@@ -52,11 +57,11 @@ const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data 
             ))}
           </ul>
         </div>
-        <p className="description">{data?.description}</p>
-
-        <ButtonComponent mode={HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[data?.status]?.mode} fullWidth>
-          {HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[data?.status]?.label}
-        </ButtonComponent>
+        <div className="button">
+          <ButtonComponent mode={HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[data?.status]?.mode} fullWidth>
+            {HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[data?.status]?.label}
+          </ButtonComponent>
+        </div>
       </Box>
     </Grid>
   );

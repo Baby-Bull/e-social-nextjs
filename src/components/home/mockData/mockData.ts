@@ -37,7 +37,7 @@ export const dataMatchingMockData = {
 };
 
 const itemRecommendCommunityMockData = {
-  image: "/assets/images/home_page/recommend_community.svg",
+  image: "/assets/images/participating_community/community_sample.png",
   numberOfRegister: 6,
   name: "コミュニティの名前がここに入ります。最大文字数40文字です。コミュニティの名前が",
   numberOfMembers: 0,
