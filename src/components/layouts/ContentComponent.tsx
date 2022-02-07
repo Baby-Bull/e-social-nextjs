@@ -7,8 +7,9 @@ import HeaderComponent from "src/components/layouts/HeaderComponent";
 
 interface IContentComponentProps {
   children: any;
+  showFooter?: boolean;
 }
-const ContentComponent: React.SFC<IContentComponentProps> = ({ children }) => (
+const ContentComponent: React.SFC<IContentComponentProps> = ({ children, showFooter = true }) => (
   <Box
     sx={{
       backgroundColor: "#F4FDFF",
@@ -19,7 +20,7 @@ const ContentComponent: React.SFC<IContentComponentProps> = ({ children }) => (
     </Head>
     <HeaderComponent />
     {children}
-    <FooterComponent />
+    {showFooter && <FooterComponent />}
   </Box>
 );
 export default ContentComponent;
