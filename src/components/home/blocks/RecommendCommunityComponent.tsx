@@ -30,7 +30,7 @@ const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data 
   const { t } = useTranslation();
 
   return (
-    <Grid item xs={12} className={classNames(styles.boxRecommend, "box-recommend-community")}>
+    <Grid item xs={12} className={classNames(styles.boxRecommend, "box-recommend-community")} style={{ padding: 0 }}>
       <Box className={styles.boxRecommendCommunity}>
         <Grid container style={{ padding: 10 }}>
           <Grid item xs={9}>
