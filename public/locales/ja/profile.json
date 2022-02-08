@@ -49,5 +49,20 @@
   "profile-editing": "プロフィール編集",
   "share": "共有",
   "copy": "コピー",
-  "login-2": "ログイン中"
+  "login-2": "ログイン中",
+  "name": "お名前",
+  "form": {
+    "placeholder": {
+      "facebook": "FacebookのプロフィールURL",
+      "github": "GitHubのプロフィールURL",
+      "twitter": "TwitterのプロフィールURL",
+      "one-thing": "40文字以内で記入してください",
+      "self-introduction": "1000文字以内で記入してください",
+      "position": "例）チームリーダー、プロジェクトリーダー等",
+      "introduce-yourself": "100文字以内で記入してください",
+      "tag": "言語、役職など２種類以上設定してください",
+      "please-select": "選択してください"
+    },
+    "save": "保存する"
+  }
 }

@@ -1,4 +1,4 @@
-import { Box, Button, Avatar, Grid } from "@mui/material";
+import { Box, Button, Avatar, Grid, Link } from "@mui/material";
 import React from "react";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
@@ -275,21 +275,26 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                         display: myProfile ? { xs: "none", lg: "block" } : "none",
                       }}
                     >
-                      <Button
-                        sx={{
-                          background: theme.blue,
-                          color: "#fff",
-                          fontWeight: 700,
-                          lineHeight: "23.17",
-                          width: "96px",
-                          height: "40px",
-                          dispaly: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <img src="/assets/images/icon/ic_edit.png" alt="ic_edit" />
-                        <Box sx={{ ml: "2px" }}>{t("profile:edit")}</Box>
-                      </Button>
+                      <Link href="/my-profile/edit">
+                        <Button
+                          sx={{
+                            background: theme.blue,
+                            color: "#fff",
+                            fontWeight: 700,
+                            lineHeight: "23.17",
+                            width: "96px",
+                            height: "40px",
+                            dispaly: "flex",
+                            alignItems: "center",
+                            "&:hover": {
+                              background: theme.blue,
+                            },
+                          }}
+                        >
+                          <img src="/assets/images/icon/ic_edit.png" alt="ic_edit" />
+                          <Box sx={{ ml: "2px" }}>{t("profile:edit")}</Box>
+                        </Button>
+                      </Link>
                     </Box>
                   </Box>
                   <Box
