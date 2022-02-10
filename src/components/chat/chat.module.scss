@@ -64,6 +64,28 @@
       .box-title {
         height: 54px;
         border: 1px solid #E4E6EB;
+        display: flex;
+        align-items: center;
+        padding-left: 20px;
+        padding-right: 20px;
+
+        .btn-chat {
+          border-radius: 12px;
+          height: 32px;
+          padding-left: 20px;
+          padding-right: 20px;
+          font-size: 14px;
+        }
+        .username {
+          color: #1A2944;
+          font-size: 20px;
+          font-weight: 500;
+          margin-right: 20px;
+        }
+
+        .btn-review {
+          margin-left: auto;
+        }
       }
 
       .box-content {
@@ -119,6 +141,72 @@
           width: 280px;
         }
       }
+    }
+
+    .boxData {
+      display: flex;
+      flex-direction: column;
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-top: 29px;
+
+      .itemMsgOther {
+        display: flex;
+        margin-bottom: 20px;
+
+        :global {
+          .message-content {
+            border-radius: 12px 12px 12px 0px;
+            background: #F4FDFF;
+            padding: 10px 20px;
+
+            white-space: pre-line;
+            font-size: 14px;
+            color: #1A2944;
+            max-width: 320px;
+          }
+          
+          .avatar {
+            width: 40px;
+            margin-top: auto;
+          }
+          .time {
+            color: #989EA8;
+            font-size: 10px;
+            margin-top: auto;
+            margin-left: 4px;
+          }
+        }
+      }
+
+      .itemMessageMyChat {
+        display: flex;
+        margin-bottom: 20px;
+        justify-content: flex-end;
+
+        :global {
+          .message-content {
+            border-radius: 12px 12px 0 12px;
+            background: linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%);
+            padding: 10px 20px;
+
+            white-space: pre-line;
+            font-size: 14px;
+            color: #FFFFFF;
+            max-width: 320px;
+            font-weight: 400;
+            line-height: 20.27px;
+          }
+          
+          .time {
+            color: #989EA8;
+            font-size: 10px;
+            margin-top: auto;
+            margin-right: 4px;
+          }
+        }
+      }
+
     }
   }
 }
