@@ -50,7 +50,7 @@ export const listThreadsMockData = [
   },
 ];
 
-export const listMessageMockData = {
+export const listMessagesMockData = {
   id: 1,
   name: "名前がここに入ります",
   avatar: "/assets/images/chat/avatar_chat.svg",

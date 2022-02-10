@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { useState } from "react";
 import { Box, Grid, IconButton, Menu, MenuItem, Paper, Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
@@ -21,7 +22,7 @@ const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({ open, handleClose, an
   </Menu>
 );
 
-const ChatBoxLeftComponent = () => {
+const ChatBoxLeftComponent = ({ toggleRenderSide }) => {
   const { t } = useTranslation();
   const [listThreads] = useState(listThreadsMockData);
 
@@ -56,7 +57,7 @@ const ChatBoxLeftComponent = () => {
       <Box className="box-content">
         <ul className={styles.boxThreads}>
           {listThreads?.map((thread, index) => (
-            <li key={index}>
+            <li key={index} onClick={toggleRenderSide}>
               <div className={`thread-item ${thread.status === 2 ? "active" : ""}`}>
                 <div className="avatar">
                   <img alt="avatar" src={thread?.avatar} />

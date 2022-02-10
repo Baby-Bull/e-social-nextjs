@@ -19,10 +19,15 @@ const BlockChatComponent = () => {
       setIsRenderRightSide(false);
     }
   }, []);
+
+  const toggleRenderSide = () => setIsRenderRightSide(!isRenderRightSide);
+
   return (
     <Grid container className={classNames(styles.chatContainerPC)}>
-      {!isMobile || (isMobile && !isRenderRightSide) ? <ChatBoxLeftComponent /> : null}
-      {!isMobile || (isMobile && isRenderRightSide) ? <ChatBoxRightComponent /> : null}
+      {!isMobile || (isMobile && !isRenderRightSide) ? (
+        <ChatBoxLeftComponent toggleRenderSide={toggleRenderSide} />
+      ) : null}
+      {!isMobile || (isMobile && isRenderRightSide) ? <ChatBoxRightComponent isMobile={isMobile} /> : null}
     </Grid>
   );
 };
