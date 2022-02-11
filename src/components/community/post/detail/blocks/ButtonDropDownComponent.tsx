@@ -156,22 +156,22 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({ top
           <Box
             sx={{
               textAlign: "center",
-              pt: ["53px", "37px"],
-              px: "50px",
+              pt: ["35px", "37px"],
+              px: [0, "50px"],
               mb: ["22px", 0],
             }}
           >
             <Box
               sx={{
-                ml: ["8px", "16px"],
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "space-between",
+                justifyContent: "center",
               }}
             >
               <Typography
                 component="span"
                 sx={{
+                  px: ["15px", "10px"],
                   color: theme.navy,
                   fontSize: [16, 20],
                   fontWeight: 700,
@@ -184,25 +184,14 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({ top
                 component="span"
                 sx={{
                   mt: ["35px"],
-                  px: "45px",
-                  display: ["none", "inherit"],
+                  px: [0, "50px"],
+                  fontSize: [14, 16],
                   color: theme.navy,
                 }}
               >
                 {t("community:dialog.note-delete-title")}
               </Typography>
             </Box>
-          </Box>
-
-          <Box
-            component="span"
-            sx={{
-              display: { sm: "none" },
-              color: theme.navy,
-              fontSize: 14,
-            }}
-          >
-            {t("community:dialog.note")}
           </Box>
         </DialogContent>
 
