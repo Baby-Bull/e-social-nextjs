@@ -7,6 +7,8 @@
   "comment": "コメント",
   "write-comment": "コメントする",
   "place-holder": "1000文字以内でコメントを入力",
+  "url": "URL",
+  "address": "場所",
   "banner": {
     "count-member": "参加人数",
     "count-online": "ログイン中",
@@ -22,6 +24,13 @@
     "load-more": "もっと見る",
     "create-post": "投稿を作成",
     "go-to-virtual-room": "バーチャルルーム入室",
+    "intro": {
+      "create-post": "新規投稿を作成"
+    },
+    "dropdown": {
+      "edit": "編集する",
+      "delete": "削除する"
+    },
     "empty": {
       "create-post": "投稿を作成する",
       "apply": "参加申請する",
@@ -55,6 +64,14 @@
   },
   "dialog": {
     "confirm": "コミュニティ名コミュニティ名コミュニティ名を本当に退会しますか？",
-    "note": "コミュニティを退会すると、グループチャットからも退出になります。"
+    "note": "コミュニティを退会すると、グループチャットからも退出になります。",
+    "confirm-delete-title": "タイトルタイトルタイトルタイトルの投稿を本当に削除しますか？",
+    "note-delete-title": "削除をすると投稿内容や投稿についたコメントは閲覧できなくなります。"
+  },
+  "detail": {
+    "comment": {
+      "latest-order": "最新順",
+      "posting-order": "投稿順"
+    }
   }
 }

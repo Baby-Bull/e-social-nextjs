@@ -28,7 +28,8 @@ export const PaginationCustom = styled(Pagination)({
   "& .MuiPaginationItem-root": {
     color: theme.blue,
     fontWeight: 700,
-
+    marginRight: "5px",
+    "&:not(.MuiPaginationItem-previousNext)": {},
     "&:hover": {
       opacity: 0.5,
     },
