@@ -2,15 +2,15 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
-import ButtonComponent from "src/components/common/ButtonComponent";
 import theme from "src/theme";
+import ButtonComponent from "src/components/common/ButtonComponent";
 
-interface EmptyMatchingComponentProps {
+interface IEmptyMatchingComponentProps {
   text: string;
   mode?: string;
 }
 
-const EmptyMatchingComponent: React.SFC<EmptyMatchingComponentProps> = ({ text, mode }) => {
+const EmptyMatchingComponent: React.SFC<IEmptyMatchingComponentProps> = ({ text, mode }) => {
   const { t } = useTranslation();
 
   return (

@@ -1,89 +1,31 @@
-import * as React from "react";
-import { Box, Tabs, Tab, Typography, Avatar } from "@mui/material";
+import React from "react";
+import { Box, Tabs, Typography, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import { styled } from "@mui/material/styles";
 
 import theme from "src/theme";
+import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabComponent";
+import EmptyMatchingComponent from "src/components/matching/blocks/EmptyMatchingComponent";
+import ThreadComponent from "src/components/matching/blocks/ThreadComponent";
+import ChildTabComponent, { IDataChild } from "src/components/matching/blocks/ChildTabComponent";
 
-import EmptyMatchingComponent from "./components/EmptyMatchingComponent";
-import ThreadComponent from "./components/ThreadComponent";
-import ChildTabComponent from "./components/ChildTabComponent";
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
+interface IData {
+  avatar: string;
+  name: string;
+  count_member: string;
 }
 
-const TabPanel = (props: TabPanelProps) => {
-  const { children, value, index } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-    >
-      {value === index && <Box sx={{ mb: ["80px", "212px"] }}>{children}</Box>}
-    </div>
-  );
-};
-
-const a11yProps = (index: number) => ({
-  id: `simple-tab-${index}`,
-  "aria-controls": `simple-tabpanel-${index}`,
-});
-
-const TabCustom = styled(Tab)({
-  minWidth: "20%",
-  maxWidth: "20%",
-  paddingLeft: "7px",
-  paddingRight: "7px",
-  "& img": {
-    width: "26px",
-    filter: theme.filter.blue,
-  },
-  "&.Mui-selected": {
-    "&": {
-      backgroundColor: theme.blue,
-    },
-    "& img": {
-      filter: theme.filter.white,
-    },
-    color: "white",
-  },
-  "@media (max-width: 425px)": {
-    display: "flex",
-    color: "black",
-    fontSize: "8px",
-    fontWeight: 500,
-  },
-  "@media (min-width: 768px)": {
-    color: theme.blue,
-    fontSize: "14px",
-    fontWeight: 700,
-    minHeight: "50px",
-    border: `1px solid ${theme.blue}`,
-    borderLeft: "none",
-    borderRadius: "12px 12px 0px 0px;",
-    "&:first-of-type": {
-      borderLeft: `1px solid ${theme.blue}`,
-    },
-    "& img": {
-      display: "none",
-    },
-  },
-  "@media (min-width: 1440px)": {
-    fontSize: "20px",
-  },
-});
-
-interface TabComponentProps {
-  data: any;
+interface ITabComponentData {
+  children: IDataChild[];
+  data: IData[];
+  text: string;
+  icon: string;
 }
 
-const TabComponent: React.SFC<TabComponentProps> = ({ data }) => {
+interface ITabComponentProps {
+  data: ITabComponentData[];
+}
+
+const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
   const { t } = useTranslation();
 
   const [valueParentTab, setValueParentTab] = React.useState(0);
@@ -103,16 +45,31 @@ const TabComponent: React.SFC<TabComponentProps> = ({ data }) => {
             backgroundColor: "transparent",
           },
         }}
-        sx={{}}
       >
         {data?.map((tab, index) => (
           <TabCustom
             key={index.toString()}
-            color="success"
+            props={{
+              xsBorderColor: theme.lightGray,
+            }}
             iconPosition="top"
             icon={tab.icon}
             label={tab.text}
             {...a11yProps(index)}
+            sx={{
+              "&.Mui-selected": {
+                "&:before": {
+                  content: `url("/assets/images/svg/red_dot.svg")`,
+                  position: "absolute",
+                  top: "-5px",
+                  right: "10px",
+                  "@media (max-width: 768px)": {
+                    top: "5px",
+                    right: "5px",
+                  },
+                },
+              },
+            }}
           />
         ))}
       </Tabs>
@@ -127,7 +84,7 @@ const TabComponent: React.SFC<TabComponentProps> = ({ data }) => {
 
       <TabPanel value={valueParentTab} index={2}>
         {data[2]?.data?.length ? (
-          data[2]?.data?.map((tab: any, tabIndex: any) => (
+          data[2]?.data?.map((tab, tabIndex) => (
             <React.Fragment key={tabIndex.toString()}>
               <Box
                 sx={{
@@ -148,7 +105,7 @@ const TabComponent: React.SFC<TabComponentProps> = ({ data }) => {
 
       <TabPanel value={valueParentTab} index={3}>
         {data[3]?.data?.length ? (
-          data[3]?.data?.map((tab: any, tabIndex: any) => (
+          data[3]?.data?.map((tab, tabIndex) => (
             <React.Fragment key={tabIndex.toString()}>
               <Box
                 sx={{
@@ -170,21 +127,21 @@ const TabComponent: React.SFC<TabComponentProps> = ({ data }) => {
         {data[4]?.data?.length ? (
           <Box
             sx={{
-              mt: "0px",
+              mt: ["40px", 0],
               mx: ["20px", "40px"],
               display: "flex",
               justifyContent: "space-between",
               flexWrap: "wrap",
             }}
           >
-            {data[4]?.data?.map((tab: any, tabIndex: any) => (
+            {data[4]?.data?.map((tab, tabIndex) => (
               <React.Fragment key={tabIndex.toString()}>
                 <Box
                   sx={{
                     mt: [0, "40px"],
                     mb: ["20px", 0],
                     mx: [0, "20px"],
-                    flex: ["1 0 50%", "1 0 18%"],
+                    flex: ["0 0 50%", "0 0 18%"],
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",

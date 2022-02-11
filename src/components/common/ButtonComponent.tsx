@@ -4,41 +4,50 @@ import { styled } from "@mui/material/styles";
 
 import theme from "src/theme";
 
-type Dimension = "x-small" | "small" | "x-medium" | "medium" | "large";
-interface ButtonComponentProps extends ButtonProps {
+type Dimension = "tiny" | "x-small" | "small" | "x-medium" | "medium" | "large";
+interface IButtonComponentProps extends ButtonProps {
   children: any;
   props?: {
     mode?: string;
     dimension?: Dimension;
     color?: string;
+    height?: string;
     bgColor?: string;
+    borderColor?: string;
+    square?: boolean;
   };
   nestedCondition?: any;
 }
 
-const ButtonRounded = styled(Button)<ButtonComponentProps>(
+const ButtonRounded = styled(Button)<IButtonComponentProps>(
   ({ props, nestedCondition = (condition: any, then: any, otherwise: any) => (condition ? then : otherwise) }) => ({
-    backgroundColor: props?.bgColor ? props?.bgColor : "white",
+    borderColor: props?.borderColor || "black",
+    backgroundColor: props?.bgColor || "white",
     "&:hover": {
-      backgroundColor: props?.bgColor ? props?.bgColor : "white",
+      borderColor: props?.borderColor || "black",
+      backgroundColor: props?.bgColor || "white",
       opacity: 0.9,
     },
-    color: props?.color ? props?.color : "white",
+    color: props?.color || "white",
     width: nestedCondition(
-      props?.dimension === "x-small",
-      "160px",
+      props?.dimension === "tiny",
+      "120px",
       nestedCondition(
-        props?.dimension === "small",
-        "184px",
+        props?.dimension === "x-small",
+        "160px",
         nestedCondition(
-          props?.dimension === "x-medium",
-          "200px",
-          nestedCondition(props?.dimension === "medium", "240px", "280px"),
+          props?.dimension === "small",
+          "184px",
+          nestedCondition(
+            props?.dimension === "x-medium",
+            "200px",
+            nestedCondition(props?.dimension === "medium", "240px", "280px"),
+          ),
         ),
       ),
     ),
-    height: 48,
-    borderRadius: 40,
+    height: props?.height || 48,
+    borderRadius: props?.square ? 4 : 40,
     fontSize: 16,
     fontWeight: 700,
     textTransform: "capitalize",
@@ -112,7 +121,7 @@ function renderSwitch(children, props, rest) {
   }
 }
 
-const ButtonComponent: React.SFC<ButtonComponentProps> = ({ children, props, ...rest }) => (
+const ButtonComponent: React.SFC<IButtonComponentProps> = ({ children, props, ...rest }) => (
   <React.Fragment>{renderSwitch(children, props, rest)}</React.Fragment>
 );
 

@@ -1,9 +1,8 @@
-import * as React from "react";
+import React from "react";
 import { Box } from "@mui/material";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
-
-import TabComponent from "./TabComponent";
+import TabComponent from "src/components/matching/TabComponent";
 
 interface IProps {}
 
@@ -378,6 +377,7 @@ class MatchingComponent extends React.Component<IProps, IState> {
           sx={{
             mt: ["9px", "84px"],
             px: [0, "8.4%"],
+            mb: ["80px", "212px"],
           }}
         >
           <TabComponent data={tabs} />
