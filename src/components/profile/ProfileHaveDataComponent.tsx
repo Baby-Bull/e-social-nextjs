@@ -136,8 +136,8 @@ const ProfileHaveDataComponent = () => {
               recommendMemberEvaluate={item.recommendMemberEvaluate}
               recommendMemberYouSpeak={item.recommendMemberYouSpeak}
               recommendMemberTag={item.recommendMemberTag}
-              status={item.status}
-              txtBtn={item.txtBtn}
+              status={t(item.status)}
+              txtBtn={t(item.txtBtn)}
               statusLogin={item.statusLogin}
             />
           ))}
