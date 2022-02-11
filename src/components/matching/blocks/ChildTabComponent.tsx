@@ -1,80 +1,25 @@
-import * as React from "react";
-import { Box, Tabs, Tab } from "@mui/material";
+import React from "react";
+import { Box, Tabs } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import { styled } from "@mui/material/styles";
 
 import theme from "src/theme";
+import { TabPanel, a11yProps, ChildTabCustom } from "src/components/common/Tab/BlueChildTabComponent";
+import EmptyMatchingComponent from "src/components/matching/blocks/EmptyMatchingComponent";
+import ThreadComponent from "src/components/matching/blocks/ThreadComponent";
 
-import EmptyMatchingComponent from "./EmptyMatchingComponent";
-import ThreadComponent from "./ThreadComponent";
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
+export interface IDataChild {
+  data: string[];
+  text: string;
+  count: string;
 }
 
-const TabPanel = (props: TabPanelProps) => {
-  const { children, value, index } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-children-${index}`}
-      aria-labelledby={`simple-tab-children-${index}`}
-    >
-      {value === index && (
-        <Box
-          sx={{
-            mx: [0, "45px"],
-          }}
-        >
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-};
-
-const a11yProps = (index: number) => ({
-  id: `simple-tab-${index}`,
-  "aria-controls": `simple-tabpanel-${index}`,
-});
-interface ChildTabCustomProps {
-  maxWidth?: string;
-}
-
-const ChildTabCustom = styled(Tab)<ChildTabCustomProps>(({ maxWidth }) => ({
-  padding: 0,
-  color: "black",
-  fontWeight: 500,
-  "&.Mui-selected": {
-    color: theme.blue,
-    fontWeight: 700,
-  },
-  "@media (max-width: 425px)": {
-    fontSize: "10px",
-  },
-  "@media (min-width: 768px)": {
-    fontSize: "14px",
-  },
-  "@media (min-width: 1440px)": {
-    marginRight: "12px",
-    fontSize: "21px",
-    maxWidth: maxWidth || "230px",
-    "&.Mui-selected": {
-      textDecoration: "underline",
-    },
-  },
-}));
-interface TabComponentProps {
+interface IChildTabComponentProps {
   dataId: number;
-  dataChild: any;
+  dataChild: IDataChild[];
   maxWidth?: string;
 }
 
-const TabComponent: React.SFC<TabComponentProps> = ({ dataId, dataChild, maxWidth }) => {
+const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataId, dataChild, maxWidth }) => {
   const { t } = useTranslation();
 
   const [valueChildTab, setValueChildTab] = React.useState(0);
@@ -99,11 +44,15 @@ const TabComponent: React.SFC<TabComponentProps> = ({ dataId, dataChild, maxWidt
           },
         }}
       >
-        {dataChild?.map((tab: any, index: number) => (
+        {dataChild?.map((tab, index) => (
           <ChildTabCustom
             key={index.toString()}
-            maxWidth={maxWidth}
-            color="success"
+            props={{
+              fontSize: "10px",
+              mdWidth: maxWidth,
+              smFontSize: "14px",
+              mdFontSize: "21px",
+            }}
             iconPosition="top"
             label={tab.text + (tab?.count ? `（${tab?.count}）` : "")}
             {...a11yProps(index)}
@@ -113,10 +62,11 @@ const TabComponent: React.SFC<TabComponentProps> = ({ dataId, dataChild, maxWidt
 
       <TabPanel value={valueChildTab} index={0}>
         {dataChild[0]?.data?.length ? (
-          dataChild[0]?.data.map((tab: any, index: any) => (
+          dataChild[0]?.data.map((tab, index) => (
             <React.Fragment key={index.toString()}>
               <Box
                 sx={{
+                  mx: [0, "45px"],
                   "&:first-of-type": {
                     marginTop: ["20px", "36px"],
                   },
@@ -137,10 +87,11 @@ const TabComponent: React.SFC<TabComponentProps> = ({ dataId, dataChild, maxWidt
       </TabPanel>
       <TabPanel value={valueChildTab} index={1}>
         {dataChild[1].data?.length ? (
-          dataChild[1]?.data.map((tab: any, index: any) => (
+          dataChild[1]?.data.map((tab, index) => (
             <React.Fragment key={index.toString()}>
               <Box
                 sx={{
+                  mx: [0, "45px"],
                   "&:first-of-type": {
                     marginTop: ["20px", "36px"],
                   },
@@ -158,10 +109,11 @@ const TabComponent: React.SFC<TabComponentProps> = ({ dataId, dataChild, maxWidt
       </TabPanel>
       <TabPanel value={valueChildTab} index={2}>
         {dataChild[2].data?.length ? (
-          dataChild[2]?.data.map((tab: any, index: any) => (
+          dataChild[2]?.data.map((tab, index) => (
             <React.Fragment key={index.toString()}>
               <Box
                 sx={{
+                  mx: [0, "45px"],
                   "&:first-of-type": {
                     marginTop: ["20px", "36px"],
                   },
@@ -180,4 +132,4 @@ const TabComponent: React.SFC<TabComponentProps> = ({ dataId, dataChild, maxWidt
     </React.Fragment>
   );
 };
-export default TabComponent;
+export default ChildTabComponent;

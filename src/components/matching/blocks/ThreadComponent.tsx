@@ -1,17 +1,16 @@
-import * as React from "react";
+import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
+import ButtonComponent from "src/components/common/ButtonComponent";
 
-import ButtonComponent from "../../common/ButtonComponent";
-
-interface ThreadComponentProps {
+interface IThreadComponentProps {
   data: any;
   type?: "unconfirm" | "confirm" | "reject" | "favourite" | "matched" | "community";
 }
 
-const ThreadComponent: React.SFC<ThreadComponentProps> = ({ data, type }) => {
+const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
   const { t } = useTranslation();
 
   const isShowThread = type === "unconfirm" || type === "reject";
@@ -37,6 +36,7 @@ const ThreadComponent: React.SFC<ThreadComponentProps> = ({ data, type }) => {
         {data.date_request}
       </Typography>
 
+      {/* Info user (avatar, ...) */}
       <Box
         sx={{
           display: "flex",
@@ -45,6 +45,7 @@ const ThreadComponent: React.SFC<ThreadComponentProps> = ({ data, type }) => {
           position: "relative",
         }}
       >
+        {/* Absolute icon heart tab favourite SP */}
         <Typography
           sx={{
             display: [type !== "favourite" && "none", "none"],
@@ -55,6 +56,7 @@ const ThreadComponent: React.SFC<ThreadComponentProps> = ({ data, type }) => {
         >
           <img src="/assets/images/svg/heart.svg" alt="heart" />
         </Typography>
+        {/* End Absolute icon heart tab favourite SP */}
 
         <Box
           sx={{
@@ -78,7 +80,7 @@ const ThreadComponent: React.SFC<ThreadComponentProps> = ({ data, type }) => {
               }}
               src={data.avatar}
             />
-
+            {/* Title bottom Avatar tab favourite */}
             <Typography
               sx={{
                 display: ["inherit", type === "favourite" ? "inherit" : "none"],
@@ -89,8 +91,10 @@ const ThreadComponent: React.SFC<ThreadComponentProps> = ({ data, type }) => {
             >
               {data.last_login}
             </Typography>
+            {/* End Title bottom Avatar tab favourite */}
           </Box>
 
+          {/* Grid right Info */}
           <Box
             sx={{
               pl: type === "favourite" ? "26px" : "20px",
@@ -152,8 +156,10 @@ const ThreadComponent: React.SFC<ThreadComponentProps> = ({ data, type }) => {
               {data.message}
             </Typography>
           </Box>
+          {/* End Grid right Info */}
         </Box>
 
+        {/* Button PC */}
         <Box
           sx={{
             display: ["none", "flex"],
@@ -283,7 +289,9 @@ const ThreadComponent: React.SFC<ThreadComponentProps> = ({ data, type }) => {
             </React.Fragment>
           )}
         </Box>
+        {/* End Button PC */}
       </Box>
+      {/* End Info user (avatar, ...) */}
 
       <Box
         sx={{
@@ -295,6 +303,7 @@ const ThreadComponent: React.SFC<ThreadComponentProps> = ({ data, type }) => {
         {data.message}
       </Box>
 
+      {/* Thread */}
       <Box
         sx={{
           display: isShowThread ? "flex" : "none",
@@ -374,7 +383,9 @@ const ThreadComponent: React.SFC<ThreadComponentProps> = ({ data, type }) => {
           </Box>
         </Box>
       </Box>
+      {/* End Thread */}
 
+      {/* Button SP */}
       <Box
         sx={{
           display: ["flex", "none"],
@@ -489,6 +500,7 @@ const ThreadComponent: React.SFC<ThreadComponentProps> = ({ data, type }) => {
           </ButtonComponent>
         )}
       </Box>
+      {/* End Button SP */}
     </Box>
   );
 };

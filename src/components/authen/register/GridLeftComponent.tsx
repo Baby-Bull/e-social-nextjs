@@ -45,11 +45,11 @@ const TypoContent = styled(Typography)`
   }
 `;
 
-interface GridLeftComponentProps {
+interface IGridLeftComponentProps {
   smAndUp?: boolean;
 }
 
-const GridLeftComponent: React.SFC<GridLeftComponentProps> = ({ smAndUp }) => {
+const GridLeftComponent: React.SFC<IGridLeftComponentProps> = ({ smAndUp }) => {
   const { t } = useTranslation();
 
   return (

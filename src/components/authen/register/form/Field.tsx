@@ -20,7 +20,7 @@ import theme from "src/theme";
 
 type Editor = "textbox" | "dropdown" | "checkbox" | "multi-selection";
 
-export interface FieldProps {
+export interface IFieldProps {
   required?: boolean;
   id: string;
   label?: string;
@@ -58,6 +58,7 @@ const InputCustom = styled(InputBase)({
 const SelectCustom = styled(Select)({
   borderRadius: 12,
   borderColor: theme.blue,
+  textAlign: "left",
   "&:hover": {
     borderRadius: 12,
     borderColor: theme.blue,
@@ -87,7 +88,7 @@ const ListItem = styled("li")({
   margin: theme.spacing(0.5),
 });
 
-export const Field: React.SFC<FieldProps> = ({ required, id, label, placeholder, editor, options, value }) => {
+export const Field: React.SFC<IFieldProps> = ({ required, id, label, placeholder, editor, options, value }) => {
   const [chipData, setChipData] = React.useState([
     { key: 0, label: "デザイナー" },
     { key: 1, label: "エンジニア" },

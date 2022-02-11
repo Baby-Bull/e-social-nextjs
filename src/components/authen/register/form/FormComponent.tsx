@@ -19,11 +19,10 @@ import {
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 
+import theme from "src/theme";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
-import theme from "src/theme";
-
-import GridLeftComponent from "../GridLeftComponent";
+import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 
 import { Field } from "./Field";
 
@@ -433,13 +432,19 @@ const FormRegisterComponents = () => {
                         props={{
                           dimension: "medium",
                           color: theme.blue,
+                          borderColor: theme.blue,
                         }}
                         sx={{
                           height: 32,
                           textAlign: "center",
-                          borderColor: theme.blue,
-                          "&:hover": { borderColor: "black" },
                         }}
+                        startIcon={
+                          <Avatar
+                            variant="square"
+                            sx={{ width: "100%", height: "100%" }}
+                            src="/assets/images/svg/heart_outlined.svg"
+                          />
+                        }
                       >
                         {t("register:form.tutorial.button-add")}
                       </ButtonComponent>
