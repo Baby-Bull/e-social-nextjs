@@ -7,6 +7,11 @@
   display: flex;
   flex-direction: row;
 
+  @media screen and (max-width: 992px) {
+    height: calc(100vh - 56px);
+  }
+
+
   .chatBoxLeft {
     width: 359px;
     display: flex;
@@ -22,6 +27,7 @@
         height: 54px;
         padding: 12px 9px;
         border: 1px solid #E4E6EB;
+        position: relative;
 
         .title {
           font-size: 20px;
@@ -59,6 +65,7 @@
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    position: relative;
 
     :global {
       .box-title {
@@ -67,13 +74,18 @@
         display: flex;
         align-items: center;
         padding-left: 20px;
-        padding-right: 20px;
+        padding-right: 18px;
+
+        @media screen and (max-width: 992px) {
+          padding-right: 10px;
+        }
+    
 
         .btn-chat {
           border-radius: 12px;
           height: 32px;
-          padding-left: 20px;
-          padding-right: 20px;
+          padding-left: 18px;
+          padding-right: 18px;
           font-size: 14px;
         }
         .username {
@@ -81,6 +93,23 @@
           font-size: 20px;
           font-weight: 500;
           margin-right: 20px;
+
+          @media screen and (max-width: 992px) {
+            margin-right: 12px;
+          }
+        }
+
+        .username-community {
+          display: block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 600px;
+          font-weight: 500;
+
+          @media screen and (max-width: 992px) {
+            max-width: calc(100vw - 80px);
+          }
         }
 
         .btn-review {
@@ -149,6 +178,12 @@
       padding-left: 20px;
       padding-right: 20px;
       padding-top: 29px;
+      height: calc(100vh - 176px);
+      overflow: auto;
+
+      @media screen and (max-width: 992px) {
+        height: calc(100vh - 168px);
+      }
 
       .itemMsgOther {
         display: flex;
@@ -178,6 +213,26 @@
           }
         }
       }
+      
+      .spanStartOfDay {
+        display: flex;
+        justify-content: center;
+        margin-top: 13px;
+        margin-bottom: 29px;
+
+        :global {
+          span {
+            color: white;
+            background: #03BCDB;
+            border-radius: 12px;
+            padding-left: 15px;
+            padding-right: 15px;
+            font-size: 12px;
+            font-weight: 500;
+            width: 54px;
+          }
+        }
+      }
 
       .itemMessageMyChat {
         display: flex;
@@ -196,6 +251,10 @@
             max-width: 320px;
             font-weight: 400;
             line-height: 20.27px;
+
+            &.error-message {
+              background: #989EA8;
+            }
           }
           
           .time {
@@ -207,6 +266,61 @@
         }
       }
 
+      .errorMessage {
+        margin-top: -12px;
+        margin-bottom: 20px;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 17.38px;
+        text-align: end;
+
+        :global {
+          .span-error-message {
+            margin: 0;
+            color: #989EA8;
+          }
+
+          .btn-action {
+            margin-left: 12px;
+            cursor: pointer;
+
+            &.btn-resend {
+              color: #03BCDB;
+            }
+            &.btn-delete {
+              color: #FF9458;
+            }
+          }
+        }
+      }
+
+    }
+  }
+
+  .boxChat {
+    border-top: 1px solid #E4E6EB;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    padding: 8px 12px;
+    background: white;
+
+    :global {
+      .paper-chat {
+        border: none;
+        box-shadow: none;
+  
+        .input-chat {
+          background: #F6F7F9;
+          border-radius: 12px;
+          padding: 9px 20px;
+          box-shadow: none;
+          font-size: 14px;
+          font-weight: 400;
+          color: #989EA8;
+        }
+      }
     }
   }
 }
@@ -282,6 +396,7 @@
       padding: 10px 19px;
       display: flex;
       align-items: center;
+      cursor: pointer;
 
       &.active {
         background: #F5F5F5;
@@ -300,6 +415,7 @@
           font-weight: 700;
           line-height: 21px;
           color: #262A30;
+          white-space: nowrap;
         }
         .message-hide {
           font-size: 14px;

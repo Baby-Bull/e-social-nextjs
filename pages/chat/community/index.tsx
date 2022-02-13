@@ -2,9 +2,9 @@ import * as React from "react";
 import type { NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import PersonalChatComponent from "src/components/chat/Personal/PersonalChatComponent";
+import CommunityChatComponent from "src/components/chat/Community/CommunityChatComponent";
 
-const ChatPersonalPage: NextPage = () => <PersonalChatComponent hasData />;
+const ChatCommunityPage: NextPage = () => <CommunityChatComponent hasData />;
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {
@@ -12,4 +12,4 @@ export const getStaticProps = async ({ locale }: { locale: string }) => ({
   },
 });
 
-export default ChatPersonalPage;
+export default ChatCommunityPage;

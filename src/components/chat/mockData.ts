@@ -53,6 +53,8 @@ export const listThreadsMockData = [
 export const listMessagesMockData = {
   id: 1,
   name: "名前がここに入ります",
+  nameCommunity: "コミュニティ名がここに入りますコミュニティ名がここに入りますコミュニティ名がここに入ります",
+  members: 30,
   avatar: "/assets/images/chat/avatar_chat.svg",
   messages: [
     {
@@ -88,7 +90,33 @@ export const listMessagesMockData = {
         "ちょっと考えさせていただけますか？\n今回の企業は志望度も高くかなりいいなとは思ってるんですが、条件次第ではって感じなので、、、",
       time: "23:54",
       isMe: true,
-      ÍsStartOfDay: true,
+      isStartOfDay: true,
+    },
+    {
+      message:
+        "ちょっと考えさせていただけますか？\n今回の企業は志望度も高くかなりいいなとは思ってるんですが、条件次第ではって感じなので、、、",
+      time: "23:54",
+      isMe: true,
+      isErrorMessage: true,
     },
   ],
 };
+
+export const listThreadsCommunityMockData = [
+  {
+    id: 1,
+    avatar: "/assets/images/chat/community_avatar_1.svg",
+    name: "コミュニティ名がここに入...　(30)",
+    messageHide: "text",
+    members: 30,
+    status: 1,
+  },
+  {
+    id: 2,
+    avatar: "/assets/images/chat/community_avatar_2.svg",
+    name: "コミュニティ名がここに...　(1220)",
+    messageHide: "text",
+    members: 1220,
+    status: 2,
+  },
+];
