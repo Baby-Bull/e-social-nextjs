@@ -10,6 +10,7 @@ declare module "@mui/material/styles" {
     whiteGray: string;
     gray: string;
     lightGray: string;
+    lightGray_1: string;
     green: string;
     orange: string;
     cleam: string;
@@ -30,6 +31,7 @@ declare module "@mui/material/styles" {
     whiteGray?: string;
     gray?: string;
     lightGray?: string;
+    lightGray_1?: string;
     green?: string;
     orange?: string;
     cleam?: string;
@@ -89,6 +91,7 @@ const theme = createTheme({
   whiteGray: "#F5F5F5",
   gray: "#989EA8",
   lightGray: "#E6E6E6",
+  lightGray_1: "#C4C4C4",
   green: "#1BD0B0",
   orange: "#FF9458",
   cleam: "#FFF9E5",

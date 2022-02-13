@@ -293,6 +293,10 @@ export const infoAdmin = {
   role: "コミュニティ内の人が投稿可能",
 };
 
+export const canCreatePost = true;
+export const isContributor = true;
+export const isContributorOrCommenter = true;
+
 export const countMemberOnVirtualRoom = "0 人";
 
 export const infoCommunity = {
@@ -329,31 +333,37 @@ export const postDetail = {
     <br />
     <span>${text1}${text2}</span>
   `,
+  url: "https://connpass.com/",
+  address: "〒160-8484 東京都新宿区歌舞伎町１丁目４−１",
 };
 
 export const comments = [
   {
     avatar: "/assets/images/svg/account.svg",
-    name: "さすらいのエンジニア",
+    name: "佐藤 太郎",
     last_login: "2021年8月27日13:48",
     content: `${text1}<br /><br />${text1}${text1}${text1}`,
   },
   {
     avatar: "/assets/images/svg/account.svg",
-    name: "suzuki nao",
+    name: "佐藤 太郎",
     last_login: "2021年8月27日13:48",
     content: text1,
   },
   {
     avatar: "/assets/images/svg/account.svg",
-    name: "ダニエル＠アプリ制作の人",
+    name: "佐藤 太郎",
     last_login: "2021年8月27日13:48",
     content: postDetail.content,
   },
   {
     avatar: "/assets/images/svg/account.svg",
-    name: "suzuki nao",
+    name: "佐藤 太郎",
     last_login: "2021年8月27日13:48",
-    content: text1,
+    content: `
+    <span style="color: ${theme.blue}; padding-right: 15px;">
+      @さすらいのエンジニア 
+    </span>
+    ${text1}`,
   },
 ];

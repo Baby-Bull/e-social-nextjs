@@ -2,9 +2,9 @@ import React from "react";
 import type { NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import DetailIndexComponent from "src/components/community/detail_post/IndexComponent";
+import DetailPostComponent from "src/components/community/post/detail/IndexComponent";
 
-const Community: NextPage = () => <DetailIndexComponent />;
+const Community: NextPage = () => <DetailPostComponent />;
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {
