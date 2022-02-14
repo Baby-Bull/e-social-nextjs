@@ -2,7 +2,7 @@ import * as React from "react";
 import type { NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import PersonalChatComponent from "src/components/chat/PersonalChatComponent";
+import PersonalChatComponent from "src/components/chat/Personal/PersonalChatComponent";
 
 const ChatPersonalNoDataPage: NextPage = () => <PersonalChatComponent />;
 

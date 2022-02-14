@@ -3,10 +3,9 @@ import { Grid } from "@mui/material";
 import classNames from "classnames";
 
 import styles from "src/components/chat/chat.module.scss";
-import ChatBoxLeftComponent from "src/components/chat/Blocks/ChatBoxLeftComponent";
+import ChatBoxLeftComponent from "src/components/chat/Community/Blocks/ChatBoxLeftComponent";
 import useViewport from "src/helpers/useViewport";
-
-import ChatBoxRightComponent from "./ChatBoxRightComponent";
+import ChatBoxRightComponent from "src/components/chat/Community/Blocks//ChatBoxRightComponent";
 
 const BlockChatComponent = () => {
   // Responsive
@@ -16,7 +15,7 @@ const BlockChatComponent = () => {
 
   useEffect(() => {
     if (isMobile) {
-      setIsRenderRightSide(false);
+      setIsRenderRightSide(true);
     }
   }, []);
 
@@ -27,7 +26,9 @@ const BlockChatComponent = () => {
       {!isMobile || (isMobile && !isRenderRightSide) ? (
         <ChatBoxLeftComponent toggleRenderSide={toggleRenderSide} />
       ) : null}
-      {!isMobile || (isMobile && isRenderRightSide) ? <ChatBoxRightComponent isMobile={isMobile} /> : null}
+      {!isMobile || (isMobile && isRenderRightSide) ? (
+        <ChatBoxRightComponent isMobile={isMobile} toggleRenderSide={toggleRenderSide} />
+      ) : null}
     </Grid>
   );
 };

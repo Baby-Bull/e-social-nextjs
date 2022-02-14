@@ -12,6 +12,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useRouter } from "next/router";
+import { Button } from "@mui/material";
+import { useTranslation } from "next-i18next";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -68,8 +70,19 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+
+const StyledButtonList = styled(Button)(({ theme }) => ({
+  color: theme.navy,
+  fontSize: "16px",
+  lineHeight: "13.17px",
+  fontWeight: 500,
+  marginLeft: "40px",
+}));
+
 // eslint-disable-next-line react/function-component-definition
 export default function PrimarySearchAppBar() {
+  const { t } = useTranslation();
+
   const [mess] = useState(9);
   const [notify] = useState("99+");
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -88,6 +101,10 @@ export default function PrimarySearchAppBar() {
     handleMobileMenuClose();
   };
   const handleMobileMenuOpen = (event) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleOpenMenu = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
   const menuId = "primary-search-account-menu";
@@ -115,16 +132,8 @@ export default function PrimarySearchAppBar() {
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
       id={mobileMenuId}
       keepMounted
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
@@ -169,6 +178,15 @@ export default function PrimarySearchAppBar() {
               alt="avatar"
               src="/assets/images/logo/logo.png"
             />
+            <div className="content-pc">
+              <StyledButtonList startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" />}>
+                {t("header.list-engineers")}
+              </StyledButtonList>
+
+              <StyledButtonList startIcon={<img alt="" src="/assets/images/svg/users.svg" />}>
+                {t("header.list-community")}
+              </StyledButtonList>
+            </div>
             <Search sx={{ display: useRouter().pathname === pathLogin ? "none" : "inherit" }}>
               <SearchIconWrapper>
                 <SearchIcon />
@@ -189,21 +207,17 @@ export default function PrimarySearchAppBar() {
                   <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
                 </Badge>
               </IconButton>
-              <IconButton size="large" aria-label="show 17 new notifications" color="inherit" sx={{ p: "12px 16px" }}>
-                <img src="/assets/images/icon/ic_setting.png" alt="ic_setting" />
-              </IconButton>
               <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <IconButton
+                  onClick={handleOpenMenu}
                   sx={{
-                    width: "32px",
-                    height: "32px",
-                    backgroundColor: "#03BCDB",
                     borderRadius: "50%",
-                    p: "12px",
+                    p: "0",
                     ml: "20px",
+                    height: "100%",
                   }}
                 >
-                  <img src="/assets/images/avatar.png" alt="avatar" width="18" height="21" />
+                  <img src="/assets/images/svg/avatar.svg" alt="avatar" width="40" height="40" />
                 </IconButton>
               </Box>
             </Box>

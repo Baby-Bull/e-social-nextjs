@@ -6,7 +6,7 @@ import { useTranslation } from "next-i18next";
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
 
-import { listThreadsMockData } from "../mockData";
+import { listThreadsMockData } from "../../mockData";
 
 interface IThreadDropDownProps {
   open: boolean;

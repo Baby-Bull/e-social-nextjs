@@ -8,5 +8,13 @@
 
   "btn-report": "通報",
   "btn-review": "レビューをする",
-  "btn-review-sp": "レビュー"
+  "btn-review-sp": "レビュー",
+
+  "span-error-message": "メッセージを送信できませんでした",
+  "btn-resend": "再送する",
+  "btn-delete": "削除する",
+
+  "community-box-left-title": "グループチャット",
+  "community-box-left-input-search-placeholder": "グループチャットを検索"
+
 }
