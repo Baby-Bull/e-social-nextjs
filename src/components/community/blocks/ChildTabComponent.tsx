@@ -107,6 +107,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataChild, maxW
           }}
           sx={{
             height: "36px",
+            mr: "26px",
             "@media (max-width: 425px)": {
               fontSize: "12px",
             },

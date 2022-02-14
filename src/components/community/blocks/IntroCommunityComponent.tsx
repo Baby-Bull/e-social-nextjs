@@ -14,6 +14,7 @@ const IntroCommunityComponent = () => {
     <React.Fragment>
       <Box
         sx={{
+          backgroundColor: "white",
           p: "20px 20px 40px 20px",
           minHeight: { sm: "601px" },
           display: "flex",
