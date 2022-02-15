@@ -19,6 +19,7 @@ export const TabPanel = (props: ITabPanelProps) => {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
+      style={{ backgroundColor: "white" }}
     >
       {value === index && <Box> {children}</Box>}
     </div>
@@ -69,6 +70,7 @@ export const TabCustom = styled(Tab)<ITabCustomProps>(({ props }) => ({
     maxWidth: props?.xsWidth || "20%",
     height: props?.xsHeight || "",
     borderTop: props?.xsBorderColor ? `1px solid ${props?.xsBorderColor}` : "none",
+    borderBottom: props?.xsBorderColor ? `1px solid ${props?.xsBorderColor}` : "none",
     borderRight: props?.xsBorderColor ? `1px solid ${props?.xsBorderColor}` : "none",
     borderRadius: props?.xsBorderRadius || "none",
     "&:first-of-type": {

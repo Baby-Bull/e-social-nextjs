@@ -37,7 +37,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataId, dataChi
         aria-label="tab children"
         sx={{
           mx: { sm: "42px" },
-          mt: { sm: "38px" },
+          pt: { sm: "38px" },
           borderBottom: [`1px solid ${theme.lightGray}`, "none"],
           ".MuiTabs-indicator": {
             backgroundColor: [theme.blue, "transparent"],
@@ -61,73 +61,118 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataId, dataChi
       </Tabs>
 
       <TabPanel value={valueChildTab} index={0}>
-        {dataChild[0]?.data?.length ? (
-          dataChild[0]?.data.map((tab, index) => (
-            <React.Fragment key={index.toString()}>
-              <Box
-                sx={{
-                  mx: [0, "45px"],
-                  "&:first-of-type": {
-                    marginTop: ["20px", "36px"],
-                  },
-                  "&:last-of-type": {
-                    borderBottom: { sm: `2px solid ${theme.lightGray}` },
-                  },
-                }}
-              >
-                <ThreadComponent data={tab} type="unconfirm" />
-              </Box>
-            </React.Fragment>
-          ))
-        ) : (
-          <EmptyMatchingComponent
-            text={dataId === 1 ? t("matching:text-empty.tab-1.1") : t("matching:text-empty.tab-2.1")}
-          />
-        )}
+        <Box
+          sx={{
+            pb: ["120px", "98px"],
+            backgroundColor: [theme.whiteBlue, "white"],
+          }}
+        >
+          {dataChild[0]?.data?.length ? (
+            dataChild[0]?.data.map((tab, index) => (
+              <React.Fragment key={index.toString()}>
+                <Box
+                  sx={{
+                    mx: [0, "45px"],
+                    "&:first-of-type": {
+                      paddingTop: ["20px", "27px"],
+                    },
+                    "&:last-of-type": {
+                      borderBottom: { sm: `2px solid ${theme.lightGray}` },
+                    },
+                  }}
+                >
+                  <ThreadComponent data={tab} type="unconfirm" />
+                </Box>
+              </React.Fragment>
+            ))
+          ) : (
+            <Box
+              sx={{
+                mx: [0, "45px"],
+                paddingTop: ["20px", "27px"],
+              }}
+            >
+              <EmptyMatchingComponent
+                text={dataId === 1 ? t("matching:text-empty.tab-1.1") : t("matching:text-empty.tab-2.1")}
+              />
+            </Box>
+          )}
+        </Box>
       </TabPanel>
       <TabPanel value={valueChildTab} index={1}>
-        {dataChild[1].data?.length ? (
-          dataChild[1]?.data.map((tab, index) => (
-            <React.Fragment key={index.toString()}>
-              <Box
-                sx={{
-                  mx: [0, "45px"],
-                  "&:first-of-type": {
-                    marginTop: ["20px", "36px"],
-                  },
-                }}
-              >
-                <ThreadComponent data={tab} type="confirm" />
-              </Box>
-            </React.Fragment>
-          ))
-        ) : (
-          <EmptyMatchingComponent
-            text={dataId === 1 ? t("matching:text-empty.tab-1.2") : t("matching:text-empty.tab-2.2")}
-          />
-        )}
+        <Box
+          sx={{
+            pb: ["120px", "98px"],
+            backgroundColor: [theme.whiteBlue, "white"],
+          }}
+        >
+          {dataChild[1].data?.length ? (
+            dataChild[1]?.data.map((tab, index) => (
+              <React.Fragment key={index.toString()}>
+                <Box
+                  sx={{
+                    mx: [0, "45px"],
+                    "&:first-of-type": {
+                      paddingTop: ["20px", "27px"],
+                    },
+                    "&:last-of-type": {
+                      borderBottom: { sm: `2px solid ${theme.lightGray}` },
+                    },
+                  }}
+                >
+                  <ThreadComponent data={tab} type="confirm" />
+                </Box>
+              </React.Fragment>
+            ))
+          ) : (
+            <Box
+              sx={{
+                mx: [0, "45px"],
+                paddingTop: ["20px", "27px"],
+              }}
+            >
+              <EmptyMatchingComponent
+                text={dataId === 1 ? t("matching:text-empty.tab-1.2") : t("matching:text-empty.tab-2.2")}
+              />
+            </Box>
+          )}
+        </Box>
       </TabPanel>
       <TabPanel value={valueChildTab} index={2}>
-        {dataChild[2].data?.length ? (
-          dataChild[2]?.data.map((tab, index) => (
-            <React.Fragment key={index.toString()}>
-              <Box
-                sx={{
-                  mx: [0, "45px"],
-                  "&:first-of-type": {
-                    marginTop: ["20px", "36px"],
-                  },
-                }}
-              >
-                <ThreadComponent data={tab} type="reject" />
-              </Box>
-            </React.Fragment>
-          ))
-        ) : (
-          <EmptyMatchingComponent
-            text={dataId === 1 ? t("matching:text-empty.tab-1.3") : t("matching:text-empty.tab-2.3")}
-          />
-        )}
+        <Box
+          sx={{
+            pb: ["120px", "98px"],
+            backgroundColor: [theme.whiteBlue, "white"],
+          }}
+        >
+          {dataChild[2].data?.length ? (
+            dataChild[2]?.data.map((tab, index) => (
+              <React.Fragment key={index.toString()}>
+                <Box
+                  sx={{
+                    mx: [0, "45px"],
+                    "&:first-of-type": {
+                      paddingTop: ["20px", "27px"],
+                    },
+                  }}
+                >
+                  <ThreadComponent data={tab} type="reject" />
+                </Box>
+              </React.Fragment>
+            ))
+          ) : (
+            <Box
+              sx={{
+                mx: [0, "45px"],
+                paddingTop: ["20px", "27px"],
+              }}
+            >
+              <EmptyMatchingComponent
+                text={dataId === 1 ? t("matching:text-empty.tab-1.3") : t("matching:text-empty.tab-2.3")}
+              />
+            </Box>
+          )}
+        </Box>
       </TabPanel>
     </React.Fragment>
   );

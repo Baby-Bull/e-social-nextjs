@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Tabs, Typography, Avatar } from "@mui/material";
+import { Box, Tabs, Typography, Avatar, Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
@@ -34,6 +34,18 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
     setValueParentTab(newValue);
   };
 
+  const options = [
+    { value: 0, label: "新しい順" },
+    { value: 1, label: "古い順" },
+    { value: 2, label: "名前順" },
+  ];
+
+  const [optionSelected, setOption] = React.useState("0");
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setOption(event.target.value);
+  };
+
   return (
     <React.Fragment>
       <Tabs
@@ -57,6 +69,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
             label={tab.text}
             {...a11yProps(index)}
             sx={{
+              backgroundColor: "white",
               "&.Mui-selected": {
                 "&:before": {
                   content: `url("/assets/images/svg/red_dot.svg")`,
@@ -83,45 +96,98 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
       </TabPanel>
 
       <TabPanel value={valueParentTab} index={2}>
-        {data[2]?.data?.length ? (
-          data[2]?.data?.map((tab, tabIndex) => (
-            <React.Fragment key={tabIndex.toString()}>
-              <Box
-                sx={{
-                  mx: [0, "40px"],
-                  "&:last-of-type": {
-                    borderBottom: { sm: `2px solid ${theme.lightGray}` },
-                  },
-                }}
-              >
-                <ThreadComponent data={tab} type="favourite" />
-              </Box>
-            </React.Fragment>
-          ))
-        ) : (
-          <EmptyMatchingComponent text={t("matching:text-empty.tab-4")} />
-        )}
+        <Box
+          sx={{
+            pb: ["120px", "98px"],
+            paddingTop: ["20px", "0"],
+            backgroundColor: theme.whiteBlue,
+          }}
+        >
+          {data[2]?.data?.length ? (
+            data[2]?.data?.map((tab, tabIndex) => (
+              <React.Fragment key={tabIndex.toString()}>
+                <Box
+                  sx={{
+                    px: [0, "40px"],
+                    backgroundColor: "white",
+                    "&:last-of-type": {
+                      borderBottom: { sm: `2px solid ${theme.lightGray}` },
+                    },
+                  }}
+                >
+                  <ThreadComponent data={tab} type="favourite" />
+                </Box>
+              </React.Fragment>
+            ))
+          ) : (
+            <EmptyMatchingComponent text={t("matching:text-empty.tab-4")} />
+          )}
+        </Box>
       </TabPanel>
 
       <TabPanel value={valueParentTab} index={3}>
-        {data[3]?.data?.length ? (
-          data[3]?.data?.map((tab, tabIndex) => (
-            <React.Fragment key={tabIndex.toString()}>
+        <Box
+          sx={{
+            pb: ["120px", "98px"],
+            backgroundColor: theme.whiteBlue,
+          }}
+        >
+          {data[3]?.data?.length ? (
+            <React.Fragment>
               <Box
                 sx={{
-                  mx: [0, "40px"],
-                  "&:last-of-type": {
-                    borderBottom: { sm: `2px solid ${theme.lightGray}` },
-                  },
+                  py: "20px",
+                  pl: { sm: "40px" },
+                  display: ["flex", "inherit"],
+                  justifyContent: "center",
+                  backgroundColor: { sm: "white" },
                 }}
               >
-                <ThreadComponent data={tab} type="matched" />
+                <Select
+                  value={optionSelected}
+                  onChange={handleChange}
+                  inputProps={{ "aria-label": "Without label" }}
+                  sx={{
+                    fontSize: 14,
+                    fontWeight: 500,
+                    color: theme.navy,
+                    width: ["320px", "240px"],
+                    height: "40px",
+                    backgroundColor: ["white"],
+                    fieldset: {
+                      borderColor: [theme.lightGray, theme.gray],
+                    },
+                  }}
+                >
+                  {options &&
+                    options.map((option, index) => (
+                      <MenuItem key={index.toString()} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                </Select>
               </Box>
+
+              {data[3]?.data?.map((tab, tabIndex) => (
+                <React.Fragment key={tabIndex.toString()}>
+                  <Box
+                    sx={{
+                      px: [0, "40px"],
+                      backgroundColor: "white",
+                      "&:last-of-type": {
+                        borderBottom: { sm: `2px solid ${theme.lightGray}` },
+                      },
+                    }}
+                  >
+                    <ThreadComponent data={tab} type="matched" />
+                  </Box>
+                </React.Fragment>
+              ))}
             </React.Fragment>
-          ))
-        ) : (
-          <EmptyMatchingComponent text={t("matching:text-empty.tab-4")} />
-        )}
+          ) : (
+            <EmptyMatchingComponent text={t("matching:text-empty.tab-4")} />
+          )}
+        </Box>
       </TabPanel>
       <TabPanel value={valueParentTab} index={4}>
         {data[4]?.data?.length ? (
@@ -171,8 +237,8 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
                     component="span"
                     pt="8px"
                     sx={{
-                      fontSize: 10,
-                      color: theme.blue,
+                      fontSize: [10, 14],
+                      color: theme.gray,
                     }}
                   >
                     {t("matching:count-member")} {tab.count_member}

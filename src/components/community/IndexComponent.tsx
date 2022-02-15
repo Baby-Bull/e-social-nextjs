@@ -139,7 +139,6 @@ const CommunityComponent = () => {
             ml: { md: "25px" },
             mb: ["40px", 0],
             width: { md: "80%" },
-            backgroundColor: "white",
             borderRadius: "12px",
           }}
         >

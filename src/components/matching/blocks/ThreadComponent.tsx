@@ -1,9 +1,20 @@
 import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
+
+const ThreadTitle = styled(Typography)({
+  paddingLeft: "20px",
+  fontWeight: 700,
+  minWidth: "110px",
+});
+
+const ThreadContent = styled(Typography)({
+  marginLeft: "20px",
+});
 
 interface IThreadComponentProps {
   data: any;
@@ -14,21 +25,23 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
   const { t } = useTranslation();
 
   const isShowThread = type === "unconfirm" || type === "reject";
+  const isConfirmOrFavouriteOrMatched = type === "confirm" || type === "favourite" || type === "matched";
 
   return (
     <Box
       sx={{
         py: ["20px", "22px"],
         px: ["20px", 0],
-        mb: [type === "confirm" || type === "favourite" ? "20px" : "40px", 0],
-        borderTop: `1px solid ${theme.lightGray}`,
-        borderBottom: `1px solid ${theme.lightGray}`,
+        mb: [isConfirmOrFavouriteOrMatched ? "20px" : "0px", 0],
+        borderTop: [`1px solid ${theme.lightGray}`, `2px solid ${theme.lightGray}`],
+        borderBottom: [`1px solid ${theme.lightGray}`, "none"],
+        color: theme.navy,
+        backgroundColor: "white",
       }}
     >
       <Typography
         sx={{
           display: { sm: "none" },
-          color: theme.gray,
           fontSize: [12, 14],
           fontWeight: 400,
         }}
@@ -61,7 +74,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
         <Box
           sx={{
             display: "flex",
-            alignItems: type === "confirm" || type === "matched" ? "center" : "flex-start",
+            alignItems: "center",
           }}
         >
           <Box
@@ -75,7 +88,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
             <Avatar
               variant="square"
               sx={{
-                width: ["32px", type === "confirm" || type === "favourite" || type === "matched" ? "54px" : "80px"],
+                width: ["32px", isConfirmOrFavouriteOrMatched ? "54px" : "80px"],
                 height: "100%",
               }}
               src={data.avatar}
@@ -83,10 +96,10 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
             {/* Title bottom Avatar tab favourite */}
             <Typography
               sx={{
-                display: ["inherit", type === "favourite" ? "inherit" : "none"],
-                color: "#D8D8D8",
-                fontSize: [8, 14],
-                fontWeight: 700,
+                display: [type === "matched" ? "none" : "inherit", type === "favourite" ? "inherit" : "none"],
+                color: theme.gray,
+                fontSize: [10, 14],
+                fontWeight: 500,
               }}
             >
               {data.last_login}
@@ -106,7 +119,6 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
               component="span"
               sx={{
                 display: ["none", "inherit"],
-                color: theme.gray,
                 fontSize: [12, 14],
                 fontWeight: 400,
               }}
@@ -116,7 +128,6 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
 
             <Box
               sx={{
-                color: theme.navy,
                 fontSize: [16, 20],
                 fontWeight: 700,
                 display: "flex",
@@ -129,8 +140,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                 sx={{
                   pl: { sm: "7px" },
                   fontSize: 12,
-                  fontWeight: 400,
-                  color: theme.blue,
+                  fontWeight: 500,
+                  color: theme.gray,
                 }}
               >
                 {data.job}
@@ -150,7 +161,6 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
               component="span"
               sx={{
                 display: ["none", type === "favourite" && "inherit"],
-                color: theme.navy,
               }}
             >
               {data.message}
@@ -167,15 +177,19 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
         >
           {type === "unconfirm" && (
             <React.Fragment>
-              <Typography
-                sx={{
+              <ButtonComponent
+                props={{
                   color: theme.gray,
-                  fontWeight: 700,
+                  bgColor: theme.whiteGray,
+                  dimension: "x-small",
+                }}
+                sx={{
                   display: !data?.is_cancel && "none",
+                  borderRadius: "12px",
                 }}
               >
                 {t("thread:button.canceled")}
-              </Typography>
+              </ButtonComponent>
 
               <ButtonComponent
                 props={{
@@ -297,7 +311,6 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
         sx={{
           pr: "20px",
           display: [type !== "favourite" && "none", "none"],
-          color: theme.navy,
         }}
       >
         {data.message}
@@ -317,15 +330,25 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
               minWidth: ["32px", "80px"],
               display: ["none", "flex"],
               justifyContent: "center",
-              color: "#D8D8D8",
-              fontSize: [8, 14],
-              fontWeight: 700,
+              color: theme.gray,
+              fontSize: [10, 14],
+              fontWeight: 500,
             }}
           >
             {data.last_login}
           </Typography>
 
-          <Box ml="18px" pt={["37px", 0]}>
+          <Box
+            sx={{
+              mt: ["17px", 0],
+              mb: ["40px", 0],
+              ml: [0, "18px"],
+              pt: "20px",
+              pb: "5px",
+              backgroundColor: theme.whiteBlue,
+              borderRadius: "12px",
+            }}
+          >
             <Box
               sx={{
                 mb: "15px",
@@ -333,16 +356,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                 flexDirection: ["column", "row"],
               }}
             >
-              <Typography
-                component="span"
-                sx={{
-                  fontWeight: 700,
-                  minWidth: "110px",
-                }}
-              >
-                {t("thread:purpose")}
-              </Typography>
-              <Typography component="span">{data.purpose}</Typography>
+              <ThreadTitle>{t("thread:purpose")}</ThreadTitle>
+              <ThreadContent>{data.purpose}</ThreadContent>
             </Box>
             <Box
               sx={{
@@ -351,16 +366,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                 flexDirection: ["column", "row"],
               }}
             >
-              <Typography
-                component="span"
-                sx={{
-                  fontWeight: 700,
-                  minWidth: "110px",
-                }}
-              >
-                {t("thread:date-interview")}
-              </Typography>
-              <Typography component="span">{data.purpose}</Typography>
+              <ThreadTitle>{t("thread:date-interview")}</ThreadTitle>
+              <ThreadContent>{data.purpose}</ThreadContent>
             </Box>
             <Box
               sx={{
@@ -369,16 +376,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                 flexDirection: ["column", "row"],
               }}
             >
-              <Typography
-                component="span"
-                sx={{
-                  fontWeight: 700,
-                  minWidth: "110px",
-                }}
-              >
-                {t("thread:message")}
-              </Typography>
-              <Typography component="span">{data.message}</Typography>
+              <ThreadTitle>{t("thread:message")}</ThreadTitle>
+              <ThreadContent>{data.message}</ThreadContent>
             </Box>
           </Box>
         </Box>
@@ -390,23 +389,26 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
         sx={{
           display: ["flex", "none"],
           flexDirection: type === "unconfirm" ? "column" : "row",
-          justifyContent: type === "confirm" ? "space-between" : "center",
+          justifyContent: type === "confirm" || type === "matched" ? "space-between" : "center",
           alignItems: "center",
         }}
       >
         {type === "unconfirm" && (
           <React.Fragment>
-            <Typography
-              sx={{
-                mt: "60px",
-                mb: "40px",
+            <ButtonComponent
+              props={{
                 color: theme.gray,
-                fontWeight: 700,
+                bgColor: theme.whiteGray,
+                dimension: "x-small",
+              }}
+              sx={{
+                mb: "20px",
                 display: !data?.is_cancel && "none",
+                borderRadius: "12px",
               }}
             >
               {t("thread:button.canceled")}
-            </Typography>
+            </ButtonComponent>
 
             <ButtonComponent
               props={{
@@ -498,6 +500,40 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
           >
             {data?.is_applied ? t("thread:button.applied") : t("thread:button.apply-matching")}
           </ButtonComponent>
+        )}
+
+        {type === "matched" && (
+          <React.Fragment>
+            <ButtonComponent
+              disabled={data?.is_reviewed}
+              props={{
+                color: data?.is_reviewed && theme.gray,
+                bgColor: !data?.is_reviewed && theme.orange,
+                dimension: "x-small",
+              }}
+              sx={{
+                mt: "27px",
+                mb: "5px",
+                fontSize: 14,
+              }}
+            >
+              {data?.is_reviewed ? t("thread:button.reviewed") : t("thread:button.review")}
+            </ButtonComponent>
+
+            <ButtonComponent
+              props={{
+                bgColor: theme.blue,
+                dimension: "x-small",
+              }}
+              sx={{
+                mt: "27px",
+                mb: "5px",
+                fontSize: 14,
+              }}
+            >
+              {t("thread:button.open-message-SP")}
+            </ButtonComponent>
+          </React.Fragment>
         )}
       </Box>
       {/* End Button SP */}
