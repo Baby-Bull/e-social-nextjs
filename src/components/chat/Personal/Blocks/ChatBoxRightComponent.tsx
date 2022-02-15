@@ -6,6 +6,7 @@ import { useTranslation } from "next-i18next";
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
+import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
 import scrollEl from "src/helpers/scrollEl";
 
 import { listMessagesMockData } from "../../mockData";
@@ -80,6 +81,9 @@ const ChatBoxRightComponent = ({ isMobile, toggleRenderSide }) => {
 
   const [listMessages] = useState(listMessagesMockData);
 
+  const [showPopup, setShowPopup] = useState(false);
+  const handleShow = () => setShowPopup(true);
+
   useEffect(() => {
     scrollEl(document.querySelector("#box-message"));
   }, [listMessagesMockData]);
@@ -90,10 +94,9 @@ const ChatBoxRightComponent = ({ isMobile, toggleRenderSide }) => {
         <Typography className="username">
           {isMobile ? <NameOfChatSP name="福くん株式会社" handleClick={toggleRenderSide} /> : listMessages?.name}
         </Typography>
-        <ButtonComponent mode="info" size="medium" className="btn-chat">
+        <ButtonComponent mode="info" size="medium" className="btn-chat" onClick={handleShow}>
           {t("chat:btn-report")}
         </ButtonComponent>
-
         <div className="btn-review">
           <ButtonComponent mode="orange" size="medium" className="btn-chat">
             {isMobile ? t("chat:btn-review-sp") : t("chat:btn-review")}
@@ -145,6 +148,7 @@ const ChatBoxRightComponent = ({ isMobile, toggleRenderSide }) => {
           </IconButton>
         </Paper>
       </Box>
+      <PopupReportUser showPopup={showPopup} setShowPopup={setShowPopup} />
     </Grid>
   );
 };
