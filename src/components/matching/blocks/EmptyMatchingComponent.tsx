@@ -16,13 +16,13 @@ const EmptyMatchingComponent: React.SFC<IEmptyMatchingComponentProps> = ({ text,
   return (
     <Box
       sx={{
-        mt: ["20px", "36px"],
         mx: ["48px", 0],
-        borderTop: `2px solid ${theme.lightGray}`,
-        height: ["470px", "490px"],
+        borderTop: { sm: `2px solid ${theme.lightGray}` },
+        height: { sm: "490px" },
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        backgroundColor: [theme.whiteBlue, "white"],
       }}
     >
       <Typography

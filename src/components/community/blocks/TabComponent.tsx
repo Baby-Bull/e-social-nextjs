@@ -50,6 +50,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
         {data?.map((tab, index) => (
           <TabCustom
             sx={{
+              backgroundColor: "white",
               display: [
                 index.toString() === "2" && "none",
                 tabsCommunity[0]?.children && index.toString() === "2" && "inherit",

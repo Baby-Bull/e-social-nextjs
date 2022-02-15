@@ -377,7 +377,7 @@ class MatchingComponent extends React.Component<IProps, IState> {
           sx={{
             mt: ["9px", "84px"],
             px: [0, "8.4%"],
-            mb: ["80px", "212px"],
+            mb: ["0", "114px"],
           }}
         >
           <TabComponent data={tabs} />
