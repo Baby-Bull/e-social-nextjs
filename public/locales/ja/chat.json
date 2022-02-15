@@ -15,6 +15,20 @@
   "btn-delete": "削除する",
 
   "community-box-left-title": "グループチャット",
-  "community-box-left-input-search-placeholder": "グループチャットを検索"
+  "community-box-left-input-search-placeholder": "グループチャットを検索",
 
+  "popup": {
+    "reason-for-reporting": "通報理由",
+    "required": "必須",
+    "background-to-the-report": "通報に至った経緯",
+    "text-confirm-report": "通報ボタンを押すと運営に通報が送信されます。本当に通報しますか？",
+    "send-report": "本当に通報する",
+    "cancel": "キャンセルする",
+    "thanks-report": "通報にご協力いただきありがとうございます。\n運営一同サービス改善に努めてまいります。",
+    "home": "ホームへ",
+    "placeholder":  {
+      "reason-for-reporting": "選択してください",
+      "background-to-the-report": "詳しく通報理由をご記入ください。"
+    }
+  }
 }
