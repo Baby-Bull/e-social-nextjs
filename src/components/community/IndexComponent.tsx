@@ -3,12 +3,12 @@ import { Box, Typography, Avatar, Link, styled } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
+import LayoutComponent from "src/components/community/LayoutComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import IntroCommunityComponent from "src/components/community/blocks/IntroCommunityComponent";
 import TabComponent from "src/components/community/blocks/TabComponent";
 import BannerComponent from "src/components/community/blocks/BannerComponent";
 import EmptyComponent from "src/components/community/blocks/EmptyComponent";
-import LayoutComponent from "src/components/community/LayoutComponent";
 
 import { members, tabsCommunity, status, bgColorByStatus } from "./mockData";
 
@@ -139,6 +139,8 @@ const CommunityComponent = () => {
             ml: { md: "25px" },
             mb: ["40px", 0],
             width: { md: "80%" },
+            backgroundColor: "white",
+            borderRadius: "12px",
           }}
         >
           <TabComponent data={tabsCommunity} />

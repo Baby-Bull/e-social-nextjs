@@ -15,6 +15,7 @@ const ListCommentComponent = () => {
     <Box
       sx={{
         border: `2px solid ${theme.whiteGray}`,
+        backgroundColor: "white",
         borderRadius: "12px",
         mt: "8px",
         mb: "20px",

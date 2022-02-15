@@ -73,5 +73,21 @@
       "latest-order": "最新順",
       "posting-order": "投稿順"
     }
+  },
+  "form": {
+    "edit": "投稿を編集する",
+    "title": "タイトル",
+    "title-value": "タイトルがここに表示されています",
+    "detail": "詳細",
+    "url": "URL（任意）",
+    "address": "場所（任意）",
+    "submit-edit": "変更内容を保存",
+    "submit-create": "投稿する ",
+    "placeholder": {
+      "title": "60文字以内で記入してください",
+      "detail": "1000文字以内で記入してください",
+      "url": "https://www.〇〇.jp",
+      "address": "東京都渋谷区渋谷◯-◯"
+    }
   }
 }

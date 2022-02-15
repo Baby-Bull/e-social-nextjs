@@ -59,13 +59,14 @@ const PostDetailComponent = () => {
   return (
     <Box
       sx={{
-        pt: ["20px", "40px"],
+        pt: ["20px", "30px"],
         pb: "40px",
         px: ["15px", "40px"],
         border: `2px solid ${theme.whiteGray}`,
         borderRadius: "12px",
         color: theme.navy,
         position: "relative",
+        backgroundColor: "white",
       }}
     >
       {isContributor && <ButtonDropDownComponent />}

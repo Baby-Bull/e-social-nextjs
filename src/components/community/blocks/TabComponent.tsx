@@ -140,6 +140,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              pb: "40px",
             }}
           >
             <GridViewComponent data={tabsCommunity[2]?.data} />
