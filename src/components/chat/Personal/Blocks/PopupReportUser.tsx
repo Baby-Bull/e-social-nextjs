@@ -245,7 +245,7 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup 
                 style={{
                   height: "195px",
                 }}
-                placeholder={t("chat:popup.placeholder.background-to-the-report")}
+                placeholder={t("chat:popup.form.placeholder.background-to-the-report")}
               />
             </Box>
             <Box sx={{ textAlign: "center" }}>
