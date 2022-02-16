@@ -85,7 +85,7 @@ const BannerComponent = () => {
               }}
               onClick={handleClickOpen}
             >
-              {status === "join" ? t("community:banner.withdraw-SP") : t("community:banner.join-SP")}
+              {status === "join" ? t("community:banner.join-SP") : t("community:banner.withdraw-SP")}
             </ButtonComponent>
           </Box>
           <Box
@@ -204,7 +204,7 @@ const BannerComponent = () => {
           }}
           onClick={handleClickOpen}
         >
-          {status === "join" ? t("community:banner.withdraw") : t("community:banner.join")}
+          {status === "join" ? t("community:banner.join") : t("community:banner.withdraw")}
         </ButtonComponent>
       </Box>
 

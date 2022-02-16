@@ -12,6 +12,7 @@ import {
   DialogTitle,
   Fab,
   Dialog,
+  Link,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
@@ -88,10 +89,28 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({ top
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem sx={{ fontSize: 14, py: "0px" }}>{t("community:button.dropdown.edit")}</MenuItem>
+        <MenuItem sx={{ fontSize: 14, py: "0px" }}>
+          <Link href="/community/post/edit">
+            <Typography
+              sx={{
+                color: theme.gray,
+                fontSize: 14,
+              }}
+            >
+              {t("community:button.dropdown.edit")}
+            </Typography>
+          </Link>
+        </MenuItem>
         <Divider />
         <MenuItem sx={{ fontSize: 14, py: "0px" }} onClick={handleClickOpenDialog}>
-          {t("community:button.dropdown.delete")}
+          <Typography
+            sx={{
+              color: theme.gray,
+              fontSize: 14,
+            }}
+          >
+            {t("community:button.dropdown.delete")}
+          </Typography>
         </MenuItem>
       </Menu>
 

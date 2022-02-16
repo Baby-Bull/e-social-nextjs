@@ -78,6 +78,7 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
             "&:hover": {
               cursor: "pointer",
               color: theme.blue,
+              textDecoration: "underline",
             },
           }}
         >

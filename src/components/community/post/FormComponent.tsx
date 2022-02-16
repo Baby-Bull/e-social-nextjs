@@ -78,7 +78,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
           fontWeight: 700,
         }}
       >
-        {t("community:form.edit")}
+        {editable ? t("community:form.edit") : t("community:form.create")}
       </Typography>
 
       <Box
