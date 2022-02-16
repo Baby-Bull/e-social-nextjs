@@ -10,6 +10,7 @@ import { useTranslation } from "next-i18next";
 import { Avatar, Box, Select, Typography } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 
+import { nameUser } from "src/components/chat/mockData";
 import theme from "src/theme";
 
 interface IReportUserProps {
@@ -155,7 +156,7 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup 
           }}
           onClick={handleClose}
         >
-          <Avatar src="/assets/images/icon/ic_close.png" />
+          <Avatar src="/assets/images/icon/ic_close.png" sx={{ width: "42px", height: "42px" }} />
         </Box>
         <DialogTitle sx={{ p: 0, mb: "32px", display: report ? "none" : "block" }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -169,7 +170,7 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup 
                 ml: "20px",
               }}
             >
-              佐藤太郎さんへのレビュー
+              {nameUser}
             </Typography>
           </Box>
         </DialogTitle>
@@ -181,7 +182,8 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup 
             />
           </Box>
           <Box sx={{ m: "20px 0 34px 0" }}>
-            <TypoContentReport>{t("chat:popup.thanks-report")}</TypoContentReport>
+            <TypoContentReport>{t("chat:popup.thanks-report1")}</TypoContentReport>
+            <TypoContentReport>{t("chat:popup.thanks-report2")}</TypoContentReport>
           </Box>
           <Box sx={{ mb: "36px" }}>
             <ButtonAction

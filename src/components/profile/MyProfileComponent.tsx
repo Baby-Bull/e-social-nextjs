@@ -66,6 +66,7 @@ const MyProfileComponent = () => {
           ProfileSkillUpstreamProcess={ProfileSkillUpstreamProcess}
           ProfileSkillEnglishExperience={ProfileSkillEnglishExperience}
           ProfileSkillLanguageExperience={ProfileSkillLanguageExperience}
+          myProfile
         />
         <Box
           sx={{
@@ -76,7 +77,9 @@ const MyProfileComponent = () => {
             fontWeight: 700,
           }}
         >
-          {t("profile:title-participating-community")} ({countParticipatingCommunity})
+          <Box>
+            {t("profile:title-participating-community")} ({countParticipatingCommunity})
+          </Box>
           <BoxNoDataComponent content={t("profile:participating-community-no-data")} />
         </Box>
         <Box

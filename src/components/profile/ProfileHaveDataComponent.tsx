@@ -67,6 +67,7 @@ const ProfileHaveDataComponent = () => {
           ProfileSkillUpstreamProcess={ProfileSkillUpstreamProcess}
           ProfileSkillEnglishExperience={ProfileSkillEnglishExperience}
           ProfileSkillLanguageExperience={ProfileSkillLanguageExperience}
+          myProfile={false}
         />
         <Box
           sx={{

@@ -108,13 +108,16 @@ const Field = styled(TextField)({
   "& fieldset": {
     border: "none",
   },
+  "&:placeholder": {
+    color: "red",
+  },
   "& .MuiInputBase-input": {
     position: "relative",
     backgroundColor: "#F4FDFF",
     fontSize: 16,
     padding: "9px 16px",
     borderRadius: "6px",
-    fontFamily: "Noto Sans",
+    fontFamily: "Noto Sans JP",
     "@media (max-width: 1200px)": {
       fontSize: 14,
     },
@@ -442,7 +445,7 @@ const ProfileSkillComponent = () => {
                 sx={{
                   position: "absolute",
                   right: { xs: 0, lg: 22 },
-                  top: { xs: "-120px", lg: 0 },
+                  top: { xs: "-120px", lg: "20px" },
                   width: { xs: "100%", lg: "96px" },
                 }}
               >

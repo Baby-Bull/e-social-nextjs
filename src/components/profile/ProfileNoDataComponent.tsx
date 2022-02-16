@@ -66,6 +66,7 @@ const ProfileNoDataComponent = () => {
           ProfileSkillUpstreamProcess={ProfileSkillUpstreamProcess}
           ProfileSkillEnglishExperience={ProfileSkillEnglishExperience}
           ProfileSkillLanguageExperience={ProfileSkillLanguageExperience}
+          myProfile={false}
         />
         <Box
           sx={{
