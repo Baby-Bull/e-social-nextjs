@@ -47,6 +47,7 @@ const BannerComponent = () => {
           alignItems: "center",
           justifyContent: "space-between",
           backgroundImage: ["none", `url("/assets/images/svg/php_bg.svg")`],
+          backgroundSize: "cover",
           borderRadius: "12px",
           border: [`1px solid ${theme.whiteGray}`, "none"],
           height: { xs: "214px", md: "320px" },
