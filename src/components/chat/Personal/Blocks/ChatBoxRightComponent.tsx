@@ -8,6 +8,7 @@ import InputCustom from "src/components/chat/ElementCustom/InputCustom";
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 // @ts-ignore
 import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
+import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupReviewComponent";
 import scrollEl from "src/helpers/scrollEl";
 
 import { listMessagesMockData } from "../../mockData";
@@ -85,6 +86,9 @@ const ChatBoxRightComponent = ({ isMobile, toggleRenderSide }) => {
   const [showPopup, setShowPopup] = useState(false);
   const handleShow = () => setShowPopup(true);
 
+  const [showPopupReview, setShowPopupReview] = useState(false);
+  const handleShowReview = () => setShowPopupReview(true);
+
   useEffect(() => {
     scrollEl(document.querySelector("#box-message"));
   }, [listMessagesMockData]);
@@ -99,7 +103,7 @@ const ChatBoxRightComponent = ({ isMobile, toggleRenderSide }) => {
           {t("chat:btn-report")}
         </ButtonComponent>
         <div className="btn-review">
-          <ButtonComponent mode="orange" size="medium" className="btn-chat">
+          <ButtonComponent mode="orange" size="medium" className="btn-chat" onClick={handleShowReview}>
             {isMobile ? t("chat:btn-review-sp") : t("chat:btn-review")}
           </ButtonComponent>
         </div>
@@ -150,6 +154,7 @@ const ChatBoxRightComponent = ({ isMobile, toggleRenderSide }) => {
         </Paper>
       </Box>
       <PopupReportUser showPopup={showPopup} setShowPopup={setShowPopup} />
+      <PopupReviewComponent showPopup={showPopupReview} setShowPopup={setShowPopupReview} />
     </Grid>
   );
 };

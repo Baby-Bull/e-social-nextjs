@@ -27,9 +27,26 @@
     "thanks-report1": "通報にご協力いただきありがとうございます。",
     "thanks-report2": "運営一同サービス改善に努めてまいります。",
     "home": "ホームへ",
-    "placeholder":  {
-      "reason-for-reporting": "選択してください",
-      "background-to-the-report": "詳しく通報理由をご記入ください。"
+    "evaluation": "評価",
+    "report": "通報",
+    "anonymous": "匿名",
+    "comment": "コメント",
+    "check-review": "レビューを確認",
+    "post-review": "レビューを投稿",
+    "to-fix": "修正する",
+    "twitter": "ツイートする",
+    "text-thanks-review": "レビュー投稿ありがとうございます！",
+    "text-share-review" : "Twitterにレビューを共有してみよう！",
+    "form": {
+      "placeholder":  {
+        "reason-for-reporting": "選択してください",
+        "background-to-the-report": "詳しく通報理由をご記入ください。",
+        "comment": "400文字以内で記入してください。"
+      },
+      "it-was-good": "良かった",
+      "it-was-bad": "悪かった",
+      "report-management": "運営に通報する",
+      "post-anonymously": "匿名で投稿"
     }
   }
 }

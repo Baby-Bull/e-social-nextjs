@@ -12,6 +12,12 @@ import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
 
+interface IReportUserProps {
+  showPopup: boolean;
+  // eslint-disable-next-line no-unused-vars
+  setShowPopup: (status: boolean) => void;
+}
+
 /* event change select option */
 const DialogReview = styled(Dialog)({
   "& .MuiPaper-root": {
@@ -102,9 +108,8 @@ const BoxContentReviewIsCheck = styled(Box)({
   },
 });
 
-const PopupReviewComponent = () => {
+const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup }) => {
   const { t } = useTranslation();
-  const [open, setOpen] = React.useState(false);
   const [isCheck, setIsCheck] = React.useState(false);
   const [isPost, setIsPost] = React.useState(false);
 
@@ -120,12 +125,8 @@ const PopupReviewComponent = () => {
     setIsCheck(false);
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
-    setOpen(false);
+    setShowPopup(false);
     setIsPost(false);
     setIsCheck(false);
   };
@@ -153,11 +154,8 @@ const PopupReviewComponent = () => {
 
   return (
     <Box>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Open alert dialog
-      </Button>
       <DialogReview
-        open={open}
+        open={showPopup}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -177,10 +175,10 @@ const PopupReviewComponent = () => {
         <DialogContent>
           <Box sx={{ textAlign: { xs: "left", lg: "center" }, m: "30px 0 96px 0" }}>
             <Typography sx={{ fontSize: "20px", fontWeight: "700", lineHeight: "40px", color: theme.navy }}>
-              {t("review:popup.text-thanks-review")}
+              {t("chat:popup.text-thanks-review")}
             </Typography>
             <Typography sx={{ fontSize: "20px", fontWeight: "700", lineHeight: "40px", color: theme.navy }}>
-              {t("review:popup.text-share-review")}
+              {t("chat:popup.text-share-review")}
             </Typography>
             <Button
               sx={{
@@ -193,13 +191,13 @@ const PopupReviewComponent = () => {
               }}
             >
               <Avatar src="/assets/images/logo/logo_twitter.png" sx={{ width: "27px", height: "21.9px", mr: "13px" }} />
-              {t("review:popup.twitter")}
+              {t("chat:popup.twitter")}
             </Button>
           </Box>
         </DialogContent>
       </DialogReview>
       <DialogReview
-        open={open}
+        open={showPopup}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -234,7 +232,7 @@ const PopupReviewComponent = () => {
         <DialogContent sx={{ p: "0", display: isCheck ? "none" : "block" }}>
           <DialogContentText id="alert-dialog-description">
             <BoxContentReview>
-              <TypoTitleReview>{t("review:popup.evaluation")}</TypoTitleReview>
+              <TypoTitleReview>{t("chat:popup.evaluation")}</TypoTitleReview>
               <Box sx={{ display: "flex" }}>
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   <Radio
@@ -252,7 +250,7 @@ const PopupReviewComponent = () => {
                     }}
                   />
                   <Typography fontWeight={500} color={theme.navy}>
-                    {t("review:form.it-was-good")}
+                    {t("chat:popup.form.it-was-good")}
                   </Typography>
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center", ml: "29px" }}>
@@ -271,13 +269,13 @@ const PopupReviewComponent = () => {
                     }}
                   />
                   <Typography fontWeight={500} color={theme.navy}>
-                    {t("review:form.it-was-bad")}
+                    {t("chat:popup.form.it-was-bad")}
                   </Typography>
                 </Box>
               </Box>
             </BoxContentReview>
             <BoxContentReview>
-              <TypoTitleReview>{t("review:popup.report")}</TypoTitleReview>
+              <TypoTitleReview>{t("chat:popup.report")}</TypoTitleReview>
               <Box sx={{ display: "flex" }}>
                 <Checkbox
                   onChange={handleChangeReport}
@@ -292,12 +290,12 @@ const PopupReviewComponent = () => {
                   }}
                 />
                 <Typography fontWeight={500} color={theme.navy}>
-                  {t("review:form.report-management")}
+                  {t("chat:popup.form.report-management")}
                 </Typography>
               </Box>
             </BoxContentReview>
             <BoxContentReview>
-              <TypoTitleReview>{t("review:popup.anonymous")}</TypoTitleReview>
+              <TypoTitleReview>{t("chat:popup.anonymous")}</TypoTitleReview>
               <Box sx={{ display: "flex" }}>
                 <Checkbox
                   onChange={handleChangeAnonymous}
@@ -312,16 +310,16 @@ const PopupReviewComponent = () => {
                   }}
                 />
                 <Typography fontWeight={500} color={theme.navy}>
-                  {t("review:form.post-anonymously")}
+                  {t("chat:popup.form.post-anonymously")}
                 </Typography>
               </Box>
             </BoxContentReview>
             <BoxContentReview>
-              <TypoTitleReview sx={{ alignItems: "unset" }}>{t("review:popup.comment")}</TypoTitleReview>
+              <TypoTitleReview sx={{ alignItems: "unset" }}>{t("chat:popup.comment")}</TypoTitleReview>
               <FieldTextAreaReview
                 minRows={12}
                 required
-                placeholder={t("review:form.placeholder.comment")}
+                placeholder={t("chat:popup.form.placeholder.comment")}
                 value={valueComment}
                 onChange={handleChangeComment}
               />
@@ -331,19 +329,19 @@ const PopupReviewComponent = () => {
         <DialogContent sx={{ p: "0", display: isCheck ? "block" : "none" }}>
           <DialogContentText id="alert-dialog-description">
             <BoxContentReviewIsCheck>
-              <TypoTitleReview>{t("review:popup.evaluation")}</TypoTitleReview>
+              <TypoTitleReview>{t("chat:popup.evaluation")}</TypoTitleReview>
               <TypoContentReview>{selectedValueEvaluation}</TypoContentReview>
             </BoxContentReviewIsCheck>
             <BoxContentReviewIsCheck>
-              <TypoTitleReview>{t("review:popup.report")}</TypoTitleReview>
+              <TypoTitleReview>{t("chat:popup.report")}</TypoTitleReview>
               <TypoContentReview>{selectedValueReport}</TypoContentReview>
             </BoxContentReviewIsCheck>
             <BoxContentReviewIsCheck>
-              <TypoTitleReview>{t("review:popup.anonymous")}</TypoTitleReview>
+              <TypoTitleReview>{t("chat:popup.anonymous")}</TypoTitleReview>
               <TypoContentReview>{selectedValueAnonymous}</TypoContentReview>
             </BoxContentReviewIsCheck>
             <BoxContentReviewIsCheck sx={{ display: "block !important" }}>
-              <TypoTitleReview sx={{ alignItems: "unset" }}>{t("review:popup.comment")}</TypoTitleReview>
+              <TypoTitleReview sx={{ alignItems: "unset" }}>{t("chat:popup.comment")}</TypoTitleReview>
               <Box>
                 <FieldTextAreaCheck>{valueComment}</FieldTextAreaCheck>
               </Box>
@@ -362,7 +360,7 @@ const PopupReviewComponent = () => {
               }}
               onClick={handleIsCheck}
             >
-              {t("review:popup.check-review")}
+              {t("chat:popup.check-review")}
             </Button>
           </Box>
           <Box sx={{ display: isCheck ? "block" : "none", textAlign: "center" }}>
@@ -378,7 +376,7 @@ const PopupReviewComponent = () => {
                 }}
                 onClick={handleIsPost}
               >
-                {t("review:popup.post-review")}
+                {t("chat:popup.post-review")}
               </Button>
             </Box>
             <Button
@@ -391,7 +389,7 @@ const PopupReviewComponent = () => {
               }}
               onClick={handleUnCheck}
             >
-              {t("review:popup.to-fix")}
+              {t("chat:popup.to-fix")}
             </Button>
           </Box>
         </DialogActions>
