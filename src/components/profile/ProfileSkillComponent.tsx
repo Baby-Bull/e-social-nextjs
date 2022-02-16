@@ -30,6 +30,7 @@ interface ProfileSkillComponentProps {
   ProfileSkillUpstreamProcess: string;
   ProfileSkillEnglishExperience: string;
   ProfileSkillLanguageExperience: string;
+  myProfile: boolean;
 }
 
 const BoxContentTab = styled(Box)`
@@ -119,6 +120,7 @@ const ProfileSkillComponent: React.SFC<ProfileSkillComponentProps> = ({
   ProfileSkillUpstreamProcess,
   ProfileSkillEnglishExperience,
   ProfileSkillLanguageExperience,
+  myProfile,
 }) => {
   const { t } = useTranslation();
   return (
@@ -142,7 +144,7 @@ const ProfileSkillComponent: React.SFC<ProfileSkillComponentProps> = ({
             fontSize: "14px",
             fontWeight: 700,
             color: "#03BCDB",
-            display: { xs: "none", lg: "flex" },
+            display: myProfile ? "none" : { xs: "none", lg: "flex" },
             alignItems: "center",
             justifyContent: "center",
           }}

@@ -24,7 +24,8 @@
     "text-confirm-report": "通報ボタンを押すと運営に通報が送信されます。本当に通報しますか？",
     "send-report": "本当に通報する",
     "cancel": "キャンセルする",
-    "thanks-report": "通報にご協力いただきありがとうございます。\n運営一同サービス改善に努めてまいります。",
+    "thanks-report1": "通報にご協力いただきありがとうございます。",
+    "thanks-report2": "運営一同サービス改善に努めてまいります。",
     "home": "ホームへ",
     "placeholder":  {
       "reason-for-reporting": "選択してください",

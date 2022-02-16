@@ -120,3 +120,4 @@ export const listThreadsCommunityMockData = [
     status: 2,
   },
 ];
+export const nameUser = "佐藤太郎さんを運営に通報する";

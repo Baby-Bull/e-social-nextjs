@@ -389,7 +389,11 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                       </Box>
                     </BoxInfoProfile>
                     <BoxInfoProfile>
-                      <Box>{t("profile:participating-community")}</Box>
+                      <Box>
+                        {t("profile:participating-community1")}
+                        <br />
+                        {t("profile:participating-community2")}
+                      </Box>
                       <Box
                         sx={{
                           display: "flex",
@@ -558,7 +562,9 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                       fontSize: "8px",
                     }}
                   >
-                    {t("profile:participating-community")}
+                    {t("profile:participating-community1")}
+                    <br />
+                    {t("profile:participating-community2")}
                   </Box>
                   <Box
                     sx={{
