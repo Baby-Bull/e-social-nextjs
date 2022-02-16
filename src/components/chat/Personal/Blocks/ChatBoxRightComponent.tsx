@@ -6,6 +6,7 @@ import { useTranslation } from "next-i18next";
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
+// @ts-ignore
 import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
 import scrollEl from "src/helpers/scrollEl";
 
