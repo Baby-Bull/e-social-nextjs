@@ -17,7 +17,7 @@ const LoginComponent = () => {
           <Grid item xs={12} sm={6}>
             <Box
               sx={{
-                pt: ["64px", 9],
+                pt: ["64px", "110px"],
                 px: ["8%", "20.7%"],
                 display: "flex",
                 flexDirection: "column",
