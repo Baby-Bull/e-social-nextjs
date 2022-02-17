@@ -8,7 +8,7 @@ const TagA = styled(Link)`
   text-decoration: none;
   ${(props) => props.theme.breakpoints.up("xs")} {
     margin-left: 0;
-    margin-right: 45px;
+    margin-right: 40px;
   }
 
   ${(props) => props.theme.breakpoints.up("lg")} {
@@ -34,10 +34,10 @@ const FooterComponent = () => {
               fontSize: "14px",
             }}
           >
-            <TagA href="/#" color="secondary">
+            <TagA href="/#" color="secondary" sx={{ mr: "26px !important" }}>
               {t("footer.signin")}
             </TagA>
-            <TagA href="/#" color="secondary">
+            <TagA href="/#" color="secondary" sx={{ mr: "26px !important" }}>
               {t("footer.signout")}
             </TagA>
           </Box>

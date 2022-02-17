@@ -94,8 +94,8 @@ const GridLeftComponent: React.SFC<IGridLeftComponentProps> = ({ smAndUp }) => {
           spacing={{ xs: "20px", sm: 4 }}
           sx={{
             pt: ["40px", "57px"],
-            px: { sm: "32px" },
-            width: ["90%", "92%"],
+            px: { sm: "60px" },
+            width: ["90%", "100%"],
             height: "100%",
           }}
         >
