@@ -164,34 +164,29 @@ const BannerComponent = () => {
               }}
               component="ul"
             >
-              {infoCommunity?.chipData.map((data) => {
-                let icon;
-
-                return (
-                  <ListItem
-                    key={data.key}
+              {infoCommunity?.chipData.map((data) => (
+                <ListItem
+                  key={data.key}
+                  sx={{
+                    ml: 0,
+                    mr: "2px",
+                  }}
+                >
+                  <Chip
+                    variant="outlined"
+                    size="small"
+                    label={data.label}
                     sx={{
-                      ml: 0,
-                      mr: "2px",
+                      fontSize: 12,
+                      fontWeight: 400,
+                      color: theme.navy,
+                      backgroundColor: theme.whiteBlue,
+                      borderRadius: "4px",
+                      borderColor: "transparent",
                     }}
-                  >
-                    <Chip
-                      variant="outlined"
-                      size="small"
-                      icon={icon}
-                      label={data.label}
-                      sx={{
-                        fontSize: 12,
-                        fontWeight: 400,
-                        color: theme.navy,
-                        backgroundColor: theme.whiteBlue,
-                        borderRadius: "4px",
-                        borderColor: "transparent",
-                      }}
-                    />
-                  </ListItem>
-                );
-              })}
+                  />
+                </ListItem>
+              ))}
             </Paper>
           </Box>
         </Box>

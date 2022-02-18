@@ -153,7 +153,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
                     color: theme.navy,
                     width: ["320px", "240px"],
                     height: "40px",
-                    backgroundColor: ["white"],
+                    backgroundColor: "white",
                     fieldset: {
                       borderColor: [theme.lightGray, theme.gray],
                     },

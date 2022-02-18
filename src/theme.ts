@@ -106,4 +106,18 @@ const theme = createTheme({
   },
 });
 
+export const themeSelect = createTheme({
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          "&": {
+            borderRadius: "16px"
+          },
+        },
+      }
+    }
+  },
+});
+
 export default theme;
