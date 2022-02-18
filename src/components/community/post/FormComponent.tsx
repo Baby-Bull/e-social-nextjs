@@ -17,7 +17,7 @@ const BoxTitle = styled(Box)({
   fontWeight: 700,
 });
 
-const InputCustom = styled(InputBase)({
+export const InputCustom = styled(InputBase)({
   backgroundColor: theme.whiteBlue,
   borderRadius: "6px",
   width: "100%",
@@ -44,22 +44,27 @@ const InputCustom = styled(InputBase)({
   },
 });
 
-const TextareaAutosizeCustom = styled(TextareaAutosize)({
+export const TextareaAutosizeCustom = styled(TextareaAutosize)({
   backgroundColor: theme.whiteBlue,
-  marginTop: "8px",
   paddingTop: "9px",
   paddingLeft: "18px",
   width: "100%",
-  height: "120px",
   resize: "none",
-  border: "none",
+  minHeight: "80px",
+  border: `2px solid transparent`,
   borderRadius: "6px",
+  fontFamily: "Noto Sans JP",
+  color: theme.navy,
   fontSize: 14,
   "&::-webkit-input-placeholder": {
     color: theme.gray,
   },
   "@media (min-width: 768px)": {
     fontSize: 16,
+  },
+  "&:focus-visible": {
+    border: `2px solid ${theme.blue}`,
+    outline: "none",
   },
 });
 
@@ -105,7 +110,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
             />
           </Grid>
 
-          <Grid item xs={3}>
+          <Grid item xs={12} sm={3}>
             <BoxTitle>{t("community:form.detail")}</BoxTitle>
           </Grid>
           <Grid item xs={12} sm={9}>
@@ -113,7 +118,6 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
               sx={{
                 height: "100%",
                 borderRadius: "6px",
-                marginBottom: "4px",
                 "& div": {
                   backgroundColor: theme.whiteBlue,
                   height: "100%",
@@ -140,9 +144,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
                 <TextareaAutosizeCustom
                   aria-label="write-comment"
                   placeholder={t("community:place-holder")}
-                  style={{
-                    height: "80px",
-                  }}
+                  style={{}}
                 />
               )}
             </Box>

@@ -40,10 +40,15 @@
     },
     "dialog": {
       "cancel": "キャンセル",
-      "withdraw": "退会する"
+      "withdraw": "退会する",
+      "delete-community": "コミュニティを削除"
     },
     "detail": {
       "submit-post": "投稿する"
+    },
+    "setting": { 
+      "save": "保存する",
+      "upload": "画像をアップロード"
     }
   },
   "intro": {
@@ -89,6 +94,38 @@
       "detail": "1000文字以内で記入してください",
       "url": "https://www.〇〇.jp",
       "address": "東京都渋谷区渋谷◯-◯"
+    }
+  },
+  "setting": {
+    "title": "管理者メニュー",
+    "form": {
+      "text-upload": "ミュニティの画像を設定してください。",
+      "max-upload": "推奨サイズ 1200×1200px",
+      "name": "コミュニティ名",
+      "detail": "コミュニティ詳細",
+      "representative": "代表者",
+      "administrator": "管理者追加",
+      "role-create-post": "投稿の作成権限",
+      "role-join": "コミュニティへの参加",
+      "tag": "コミュニティタグ",
+      "placeholder": {
+        "name": "40文字以内で記入してください",
+        "detail": "1000文字以内で記入してください",
+        "administrator": "管理人に追加したいメンバーを選択",
+        "role-create-post": "選択してください",
+        "tag": "コミュニティに関するタグを設定すると検索されやすくなります",
+        "tag-SP": "設定すると検索されやすくなります"
+      },
+      "remove": "X削除",
+      "add": "＋追加する",
+      "delete-img": "現在の画像を削除する",
+      "explain": "管理者はコミュニティの削除以外の管理を全て行うことができます。",
+      "delete-community": "コミュニティを削除",
+      "dialog": {
+        "title": "コミュニティの削除",
+        "content": "一度削除をしてしまうと元には戻せません。本当に削除しますか？"
+      },
+      "save-success": "設定を保存しました"
     }
   }
 }

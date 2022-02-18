@@ -271,7 +271,19 @@ export const tabsCommunity = [
     ],
   },
   {
-    text: "参加メンバー",
+    text: "管理者メニュー",
+  },
+];
+
+export const tabsCommunitySetting = [
+  {
+    text: "基本設定",
+  },
+  {
+    text: "メンバー管理",
+  },
+  {
+    text: "参加申請",
   },
 ];
 
@@ -367,3 +379,46 @@ export const comments = [
     ${text1}`,
   },
 ];
+
+export const admins = [
+  {
+    label: "佐藤太郎",
+    avatar: "/assets/images/svg/account.svg",
+    value: 0,
+  },
+  {
+    label: "エンジニア花子",
+    avatar: "/assets/images/svg/account.svg",
+    value: 1,
+  },
+  {
+    label: "プロダクトリーダーしてます鈴木",
+    avatar: "/assets/images/svg/account.svg",
+    value: 2,
+  },
+  {
+    label: "おじろ＠Java ",
+    avatar: "/assets/images/svg/account.svg",
+    value: 2,
+  },
+];
+
+export const infoCommunitySetting = {
+  avatar: "/assets/images/svg/php.svg",
+  admin: infoAdmin,
+  rolesCreatePost: [
+    { value: 0, label: "する" },
+    { value: 1, label: "古い順" },
+    { value: 2, label: "名前順" },
+  ],
+  rolesJoin: [
+    { value: "0", label: "誰でも参加可能" },
+    { value: "1", label: "管理人の承認が必要" },
+  ],
+  tags: [
+    { key: 0, label: "デザイナー" },
+    { key: 1, label: "エンジニア" },
+    { key: 2, label: "デザイナー" },
+    { key: 3, label: "エンジニア" },
+  ],
+};

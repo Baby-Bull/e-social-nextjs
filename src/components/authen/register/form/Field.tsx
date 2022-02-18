@@ -295,7 +295,17 @@ export const Field: React.SFC<IFieldProps> = ({ required, id, label, placeholder
                     icon={icon}
                     label={data.label}
                     onDelete={handleDelete(data)}
-                    deleteIcon={<Avatar sx={{ width: "16px", height: "16px" }} src="/assets/images/svg/delete.svg" />}
+                    deleteIcon={
+                      <Avatar
+                        src="/assets/images/svg/delete.svg"
+                        sx={{
+                          width: "16px",
+                          height: "16px",
+                          p: "4px",
+                          backgroundColor: "white",
+                        }}
+                      />
+                    }
                     sx={{
                       pr: 1,
                       fontSize: 12,
