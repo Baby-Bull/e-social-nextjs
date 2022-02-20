@@ -1,0 +1,15 @@
+{
+  "input-tag-placeholder": "フリーワード検索",
+  "label-checkbox-1": "今すぐ話せます",
+  "label-checkbox-2": "友達募集しています",
+  "label-checkbox-3": "相談に乗って欲しいです",
+  "title": "エンジニア一覧",
+  "sort-by": "並び替え",
+  "recommend-order": "オススメ順",
+  "last-login-order": "ログイン順",
+  "btn-search": "検索",
+  "btn-clear-condition": "検索条件クリア",
+
+  "btn-send-matching-request": "マッチングのリクエストを送る",
+  "btn-add-favorite": "話したい人リストに登録"
+}
