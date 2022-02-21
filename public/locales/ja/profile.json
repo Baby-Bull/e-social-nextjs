@@ -73,5 +73,12 @@
     "to-add": "＋追加する",
     "estimated-star": "星の目安",
     "delete": "×削除"
+  },
+  "popup": {
+    "chart": {
+      "title": "佐藤太郎さんのキャラクター分析結果",
+      "title-mb1": "佐藤太郎さんの",
+      "title-mb2": "キャラクター分析結果"
+    }
   }
 }

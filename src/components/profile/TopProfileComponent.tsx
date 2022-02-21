@@ -1,8 +1,9 @@
 import { Box, Button, Avatar, Grid, Link } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 
+import PopupChartProfileComponent from "src/components/profile/PopupChartProfileComponent";
 import theme from "src/theme";
 
 interface TopProfileComponentProps {
@@ -37,6 +38,11 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
   myProfile,
 }) => {
   const { t } = useTranslation();
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleShowPopup = () => {
+    setShowPopup(true);
+  };
   return (
     <Box>
       <Grid container>
@@ -313,6 +319,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                         color: "#ffffff",
                         mr: "9.3px",
                       }}
+                      onClick={handleShowPopup}
                     >
                       <Box>{t("profile:character-analysis")}</Box>
                     </Button>
@@ -648,6 +655,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                   fontWeight: 700,
                   fontSize: "14px",
                 }}
+                onClick={handleShowPopup}
               >
                 <Box>{t("profile:character-analysis")}</Box>
               </Button>
@@ -787,6 +795,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
           </Box>
         </Grid>
       </Grid>
+      <PopupChartProfileComponent showPopup={showPopup} setShowPopup={setShowPopup} />
     </Box>
   );
 };
