@@ -108,7 +108,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data }) => {
                 height: "36px",
               }}
             >
-              {t("community:button.setting.participation.approve")}ss
+              {t("community:button.setting.participation.approve")}
             </ButtonComponent>
 
             <ButtonComponent
@@ -120,7 +120,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data }) => {
                 height: "36px",
               }}
             >
-              {t("community:button.setting.participation.reject")}aa
+              {t("community:button.setting.participation.reject")}
             </ButtonComponent>
           </React.Fragment>
         </Box>
