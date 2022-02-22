@@ -126,7 +126,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, type }) =
                 dimension: "x-small",
               }}
               sx={{
-                display: ["none", !data.is_manager && "flex"],
+                display: ["none", !data.is_representative && "flex"],
                 height: "36px",
               }}
               onClick={handleOpenDialogBlock}
@@ -160,6 +160,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, type }) =
                   borderRadius: "8px",
                   height: "32px",
                 }}
+                onClick={handleOpenDialogUnBlock}
               >
                 {t("community:button.setting.member.unblock-SP")}
               </ButtonComponent>
