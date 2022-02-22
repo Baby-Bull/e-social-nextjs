@@ -37,6 +37,8 @@ interface IChildTabCustomProps {
     smFontSize?: string;
     mdFontSize?: string;
     mdWidth?: string;
+    xsFontSize?: string;
+    xsWidth?: string;
   };
 }
 
@@ -48,6 +50,11 @@ export const ChildTabCustom = styled(Tab)<IChildTabCustomProps>(({ props }) => (
   "&.Mui-selected": {
     color: theme.blue,
     fontWeight: 700,
+  },
+  "@media (max-width: 425px)": {
+    minWidth: props?.xsWidth || "",
+    maxWidth: props?.xsWidth || "",
+    fontSize: props?.xsFontSize || "",
   },
   "@media (min-width: 768px)": {
     fontSize: props?.smFontSize || "",

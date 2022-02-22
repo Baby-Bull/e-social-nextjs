@@ -26,6 +26,8 @@ import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
 import ButtonExplainComponent from "src/components/community/setting/blocks/ButtonExplainComponent";
+import ParticipatedMemberComponent from "src/components/community/setting/blocks/ParticipatedMemberComponent";
+import MemberComponent from "src/components/community/setting/blocks/MemberComponent";
 
 import { admins, tabsCommunitySetting, infoCommunitySetting } from "../mockData";
 
@@ -201,12 +203,12 @@ const CommunitySettingComponent = () => {
         <TabPanel value={value} index={0}>
           <Box
             sx={{
+              mt: "20px",
+              mr: ["20px", "17.32%"],
+              ml: ["20px", "0"],
               pt: ["20px ", "40px"],
               px: ["10px", "40px"],
-              ml: ["20px", "0px"],
-              mr: ["20px", "18%"],
               pb: "64px",
-              mb: ["80px", "170px"],
               backgroundColor: "white",
             }}
           >
@@ -626,10 +628,10 @@ const CommunitySettingComponent = () => {
         </TabPanel>
 
         <TabPanel value={value} index={1}>
-          Item Two
+          <MemberComponent dataChild={tabsCommunitySetting[1]?.children} />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Item Three
+          <ParticipatedMemberComponent />
         </TabPanel>
       </Box>
 
