@@ -1,21 +1,11 @@
 import React from "react";
-import {
-  Box,
-  Typography,
-  Avatar,
-  Chip,
-  Paper,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Fab,
-} from "@mui/material";
+import { Box, Typography, Avatar, Chip, Paper } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
+import DialogConfirmWithAvatarComponent from "src/components/common/dialog/DialogConfirmWithAvatarComponent";
 
 import { bgColorByStatus, infoCommunity, status } from "../mockData";
 
@@ -25,15 +15,8 @@ const BannerComponent = () => {
   const { t } = useTranslation();
 
   const [open, setOpen] = React.useState(false);
-  const [fullWidth] = React.useState(true);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleClickOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   return (
     <React.Fragment>
@@ -204,166 +187,16 @@ const BannerComponent = () => {
         </ButtonComponent>
       </Box>
 
-      <Dialog
-        PaperProps={{
-          style: {
-            borderRadius: 12,
-            maxWidth: "640px",
-          },
-        }}
-        open={open}
-        onClose={handleClose}
-        scroll="paper"
-        fullWidth={fullWidth}
-        aria-labelledby="scroll-dialog-title"
-        aria-describedby="scroll-dialog-description"
-      >
-        <DialogTitle
-          id="scroll-dialog-title"
-          sx={{
-            backgroundColor: theme.whiteBlue,
-            textAlign: "right",
-            position: "relative",
-          }}
-        >
-          <Fab
-            variant="circular"
-            onClick={handleClose}
-            sx={{
-              position: "absolute",
-              top: ["7px", "10px"],
-              right: ["7px", "15px"],
-              width: ["30px", "inherit"],
-              height: ["30px", "inherit"],
-              backgroundColor: "transparent",
-              boxShadow: "unset",
-              "&:hover": {
-                backgroundColor: "transparent",
-                opacity: 0.8,
-              },
-            }}
-          >
-            <Avatar
-              variant="square"
-              sx={{
-                width: ["24px", "22px"],
-                height: ["24px", "22px"],
-                display: "flex",
-                justifyContent: "center",
-              }}
-              src="/assets/images/svg/delete-x.svg"
-            />
-          </Fab>
-        </DialogTitle>
-
-        <DialogContent
-          sx={{
-            backgroundColor: theme.whiteBlue,
-            px: ["14px", "40px"],
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              pt: ["53px", "37px"],
-              pr: { sm: "60px" },
-              mb: ["22px", 0],
-            }}
-          >
-            <Avatar
-              variant="square"
-              sx={{
-                width: ["40px", "64px"],
-                height: "100%",
-              }}
-              src="/assets/images/svg/account.svg"
-            />
-
-            <Box
-              sx={{
-                ml: ["8px", "16px"],
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}
-            >
-              <Typography
-                component="span"
-                sx={{
-                  color: theme.navy,
-                  fontSize: [16, 20],
-                  fontWeight: 700,
-                }}
-              >
-                {t("community:dialog.confirm")}
-              </Typography>
-
-              <Typography
-                component="span"
-                sx={{
-                  mt: ["35px"],
-                  display: ["none", "inherit"],
-                  color: theme.navy,
-                }}
-              >
-                {t("community:dialog.note")}
-              </Typography>
-            </Box>
-          </Box>
-
-          <Box
-            component="span"
-            sx={{
-              display: { sm: "none" },
-              color: theme.navy,
-              fontSize: 14,
-            }}
-          >
-            {t("community:dialog.note")}
-          </Box>
-        </DialogContent>
-
-        <DialogActions
-          sx={{
-            backgroundColor: theme.whiteBlue,
-            display: "flex",
-            flexDirection: ["column", "row"],
-            alignItems: "center",
-            justifyContent: ["center", "space-around"],
-            p: ["30px 45px 60px 45px", "30px 45px 55px 45px"],
-            "&.MuiDialogActions-root": {
-              "& > :not(:first-of-type)": {
-                marginLeft: 0,
-              },
-            },
-          }}
-        >
-          <ButtonComponent
-            props={{
-              dimension: "medium",
-              bgColor: theme.gray,
-            }}
-            sx={{
-              height: "56px",
-            }}
-          >
-            {t("community:button.dialog.cancel")}
-          </ButtonComponent>
-
-          <ButtonComponent
-            props={{
-              dimension: "medium",
-              bgColor: theme.blue,
-            }}
-            sx={{
-              height: "56px",
-              mt: ["40px", 0],
-            }}
-          >
-            {t("community:button.dialog.withdraw")}
-          </ButtonComponent>
-        </DialogActions>
-      </Dialog>
+      <DialogConfirmWithAvatarComponent
+        title={t("community:dialog.confirm")}
+        content={t("community:dialog.note")}
+        btnLeft={t("community:button.dialog.cancel")}
+        btnRight={t("community:button.dialog.withdraw")}
+        isShow={open}
+        handleClose={handleClose}
+        handleCancel={handleClose}
+        handleOK={handleClose}
+      />
     </React.Fragment>
   );
 };

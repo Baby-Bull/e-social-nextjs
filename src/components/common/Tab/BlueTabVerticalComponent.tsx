@@ -3,6 +3,7 @@ import { Box, Tab } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 import theme from "src/theme";
+import useViewport from "src/helpers/useViewport";
 
 interface ITabPanelProps {
   children?: React.ReactNode;
@@ -13,13 +14,20 @@ interface ITabPanelProps {
 export const TabPanel = (props: ITabPanelProps) => {
   const { children, value, index } = props;
 
+  const viewPort = useViewport();
+  const isMobile = viewPort.width <= 425;
+
   return (
     <div
       role="tabpanel"
       hidden={value !== index}
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
-      style={{ backgroundColor: theme.whiteBlue }}
+      style={{
+        backgroundColor: theme.whiteBlue,
+        width: "100%",
+        paddingBottom: isMobile ? "80px" : "170px",
+      }}
     >
       {value === index && <Box> {children}</Box>}
     </div>
@@ -42,7 +50,6 @@ export const TabCustom = styled(Tab)<ITabCustomProps>(({ props }) => ({
   height: "48px",
   color: theme.navy,
   fontWeight: 500,
-  marginBottom: "20px",
   minWidth: props?.smWidth || "20%",
   maxWidth: props?.smWidth || "20%",
   "&.Mui-selected": {
@@ -65,6 +72,7 @@ export const TabCustom = styled(Tab)<ITabCustomProps>(({ props }) => ({
     maxWidth: props?.xsWidth,
   },
   "@media (min-width: 768px)": {
+    marginBottom: "20px",
     borderRadius: "12px 0 0 12px",
     paddingLeft: "26px",
     alignItems: "flex-start",

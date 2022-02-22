@@ -44,6 +44,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
           display: { sm: "none" },
           fontSize: [12, 14],
           fontWeight: 400,
+          mb: "5px",
         }}
       >
         {data.date_request}
