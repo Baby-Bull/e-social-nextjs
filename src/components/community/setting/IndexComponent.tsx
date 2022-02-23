@@ -75,8 +75,12 @@ const SelectCustom = styled(Select)({
 const CommunitySettingComponent = () => {
   const { t } = useTranslation();
 
+  const [saveSuccess, setSaveSuccess] = React.useState(false);
+  const handleSaveSuccess = () => setSaveSuccess(true);
+
   const [value, setValue] = React.useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setSaveSuccess(false);
     setValue(newValue);
   };
 
@@ -122,9 +126,6 @@ const CommunitySettingComponent = () => {
     setOpen(false);
   };
 
-  const [saveSuccess, setSaveSuccess] = React.useState(false);
-  const handleSaveSuccess = () => setSaveSuccess(true);
-
   return (
     <ContentComponent>
       <Box
@@ -135,10 +136,10 @@ const CommunitySettingComponent = () => {
           position: "absolute",
           top: 0,
           width: "100%",
-          height: "80px",
+          height: ["40px", "80px"],
           backgroundColor: theme.blue,
           opacity: 0.8,
-          fontSize: 20,
+          fontSize: [16, 20],
           fontWeight: 700,
           color: "white",
           zIndex: 99999,
@@ -149,7 +150,7 @@ const CommunitySettingComponent = () => {
 
       <Box
         sx={{
-          mt: "38px",
+          mt: ["20px", "38px"],
           ml: [0, "40px"],
           bgcolor: "white",
           display: "flex",
@@ -605,12 +606,16 @@ const CommunitySettingComponent = () => {
                   bgColor: disableBtnSubmit ? theme.gray : theme.blue,
                 }}
                 sx={{
+                  fontSize: { sm: 20 },
                   height: ["48px", "56px"],
                   "@media (max-width: 425px)": {
                     width: "200px",
                   },
+                  "&:hover": {
+                    cursor: disableBtnSubmit && "not-allowed",
+                  },
                 }}
-                onClick={handleSaveSuccess}
+                onClick={!disableBtnSubmit ? handleSaveSuccess : null}
               >
                 {t("community:button.setting.save")}
               </ButtonComponent>
@@ -638,7 +643,7 @@ const CommunitySettingComponent = () => {
       <DialogConfirmComponent
         title={t("community:setting.form.dialog.title")}
         content={t("community:setting.form.dialog.content")}
-        btnLeft={t("community:button.dialog.cancel")}
+        btnLeft={t("community:button.dialog.cancel-2")}
         btnRight={t("community:button.dialog.delete-community")}
         isShow={openDialog}
         handleClose={handleCloseDialog}

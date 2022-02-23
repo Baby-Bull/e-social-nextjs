@@ -196,7 +196,14 @@ export default function PrimarySearchAppBar() {
   );
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ background: "#fff", p: { xs: 0, lg: "0 16px" } }}>
+      <AppBar
+        position="static"
+        sx={{
+          background: "#fff",
+          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+          p: { xs: 0, lg: "0 16px" },
+        }}
+      >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Box

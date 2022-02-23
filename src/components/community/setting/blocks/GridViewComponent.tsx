@@ -18,7 +18,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data }) => {
         py: ["20px", "22px"],
         px: ["20px", "40px"],
         mb: ["20px", 0],
-        borderTop: [`1px solid ${theme.lightGray}`, `2px solid ${theme.lightGray}`],
+        borderTop: `1px solid ${theme.lightGray}`,
         borderBottom: [`1px solid ${theme.lightGray}`, "none"],
         color: theme.navy,
         backgroundColor: "white",
@@ -113,7 +113,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data }) => {
 
             <ButtonComponent
               props={{
-                bgColor: theme.blue,
+                bgColor: theme.gray,
                 dimension: "x-small",
               }}
               sx={{
