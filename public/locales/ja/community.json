@@ -40,6 +40,7 @@
     },
     "dialog": {
       "cancel": "キャンセル",
+      "cancel-2": "キャンセルする",
       "withdraw": "退会する",
       "delete-community": "コミュニティを削除",
       "block": "ブロックする",

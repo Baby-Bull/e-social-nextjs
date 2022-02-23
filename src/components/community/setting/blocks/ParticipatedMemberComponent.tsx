@@ -22,7 +22,7 @@ const ParticipationComponent = () => {
     >
       <Box
         sx={{
-          borderBottom: { sm: `2px solid ${theme.lightGray}` },
+          borderBottom: { sm: `1px solid ${theme.lightGray}` },
         }}
       >
         <Typography
