@@ -41,6 +41,10 @@ const SelectCustom = styled(Select)({
     padding: "10px 11px",
     borderRadius: "12px",
     fontFamily: "Noto Sans",
+    background: "white",
+  },
+  "& .MuiOutlinedInput-notchedOutline": {
+    border: "1px solid #989EA8",
   },
 });
 
@@ -102,7 +106,7 @@ const SearchCommunityComponent = () => {
               sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: { sm: "100%", md: 240 } }}
             >
               <IconButton sx={{ p: "10px" }} aria-label="menu">
-                <img src="/assets/images/svg/ic_user_search.svg" alt="ic_search" width="18px" height="22px" />
+                <img src="/assets/images/svg/ic_search_blue.svg" alt="ic_search" width="18px" height="22px" />
               </IconButton>
               <InputBase
                 className="input-search-tag"

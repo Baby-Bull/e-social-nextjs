@@ -41,6 +41,10 @@ const SelectCustom = styled(Select)({
     padding: "10px 11px",
     borderRadius: "12px",
     fontFamily: "Noto Sans",
+    background: "white",
+  },
+  "& .MuiOutlinedInput-notchedOutline": {
+    border: "1px solid #989EA8",
   },
 });
 
