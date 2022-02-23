@@ -27,6 +27,15 @@
             color: #989EA8;
             font-size: 16px;
             font-weight: 400;
+
+            .MuiInputBase-input {
+              color: #989EA8;
+
+              &::placeholder {
+                color: #989EA8;
+                opacity: 1;
+              }
+            }
           }
         }
 
