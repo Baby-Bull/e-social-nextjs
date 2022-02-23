@@ -45,7 +45,7 @@ const TypoTitleReview = styled(Typography)({
   fontWeight: 700,
   lineHeight: "24px",
   color: theme.navy,
-  width: "120px",
+  width: "100px",
   display: "flex",
   alignItems: "center",
   "@media (max-width: 1200px)": {
@@ -58,7 +58,7 @@ const TypoContentReview = styled(Typography)({
   fontSize: "16px",
   fontWeight: 500,
   lineHeight: "24px",
-  color: theme.black,
+  color: theme.navy,
   display: "flex",
   alignItems: "center",
   "@media (max-width: 1200px)": {
@@ -329,7 +329,18 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
         <DialogContent sx={{ p: "0", display: isCheck ? "block" : "none" }}>
           <DialogContentText id="alert-dialog-description">
             <BoxContentReviewIsCheck>
-              <TypoTitleReview>{t("chat:popup.evaluation")}</TypoTitleReview>
+              <TypoTitleReview>
+                {t("chat:popup.evaluation")}{" "}
+                <Typography
+                  fontSize={12}
+                  fontWeight={700}
+                  lineHeight="17.38px"
+                  color={theme.blue}
+                  sx={{ mt: "-15px", ml: "2px" }}
+                >
+                  *
+                </Typography>
+              </TypoTitleReview>
               <TypoContentReview>{selectedValueEvaluation}</TypoContentReview>
             </BoxContentReviewIsCheck>
             <BoxContentReviewIsCheck>
@@ -341,14 +352,25 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
               <TypoContentReview>{selectedValueAnonymous}</TypoContentReview>
             </BoxContentReviewIsCheck>
             <BoxContentReviewIsCheck sx={{ display: "block !important" }}>
-              <TypoTitleReview sx={{ alignItems: "unset" }}>{t("chat:popup.comment")}</TypoTitleReview>
+              <TypoTitleReview sx={{ alignItems: "unset" }}>
+                {t("chat:popup.comment")}
+                <Typography
+                  fontSize={12}
+                  fontWeight={700}
+                  lineHeight="17.38px"
+                  color={theme.blue}
+                  sx={{ mt: "-5px", ml: "2px" }}
+                >
+                  *
+                </Typography>
+              </TypoTitleReview>
               <Box>
                 <FieldTextAreaCheck>{valueComment}</FieldTextAreaCheck>
               </Box>
             </BoxContentReviewIsCheck>
           </DialogContentText>
         </DialogContent>
-        <DialogActions sx={{ dislay: "flex", justifyContent: "center", ml: { xs: "0", lg: "120px" }, pb: "31px" }}>
+        <DialogActions sx={{ dislay: "flex", justifyContent: "center", pb: "31px" }}>
           <Box sx={{ display: isCheck ? "none" : "block" }}>
             <Button
               sx={{
