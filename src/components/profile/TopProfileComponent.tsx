@@ -298,7 +298,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                           }}
                         >
                           <img src="/assets/images/icon/ic_edit.png" alt="ic_edit" />
-                          <Box sx={{ ml: "2px" }}>{t("profile:edit")}</Box>
+                          {t("profile:edit")}
                         </Button>
                       </Link>
                     </Box>
