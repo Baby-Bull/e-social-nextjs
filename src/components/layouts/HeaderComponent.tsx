@@ -103,6 +103,8 @@ const TypoLabel = styled(Typography)({
 // eslint-disable-next-line react/function-component-definition
 export default function PrimarySearchAppBar() {
   const { t } = useTranslation();
+  const router = useRouter();
+
   const currencies = [
     {
       value: "",
@@ -145,6 +147,14 @@ export default function PrimarySearchAppBar() {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
+
+  const handleRedirectMatching = (type: string) => {
+    Router.push({
+      pathname: "/matching",
+      query: { type: type }
+    })
+  }
+
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -219,7 +229,7 @@ export default function PrimarySearchAppBar() {
           </Link>
         </Button>
       </Box>
-      <Box sx={{ m: "20px 0 0px 12px" }}>
+      <Box sx={{ m: "20px 0 0px 12px" }} onClick={handleMenuClose}>
         <Link href="/chat/personal" underline="none">
           <MenuItemCustom>
             <IconButtonCustom size="large" aria-label="show 4 new mails" color="inherit">
@@ -228,25 +238,25 @@ export default function PrimarySearchAppBar() {
             <TypoLabel>{t("header.message")}</TypoLabel>
           </MenuItemCustom>
         </Link>
-        <MenuItemCustom>
+        <MenuItemCustom onClick={() => handleRedirectMatching("unconfirm")}>
           <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
             <img src="/assets/images/ic_nav_profile/ic_user.svg" alt="ic_user" />
           </IconButtonCustom>
           <TypoLabel>{t("header.matching-request")}</TypoLabel>
         </MenuItemCustom>
-        <MenuItemCustom>
+        <MenuItemCustom onClick={() => handleRedirectMatching("confirm")}>
           <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
             <img src="/assets/images/ic_nav_profile/ic_hand.svg" alt="ic_hand" />
           </IconButtonCustom>
           <TypoLabel>{t("header.matching-you-applied-for")}</TypoLabel>
         </MenuItemCustom>
-        <MenuItemCustom>
+        <MenuItemCustom  onClick={() => handleRedirectMatching("favourite")}>
           <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
             <img src="/assets/images/ic_nav_profile/ic_heart.svg" alt="ic_heart" />
           </IconButtonCustom>
           <TypoLabel>{t("header.list-people-you-want-to-talk")}</TypoLabel>
         </MenuItemCustom>
-        <MenuItemCustom>
+        <MenuItemCustom onClick={() => handleRedirectMatching("reject")}>
           <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
             <img src="/assets/images/ic_nav_profile/ic_star.svg" alt="ic_star" />
           </IconButtonCustom>

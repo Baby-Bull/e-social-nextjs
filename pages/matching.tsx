@@ -8,7 +8,7 @@ const Matching: NextPage = () => <MatchingComponent />;
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ["common", "thread", "register", "matching"])),
+    ...(await serverSideTranslations(locale, ["common", "thread", "register", "matching", "chat", "home"])),
   },
 });
 

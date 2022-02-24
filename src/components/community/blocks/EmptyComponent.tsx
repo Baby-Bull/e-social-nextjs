@@ -14,6 +14,7 @@ interface IEmptyComponentProps {
   };
   bgButton?: string;
   absolute?: boolean;
+  handleClick?: () => void;
 }
 
 const EmptyComponent: React.SFC<IEmptyComponentProps> = ({
@@ -23,6 +24,7 @@ const EmptyComponent: React.SFC<IEmptyComponentProps> = ({
   mtButton,
   bgButton,
   absolute,
+  handleClick,
 }) => (
   <Box
     sx={{
@@ -71,6 +73,7 @@ const EmptyComponent: React.SFC<IEmptyComponentProps> = ({
         display: hiddenButton ? "none" : "inherit",
         mt: [mtButton?.xs || "0", mtButton?.md || "80px"],
       }}
+      onClick={handleClick}
     >
       {textButton}
     </ButtonComponent>

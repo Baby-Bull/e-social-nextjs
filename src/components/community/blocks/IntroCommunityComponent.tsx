@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
@@ -9,6 +10,7 @@ import { countMemberOnVirtualRoom, infoAdmin, status, canCreatePost } from "../m
 
 const IntroCommunityComponent = () => {
   const { t } = useTranslation();
+  const router = useRouter();
 
   return (
     <React.Fragment>
@@ -132,6 +134,7 @@ const IntroCommunityComponent = () => {
               mt: ["20px", "40px"],
               height: "54px",
             }}
+            onClick={() => router.push(`/community/post/create`)}
           >
             {t("community:button.intro.create-post")}
           </ButtonComponent>

@@ -2,21 +2,26 @@ import React from "react";
 import { Box, Typography, Avatar, Chip, Paper } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
+import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmWithAvatarComponent from "src/components/common/dialog/DialogConfirmWithAvatarComponent";
 
-import { bgColorByStatus, infoCommunity, status } from "../mockData";
+import { bgColorByStatus, infoCommunity, status, isAdminCommunity } from "../mockData";
 
 const ListItem = styled("li")({});
 
 const BannerComponent = () => {
   const { t } = useTranslation();
+  const router = useRouter();
 
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const [roleAdminCommunity, setRoleAdminCommunity] = React.useState(isAdminCommunity);
+  const handleClickRoleAdminCommunity = () => setRoleAdminCommunity(!roleAdminCommunity);
 
   return (
     <React.Fragment>
@@ -57,10 +62,11 @@ const BannerComponent = () => {
                 height: ["80px", "160px"],
               }}
               src="/assets/images/svg/php.svg"
+              onClick={handleClickRoleAdminCommunity}
             />
             <ButtonComponent
               sx={{
-                display: { md: "none" },
+                display: { xs: roleAdminCommunity && "none", md: "none" },
                 width: "120px",
                 height: "36px",
               }}
@@ -70,6 +76,25 @@ const BannerComponent = () => {
               onClick={handleClickOpen}
             >
               {status === "join" ? t("community:banner.join-SP") : t("community:banner.withdraw-SP")}
+            </ButtonComponent>
+
+            <ButtonComponent
+              variant="outlined"
+              sx={{
+                display: { xs: !roleAdminCommunity && "none", md: "none" },
+                width: "120px",
+                height: "36px",
+                fontSize: 14,
+                px: 0,
+              }}
+              props={{
+                bgColor: "white",
+                color: theme.blue,
+                borderColor: theme.blue,
+              }}
+              onClick={() => router.push(`/community/setting`)}
+            >
+              {t("community:setting.title")}
             </ButtonComponent>
           </Box>
           <Box
@@ -176,7 +201,7 @@ const BannerComponent = () => {
 
         <ButtonComponent
           sx={{
-            display: { xs: "none", md: "inherit" },
+            display: { xs: "none", md: !roleAdminCommunity && "inherit" },
           }}
           props={{
             bgColor: bgColorByStatus,
@@ -184,6 +209,21 @@ const BannerComponent = () => {
           onClick={handleClickOpen}
         >
           {status === "join" ? t("community:banner.join") : t("community:banner.withdraw")}
+        </ButtonComponent>
+
+        <ButtonComponent
+          variant="outlined"
+          sx={{
+            display: { xs: "none", md: roleAdminCommunity && "inherit" },
+          }}
+          props={{
+            bgColor: "white",
+            color: theme.blue,
+            borderColor: theme.blue,
+          }}
+          onClick={() => router.push(`/community/setting`)}
+        >
+          {t("community:setting.title")}
         </ButtonComponent>
       </Box>
 

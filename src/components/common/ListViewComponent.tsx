@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
+import { useRouter } from "next/router";
 
 import theme from "src/theme";
 
@@ -18,109 +19,108 @@ interface IListViewComponentProps {
   };
 }
 
-const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) => (
-  <Box
-    sx={{
-      py: ["10px", "20px"],
-      pl: props?.pl,
-      pr: props?.pr,
-      borderTop: `1px solid ${theme.lightGray}`,
-    }}
-  >
-    <Typography
-      component="span"
-      sx={{
-        display: { sm: "none" },
-        color: theme.navy,
-        fontSize: [12, 16],
-        fontWeight: 700,
-        "&:hover": {
-          cursor: "pointer",
-          color: theme.blue,
-        },
-      }}
-    >
-      {data.title}
-    </Typography>
+const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) => {
+  const router = useRouter();
 
+  return (
     <Box
       sx={{
-        display: "flex",
-        alignItems: "center",
-        mt: ["5px", "0"],
+        py: ["10px", "20px"],
+        pl: props?.pl,
+        pr: props?.pr,
+        borderTop: `1px solid ${theme.lightGray}`,
       }}
     >
-      <Avatar
-        variant="square"
+      <Typography
+        component="span"
         sx={{
-          width: ["24px", "64px"],
-          height: "100%",
-        }}
-        src={data.avatar}
-      />
-
-      {/* Grid right Info */}
-      <Box
-        sx={{
-          ml: ["8px", "18px"],
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
+          display: { sm: "none" },
+          fontSize: [12, 16],
+          fontWeight: 700,
         }}
       >
-        <Typography
-          component="span"
-          sx={{
-            display: ["none", "inherit"],
-            color: theme.navy,
-            fontSize: [12, 16],
-            fontWeight: 700,
-            "&:hover": {
-              cursor: "pointer",
-              color: theme.blue,
-              textDecoration: "underline",
-            },
-          }}
-        >
-          {data.title}
-        </Typography>
+        {data.title}
+      </Typography>
 
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          mt: ["5px", "0"],
+        }}
+      >
+        <Avatar
+          variant="square"
+          sx={{
+            width: ["24px", "64px"],
+            height: "100%",
+          }}
+          src={data.avatar}
+        />
+
+        {/* Grid right Info */}
         <Box
           sx={{
+            ml: ["8px", "18px"],
             display: "flex",
-            alignItems: "center",
+            flexDirection: "column",
+            justifyContent: "center",
           }}
         >
-          <Typography component="span" fontSize={12}>
-            {data.name}
-          </Typography>
           <Typography
             component="span"
             sx={{
-              mx: ["12px", "30px"],
-              fontSize: 12,
-              color: theme.gray,
+              display: ["none", "inherit"],
+              fontSize: [12, 16],
+              fontWeight: 700,
+              "&:hover": {
+                cursor: "pointer",
+                color: theme.blue,
+                textDecoration: "underline",
+              },
             }}
+            onClick={() => router.push(`/community/post/detail`)}
           >
-            {data.last_login}
+            {data.title}
           </Typography>
 
-          <img src="/assets/images/svg/message.svg" alt="message" />
-
-          <Typography
-            component="span"
+          <Box
             sx={{
-              ml: "4px",
-              fontSize: 12,
-              color: theme.gray,
+              display: "flex",
+              alignItems: "center",
             }}
           >
-            {data.count_message}
-          </Typography>
+            <Typography component="span" fontSize={12}>
+              {data.name}
+            </Typography>
+            <Typography
+              component="span"
+              sx={{
+                mx: ["12px", "30px"],
+                fontSize: 12,
+                color: theme.gray,
+              }}
+            >
+              {data.last_login}
+            </Typography>
+
+            <img src="/assets/images/svg/message.svg" alt="message" />
+
+            <Typography
+              component="span"
+              sx={{
+                ml: "4px",
+                fontSize: 12,
+                color: theme.gray,
+              }}
+            >
+              {data.count_message}
+            </Typography>
+          </Box>
         </Box>
+        {/* End Grid right Info */}
       </Box>
-      {/* End Grid right Info */}
     </Box>
-  </Box>
-);
+  );
+};
 export default ListViewComponent;

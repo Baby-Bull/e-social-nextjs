@@ -22,6 +22,7 @@ const index = 0;
 export const status = STATUSES[index].value;
 export const bgColorByStatus = STATUSES[index].bgColor;
 
+export const isAdminCommunity = false;
 export const communityMembers = [
   {
     avatar: "/assets/images/svg/account.svg",
