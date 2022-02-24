@@ -8,9 +8,8 @@ import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useRouter } from "next/router";
-import { Button, Select } from "@mui/material";
+import { Button, Select, Avatar, Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
 import theme from "../../theme";
@@ -85,6 +84,22 @@ const SelectCustom = styled(Select)({
   },
 });
 
+const MenuItemCustom = styled(MenuItem)({
+  padding: "8px 0",
+  width: "160px",
+});
+
+const IconButtonCustom = styled(IconButton)({
+  padding: 0,
+});
+
+const TypoLabel = styled(Typography)({
+  fontSize: "12px",
+  lineHeight: "17.38px",
+  color: theme.navy,
+  marginLeft: "4px",
+});
+
 // eslint-disable-next-line react/function-component-definition
 export default function PrimarySearchAppBar() {
   const { t } = useTranslation();
@@ -120,9 +135,9 @@ export default function PrimarySearchAppBar() {
     setCurrency(event.target.value);
   };
 
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  // const handleProfileMenuOpen = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
@@ -166,32 +181,78 @@ export default function PrimarySearchAppBar() {
       keepMounted
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
+      sx={{
+        top: "9px",
+        "& .MuiMenu-paper": {
+          borderRadius: "12px",
+        },
+      }}
     >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={mess} color="error">
-            <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton size="large" aria-label="show 17 new notifications" color="inherit" sx={{ p: "12px 16px" }}>
-          <img src="/assets/images/icon/ic_setting.png" alt="ic_setting" />
-        </IconButton>
-        <p>Setting</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
+      <Box sx={{ p: "22px 0 22px 12px", borderBottom: "1px solid #D8D8D8" }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Avatar src="/assets/images/svg/avatar.svg" sx={{ width: "20px", height: "20px", mr: "4px" }} />
+          <Typography fontWeight={500} fontSize={12} lineHeight="17.38px">
+            マイプロフィール
+          </Typography>
+        </Box>
+        <Button
+          sx={{
+            width: "124px",
+            height: "32px",
+            borderRadius: "4px",
+            border: "0.5px solid #989EA8",
+            color: theme.navy,
+            fontSize: "12px",
+            fontWeight: 400,
+            lineHeight: "17.38px",
+            mt: "27px",
+            padding: "6px 13px",
+          }}
         >
-          <AccountCircle sx={{ fill: "#03BCDB" }} />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
+          {t("header.profile-editing")}
+        </Button>
+      </Box>
+      <Box sx={{ m: "20px 0 0px 12px" }}>
+        <MenuItemCustom>
+          <IconButtonCustom size="large" aria-label="show 4 new mails" color="inherit">
+            <img src="/assets/images/ic_nav_profile/ic_mess.svg" alt="ic_mess" />
+          </IconButtonCustom>
+          <TypoLabel>{t("header.message")}</TypoLabel>
+        </MenuItemCustom>
+        <MenuItemCustom>
+          <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
+            <img src="/assets/images/ic_nav_profile/ic_user.svg" alt="ic_user" />
+          </IconButtonCustom>
+          <TypoLabel>{t("header.matching-request")}</TypoLabel>
+        </MenuItemCustom>
+        <MenuItemCustom>
+          <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
+            <img src="/assets/images/ic_nav_profile/ic_hand.svg" alt="ic_hand" />
+          </IconButtonCustom>
+          <TypoLabel>{t("header.matching-you-applied-for")}</TypoLabel>
+        </MenuItemCustom>
+        <MenuItemCustom>
+          <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
+            <img src="/assets/images/ic_nav_profile/ic_heart.svg" alt="ic_heart" />
+          </IconButtonCustom>
+          <TypoLabel>{t("header.list-people-you-want-to-talk")}</TypoLabel>
+        </MenuItemCustom>
+        <MenuItemCustom>
+          <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
+            <img src="/assets/images/ic_nav_profile/ic_star.svg" alt="ic_star" />
+          </IconButtonCustom>
+          <TypoLabel>{t("header.participating-community")}</TypoLabel>
+        </MenuItemCustom>
+        <MenuItemCustom>
+          <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
+            <img src="/assets/images/ic_nav_profile/ic_setting.svg" alt="ic_setting" />
+          </IconButtonCustom>
+          <TypoLabel>{t("header.setting")}</TypoLabel>
+        </MenuItemCustom>
+        <MenuItemCustom>
+          <TypoLabel>{t("header.logout")}</TypoLabel>
+        </MenuItemCustom>
+      </Box>
     </Menu>
   );
   return (
