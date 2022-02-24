@@ -1035,28 +1035,30 @@ const ProfileSkillComponent = () => {
               </TabsUnstyled>
             </Box>
             <Box sx={{ mt: "53px", textAlign: "center" }}>
-              <Button
-                sx={{
-                  background: theme.blue,
-                  borderRadius: "28px",
-                  width: "240px",
-                  "&:hover": {
-                    background: theme.blue,
-                  },
-                }}
-              >
-                <Typography
+              <Link href="/my-profile/edit" underline="none">
+                <Button
                   sx={{
-                    color: "#fff",
-                    fontWeight: 700,
-                    fontSize: 20,
+                    background: theme.blue,
+                    borderRadius: "28px",
+                    width: "240px",
+                    "&:hover": {
+                      background: theme.blue,
+                    },
                   }}
                 >
-                  保存する
-                </Typography>
-              </Button>
+                  <Typography
+                    sx={{
+                      color: "#fff",
+                      fontWeight: 700,
+                      fontSize: 20,
+                    }}
+                  >
+                    {t("profile:form.save")}
+                  </Typography>
+                </Button>
+              </Link>
               <Box sx={{ mt: "40px" }}>
-                <Link href="/#" sx={{ color: theme.blue, textDecoration: "none" }}>
+                <Link href="/my-profile" sx={{ color: theme.blue, textDecoration: "none" }}>
                   編集をやめる
                 </Link>
               </Box>

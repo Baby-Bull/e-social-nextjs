@@ -130,7 +130,7 @@ const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
     <Grid container className={styles.recommendList}>
       <div className="div-title">
         <span className="title">{title}</span>
-        <Link className="link-see-more content-pc" href="#" underline="none">
+        <Link className="link-see-more content-pc" href="/search_user" underline="none">
           {t("home:see-more")}
         </Link>
       </div>
@@ -138,7 +138,7 @@ const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
         <SlickSliderRecommendComponent items={dataElements} />
       </div>
 
-      <Link className="link-see-more content-mobile" href="#" underline="none">
+      <Link className="link-see-more content-mobile" href="/search_user" underline="none">
         {t("home:see-more")}
       </Link>
     </Grid>

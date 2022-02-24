@@ -9,7 +9,7 @@ import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { useRouter } from "next/router";
-import { Button, Select, Avatar, Typography } from "@mui/material";
+import { Button, Select, Avatar, Typography, Link } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
 import theme from "../../theme";
@@ -201,24 +201,33 @@ export default function PrimarySearchAppBar() {
             height: "32px",
             borderRadius: "4px",
             border: "0.5px solid #989EA8",
-            color: theme.navy,
-            fontSize: "12px",
-            fontWeight: 400,
-            lineHeight: "17.38px",
             mt: "27px",
             padding: "6px 13px",
           }}
         >
-          {t("header.profile-editing")}
+          <Link
+            underline="none"
+            href="/my-profile"
+            sx={{
+              color: theme.navy,
+              fontSize: "12px",
+              fontWeight: 400,
+              lineHeight: "17.38px",
+            }}
+          >
+            {t("header.profile-editing")}
+          </Link>
         </Button>
       </Box>
       <Box sx={{ m: "20px 0 0px 12px" }}>
-        <MenuItemCustom>
-          <IconButtonCustom size="large" aria-label="show 4 new mails" color="inherit">
-            <img src="/assets/images/ic_nav_profile/ic_mess.svg" alt="ic_mess" />
-          </IconButtonCustom>
-          <TypoLabel>{t("header.message")}</TypoLabel>
-        </MenuItemCustom>
+        <Link href="/chat/personal" underline="none">
+          <MenuItemCustom>
+            <IconButtonCustom size="large" aria-label="show 4 new mails" color="inherit">
+              <img src="/assets/images/ic_nav_profile/ic_mess.svg" alt="ic_mess" />
+            </IconButtonCustom>
+            <TypoLabel>{t("header.message")}</TypoLabel>
+          </MenuItemCustom>
+        </Link>
         <MenuItemCustom>
           <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
             <img src="/assets/images/ic_nav_profile/ic_user.svg" alt="ic_user" />
@@ -243,12 +252,14 @@ export default function PrimarySearchAppBar() {
           </IconButtonCustom>
           <TypoLabel>{t("header.participating-community")}</TypoLabel>
         </MenuItemCustom>
-        <MenuItemCustom>
-          <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
-            <img src="/assets/images/ic_nav_profile/ic_setting.svg" alt="ic_setting" />
-          </IconButtonCustom>
-          <TypoLabel>{t("header.setting")}</TypoLabel>
-        </MenuItemCustom>
+        <Link href="/mail-setting" underline="none">
+          <MenuItemCustom>
+            <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
+              <img src="/assets/images/ic_nav_profile/ic_setting.svg" alt="ic_setting" />
+            </IconButtonCustom>
+            <TypoLabel>{t("header.setting")}</TypoLabel>
+          </MenuItemCustom>
+        </Link>
         <MenuItemCustom>
           <TypoLabel>{t("header.logout")}</TypoLabel>
         </MenuItemCustom>
@@ -267,23 +278,28 @@ export default function PrimarySearchAppBar() {
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              component="img"
-              sx={{
-                width: { xs: "70px", lg: "141px" },
-                height: { xs: "20px", lg: "42px" },
-              }}
-              alt="avatar"
-              src="/assets/images/logo/logo.png"
-            />
-            <Box sx={{ display: { xs: "none", lg: "block" } }}>
-              <StyledButtonList startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" />}>
-                {t("header.list-engineers")}
-              </StyledButtonList>
-
-              <StyledButtonList startIcon={<img alt="" src="/assets/images/svg/users.svg" />}>
-                {t("header.list-community")}
-              </StyledButtonList>
+            <Link href="/">
+              <Box
+                component="img"
+                sx={{
+                  width: { xs: "70px", lg: "141px" },
+                  height: { xs: "20px", lg: "42px" },
+                }}
+                alt="avatar"
+                src="/assets/images/logo/logo.png"
+              />
+            </Link>
+            <Box sx={{ display: { xs: "none", lg: useRouter().pathname === pathLogin ? "none" : "block" } }}>
+              <Link underline="none" href="/search_user">
+                <StyledButtonList startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" />}>
+                  {t("header.list-engineers")}
+                </StyledButtonList>
+              </Link>
+              <Link underline="none" href="/search_community">
+                <StyledButtonList startIcon={<img alt="" src="/assets/images/svg/users.svg" />}>
+                  {t("header.list-community")}
+                </StyledButtonList>
+              </Link>
             </Box>
             <Search sx={{ display: useRouter().pathname === pathLogin ? "none" : "inherit" }}>
               <SearchIconWrapper>

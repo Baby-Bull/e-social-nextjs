@@ -34,10 +34,10 @@ const FooterComponent = () => {
               fontSize: "14px",
             }}
           >
-            <TagA href="/#" color="secondary" sx={{ mr: "26px !important" }}>
+            <TagA href="/login" color="secondary" sx={{ mr: "26px !important" }}>
               {t("footer.signin")}
             </TagA>
-            <TagA href="/#" color="secondary" sx={{ mr: "26px !important" }}>
+            <TagA href="/register" color="secondary" sx={{ mr: "26px !important" }}>
               {t("footer.signout")}
             </TagA>
           </Box>

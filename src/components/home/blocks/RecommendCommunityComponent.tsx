@@ -83,7 +83,7 @@ const RecommendCommunityComponent = () => {
     <Grid container className={styles.recommendList}>
       <div className="div-title">
         <span className="title">{t("home:recommend-community")}</span>
-        <Link className="link-see-more content-pc" href="#" underline="none">
+        <Link className="link-see-more content-pc" href="/search_community" underline="none">
           {t("home:see-more")}
         </Link>
       </div>
@@ -92,7 +92,7 @@ const RecommendCommunityComponent = () => {
         <SlickSliderRecommendComponent items={recommendCommunityItems} />
       </div>
 
-      <Link className="link-see-more content-mobile" href="#" underline="none">
+      <Link className="link-see-more content-mobile" href="/search_community" underline="none">
         {t("home:see-more")}
       </Link>
     </Grid>
