@@ -149,11 +149,11 @@ export default function PrimarySearchAppBar() {
   };
 
   const handleRedirectMatching = (type: string) => {
-    Router.push({
+    router.push({
       pathname: "/matching",
-      query: { type: type }
-    })
-  }
+      query: { type },
+    });
+  };
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -250,7 +250,7 @@ export default function PrimarySearchAppBar() {
           </IconButtonCustom>
           <TypoLabel>{t("header.matching-you-applied-for")}</TypoLabel>
         </MenuItemCustom>
-        <MenuItemCustom  onClick={() => handleRedirectMatching("favourite")}>
+        <MenuItemCustom onClick={() => handleRedirectMatching("favourite")}>
           <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
             <img src="/assets/images/ic_nav_profile/ic_heart.svg" alt="ic_heart" />
           </IconButtonCustom>
