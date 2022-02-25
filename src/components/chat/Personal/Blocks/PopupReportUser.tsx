@@ -1,4 +1,5 @@
 import React from "react";
+import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -123,6 +124,8 @@ const options = [
 
 const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup }) => {
   const { t } = useTranslation();
+  const router = useRouter();
+
   const [option, setOption] = React.useState(options[0].label);
   const [report, setReport] = React.useState(false);
 
@@ -187,7 +190,7 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup 
           </Box>
           <Box sx={{ mb: "36px" }}>
             <ButtonAction
-              onClick={handleClose}
+              onClick={() => router.push("/")}
               sx={{
                 background: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)",
                 color: "#fff",

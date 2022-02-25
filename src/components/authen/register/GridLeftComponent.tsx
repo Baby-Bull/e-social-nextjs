@@ -35,7 +35,11 @@ const BoxDescription = styled(Box)`
   align-items: center;
 `;
 
-const TypoContent = styled(Typography)`
+const TypoCustom = styled(Typography)`
+  letter-spacing: 6px;
+`;
+
+const TypoContent = styled(TypoCustom)`
   font-weight: 700;
   ${(props) => props.theme.breakpoints.up("xs")} {
     padding-left: 14px;
@@ -58,7 +62,7 @@ const GridLeftComponent: React.SFC<IGridLeftComponentProps> = ({ smAndUp }) => {
       xs={12}
       sm={6}
       sx={{
-        background: theme.blue,
+        background: theme.whiteGray,
         display: [smAndUp ? "none" : "block", "block"],
       }}
     >
@@ -76,8 +80,8 @@ const GridLeftComponent: React.SFC<IGridLeftComponentProps> = ({ smAndUp }) => {
           sx={{
             pb: ["40px", "48px"],
             fontSize: 20,
-            color: "white",
             fontWeight: 700,
+            letterSpacing: "7px",
           }}
         >
           {t("register:description.title")}
@@ -112,9 +116,9 @@ const GridLeftComponent: React.SFC<IGridLeftComponentProps> = ({ smAndUp }) => {
                   justifyContent: ["space-between", "space-between", "center"],
                 }}
               >
-                <Typography fontWeight="700" pl={{ md: "20px" }}>
+                <TypoCustom fontWeight="700" pl={{ md: "20px" }}>
                   {t("register:description.text-1.1")}
-                </Typography>
+                </TypoCustom>
                 <Typography fontSize="12px" fontWeight="400" pl={{ md: "20px" }}>
                   {t("register:description.text-1.2")}
                 </Typography>

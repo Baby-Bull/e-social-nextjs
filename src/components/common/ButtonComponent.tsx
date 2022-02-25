@@ -80,6 +80,7 @@ function renderSwitch(children, props, rest) {
           startIcon={
             <Avatar variant="square" sx={{ width: "100%", height: "100%" }} src="/assets/images/svg/twitter.svg" />
           }
+          {...rest}
         >
           {children}
         </ButtonRounded>
@@ -90,6 +91,7 @@ function renderSwitch(children, props, rest) {
           variant="outlined"
           disableElevation
           startIcon={<Avatar sx={{ width: "100%", height: "100%" }} src="/assets/images/svg/google.svg" />}
+          {...rest}
         >
           {children}
         </ButtonGoogle>
@@ -102,6 +104,7 @@ function renderSwitch(children, props, rest) {
           startIcon={
             <Avatar variant="square" sx={{ width: "100%", height: "100%" }} src="/assets/images/logo/logo_github.png" />
           }
+          {...rest}
         >
           {children}
         </ButtonRounded>

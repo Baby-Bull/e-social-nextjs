@@ -1,6 +1,7 @@
 import { Box, Grid, Link } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
@@ -28,6 +29,7 @@ interface IRecommendCommunityItemProps {
 
 const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data }) => {
   const { t } = useTranslation();
+  const router = useRouter();
 
   return (
     <Grid item xs={12} className={classNames(styles.boxRecommend, "box-recommend-community")} style={{ padding: 0 }}>
@@ -58,7 +60,13 @@ const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data 
           </ul>
         </div>
         <div className="button">
-          <ButtonComponent mode={HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[data?.status]?.mode} fullWidth>
+          <ButtonComponent
+            mode={HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[data?.status]?.mode}
+            fullWidth
+            onClick={() =>
+              HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[data?.status]?.allowJoinCommunity ? router.push("/community") : ""
+            }
+          >
             {HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[data?.status]?.label}
           </ButtonComponent>
         </div>

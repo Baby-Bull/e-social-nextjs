@@ -2,6 +2,7 @@ export const HOMEPAGE_RECOMMEND_COMMUNITY_STATUS = {
   1: {
     label: "コミュニティに参加する",
     mode: "green",
+    allowJoinCommunity: true,
   },
   2: {
     label: "申請中",
