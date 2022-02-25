@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Tabs, Typography, Avatar, Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabComponent";
@@ -27,12 +28,30 @@ interface ITabComponentProps {
 
 const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
   const { t } = useTranslation();
+  const typeQuery = useRouter()?.query?.type;
+
+  const nestedCondition = (condition: any, then: any, otherwise: any) => (condition ? then : otherwise);
+  const type = nestedCondition(
+    typeQuery === "unconfirm",
+    0,
+    nestedCondition(
+      typeQuery === "confirm",
+      1,
+      nestedCondition(typeQuery === "favourite", 2, nestedCondition(typeQuery === "reject", 4, 3)),
+    ),
+  );
 
   const [valueParentTab, setValueParentTab] = React.useState(0);
 
   const onChangeParentTab = (event: React.SyntheticEvent, newValue: number) => {
     setValueParentTab(newValue);
   };
+
+  React.useEffect(() => {
+    if (typeQuery) {
+      setValueParentTab(type);
+    }
+  }, [typeQuery]);
 
   const options = [
     { value: 0, label: "新しい順" },

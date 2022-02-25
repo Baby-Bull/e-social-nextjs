@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Tabs, Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
+import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabComponent";
@@ -28,6 +29,7 @@ interface ITabComponentProps {
 
 const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
   const { t } = useTranslation();
+  const router = useRouter();
 
   const [valueParentTab, setValueParentTab] = React.useState(0);
 
@@ -98,7 +100,10 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
             {status === "join" && tabsCommunity[0]?.children ? (
               <ChildTabComponent dataChild={tabsCommunity[0]?.children} maxWidth="75px" />
             ) : (
-              <EmptyComponent textButton={t("community:button.empty.create-post")}>
+              <EmptyComponent
+                textButton={t("community:button.empty.create-post")}
+                handleClick={() => router.push("/community/post/create")}
+              >
                 <TypographyCustom>{t("community:empty.no-post")}</TypographyCustom>
                 <TypographyCustom display={["none", "inherit"]}>
                   {t("community:empty.create-post") + t("community:empty.talk-to-members")}

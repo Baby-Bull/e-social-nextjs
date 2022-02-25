@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Tabs, Stack, Pagination } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
+import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import { TabPanel, a11yProps, ChildTabCustom } from "src/components/common/Tab/BlueChildTabComponent";
@@ -48,6 +49,7 @@ interface IChildTabComponentProps {
 
 const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataChild, maxWidth }) => {
   const { t } = useTranslation();
+  const router = useRouter();
 
   const [valueChildTab, setValueChildTab] = React.useState(0);
 
@@ -112,6 +114,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataChild, maxW
               fontSize: "12px",
             },
           }}
+          onClick={() => router.push("/community/post/create")}
         >
           {t("community:button.create-post")}
         </ButtonComponent>
