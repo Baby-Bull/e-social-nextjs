@@ -2,6 +2,7 @@ import { Avatar, Box, Button, Grid, Modal } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import { Field } from "src/components/common/Form/_Field";
@@ -38,6 +39,7 @@ const optionsPurposes = [
 
 const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({ open, setOpen }) => {
   const { t } = useTranslation();
+  const router = useRouter();
 
   const handleClose = () => setOpen(false);
 
@@ -90,7 +92,16 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({ open,
 
           <Grid container>
             <Grid xs={12} sx={{ mt: 4, textAlign: "center" }}>
-              <ButtonComponent mode="gradient" fullWidth>
+              <ButtonComponent
+                mode="gradient"
+                fullWidth
+                onClick={() =>
+                  router.push({
+                    pathname: "/matching",
+                    query: { type: "confirm" },
+                  })
+                }
+              >
                 {t("home:modal-matching.button")}
               </ButtonComponent>
             </Grid>

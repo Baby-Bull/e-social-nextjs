@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import ContentComponent from "src/components/layouts/ContentComponent";
@@ -32,6 +33,7 @@ const ListItem = styled("li")({
 
 const FormRegisterComponents = () => {
   const { t } = useTranslation();
+  const router = useRouter();
 
   const [open, setOpen] = React.useState(false);
   const [fullWidth] = React.useState(true);
@@ -573,7 +575,6 @@ const FormRegisterComponents = () => {
               }}
             >
               <ButtonComponent
-                onClick={handleClose}
                 props={{
                   dimension: "medium",
                   color: theme.blue,
@@ -581,6 +582,7 @@ const FormRegisterComponents = () => {
                 sx={{
                   height: "56px",
                 }}
+                onClick={() => router.push("/")}
               >
                 {t("register:form.tutorial.button-redirect-home")}
               </ButtonComponent>
