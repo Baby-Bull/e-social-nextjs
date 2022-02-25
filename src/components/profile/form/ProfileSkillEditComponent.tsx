@@ -1035,7 +1035,7 @@ const ProfileSkillComponent = () => {
               </TabsUnstyled>
             </Box>
             <Box sx={{ mt: "53px", textAlign: "center" }}>
-              <Link href="/my-profile/edit" underline="none">
+              <Link href="/my-profile" underline="none">
                 <Button
                   sx={{
                     background: theme.blue,

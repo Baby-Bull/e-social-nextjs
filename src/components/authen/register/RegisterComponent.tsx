@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Grid, Typography, Link } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import ContentComponent from "src/components/layouts/ContentComponent";
@@ -9,6 +10,9 @@ import GridLeftComponent from "src/components/authen/register/GridLeftComponent"
 
 const RegisterComponents = () => {
   const { t } = useTranslation();
+  const router = useRouter();
+
+  const handleRedirectForm = () => router.push("/register/form");
 
   return (
     <ContentComponent>
@@ -47,13 +51,19 @@ const RegisterComponents = () => {
                 {t("register:sub-title")}
               </Typography>
               <Box pt="63px">
-                <ButtonComponent props={{ mode: "twitter" }}>Twitterで登録</ButtonComponent>
+                <ButtonComponent props={{ mode: "twitter" }} onClick={() => handleRedirectForm()}>
+                  Twitterで登録
+                </ButtonComponent>
               </Box>
               <Box pt="48px">
-                <ButtonComponent props={{ mode: "google" }}>Googleで登録</ButtonComponent>
+                <ButtonComponent props={{ mode: "google" }} onClick={() => handleRedirectForm()}>
+                  Googleで登録
+                </ButtonComponent>
               </Box>
               <Box pt="48px">
-                <ButtonComponent props={{ mode: "github" }}>Githubで登録</ButtonComponent>
+                <ButtonComponent props={{ mode: "github" }} onClick={() => handleRedirectForm()}>
+                  Githubで登録
+                </ButtonComponent>
               </Box>
 
               <Link

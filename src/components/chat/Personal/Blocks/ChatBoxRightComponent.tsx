@@ -84,7 +84,9 @@ const ChatBoxRightComponent = ({ isMobile, toggleRenderSide }) => {
   const [listMessages] = useState(listMessagesMockData);
 
   const [showPopup, setShowPopup] = useState(false);
-  const handleShow = () => setShowPopup(true);
+  const handleShow = () => {
+    setShowPopup(true);
+  };
 
   const [showPopupReview, setShowPopupReview] = useState(false);
   const handleShowReview = () => setShowPopupReview(true);

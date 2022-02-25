@@ -7,6 +7,7 @@ import styles from "src/components/searchUser/search_user.module.scss";
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import { HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS } from "src/components/constants/constants";
 import { replaceLabelByTranslate } from "src/utils/utils";
+import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
 
 interface IUserItemProps {
   image: string;
@@ -28,68 +29,74 @@ interface IBoxUserComponentProps {
 
 const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
   const { t } = useTranslation();
+  const [showModalMatching, setModalMatching] = React.useState(false);
+  const handleShowModalMatching = () => setModalMatching(true);
 
   return (
-    <Grid item xs={12} className={classNames(styles.boxItemUser)}>
-      <Box className={styles.boxItemSearchUser}>
-        <div className="status-summary">
-          <ButtonComponent
-            mode={HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[data?.chatStatus]?.mode}
-            size="small"
-            style={{ borderRadius: "4px", width: "130px" }}
-          >
-            {HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[data?.chatStatus]?.label}
-          </ButtonComponent>
-          <span className="label-login-status">
-            {data?.lastLogin
-              ? replaceLabelByTranslate(t("home:box-member-recommend.last-login"), data?.lastLogin)
-              : t("home:box-member-recommend.no-login")}
-          </span>
-        </div>
-
-        <div className="info-summary">
-          <img src={data?.image} alt="img-member" />
-          <div className="member-info">
-            <p className="name">{data?.name}</p>
-            <p className="career">{data?.career}</p>
-            <p className="review">
-              {t("home:box-member-recommend.review")}: {data?.review}
-            </p>
+    <React.Fragment>
+      <Grid item xs={12} className={classNames(styles.boxItemUser)}>
+        <Box className={styles.boxItemSearchUser}>
+          <div className="status-summary">
+            <ButtonComponent
+              mode={HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[data?.chatStatus]?.mode}
+              size="small"
+              style={{ borderRadius: "4px", width: "130px" }}
+            >
+              {HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[data?.chatStatus]?.label}
+            </ButtonComponent>
+            <span className="label-login-status">
+              {data?.lastLogin
+                ? replaceLabelByTranslate(t("home:box-member-recommend.last-login"), data?.lastLogin)
+                : t("home:box-member-recommend.no-login")}
+            </span>
           </div>
-        </div>
 
-        <div className="introduce">{data?.introduce}</div>
+          <div className="info-summary">
+            <img src={data?.image} alt="img-member" />
+            <div className="member-info">
+              <p className="name">{data?.name}</p>
+              <p className="career">{data?.career}</p>
+              <p className="review">
+                {t("home:box-member-recommend.review")}: {data?.review}
+              </p>
+            </div>
+          </div>
 
-        <div className="tags">
-          <ul>
-            {data?.tags?.map((tag, index) => (
-              <li key={index}>{tag}</li>
-            ))}
-          </ul>
-        </div>
+          <div className="introduce">{data?.introduce}</div>
 
-        <p className="label-description">
-          <img alt="" src="/assets/images/home_page/ic_chat.svg" />
-          {t("home:box-member-recommend.label-description")}
-        </p>
+          <div className="tags">
+            <ul>
+              {data?.tags?.map((tag, index) => (
+                <li key={index}>{tag}</li>
+              ))}
+            </ul>
+          </div>
 
-        <p className="description">{data?.description}</p>
+          <p className="label-description">
+            <img alt="" src="/assets/images/home_page/ic_chat.svg" />
+            {t("home:box-member-recommend.label-description")}
+          </p>
 
-        <div className="div-review">
-          <img
-            alt="ic-like"
-            src={
-              data?.isLiked ? "/assets/images/home_page/ic_heart.svg" : "/assets/images/home_page/ic_heart_empty.svg"
-            }
-          />
-          <span>{t("user-search:btn-add-favorite")}</span>
-        </div>
+          <p className="description">{data?.description}</p>
 
-        <ButtonComponent mode="green" fullWidth>
-          {t("user-search:btn-send-matching-request")}
-        </ButtonComponent>
-      </Box>
-    </Grid>
+          <div className="div-review">
+            <img
+              alt="ic-like"
+              src={
+                data?.isLiked ? "/assets/images/home_page/ic_heart.svg" : "/assets/images/home_page/ic_heart_empty.svg"
+              }
+            />
+            <span>{t("user-search:btn-add-favorite")}</span>
+          </div>
+
+          <ButtonComponent mode="green" fullWidth onClick={handleShowModalMatching}>
+            {t("user-search:btn-send-matching-request")}
+          </ButtonComponent>
+        </Box>
+      </Grid>
+
+      <ModalMatchingComponent open={showModalMatching} setOpen={setModalMatching} />
+    </React.Fragment>
   );
 };
 

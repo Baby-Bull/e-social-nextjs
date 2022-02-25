@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Grid, Typography, Link } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
@@ -9,6 +10,10 @@ import GridLeftComponent from "src/components/authen/register/GridLeftComponent"
 
 const LoginComponent = () => {
   const { t } = useTranslation();
+  const router = useRouter();
+
+  const handleRedirectHome = () => router.push("/");
+
   return (
     <ContentComponent>
       <Box>
@@ -34,13 +39,19 @@ const LoginComponent = () => {
                 {t("login:right.title")}
               </Typography>
               <Box pt="68px">
-                <ButtonComponent props={{ mode: "twitter" }}>Twitterで登録</ButtonComponent>
+                <ButtonComponent props={{ mode: "twitter" }} onClick={() => handleRedirectHome()}>
+                  Twitterで登録
+                </ButtonComponent>
               </Box>
               <Box pt="48px">
-                <ButtonComponent props={{ mode: "google" }}>Googleで登録</ButtonComponent>
+                <ButtonComponent props={{ mode: "google" }} onClick={() => handleRedirectHome()}>
+                  Googleで登録
+                </ButtonComponent>
               </Box>
               <Box pt="48px">
-                <ButtonComponent props={{ mode: "github" }}>Githubで登録</ButtonComponent>
+                <ButtonComponent props={{ mode: "github" }} onClick={() => handleRedirectHome()}>
+                  Githubで登録
+                </ButtonComponent>
               </Box>
               <Box
                 sx={{

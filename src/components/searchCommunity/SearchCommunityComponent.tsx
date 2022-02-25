@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
 
 import styles from "src/components/searchCommunity/search_community.module.scss";
@@ -66,6 +67,8 @@ const FormControlLabelCustom = styled(FormControlLabel)({
 
 const SearchCommunityComponent = () => {
   const { t } = useTranslation();
+  const router = useRouter();
+
   // Responsive
   const viewPort = useViewport();
   const isMobile = viewPort.width <= 992;
@@ -169,7 +172,11 @@ const SearchCommunityComponent = () => {
 
           <div className="box-btn-create-community">
             <Typography className="span-direction">{t("community-search:span-create-community-direction")}</Typography>
-            <Button className="btn-user-search btn-create-community" fullWidth>
+            <Button
+              className="btn-user-search btn-create-community"
+              fullWidth
+              onClick={() => router.push("/community/setting")}
+            >
               {t("community-search:btn-create-community")}
             </Button>
           </div>
