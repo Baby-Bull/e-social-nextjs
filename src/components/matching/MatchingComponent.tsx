@@ -274,6 +274,7 @@ class MatchingComponent extends React.Component<IProps, IState> {
           data: [
             {
               avatar: "/assets/images/svg/account.svg",
+              avatar2: "/assets/images/svg/account_2.svg",
               name: "佐藤 太郎",
               date_request: "2021年8月27日13時48分にリクエスト",
               job: "フロントエンドエンジニア",
@@ -281,10 +282,12 @@ class MatchingComponent extends React.Component<IProps, IState> {
               message: `ここには話したいことのテキストが入ります。最大2行の表示です。
               ここには話したいことのテキストが入ります。最大2行の表示です。
               ここには話したいことのテキストが入ります。最大2行の表示です。ここには話した...`,
+              is_send_message: false,
               is_reviewed: false,
             },
             {
               avatar: "/assets/images/svg/account.svg",
+              avatar2: "/assets/images/svg/account_2.svg",
               name: "佐藤 太郎",
               date_request: "2021年8月27日13時48分にリクエスト",
               job: "フロントエンドエンジニア",
@@ -292,10 +295,12 @@ class MatchingComponent extends React.Component<IProps, IState> {
               message: `ここには話したいことのテキストが入ります。最大2行の表示です。
               ここには話したいことのテキストが入ります。最大2行の表示です。
               ここには話したいことのテキストが入ります。最大2行の表示です。ここには話した...`,
+              is_send_message: false,
               is_reviewed: false,
             },
             {
               avatar: "/assets/images/svg/account.svg",
+              avatar2: "/assets/images/svg/account_2.svg",
               name: "佐藤 太郎",
               date_request: "2021年8月27日13時48分にリクエスト",
               job: "フロントエンドエンジニア",
@@ -303,10 +308,12 @@ class MatchingComponent extends React.Component<IProps, IState> {
               message: `ここには話したいことのテキストが入ります。最大2行の表示です。
               ここには話したいことのテキストが入ります。最大2行の表示です。
               ここには話したいことのテキストが入ります。最大2行の表示です。ここには話した...`,
+              is_send_message: true,
               is_reviewed: true,
             },
             {
               avatar: "/assets/images/svg/account.svg",
+              avatar2: "/assets/images/svg/account_2.svg",
               name: "佐藤 太郎",
               date_request: "2021年8月27日13時48分にリクエスト",
               job: "フロントエンドエンジニア",
@@ -314,6 +321,7 @@ class MatchingComponent extends React.Component<IProps, IState> {
               message: `ここには話したいことのテキストが入ります。最大2行の表示です。
               ここには話したいことのテキストが入ります。最大2行の表示です。
               ここには話したいことのテキストが入ります。最大2行の表示です。ここには話した...`,
+              is_send_message: true,
               is_reviewed: false,
             },
           ],
