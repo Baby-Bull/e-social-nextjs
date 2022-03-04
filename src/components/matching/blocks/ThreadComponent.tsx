@@ -91,6 +91,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
             sx={{
               display: "flex",
               alignItems: "center",
+              pl: type === "matched" && !data.is_send_message ? "25px" : "7px",
             }}
           >
             <Box
@@ -101,14 +102,48 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                 justifyContent: "space-between",
               }}
             >
-              <Avatar
-                variant="square"
+              <Box
                 sx={{
-                  width: ["32px", isConfirmOrFavouriteOrMatched ? "54px" : "80px"],
-                  height: "100%",
+                  position: "relative",
+                  mr: type === "matched" && data.is_send_message && "18px",
                 }}
-                src={data.avatar}
-              />
+              >
+                <Avatar
+                  variant="square"
+                  sx={{
+                    width: ["32px", isConfirmOrFavouriteOrMatched ? "54px" : "80px"],
+                    height: "100%",
+                  }}
+                  src={data.avatar}
+                />
+
+                <Avatar
+                  variant="square"
+                  sx={{
+                    display: type !== "matched" && "none",
+                    position: "absolute",
+                    top: !data.is_send_message ? "-15px" : "42px",
+                    left: !data.is_send_message ? "-20px" : "52px",
+                    width: ["15px", "24px"],
+                    height: ["15px", "24px"],
+                  }}
+                  src={data.avatar2}
+                />
+
+                <Box
+                  sx={{
+                    display: type !== "matched" && "none",
+                    backgroundImage: `url("/assets/images/svg/send.svg")`,
+                    backgroundSize: "contain",
+                    backgroundRepeat: "no-repeat",
+                    position: "absolute",
+                    top: !data.is_send_message ? "-5px" : "34px",
+                    left: !data.is_send_message ? "0" : "43px",
+                    width: ["15px", "20px"],
+                    height: ["100%"],
+                  }}
+                />
+              </Box>
               {/* Title bottom Avatar tab favourite */}
               <Typography
                 sx={{
