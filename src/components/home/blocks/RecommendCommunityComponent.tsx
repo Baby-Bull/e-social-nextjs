@@ -35,12 +35,12 @@ const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data 
     <Grid item xs={12} className={classNames(styles.boxRecommend, "box-recommend-community")} style={{ padding: 0 }}>
       <Box className={styles.boxRecommendCommunity}>
         <Grid container style={{ padding: 10 }}>
-          <Grid item xs={9}>
+          <Grid item xs={6}>
             <div className="label-number-of-register">
               {replaceLabelByTranslate(t("home:box-community-recommend.number-of-register"), data?.numberOfRegister)}
             </div>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={6}>
             <div className="label-number-of-members">
               {replaceLabelByTranslate(t("home:box-community-recommend.number-of-members"), data?.numberOfMembers)}
             </div>
