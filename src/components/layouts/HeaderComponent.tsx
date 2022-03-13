@@ -14,6 +14,10 @@ import { useTranslation } from "next-i18next";
 
 import theme from "../../theme";
 
+interface IHeaderComponentProps {
+  authPage?: boolean;
+}
+
 const Search = styled("div")({
   marginRight: theme.spacing(2),
   backgroundColor: "#FFFFFF",
@@ -100,8 +104,7 @@ const TypoLabel = styled(Typography)({
   marginLeft: "4px",
 });
 
-// eslint-disable-next-line react/function-component-definition
-export default function PrimarySearchAppBar() {
+const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false }) => {
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -131,7 +134,6 @@ export default function PrimarySearchAppBar() {
   const [currency, setCurrency] = React.useState(currencies[0].label);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const pathLogin = "/login";
 
   const handleChange = (event) => {
     setCurrency(event.target.value);
@@ -299,7 +301,7 @@ export default function PrimarySearchAppBar() {
                 src="/assets/images/logo/logo.png"
               />
             </Link>
-            <Box sx={{ display: { xs: "none", lg: useRouter().pathname === pathLogin ? "none" : "block" } }}>
+            <Box sx={{ display: { xs: "none", lg: authPage ? "none" : "block" } }}>
               <Link underline="none" href="/search_user">
                 <StyledButtonList startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" />}>
                   {t("header.list-engineers")}
@@ -311,7 +313,7 @@ export default function PrimarySearchAppBar() {
                 </StyledButtonList>
               </Link>
             </Box>
-            <Search sx={{ display: useRouter().pathname === pathLogin ? "none" : "inherit" }}>
+            <Search sx={{ display: authPage ? "none" : "inherit" }}>
               <SearchIconWrapper>
                 <img src="/assets/images/icon/ic_search_2.png" alt="ic_search" width="18px" height="18px" />
               </SearchIconWrapper>
@@ -336,7 +338,7 @@ export default function PrimarySearchAppBar() {
               </Box>
             </Search>
           </Box>
-          <Box sx={{ display: useRouter().pathname === pathLogin ? "none" : "inherit" }}>
+          <Box sx={{ display: authPage ? "none" : "inherit" }}>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
               <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{ p: "12px 16px" }}>
@@ -406,4 +408,6 @@ export default function PrimarySearchAppBar() {
       {renderMenu}
     </Box>
   );
-}
+};
+
+export default HeaderComponent;
