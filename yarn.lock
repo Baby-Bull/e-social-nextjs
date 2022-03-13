@@ -1100,6 +1100,11 @@ cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
+crypto-js@^3.1.9-1:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.3.0.tgz#846dd1cce2f68aacfa156c8578f926a609b7976b"
+  integrity sha512-DIT51nX0dCfKltpRiXV+/TVZq+Qq2NgF4644+K7Ttnla7zEzqc+kjJyiB96BHNyUTBxyjzRcZYpUdZa+QAqi6Q==
+
 css-loader@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-1.0.0.tgz#9f46aaa5ca41dbe31860e3b62b8e23c42916bf56"
@@ -3054,6 +3059,13 @@ react@^17.0.2:
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
+
+reactjs-social-login@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/reactjs-social-login/-/reactjs-social-login-2.0.1.tgz#6bd314819bce64e8d3fc6de1e0c692f4163f2c0c"
+  integrity sha512-sM4B0J6MfLPsqNmEhJS2Oo8fjysczikOD7Pftzjj/ZirZg3TbiS2kgIhQBdp31xU76PcN2/DcM8lszZ97JDcZw==
+  dependencies:
+    crypto-js "^3.1.9-1"
 
 readable-stream@^2.0.2:
   version "2.3.7"

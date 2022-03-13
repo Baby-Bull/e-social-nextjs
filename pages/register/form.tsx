@@ -1,8 +1,9 @@
 import * as React from "react";
 import type { NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import dynamic from "next/dynamic";
 
-import FormComponent from "src/components/authen/register/form/FormComponent";
+const FormComponent = dynamic(() => import("src/components/authen/register/form/FormComponent"), { ssr: false });
 
 const Form: NextPage = () => <FormComponent />;
 

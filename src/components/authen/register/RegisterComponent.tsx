@@ -1,7 +1,9 @@
-import React from "react";
-import { Box, Grid, Typography, Link } from "@mui/material";
+/* eslint-disable no-console */
+import React, { useRef, useState, useEffect } from "react";
+import { Box, Grid, Typography, Link, CircularProgress, Backdrop } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import { LoginSocialGoogle, LoginSocialGithub, IResolveParams, TypeCrossFunction } from "reactjs-social-login";
 
 import theme from "src/theme";
 import ContentComponent from "src/components/layouts/ContentComponent";
@@ -11,11 +13,66 @@ import GridLeftComponent from "src/components/authen/register/GridLeftComponent"
 const RegisterComponents = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRedirectForm = () => router.push("/register/form");
+  const [provider, setProvider] = useState("");
+  const [profile, setProfile] = useState<any>();
+  const githubRef = useRef<TypeCrossFunction>(null!);
+  const googleRef = useRef<TypeCrossFunction>(null!);
+
+  const onLoginStart = () => {
+    setIsLoading(true);
+  };
+
+  const onLogoutFailure = () => {
+    setIsLoading(true);
+  };
+
+  useEffect(() => {
+    const registerAccount = async (accessToken: string) => {
+      let urlAuth = `${process.env.NEXT_PUBLIC_API}/auth`;
+      switch (provider) {
+        case "github":
+          urlAuth += "/github";
+          break;
+        case "google":
+          urlAuth += "/google";
+          break;
+        default:
+          setIsLoading(false);
+          // eslint-disable-next-line no-alert
+          alert("Provider not support");
+          return;
+      }
+      setIsLoading(true);
+      const rawResponse = await fetch(urlAuth, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ access_token: accessToken }),
+      });
+      const content = await rawResponse.json();
+      setIsLoading(false);
+      if (content?.data?.access_token) {
+        router.push("/register/form");
+      }
+      return content;
+    };
+    if (profile?.access_token) {
+      registerAccount(profile.access_token);
+    }
+  }, [profile]);
 
   return (
-    <ContentComponent>
+    <ContentComponent authPage>
+      {isLoading && (
+        <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       <Box>
         <Grid container>
           <GridLeftComponent />
@@ -50,20 +107,47 @@ const RegisterComponents = () => {
               >
                 {t("register:sub-title")}
               </Typography>
+
               <Box pt="63px">
                 <ButtonComponent props={{ mode: "twitter" }} onClick={() => handleRedirectForm()}>
-                  Twitterで登録
+                  {t("login:right.register-twitter")}
                 </ButtonComponent>
               </Box>
               <Box pt="48px">
-                <ButtonComponent props={{ mode: "google" }} onClick={() => handleRedirectForm()}>
-                  Googleで登録
-                </ButtonComponent>
+                <LoginSocialGoogle
+                  ref={googleRef}
+                  client_id={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}
+                  onLogoutFailure={onLogoutFailure}
+                  onLoginStart={onLoginStart}
+                  onResolve={({ provider: googleProvider, data }: IResolveParams) => {
+                    setProvider(googleProvider);
+                    setProfile(data);
+                  }}
+                  onReject={(err) => {
+                    console.log(err);
+                  }}
+                >
+                  <ButtonComponent props={{ mode: "google" }}>{t("login:right.register-google")}</ButtonComponent>
+                </LoginSocialGoogle>
               </Box>
+
               <Box pt="48px">
-                <ButtonComponent props={{ mode: "github" }} onClick={() => handleRedirectForm()}>
-                  Githubで登録
-                </ButtonComponent>
+                <LoginSocialGithub
+                  ref={githubRef}
+                  client_id={process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID || ""}
+                  client_secret={process.env.NEXT_PUBLIC_GITHUB_CLIENT_SECRET || ""}
+                  redirect_uri={process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER}
+                  onResolve={({ provider: githubProvider, data }: IResolveParams) => {
+                    setProvider(githubProvider);
+                    setProfile(data);
+                  }}
+                  onLoginStart={onLoginStart}
+                  onReject={(err: any) => {
+                    console.log(err);
+                  }}
+                >
+                  <ButtonComponent props={{ mode: "github" }}>{t("login:right.register-git")}</ButtonComponent>
+                </LoginSocialGithub>
               </Box>
 
               <Link
