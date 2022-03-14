@@ -75,7 +75,7 @@ const FormRegisterComponents = () => {
 
   return (
     <React.Fragment>
-      <ContentComponent>
+      <ContentComponent authPage>
         <Box>
           <Grid container>
             <GridLeftComponent smAndUp />
