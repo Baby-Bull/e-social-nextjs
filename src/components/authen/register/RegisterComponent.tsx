@@ -9,13 +9,13 @@ import theme from "src/theme";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
+import { getAccessTokenTwitter } from "src/services/auth";
 
 const RegisterComponents = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleRedirectForm = () => router.push("/register/form");
   const [provider, setProvider] = useState("");
   const [profile, setProfile] = useState<any>();
   const githubRef = useRef<TypeCrossFunction>(null!);
@@ -30,6 +30,24 @@ const RegisterComponents = () => {
   };
 
   useEffect(() => {
+    const registerWithTwitter = async () => {
+      const popupWindowURL = new URL(window.location.href);
+      const code = popupWindowURL.searchParams.get("code");
+      if (code) {
+        const res = await getAccessTokenTwitter(code, process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER);
+        if (res?.access_token) {
+          setProvider("twitter");
+          setProfile(res);
+        }
+      }
+    };
+    registerWithTwitter();
+  }, []);
+
+  // eslint-disable-next-line max-len
+  const urlRedirectTwitter = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_TWITTER_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER}&scope=tweet.read%20users.read%20follows.read%20follows.write&state=state&code_challenge=challenge&code_challenge_method=plain`;
+
+  useEffect(() => {
     const registerAccount = async (accessToken: string) => {
       let urlAuth = `${process.env.NEXT_PUBLIC_API}/auth`;
       switch (provider) {
@@ -38,6 +56,9 @@ const RegisterComponents = () => {
           break;
         case "google":
           urlAuth += "/google";
+          break;
+        case "twitter":
+          urlAuth += "/twitter";
           break;
         default:
           setIsLoading(false);
@@ -62,7 +83,10 @@ const RegisterComponents = () => {
       return content;
     };
     if (profile?.access_token) {
-      registerAccount(profile.access_token);
+      registerAccount(profile?.access_token);
+    }
+    if (provider === "twitter" && profile) {
+      console.log(profile);
     }
   }, [profile]);
 
@@ -109,7 +133,7 @@ const RegisterComponents = () => {
               </Typography>
 
               <Box pt="63px">
-                <ButtonComponent props={{ mode: "twitter" }} onClick={() => handleRedirectForm()}>
+                <ButtonComponent props={{ mode: "twitter" }} href={urlRedirectTwitter}>
                   {t("login:right.register-twitter")}
                 </ButtonComponent>
               </Box>
@@ -125,6 +149,7 @@ const RegisterComponents = () => {
                   }}
                   onReject={(err) => {
                     console.log(err);
+                    setIsLoading(false);
                   }}
                 >
                   <ButtonComponent props={{ mode: "google" }}>{t("login:right.register-google")}</ButtonComponent>
@@ -144,6 +169,7 @@ const RegisterComponents = () => {
                   onLoginStart={onLoginStart}
                   onReject={(err: any) => {
                     console.log(err);
+                    setIsLoading(false);
                   }}
                 >
                   <ButtonComponent props={{ mode: "github" }}>{t("login:right.register-git")}</ButtonComponent>
