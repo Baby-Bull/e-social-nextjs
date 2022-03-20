@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Grid,
@@ -15,6 +15,8 @@ import {
   Button,
   Paper,
   Chip,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
@@ -24,6 +26,7 @@ import theme from "src/theme";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
+import { updateProfile } from "src/services/auth";
 
 import { Field } from "./Field";
 
@@ -35,9 +38,26 @@ const FormRegisterComponents = () => {
   const { t } = useTranslation();
   const router = useRouter();
 
+  const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [fullWidth] = React.useState(true);
   const [isTutorialDone, setStep] = React.useState(false);
+
+  const [userInfo, setUserInfo] = useState({
+    username: null,
+    birthday: null,
+    status: null,
+    email: null,
+    address: null,
+    tags: [],
+  });
+
+  const onChangeUserInfo = (key: string, value: any) => {
+    setUserInfo({
+      ...userInfo,
+      [key]: value,
+    });
+  };
 
   const handleClickOpen = () => {
     setStep(false);
@@ -73,9 +93,23 @@ const FormRegisterComponents = () => {
     }
   }, [open]);
 
+  const submitUpdateProfile = async () => {
+    setIsLoading(true);
+    const resUpdate = await updateProfile(useRouter);
+    setIsLoading(false);
+    if (resUpdate?.data) {
+      handleClickOpen();
+    }
+  };
+
   return (
     <React.Fragment>
       <ContentComponent authPage>
+        {isLoading && (
+          <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
+            <CircularProgress color="inherit" />
+          </Backdrop>
+        )}
         <Box>
           <Grid container>
             <GridLeftComponent smAndUp />
@@ -103,11 +137,12 @@ const FormRegisterComponents = () => {
 
                 <form style={{ textAlign: "center", marginBottom: "63px" }}>
                   <Field
-                    id="name"
+                    id="username"
                     required
                     label={t("register:form.label.name")}
                     placeholder={t("register:form.placeholder.name")}
                     editor="textbox"
+                    onChangeValue={onChangeUserInfo}
                   />
                   <Field
                     id="birthday"
@@ -115,14 +150,16 @@ const FormRegisterComponents = () => {
                     label={t("register:form.label.birthday")}
                     placeholder={t("register:form.placeholder.birthday")}
                     editor="textbox"
+                    onChangeValue={onChangeUserInfo}
                   />
                   <Field
                     id="status"
                     required
                     label={t("register:form.label.status")}
                     placeholder={t("register:form.placeholder.status")}
-                    options={["", "Marketing"]}
+                    options={["", "今すぐ話せます", "友達募集しています", "相談に乗って欲しいです"]}
                     editor="dropdown"
+                    onChangeValue={onChangeUserInfo}
                   />
                   <Field
                     id="email"
@@ -130,20 +167,24 @@ const FormRegisterComponents = () => {
                     label={t("register:form.label.email")}
                     placeholder={t("register:form.placeholder.email")}
                     editor="textbox"
+                    onChangeValue={onChangeUserInfo}
                   />
                   <Field
-                    id="place"
+                    id="address"
                     required
                     label={t("register:form.label.place")}
                     placeholder={t("register:form.placeholder.place")}
                     editor="textbox"
+                    onChangeValue={onChangeUserInfo}
                   />
                   <Field
-                    id="tag"
+                    id="tags"
                     required
                     label={t("register:form.label.tag")}
                     placeholder={t("register:form.placeholder.tag")}
                     editor="multi-selection"
+                    value={userInfo?.tags || []}
+                    onChangeValue={onChangeUserInfo}
                   />
                   <Field id="checkbox" label={t("register:form.label.checkbox")} editor="checkbox" />
 
@@ -152,7 +193,7 @@ const FormRegisterComponents = () => {
                       mode: "gradient",
                       dimension: "x-medium",
                     }}
-                    onClick={handleClickOpen}
+                    onClick={submitUpdateProfile}
                   >
                     {t("register:form.submit")}
                   </ButtonComponent>
