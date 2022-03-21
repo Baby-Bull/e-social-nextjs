@@ -1,6 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 import base64 from "base-64";
 
+import { api, setToken } from "src/helpers/api";
+import { getRefreshToken, getToken, setRefreshToken } from "src/helpers/storage";
+
 const PREVENT_CORS_URL: string = "https://cors.bridged.cc";
 
 export const getAccessTokenTwitter = async (code: string, redirectUri: string) => {
@@ -38,5 +41,50 @@ export const getAccessTokenTwitter = async (code: string, redirectUri: string) =
     // eslint-disable-next-line no-console
     console.log(error);
     return false;
+  }
+};
+
+export const authWithProvider = async (provider: string, accessToken: string) => {
+  try {
+    const res = await api.post(`/auth/${provider}`, { access_token: accessToken });
+    if (res?.data?.access_token) {
+      setToken(res?.data?.access_token);
+      setRefreshToken(res?.data?.refresh_token);
+    }
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const logout = async () => {
+  try {
+    const res = await api.post("/auth/logout");
+    setToken("");
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const refreshToken = async () => {
+  try {
+    const res = await api.post("/auth/tokens", { access_token: getToken(), refresh_token: getRefreshToken() });
+    if (res?.data?.access_token) {
+      setToken(res?.data?.access_token);
+      setRefreshToken(res?.data?.refresh_token);
+    }
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const updateProfile = async (dataUpdate: any) => {
+  try {
+    const res = await api.patch("/user/profile", dataUpdate);
+    return res;
+  } catch (error) {
+    return error;
   }
 };

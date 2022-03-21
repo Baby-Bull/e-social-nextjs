@@ -29,6 +29,8 @@ export interface IFieldProps {
   /* The drop down items for the field */
   options?: string[];
   value?: any;
+  // eslint-disable-next-line no-unused-vars
+  onChangeValue?: (key: string, value: any) => void;
 }
 
 const InputCustom = styled(InputBase)({
@@ -39,7 +41,7 @@ const InputCustom = styled(InputBase)({
     fontSize: 16,
     padding: "10px 12px",
     borderRadius: 12,
-    fontFamily: "Noto Sans",
+    fontFamily: "Noto Sans JP",
     "@media (max-width: 425px)": {
       width: 294,
       height: 38,
@@ -70,7 +72,7 @@ const SelectCustom = styled(Select)({
     fontSize: 16,
     padding: "10px 12px",
     borderRadius: 12,
-    fontFamily: "Noto Sans",
+    fontFamily: "Noto Sans JP",
     "@media (max-width: 425px)": {
       height: 40,
     },
@@ -88,14 +90,30 @@ const ListItem = styled("li")({
   margin: theme.spacing(0.5),
 });
 
-export const Field: React.SFC<IFieldProps> = ({ required, id, label, placeholder, editor, options, value }) => {
-  const [chipData, setChipData] = React.useState([
-    { key: 0, label: "デザイナー" },
-    { key: 1, label: "エンジニア" },
-  ]);
+export const Field: React.SFC<IFieldProps> = ({
+  required,
+  id,
+  label,
+  placeholder,
+  editor,
+  options,
+  value,
+  onChangeValue,
+}) => {
+  const handleDeleteTagItem = (tag: string) => () => {
+    const tags = value.filter((item: string) => item !== tag);
+    if (onChangeValue) {
+      onChangeValue("tags", tags);
+    }
+  };
 
-  const handleDelete = (chipToDelete) => () => {
-    setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+  const onKeyPressInputTag = (e: any) => {
+    if (e.key === "Enter" && e.target.value) {
+      if (onChangeValue && !value.includes(e.target.value)) {
+        onChangeValue("tags", [...value, e.target.value]);
+      }
+      (document.getElementById("input_tag") as HTMLInputElement).value = "";
+    }
   };
 
   const [listChipData] = React.useState([
@@ -156,7 +174,12 @@ export const Field: React.SFC<IFieldProps> = ({ required, id, label, placeholder
               />
             </Box>
           </InputLabel>
-          <InputCustom placeholder={placeholder} defaultValue={value} id={id} />
+          <InputCustom
+            placeholder={placeholder}
+            defaultValue={value}
+            id={id}
+            onChange={(e) => onChangeValue(id, e.target.value)}
+          />
         </FormControl>
       )}
 
@@ -177,7 +200,7 @@ export const Field: React.SFC<IFieldProps> = ({ required, id, label, placeholder
           <SelectCustom
             autoWidth={false}
             value={value}
-            // onChange={handleChange}
+            onChange={(e) => onChangeValue(id, e.target.value)}
             displayEmpty
             defaultValue=""
           >
@@ -272,7 +295,7 @@ export const Field: React.SFC<IFieldProps> = ({ required, id, label, placeholder
               />
             </Box>
           </InputLabel>
-          <InputCustom placeholder={placeholder} defaultValue={value} id={id} />
+          <InputCustom placeholder={placeholder} id="input_tag" onKeyPress={onKeyPressInputTag} />
 
           <Paper
             sx={{
@@ -286,15 +309,15 @@ export const Field: React.SFC<IFieldProps> = ({ required, id, label, placeholder
             }}
             component="ul"
           >
-            {chipData.map((data) => {
+            {value?.map((item) => {
               let icon;
 
               return (
-                <ListItem key={data.key}>
+                <ListItem key={item}>
                   <Chip
                     icon={icon}
-                    label={data.label}
-                    onDelete={handleDelete(data)}
+                    label={item}
+                    onDelete={handleDeleteTagItem(item)}
                     deleteIcon={
                       <Avatar
                         src="/assets/images/svg/delete.svg"

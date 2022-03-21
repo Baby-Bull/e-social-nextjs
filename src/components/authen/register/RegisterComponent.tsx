@@ -9,7 +9,7 @@ import theme from "src/theme";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
-import { getAccessTokenTwitter } from "src/services/auth";
+import { authWithProvider, getAccessTokenTwitter } from "src/services/auth";
 
 const RegisterComponents = () => {
   const { t } = useTranslation();
@@ -48,45 +48,21 @@ const RegisterComponents = () => {
   const urlRedirectTwitter = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_TWITTER_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER}&scope=tweet.read%20users.read%20follows.read%20follows.write&state=state&code_challenge=challenge&code_challenge_method=plain`;
 
   useEffect(() => {
-    const registerAccount = async (accessToken: string) => {
-      let urlAuth = `${process.env.NEXT_PUBLIC_API}/auth`;
-      switch (provider) {
-        case "github":
-          urlAuth += "/github";
-          break;
-        case "google":
-          urlAuth += "/google";
-          break;
-        case "twitter":
-          urlAuth += "/twitter";
-          break;
-        default:
-          setIsLoading(false);
-          // eslint-disable-next-line no-alert
-          alert("Provider not support");
-          return;
-      }
+    const registerAccount = async (providerAuth: string, accessToken: string) => {
       setIsLoading(true);
-      const rawResponse = await fetch(urlAuth, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ access_token: accessToken }),
-      });
-      const content = await rawResponse.json();
+      const resAuth = await authWithProvider(providerAuth, accessToken);
       setIsLoading(false);
-      if (content?.data?.access_token) {
-        router.push("/register/form");
+      if (resAuth?.data?.access_token) {
+        if (resAuth?.data?.user?.is_profile_edited) {
+          router.push("/");
+        } else {
+          router.push("/register/form");
+        }
       }
-      return content;
+      return resAuth;
     };
     if (profile?.access_token) {
-      registerAccount(profile?.access_token);
-    }
-    if (provider === "twitter" && profile) {
-      console.log(profile);
+      registerAccount(provider, profile?.access_token);
     }
   }, [profile]);
 

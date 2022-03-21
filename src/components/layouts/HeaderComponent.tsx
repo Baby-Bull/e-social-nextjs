@@ -12,7 +12,8 @@ import { useRouter } from "next/router";
 import { Button, Select, Avatar, Typography, Link } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
-import theme from "../../theme";
+import { logout } from "src/services/auth";
+import theme from "src/theme";
 
 interface IHeaderComponentProps {
   authPage?: boolean;
@@ -164,6 +165,11 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   const handleOpenMenu = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/login");
+  };
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -272,7 +278,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
             <TypoLabel>{t("header.setting")}</TypoLabel>
           </MenuItemCustom>
         </Link>
-        <MenuItemCustom>
+        <MenuItemCustom onClick={handleLogout}>
           <TypoLabel>{t("header.logout")}</TypoLabel>
         </MenuItemCustom>
       </Box>
