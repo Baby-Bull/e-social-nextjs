@@ -67,7 +67,7 @@ const LoginComponent = () => {
   }, [profile]);
 
   return (
-    <ContentComponent>
+    <ContentComponent authPage>
       {isLoading && (
         <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
           <CircularProgress color="inherit" />
