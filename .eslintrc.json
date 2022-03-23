@@ -24,7 +24,8 @@
   ],
   "rules": {
     "react/prop-types": "off",
-    "react/no-array-index-key": "off", 
+    "react/jsx-props-no-spreading": "off",
+    "react/no-array-index-key": "off",
     "jsx-a11y/click-events-have-key-events": 0,
     "jsx-a11y/no-static-element-interactions": 0,
     "react/jsx-fragments": [
@@ -63,10 +64,26 @@
         "namedComponents": "arrow-function"
       }
     ],
-    "react/require-default-props": [0],
-    "react/jsx-props-no-spreading": [2, {"custom": "ignore"}],
-    "func-names": ["error", "as-needed"],
-    "max-len": ["error", { "code": 120, "ignoreComments": true }],
+    "react/require-default-props": [
+      0
+    ],
+    // "react/jsx-props-no-spreading": [
+    //   2,
+    //   {
+    //     "custom": "ignore"
+    //   }
+    // ],
+    "func-names": [
+      "error",
+      "as-needed"
+    ],
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "ignoreComments": true
+      }
+    ],
     "import/order": [
       2,
       {
@@ -92,7 +109,12 @@
         "usePrettierrc": true
       }
     ],
-    "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+    "no-plusplus": [
+      "error",
+      {
+        "allowForLoopAfterthoughts": true
+      }
+    ],
     "consistent-return": 0,
     "no-inner-declarations": 0
   },

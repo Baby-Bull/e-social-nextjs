@@ -236,16 +236,6 @@ const FormRegisterComponents = () => {
                     error={errorValidate.birthday}
                   />
 
-                  {/* <Field
-                    id="birthday"
-                    required
-                    label={t("register:form.label.birthday")}
-                    placeholder={t("register:form.placeholder.birthday")}
-                    onChangeValue={onChangeUserInfo}
-                    editor="textbox"
-                    error={errorValidate.birthday}
-                  /> */}
-
                   <Field
                     id="status"
                     required
