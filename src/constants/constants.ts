@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
 export const MONTHS = [
   {
     label: 0,
@@ -53,3 +52,5 @@ export const MONTHS = [
     value: 12,
   },
 ];
+
+export const AUTH_PAGE_PATHS = ["/login", "/register", "/register/form"];

@@ -21,12 +21,16 @@ import {
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+// import { LocalizationProvider, DesktopDatePicker } from "@mui/lab";
+// import DateAdapter from "@mui/lab/AdapterDayjs";
 
 import theme from "src/theme";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 import { updateProfile } from "src/services/auth";
+import { REGEX_RULES, VALIDATE_MESSAGE_FORM_REGISTER } from "src/messages/validate";
+import { USER_STATUS_OPTIONS } from "src/components/constants/constants";
 
 import { Field } from "./Field";
 
@@ -42,20 +46,31 @@ const FormRegisterComponents = () => {
   const [open, setOpen] = React.useState(false);
   const [fullWidth] = React.useState(true);
   const [isTutorialDone, setStep] = React.useState(false);
+  const [hasAgree, setHasAgree] = useState(true);
 
   const [userInfo, setUserInfo] = useState({
     username: null,
     birthday: null,
-    status: null,
+    status: USER_STATUS_OPTIONS[0].value,
     email: null,
     address: null,
     tags: [],
   });
 
+  const [errorValidate, setErrorValidates] = useState({
+    username: null,
+    birthday: null,
+    status: null,
+    email: null,
+    address: null,
+    tags: null,
+    checkbox: null,
+  });
+
   const onChangeUserInfo = (key: string, value: any) => {
     setUserInfo({
       ...userInfo,
-      [key]: value,
+      [key]: typeof value === "string" ? value.trim() : value,
     });
   };
 
@@ -93,12 +108,77 @@ const FormRegisterComponents = () => {
     }
   }, [open]);
 
+  const onChangeCheckbox = () => {
+    setHasAgree(!hasAgree);
+  };
+
+  const handleValidateForm = () => {
+    let isValidForm = true;
+    const errorMessages = {
+      username: null,
+      birthday: null,
+      status: null,
+      email: null,
+      address: null,
+      tags: null,
+      checkbox: null,
+    };
+    // validate username;
+    if (!userInfo?.username || userInfo?.username?.length === 0) {
+      isValidForm = false;
+      errorMessages.username = VALIDATE_MESSAGE_FORM_REGISTER.username.required;
+    } else if (userInfo?.username?.length === 50) {
+      isValidForm = false;
+      errorMessages.username = VALIDATE_MESSAGE_FORM_REGISTER.username.max_length;
+    } else if (!REGEX_RULES.only_japanese.test(userInfo?.username)) {
+      // isValidForm = false;
+      // errorMessages.username = VALIDATE_MESSAGE_FORM_REGISTER.username.invalid;
+    }
+
+    // validate birthday
+    if (!userInfo?.birthday || userInfo?.birthday?.length === 0) {
+      isValidForm = false;
+      errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.required;
+    }
+
+    // validate email
+    if (!userInfo?.email || userInfo?.email?.length === 0) {
+      isValidForm = false;
+      errorMessages.email = VALIDATE_MESSAGE_FORM_REGISTER.email.required;
+    } else if (!REGEX_RULES.email.test(userInfo?.email)) {
+      isValidForm = false;
+      errorMessages.email = VALIDATE_MESSAGE_FORM_REGISTER.email.invalid;
+    }
+
+    // validate address
+    if (!userInfo?.address || userInfo?.address?.length === 0) {
+      isValidForm = false;
+      errorMessages.address = VALIDATE_MESSAGE_FORM_REGISTER.address.required;
+    }
+
+    // validate tags
+    if (!userInfo?.tags || userInfo?.tags?.length === 0) {
+      isValidForm = false;
+      errorMessages.tags = VALIDATE_MESSAGE_FORM_REGISTER.tags.required;
+    }
+
+    // validate checkbox
+    if (!hasAgree) {
+      errorMessages.checkbox = VALIDATE_MESSAGE_FORM_REGISTER.checkbox;
+    }
+
+    setErrorValidates(errorMessages);
+    return isValidForm;
+  };
+
   const submitUpdateProfile = async () => {
-    setIsLoading(true);
-    const resUpdate = await updateProfile(useRouter);
-    setIsLoading(false);
-    if (resUpdate?.data) {
-      handleClickOpen();
+    if (handleValidateForm()) {
+      setIsLoading(true);
+      const resUpdate = await updateProfile(userInfo);
+      setIsLoading(false);
+      if (resUpdate?.data) {
+        handleClickOpen();
+      }
     }
   };
 
@@ -143,23 +223,38 @@ const FormRegisterComponents = () => {
                     placeholder={t("register:form.placeholder.name")}
                     editor="textbox"
                     onChangeValue={onChangeUserInfo}
+                    error={errorValidate.username}
                   />
+                  {/* <LocalizationProvider dateAdapter={DateAdapter}>
+                    <DesktopDatePicker
+                      label={t("register:form.label.birthday")}
+                      placeholder={t("register:form.placeholder.birthday")}
+                      inputFormat="yyyy/MM/dd"
+                      value={value}
+                      onChange={handleChange}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                  </LocalizationProvider> */}
+
                   <Field
                     id="birthday"
                     required
                     label={t("register:form.label.birthday")}
                     placeholder={t("register:form.placeholder.birthday")}
-                    editor="textbox"
                     onChangeValue={onChangeUserInfo}
+                    editor="textbox"
+                    error={errorValidate.birthday}
                   />
+
                   <Field
                     id="status"
                     required
                     label={t("register:form.label.status")}
                     placeholder={t("register:form.placeholder.status")}
-                    options={["", "今すぐ話せます", "友達募集しています", "相談に乗って欲しいです"]}
+                    options={USER_STATUS_OPTIONS}
                     editor="dropdown"
                     onChangeValue={onChangeUserInfo}
+                    error={errorValidate.status}
                   />
                   <Field
                     id="email"
@@ -168,6 +263,7 @@ const FormRegisterComponents = () => {
                     placeholder={t("register:form.placeholder.email")}
                     editor="textbox"
                     onChangeValue={onChangeUserInfo}
+                    error={errorValidate.email}
                   />
                   <Field
                     id="address"
@@ -176,6 +272,7 @@ const FormRegisterComponents = () => {
                     placeholder={t("register:form.placeholder.place")}
                     editor="textbox"
                     onChangeValue={onChangeUserInfo}
+                    error={errorValidate.address}
                   />
                   <Field
                     id="tags"
@@ -185,14 +282,23 @@ const FormRegisterComponents = () => {
                     editor="multi-selection"
                     value={userInfo?.tags || []}
                     onChangeValue={onChangeUserInfo}
+                    error={errorValidate.tags}
                   />
-                  <Field id="checkbox" label={t("register:form.label.checkbox")} editor="checkbox" />
+                  <Field
+                    id="checkbox"
+                    label={t("register:form.label.checkbox")}
+                    editor="checkbox"
+                    value={hasAgree}
+                    onChangeCheckbox={onChangeCheckbox}
+                    error={errorValidate.checkbox}
+                  />
 
                   <ButtonComponent
                     props={{
                       mode: "gradient",
                       dimension: "x-medium",
                     }}
+                    sx={{ marginTop: "8px" }}
                     onClick={submitUpdateProfile}
                   >
                     {t("register:form.submit")}

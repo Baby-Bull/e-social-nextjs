@@ -39,3 +39,18 @@ export const HOMEPAGE_RECOMMEND_MEMBER_STATUS = {
     mode: "default",
   },
 };
+
+export const USER_STATUS_OPTIONS = [
+  {
+    label: "今すぐ話せます",
+    value: "can-talk",
+  },
+  {
+    label: "友達募集しています",
+    value: "looking-for-friend",
+  },
+  {
+    label: "相談に乗って欲しいです",
+    value: "need-consult",
+  },
+];

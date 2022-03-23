@@ -395,20 +395,22 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
             </Box>
           </Box>
         </Toolbar>
-        <Box sx={{ display: { xs: "flex", lg: "none" }, justifyContent: "center" }}>
-          <StyledButtonList
-            startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" width="16px" height="11.33px" />}
-            sx={{ mr: { xs: "40px", md: "0" } }}
-          >
-            {t("header.list-engineers")}
-          </StyledButtonList>
+        {!authPage && (
+          <Box sx={{ display: { xs: "flex", lg: "none" }, justifyContent: "center" }}>
+            <StyledButtonList
+              startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" width="16px" height="11.33px" />}
+              sx={{ mr: { xs: "40px", md: "0" } }}
+            >
+              {t("header.list-engineers")}
+            </StyledButtonList>
 
-          <StyledButtonList
-            startIcon={<img alt="" src="/assets/images/svg/users.svg" width="15.36px" height="10.88px" />}
-          >
-            {t("header.list-community")}
-          </StyledButtonList>
-        </Box>
+            <StyledButtonList
+              startIcon={<img alt="" src="/assets/images/svg/users.svg" width="15.36px" height="10.88px" />}
+            >
+              {t("header.list-community")}
+            </StyledButtonList>
+          </Box>
+        )}
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
