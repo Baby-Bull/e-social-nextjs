@@ -14,12 +14,15 @@ import {
   Paper,
   Avatar,
 } from "@mui/material";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DesktopDatePicker from "@mui/lab/DatePicker";
 import { styled } from "@mui/material/styles";
 
 import theme from "src/theme";
 import { VALIDATE_MESSAGE_FORM_REGISTER } from "src/messages/validate";
 
-type Editor = "textbox" | "dropdown" | "checkbox" | "multi-selection";
+type Editor = "textbox" | "dropdown" | "checkbox" | "multi-selection" | "date-picker";
 
 export interface IOptionProps {
   label: string;
@@ -137,7 +140,6 @@ export const Field: React.SFC<IFieldProps> = ({
       onChangeValue("tags", [...value, tag]);
     }
   };
-
   const [listChipData] = React.useState([
     { key: 0, label: "React" },
     { key: 1, label: "Ruby on Rails" },
@@ -148,6 +150,8 @@ export const Field: React.SFC<IFieldProps> = ({
     { key: 6, label: "サーバーサイドエンジニア" },
     { key: 7, label: "レビュー" },
   ]);
+
+  const [date, setDate] = React.useState(null);
 
   return (
     <React.Fragment>
@@ -273,7 +277,12 @@ export const Field: React.SFC<IFieldProps> = ({
                   let icon;
 
                   return (
-                    <ListItem key={data.key} onClick={() => onClickTagChip(data.label)}>
+                    <ListItem
+                      key={data.key}
+                      onClick={() => {
+                        onClickTagChip(data.label);
+                      }}
+                    >
                       <Chip
                         variant="outlined"
                         size="small"
@@ -319,6 +328,7 @@ export const Field: React.SFC<IFieldProps> = ({
               </Box>
             </InputLabel>
             <InputCustom placeholder={placeholder} id="input_tag" onKeyPress={onKeyPressInputTag} />
+
             {errorElement && (
               <Typography
                 sx={{
@@ -418,6 +428,73 @@ export const Field: React.SFC<IFieldProps> = ({
               }
             />
           </FormGroup>
+        )}
+
+        {editor!.toLowerCase() === "date-picker" && (
+          <FormControl sx={{ pt: "20px", mt: ["25px", "20px"], width: "100%" }} variant="standard">
+            <InputLabel
+              shrink
+              htmlFor={id}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                color: "black",
+              }}
+            >
+              <Box display="flex">
+                {label}
+                <Chip
+                  label="必須"
+                  sx={{
+                    display: required ? "" : "none",
+                    ml: 1,
+                    width: "54px",
+                    height: "22px",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "white",
+                    backgroundColor: theme.orange,
+                  }}
+                />
+              </Box>
+            </InputLabel>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DesktopDatePicker
+                value={date}
+                onChange={(newValue) => {
+                  onChangeValue("birthday", newValue?.toLocaleString().split(",")[0]);
+                  setDate(newValue);
+                }}
+                renderInput={({ inputRef, inputProps, InputProps }) => (
+                  <Box
+                    sx={{
+                      backgroundColor: "white",
+                      border: `1px solid ${theme.blue}`,
+                      padding: "10px 12px",
+                      borderRadius: "12px",
+                      fontFamily: "Noto Sans JP",
+                      alignItems: "center",
+                      display: "flex",
+                    }}
+                  >
+                    <input
+                      disabled
+                      style={{
+                        outlineStyle: "none",
+                        borderStyle: "none",
+                        fontSize: "16px",
+                        width: "100%",
+                      }}
+                      placeholder="Click to select date"
+                      ref={inputRef}
+                      {...inputProps}
+                    />
+                    {InputProps?.endAdornment}
+                  </Box>
+                )}
+              />
+            </LocalizationProvider>
+          </FormControl>
         )}
 
         {/* TODO - display validation error */}

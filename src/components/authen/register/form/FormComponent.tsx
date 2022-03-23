@@ -225,16 +225,6 @@ const FormRegisterComponents = () => {
                     onChangeValue={onChangeUserInfo}
                     error={errorValidate.username}
                   />
-                  {/* <LocalizationProvider dateAdapter={DateAdapter}>
-                    <DesktopDatePicker
-                      label={t("register:form.label.birthday")}
-                      placeholder={t("register:form.placeholder.birthday")}
-                      inputFormat="yyyy/MM/dd"
-                      value={value}
-                      onChange={handleChange}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </LocalizationProvider> */}
 
                   <Field
                     id="birthday"
@@ -242,9 +232,19 @@ const FormRegisterComponents = () => {
                     label={t("register:form.label.birthday")}
                     placeholder={t("register:form.placeholder.birthday")}
                     onChangeValue={onChangeUserInfo}
-                    editor="textbox"
+                    editor="date-picker"
                     error={errorValidate.birthday}
                   />
+
+                  {/* <Field
+                    id="birthday"
+                    required
+                    label={t("register:form.label.birthday")}
+                    placeholder={t("register:form.placeholder.birthday")}
+                    onChangeValue={onChangeUserInfo}
+                    editor="textbox"
+                    error={errorValidate.birthday}
+                  /> */}
 
                   <Field
                     id="status"
