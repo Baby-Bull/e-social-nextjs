@@ -139,6 +139,7 @@ const FormRegisterComponents = () => {
     if (!userInfo?.birthday || userInfo?.birthday?.length === 0) {
       isValidForm = false;
       errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.required;
+      errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.invalid_date;
     }
 
     // validate email

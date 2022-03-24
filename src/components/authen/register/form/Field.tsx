@@ -119,7 +119,22 @@ export const Field: React.SFC<IFieldProps> = ({
       onChangeValue("tags", tags);
     }
   };
+
   const [errorElement, setErrorElement] = React.useState(null);
+  const [errorDateElement, setErrorDateElement] = React.useState(null);
+
+  const onValidateDate = (tempValue: any) => {
+    if (
+      tempValue == "Invalid Date" ||
+      new Date().getFullYear() < tempValue?.getFullYear() ||
+      tempValue?.getFullYear() < 1900
+    ) {
+      setErrorDateElement(VALIDATE_MESSAGE_FORM_REGISTER.birthday.invalid_date);
+    } else {
+      onChangeValue("birthday", tempValue?.toLocaleString().split(",")[0]);
+      setErrorDateElement(null);
+    }
+  };
 
   const onKeyPressInputTag = (e: any) => {
     if (e.key === "Enter" && e.target.value.trim()) {
@@ -460,9 +475,11 @@ export const Field: React.SFC<IFieldProps> = ({
             </InputLabel>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DesktopDatePicker
+                maxDate={new Date()}
                 value={date}
+                inputFormat="dd/MM/yyyy"
                 onChange={(newValue) => {
-                  onChangeValue("birthday", newValue?.toLocaleString().split(",")[0]);
+                  onValidateDate(newValue);
                   setDate(newValue);
                 }}
                 renderInput={({ inputRef, inputProps, InputProps }) => (
@@ -478,7 +495,6 @@ export const Field: React.SFC<IFieldProps> = ({
                     }}
                   >
                     <input
-                      disabled
                       style={{
                         outlineStyle: "none",
                         borderStyle: "none",
@@ -494,10 +510,31 @@ export const Field: React.SFC<IFieldProps> = ({
                 )}
               />
             </LocalizationProvider>
+            {/* TODO - display validation error */}
+            {errorDateElement && (
+              <Typography
+                sx={{
+                  fontSize: "10px",
+                  color: "red",
+                  textAlign: editor === "checkbox" ? "center" : "left",
+                  "&": {
+                    "@media (max-width: 425px)": {
+                      maxWidth: 320,
+                    },
+                    "@media (min-width: 768px)": {
+                      maxWidth: 220,
+                    },
+                    "@media (min-width: 1024px)": {
+                      maxWidth: 320,
+                    },
+                  },
+                }}
+              >
+                {errorDateElement}
+              </Typography>
+            )}
           </FormControl>
         )}
-
-        {/* TODO - display validation error */}
       </Box>
       {error && (
         <Typography
