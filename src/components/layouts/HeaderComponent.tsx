@@ -8,11 +8,14 @@ import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
+import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useRouter } from "next/router";
 import { Button, Select, Avatar, Typography, Link } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
 import { logout } from "src/services/auth";
+import { menuNotificationsData } from "src/components/home/mockData/mockData";
+import styles from "src/components/home/home.module.scss";
 import theme from "src/theme";
 
 interface IHeaderComponentProps {
@@ -132,12 +135,19 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   const [notify] = useState("99+");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [notifyAnchorEl, setNotifyAnchorEl] = React.useState(null);
   const [currency, setCurrency] = React.useState(currencies[0].label);
+
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const isNotifyMenuOpen = Boolean(notifyAnchorEl);
+  const pathLogin = "/login";
 
   const handleChange = (event) => {
     setCurrency(event.target.value);
+  };
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
   // const handleProfileMenuOpen = (event) => {
@@ -150,6 +160,9 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     setAnchorEl(null);
     handleMobileMenuClose();
   };
+  const handleNotifyMenuClose = () => {
+    setNotifyAnchorEl(null);
+  };
 
   const handleRedirectMatching = (type: string) => {
     router.push({
@@ -161,9 +174,11 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-
   const handleOpenMenu = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+  const handleNotifyOpenMenu = (event) => {
+    setNotifyAnchorEl(event.currentTarget);
   };
 
   const handleLogout = async () => {
@@ -284,6 +299,42 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
       </Box>
     </Menu>
   );
+  const notifyMenuId = "primary-search-account-menu-notification";
+  const renderNotificationMenu = (
+    <Menu
+      className={styles.notificationMenu}
+      anchorEl={notifyAnchorEl}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      id={notifyMenuId}
+      keepMounted
+      open={isNotifyMenuOpen}
+      onClose={handleNotifyMenuClose}
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+    >
+      <div className={styles.notificationMenuHeader}>お知らせ</div>
+      {menuNotificationsData.map((data) => (
+        <MenuItem key={data.id} className={styles.notificationMenuItem}>
+          <div className={styles.notificationImage}>
+            <img alt="" src={data.image} />
+          </div>
+          <div className={styles.notficationContents}>
+            {data.important ? (
+              <div className={styles.notificationContent}>{data.content}</div>
+            ) : (
+              <div>{data.content}</div>
+            )}
+            <div className={styles.createdTime}>{data.createdTime}</div>
+          </div>
+        </MenuItem>
+      ))}
+    </Menu>
+  );
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
@@ -352,7 +403,13 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                   <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
                 </Badge>
               </IconButton>
-              <IconButton size="large" aria-label="show 17 new notifications" color="inherit" sx={{ p: "12px 16px" }}>
+              <IconButton
+                size="large"
+                aria-label="show 17 new notifications"
+                color="inherit"
+                sx={{ p: "12px 16px" }}
+                onClick={handleNotifyOpenMenu}
+              >
                 <Badge badgeContent={notify} color="error">
                   <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
                 </Badge>
@@ -414,6 +471,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+      {renderNotificationMenu}
     </Box>
   );
 };
