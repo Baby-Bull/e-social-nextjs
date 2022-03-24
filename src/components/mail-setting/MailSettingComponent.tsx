@@ -1,4 +1,4 @@
-import { Avatar, Box, Typography, Button } from "@mui/material";
+import { Avatar, Box, Typography, Button, Chip, InputLabel, InputBase } from "@mui/material";
 import React, { useState } from "react";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import PropTypes from "prop-types";
@@ -10,9 +10,11 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useTranslation } from "next-i18next";
 
+import ButtonComponent from "src/components/common/ButtonComponent";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import PopupOptionRecommendComponent from "src/components/mail-setting/PopupOptionRecommendComponent";
 import theme from "src/theme";
+import "typeface-roboto";
 
 import { notifyMess, notifyRecommend } from "./mockData";
 
@@ -72,6 +74,30 @@ const TitleTab = styled(Tab)({
   },
 });
 
+const InputCustom = styled(InputBase)({
+  "& .MuiInputBase-input": {
+    position: "relative",
+    backgroundColor: "white",
+    border: `1px solid ${theme.blue}`,
+    fontSize: 16,
+    padding: "10px 12px",
+    borderRadius: 12,
+    fontFamily: "Noto Sans",
+    "@media (max-width: 425px)": {
+      width: 294,
+      height: 38,
+    },
+    "@media (min-width: 769px)": {
+      width: 360,
+      height: 18,
+    },
+    "&:focus": {
+      boxShadow: `${theme.blue} 0 0 0 0.1rem`,
+      borderColor: theme.blue,
+    },
+  },
+});
+
 const IcQuestion = styled(Avatar)({
   width: "18px",
   height: "22px",
@@ -95,6 +121,8 @@ const MailSettingComponent = () => {
   const [value, setValue] = React.useState(0);
   const [isNotifyMess, setIsNotifyMess] = React.useState(true);
   const [valueOnchange, setValueOnchange] = React.useState(false);
+  const [mailOnChange, setMailOnChange] = React.useState(false);
+  const [mail] = React.useState("tanakataro@rebase.com");
 
   const [showPopup, setShowPopup] = useState(false);
 
@@ -118,6 +146,14 @@ const MailSettingComponent = () => {
 
   const handleSave = () => {
     setValueOnchange(false);
+  };
+
+  const handleMail = () => {
+    setMailOnChange(true);
+  };
+
+  const handleMailSave = () => {
+    setMailOnChange(false);
   };
 
   // @ts-ignore
@@ -176,10 +212,82 @@ const MailSettingComponent = () => {
               }}
             >
               <TabPanel value={value} index={0}>
-                Item One
+                <Box sx={{ p: { xs: "0", lg: "6px 0 0 59px" } }}>
+                  <Box sx={{ mb: "19px", display: { xs: "none", lg: "block" } }}>
+                    <Typography component="span" fontSize={20} fontWeight={700} lineHeight="28.96px" color={theme.navy}>
+                      {t("mail-setting:email-address-setting")}
+                    </Typography>
+                  </Box>
+                  <Typography
+                    fontFamily="Roboto"
+                    fontSize={16}
+                    fontWeight={300}
+                    lineHeight="28.96px"
+                    color={theme.navy}
+                  >
+                    {t("mail-setting:mail-setting-description")}
+                  </Typography>
+                  <Box sx={{ display: "flex", alignItems: "center", mt: "40px" }}>
+                    <Typography component="div" fontSize={14} fontWeight={500} lineHeight="18.75px" color={theme.navy}>
+                      {t("mail-setting:your-current-email-address")}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: "flex", alignItems: "center", mt: "18px" }}>
+                    <Typography component="div" fontSize={14} fontWeight={400} lineHeight="18.75px" color={theme.navy}>
+                      {mail}
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ display: "flex", alignItems: "center", mt: "39px" }}>
+                    <InputLabel
+                      shrink
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        color: "black",
+                      }}
+                    >
+                      <Box display="flex">
+                        {t("mail-setting:new-email-address")}
+                        <Chip
+                          label="必須"
+                          sx={{
+                            display: "",
+                            ml: 1,
+                            width: "54px",
+                            height: "22px",
+                            fontSize: 12,
+                            fontWeight: 600,
+                            color: "white",
+                            backgroundColor: theme.orange,
+                          }}
+                        />
+                      </Box>
+                    </InputLabel>
+                  </Box>
+                  <InputCustom onChange={handleMail} placeholder="tanakataro@rebase.co.jp" id="mail" />
+                  <Box sx={{ display: "flex", alignItems: "center", mt: "55px" }}>
+                    <ButtonComponent
+                      sx={{
+                        background: mailOnChange ? "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)" : theme.gray,
+                        color: "#fff",
+                        "&:hover": {
+                          background: mailOnChange ? "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)" : theme.gray,
+                        },
+                      }}
+                      props={{
+                        mode: "gradient",
+                        dimension: "x-medium",
+                      }}
+                      onClick={handleMailSave}
+                    >
+                      {t("mail-setting:send")}
+                    </ButtonComponent>
+                  </Box>
+                </Box>
               </TabPanel>
               <TabPanel value={value} index={1}>
-                <Box sx={{ p: { xs: "0", lg: "30px 0 0 59px" } }}>
+                <Box sx={{ p: { xs: "0", lg: "6px 0 0 59px" } }}>
                   <Box sx={{ mb: "40px", display: { xs: "none", lg: "block" } }}>
                     <Typography component="span" fontSize={20} fontWeight={700} lineHeight="28.96px" color={theme.navy}>
                       {t("mail-setting:notification-settings")}
@@ -221,6 +329,7 @@ const MailSettingComponent = () => {
                       onClick={handleShowPopupNotifyRecommend}
                     />
                     <Checkbox
+                      defaultChecked
                       sx={{
                         ml: "65px",
                         color: theme.blue,
