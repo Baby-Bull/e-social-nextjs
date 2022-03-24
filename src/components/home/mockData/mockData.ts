@@ -29,6 +29,86 @@ export const notificationsMockData = [
   },
 ];
 
+export const menuNotificationsData = [
+  {
+    id: 1,
+    image: "/assets/images/avatar_user.png",
+    content: "●●さんからマッチングリクエストが届きました。",
+    important: false,
+    createdTime: "6:16",
+  },
+  {
+    id: 2,
+    image: "/assets/images/avatar_review.png",
+    content: "コミュニティ名の参加が承認されました。",
+    important: false,
+    createdTime: "6:16",
+  },
+  {
+    id: 3,
+    image: "/assets/images/avatar_review.png",
+    content: "コミュニティ名の参加が承認されませんでした。",
+    important: false,
+    createdTime: "6:16",
+  },
+  {
+    id: 4,
+    image: "/assets/images/rectangle.png",
+    content: "運営からのお知らせ内容が入ります。",
+    important: true,
+    createdTime: "6:16",
+  },
+  {
+    id: 5,
+    image: "/assets/images/avatar_user.png",
+    content: "●●さんからメッセージが届きました。",
+    important: false,
+    createdTime: "6:16",
+  },
+  {
+    id: 6,
+    image: "/assets/images/avatar_user.png",
+    content: "コミュニティ名のグループメッセージが届きました。",
+    important: false,
+    createdTime: "6:16",
+  },
+  {
+    id: 7,
+    image: "/assets/images/avatar_user.png",
+    content: "●●さんがログインしました",
+    important: true,
+    createdTime: "6:16",
+  },
+  {
+    id: 8,
+    image: "/assets/images/avatar_user.png",
+    content: "●●さんがログインしました",
+    important: true,
+    createdTime: "6:16",
+  },
+  {
+    id: 9,
+    image: "/assets/images/avatar_user.png",
+    content: "●●さんがログインしました",
+    important: true,
+    createdTime: "6:16",
+  },
+  {
+    id: 10,
+    image: "/assets/images/avatar_user.png",
+    content: "●●さんがログインしました",
+    important: true,
+    createdTime: "6:16",
+  },
+  {
+    id: 111,
+    image: "/assets/images/avatar_user.png",
+    content: "●●さんがログインしました",
+    important: true,
+    createdTime: "6:16",
+  },
+];
+
 export const dataMatchingMockData = {
   request: 3,
   application: 5,
