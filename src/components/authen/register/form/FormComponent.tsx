@@ -136,9 +136,11 @@ const FormRegisterComponents = () => {
     }
 
     // validate birthday
-    if (!userInfo?.birthday || userInfo?.birthday?.length === 0) {
+    if (!userInfo?.birthday?.dob_value || userInfo?.birthday?.dob_value?.length === 0) {
       isValidForm = false;
       errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.required;
+    } else if (userInfo?.birthday?.dob_value?.length !== 0 && userInfo?.birthday?.error_invalid) {
+      isValidForm = false;
       errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.invalid_date;
     }
 
@@ -175,6 +177,7 @@ const FormRegisterComponents = () => {
   const submitUpdateProfile = async () => {
     if (handleValidateForm()) {
       setIsLoading(true);
+      userInfo.birthday = userInfo?.birthday?.dob_value;
       const resUpdate = await updateProfile(userInfo);
       setIsLoading(false);
       if (resUpdate?.data) {

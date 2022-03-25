@@ -121,7 +121,7 @@ export const Field: React.SFC<IFieldProps> = ({
   };
 
   const [errorElement, setErrorElement] = React.useState(null);
-  const [errorDateElement, setErrorDateElement] = React.useState(null);
+  // const [errorDateElement, setErrorDateElement] = React.useState(null);
 
   const onValidateDate = (tempValue: any) => {
     if (
@@ -129,10 +129,17 @@ export const Field: React.SFC<IFieldProps> = ({
       new Date().getFullYear() < tempValue?.getFullYear() ||
       tempValue?.getFullYear() < 1900
     ) {
-      setErrorDateElement(VALIDATE_MESSAGE_FORM_REGISTER.birthday.invalid_date);
+      onChangeValue("birthday", {
+        dob_value: tempValue?.toLocaleString().split(",")[0],
+        error_invalid: true,
+      });
+      // setErrorDateElement(VALIDATE_MESSAGE_FORM_REGISTER.birthday.invalid_date);
     } else {
-      onChangeValue("birthday", tempValue?.toLocaleString().split(",")[0]);
-      setErrorDateElement(null);
+      onChangeValue("birthday", {
+        dob_value: tempValue?.toLocaleString().split(",")[0],
+        error_invalid: false,
+      });
+      // setErrorDateElement(null);
     }
   };
 
@@ -510,8 +517,8 @@ export const Field: React.SFC<IFieldProps> = ({
                 )}
               />
             </LocalizationProvider>
-            {/* TODO - display validation error */}
-            {errorDateElement && (
+            {/* TODO - display validation error *  -- Reject/}
+            {/* {errorDateElement && (
               <Typography
                 sx={{
                   fontSize: "10px",
@@ -532,7 +539,7 @@ export const Field: React.SFC<IFieldProps> = ({
               >
                 {errorDateElement}
               </Typography>
-            )}
+            )} */}
           </FormControl>
         )}
       </Box>
