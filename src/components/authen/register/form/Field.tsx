@@ -130,13 +130,13 @@ export const Field: React.SFC<IFieldProps> = ({
       tempValue?.getFullYear() < 1900
     ) {
       onChangeValue("birthday", {
-        dob_value: tempValue?.toLocaleString().split(",")[0],
+        dob_value: tempValue?.toLocaleDateString("en-CA"),
         error_invalid: true,
       });
       // setErrorDateElement(VALIDATE_MESSAGE_FORM_REGISTER.birthday.invalid_date);
     } else {
       onChangeValue("birthday", {
-        dob_value: tempValue?.toLocaleString().split(",")[0],
+        dob_value: tempValue?.toLocaleDateString("en-CA"),
         error_invalid: false,
       });
       // setErrorDateElement(null);

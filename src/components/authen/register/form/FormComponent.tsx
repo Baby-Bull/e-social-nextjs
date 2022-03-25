@@ -176,8 +176,8 @@ const FormRegisterComponents = () => {
 
   const submitUpdateProfile = async () => {
     if (handleValidateForm()) {
-      setIsLoading(true);
       userInfo.birthday = userInfo?.birthday?.dob_value;
+      setIsLoading(true);
       const resUpdate = await updateProfile(userInfo);
       setIsLoading(false);
       if (resUpdate?.data) {
