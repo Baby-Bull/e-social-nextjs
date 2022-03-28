@@ -23,8 +23,6 @@ import {
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-// import { LocalizationProvider, DesktopDatePicker } from "@mui/lab";
-// import DateAdapter from "@mui/lab/AdapterDayjs";
 
 import theme from "src/theme";
 import ContentComponent from "src/components/layouts/ContentComponent";

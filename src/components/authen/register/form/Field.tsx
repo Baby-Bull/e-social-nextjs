@@ -121,11 +121,10 @@ export const Field: React.SFC<IFieldProps> = ({
   };
 
   const [errorElement, setErrorElement] = React.useState(null);
-  // const [errorDateElement, setErrorDateElement] = React.useState(null);
 
   const onValidateDate = (tempValue: any) => {
     if (
-      tempValue == "Invalid Date" ||
+      JSON.stringify(tempValue) === "null" ||
       new Date().getFullYear() < tempValue?.getFullYear() ||
       tempValue?.getFullYear() < 1900
     ) {
@@ -133,13 +132,11 @@ export const Field: React.SFC<IFieldProps> = ({
         dob_value: tempValue?.toLocaleDateString("en-CA"),
         error_invalid: true,
       });
-      // setErrorDateElement(VALIDATE_MESSAGE_FORM_REGISTER.birthday.invalid_date);
     } else {
       onChangeValue("birthday", {
         dob_value: tempValue?.toLocaleDateString("en-CA"),
         error_invalid: false,
       });
-      // setErrorDateElement(null);
     }
   };
 
@@ -517,29 +514,6 @@ export const Field: React.SFC<IFieldProps> = ({
                 )}
               />
             </LocalizationProvider>
-            {/* TODO - display validation error *  -- Reject/}
-            {/* {errorDateElement && (
-              <Typography
-                sx={{
-                  fontSize: "10px",
-                  color: "red",
-                  textAlign: editor === "checkbox" ? "center" : "left",
-                  "&": {
-                    "@media (max-width: 425px)": {
-                      maxWidth: 320,
-                    },
-                    "@media (min-width: 768px)": {
-                      maxWidth: 220,
-                    },
-                    "@media (min-width: 1024px)": {
-                      maxWidth: 320,
-                    },
-                  },
-                }}
-              >
-                {errorDateElement}
-              </Typography>
-            )} */}
           </FormControl>
         )}
       </Box>
