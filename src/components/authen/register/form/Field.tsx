@@ -121,7 +121,7 @@ export const Field: React.SFC<IFieldProps> = ({
   const onKeyPressInputTag = (e: any) => {
     if (e.key === "Enter" && e.target.value.trim()) {
       if (onChangeValue && !value.includes(e.target.value.trim())) {
-        if (e.target.value.length > 10) {
+        if (e.target.value.length > 20) {
           setErrorElement(VALIDATE_MESSAGE_FORM_REGISTER.tags.max_length);
         } else {
           setErrorElement(null);
