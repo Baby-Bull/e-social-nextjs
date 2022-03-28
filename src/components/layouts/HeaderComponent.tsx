@@ -8,7 +8,6 @@ import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useRouter } from "next/router";
 import { Button, Select, Avatar, Typography, Link } from "@mui/material";
 import { useTranslation } from "next-i18next";
@@ -141,18 +140,10 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const isNotifyMenuOpen = Boolean(notifyAnchorEl);
-  const pathLogin = "/login";
 
   const handleChange = (event) => {
     setCurrency(event.target.value);
   };
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  // const handleProfileMenuOpen = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
