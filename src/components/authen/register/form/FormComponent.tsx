@@ -17,6 +17,8 @@ import {
   Chip,
   Backdrop,
   CircularProgress,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
@@ -31,6 +33,7 @@ import GridLeftComponent from "src/components/authen/register/GridLeftComponent"
 import { updateProfile } from "src/services/auth";
 import { REGEX_RULES, VALIDATE_MESSAGE_FORM_REGISTER } from "src/messages/validate";
 import { USER_STATUS_OPTIONS } from "src/components/constants/constants";
+import { JAPAN_PROVINCE_OPTIONS } from "src/constants/constants";
 
 import { Field } from "./Field";
 
@@ -47,6 +50,8 @@ const FormRegisterComponents = () => {
   const [fullWidth] = React.useState(true);
   const [isTutorialDone, setStep] = React.useState(false);
   const [hasAgree, setHasAgree] = useState(true);
+
+  const [openError, setOpenError] = React.useState(false);
 
   const [userInfo, setUserInfo] = useState({
     username: null,
@@ -112,6 +117,14 @@ const FormRegisterComponents = () => {
     setHasAgree(!hasAgree);
   };
 
+  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenError(false);
+  };
+
   const handleValidateForm = () => {
     let isValidForm = true;
     const errorMessages = {
@@ -130,9 +143,9 @@ const FormRegisterComponents = () => {
     } else if (userInfo?.username?.length === 50) {
       isValidForm = false;
       errorMessages.username = VALIDATE_MESSAGE_FORM_REGISTER.username.max_length;
-    } else if (!REGEX_RULES.only_japanese.test(userInfo?.username)) {
-      // isValidForm = false;
-      // errorMessages.username = VALIDATE_MESSAGE_FORM_REGISTER.username.invalid;
+    } else if (!REGEX_RULES.username_register.test(userInfo?.username)) {
+      isValidForm = false;
+      errorMessages.username = VALIDATE_MESSAGE_FORM_REGISTER.username.invalid;
     }
 
     // validate birthday
@@ -180,14 +193,26 @@ const FormRegisterComponents = () => {
       setIsLoading(true);
       const resUpdate = await updateProfile(userInfo);
       setIsLoading(false);
-      if (resUpdate?.data) {
+      if (!resUpdate?.statusCode) {
         handleClickOpen();
+      } else {
+        setOpenError(true);
       }
     }
   };
 
   return (
     <React.Fragment>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={openError}
+        autoHideDuration={6000}
+        onClose={handleCloseError}
+      >
+        <Alert onClose={handleCloseError} severity="error" sx={{ width: "100%" }}>
+          Update profile fail!
+        </Alert>
+      </Snackbar>
       <ContentComponent authPage>
         {isLoading && (
           <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
@@ -264,7 +289,8 @@ const FormRegisterComponents = () => {
                     required
                     label={t("register:form.label.place")}
                     placeholder={t("register:form.placeholder.place")}
-                    editor="textbox"
+                    editor="dropdown"
+                    options={JAPAN_PROVINCE_OPTIONS}
                     onChangeValue={onChangeUserInfo}
                     error={errorValidate.address}
                   />

@@ -1,4 +1,5 @@
 export const REGEX_RULES = {
+  username_register: /^[一-龯ぁ-んァ-ンa-zA-Z0-9\w]+$/,
   only_japanese: /^[一-龯ぁ-んァ-ン]+$/,
   email: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
 };
@@ -6,7 +7,7 @@ export const REGEX_RULES = {
 export const VALIDATE_MESSAGE_FORM_REGISTER = {
   username: {
     required: "ユーザー名を入力してください",
-    invalid: "ユーザー名は不正な値です。平仮名、カタカナ、漢字以外は認められません。",
+    invalid: "ひらがな、カタカナ、漢字、a〜zの文字、0〜9の数字を含むユーザー名を入力してください。",
     max_length: "文字数オーバーです。50文字以内で入力してください。",
   },
   birthday: {
@@ -27,7 +28,7 @@ export const VALIDATE_MESSAGE_FORM_REGISTER = {
   },
   tags: {
     required: "タグを入力してください",
-    max_length: "1タグにつき10文字以内で入力してください",
+    max_length: "1タグにつき20文字以内で入力してください",
   },
   checkbox: "利用規約に同意してください",
 };
