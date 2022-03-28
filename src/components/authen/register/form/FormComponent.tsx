@@ -23,8 +23,6 @@ import {
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-// import { LocalizationProvider, DesktopDatePicker } from "@mui/lab";
-// import DateAdapter from "@mui/lab/AdapterDayjs";
 
 import theme from "src/theme";
 import ContentComponent from "src/components/layouts/ContentComponent";
@@ -149,9 +147,12 @@ const FormRegisterComponents = () => {
     }
 
     // validate birthday
-    if (!userInfo?.birthday || userInfo?.birthday?.length === 0) {
+    if (!userInfo?.birthday?.dob_value || userInfo?.birthday?.dob_value?.length === 0) {
       isValidForm = false;
       errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.required;
+    } else if (userInfo?.birthday?.dob_value?.length !== 0 && userInfo?.birthday?.error_invalid) {
+      isValidForm = false;
+      errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.invalid_date;
     }
 
     // validate email
@@ -186,6 +187,7 @@ const FormRegisterComponents = () => {
 
   const submitUpdateProfile = async () => {
     if (handleValidateForm()) {
+      userInfo.birthday = userInfo?.birthday?.dob_value;
       setIsLoading(true);
       const resUpdate = await updateProfile(userInfo);
       setIsLoading(false);
@@ -250,16 +252,6 @@ const FormRegisterComponents = () => {
                     onChangeValue={onChangeUserInfo}
                     error={errorValidate.username}
                   />
-                  {/* <LocalizationProvider dateAdapter={DateAdapter}>
-                    <DesktopDatePicker
-                      label={t("register:form.label.birthday")}
-                      placeholder={t("register:form.placeholder.birthday")}
-                      inputFormat="yyyy/MM/dd"
-                      value={value}
-                      onChange={handleChange}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </LocalizationProvider> */}
 
                   <Field
                     id="birthday"
@@ -267,7 +259,7 @@ const FormRegisterComponents = () => {
                     label={t("register:form.label.birthday")}
                     placeholder={t("register:form.placeholder.birthday")}
                     onChangeValue={onChangeUserInfo}
-                    editor="textbox"
+                    editor="date-picker"
                     error={errorValidate.birthday}
                   />
 

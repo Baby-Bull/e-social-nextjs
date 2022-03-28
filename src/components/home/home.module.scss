@@ -160,6 +160,15 @@
     align-items: center;
     margin-right: 20px;
     justify-content: space-between;
+    transition: 0.1s;
+
+    &:hover {
+      background-color: #d9f4fa;
+      cursor: pointer;
+      -ms-transform: scale(0.95); 
+      -webkit-transform: scale(0.95); 
+      transform: scale(0.95);
+    }
 
     :global {
       .label {

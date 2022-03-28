@@ -2,6 +2,7 @@ import { Grid, Box } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import React, { useEffect, useState } from "react";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import styles from "src/components/home/home.module.scss";
 
@@ -24,8 +25,10 @@ const MatchingItem: React.SFC<IMatchingItemProps> = ({ label, data, unit }) => (
     <div className="label">
       <span>{label}</span>
     </div>
+    <ArrowForwardIosIcon sx={{ fontSize: "10px", fontWeight: "bold", marginLeft: "-3em" }} />
     <div className="div-data">
-      <span className="data">{data}</span> <span className="unit">{unit}</span>
+      <span className="data">{data}</span>
+      <span className="unit">{unit}</span>
     </div>
   </Box>
 );
@@ -33,7 +36,6 @@ const MatchingItem: React.SFC<IMatchingItemProps> = ({ label, data, unit }) => (
 const MatchingItemMobile: React.SFC<IMatchingItemMobileProps> = ({ label, data, icon }) => (
   <Box className={styles.boxMatchingMobile}>
     <img src={icon} alt="icon" />
-
     <span className="label-type">{label}</span>
     {data ? <span className="span-has-data" /> : ""}
   </Box>
