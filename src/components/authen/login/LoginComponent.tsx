@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import { Box, Grid, Typography, Link, Backdrop, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -10,6 +9,7 @@ import ButtonComponent from "src/components/common/ButtonComponent";
 import theme from "src/theme";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 import { authWithProvider, getAccessTokenTwitter } from "src/services/auth";
+import { AuthContext } from "context/AuthContext";
 
 const LoginComponent = () => {
   const { t } = useTranslation();
@@ -20,6 +20,8 @@ const LoginComponent = () => {
   const [profile, setProfile] = useState<any>();
   const githubRef = useRef<TypeCrossFunction>(null!);
   const googleRef = useRef<TypeCrossFunction>(null!);
+
+  const { dispatch } = useContext(AuthContext);
 
   const onLoginStart = () => {
     setIsLoading(true);
@@ -53,6 +55,7 @@ const LoginComponent = () => {
       const resAuth = await authWithProvider(providerAuth, accessToken);
       setIsLoading(false);
       if (resAuth?.data?.access_token) {
+        dispatch({ type: "LOGIN_SUCCESS", payload: resAuth?.data });
         if (resAuth?.data?.user?.is_profile_edited) {
           router.push("/");
         } else {

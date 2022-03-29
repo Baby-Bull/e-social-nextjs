@@ -2,6 +2,7 @@ import { Box, Grid, Link } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import React, { useEffect, useState } from "react";
+import { format } from "timeago.js";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import {
@@ -10,21 +11,23 @@ import {
 } from "src/components/constants/constants";
 import styles from "src/components/home/home.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
+import { deleteAnUserFavorite, postAnUserFavorite } from "src/services/user";
 
 import SlickSliderRecommendComponent from "./SlickSliderRecommendComponent";
 
 interface IRecommendDataItem {
-  image: string;
-  lastLogin: string;
-  name: string;
-  career: string;
-  review: number;
-  introduce: string;
+  id: string;
+  profile_image: string;
+  last_login_at: string;
+  username: string;
+  job_position: string;
+  review_count: number;
+  self_description: string;
   tags: Array<string>;
-  description: string;
+  discussion_topic: string;
   status: number;
   chatStatus: number;
-  isLiked: boolean;
+  is_favorite: boolean;
 }
 
 interface IRecommendItemProps {
@@ -38,8 +41,14 @@ interface IRecommendMembersComponentProps {
   setOpenMatchingModal: Function;
 }
 
+const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
+  if (isFavorite) postAnUserFavorite(tempData);
+  else deleteAnUserFavorite(tempData);
+};
+
 const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, setOpenMatchingModal }) => {
   const { t } = useTranslation();
+  const [liked, setLiked] = useState(data?.is_favorite);
 
   return (
     <Grid item xs={12} className={classNames(styles.boxRecommend)}>
@@ -53,24 +62,29 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, setOpenMatchingMo
             {HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[data?.chatStatus]?.label}
           </ButtonComponent>
           <span className="label-login-status">
-            {data?.lastLogin
-              ? replaceLabelByTranslate(t("home:box-member-recommend.last-login"), data?.lastLogin)
+            {format(data?.last_login_at)
+              ? replaceLabelByTranslate(t("home:box-member-recommend.last-login"), format(data?.last_login_at))
               : t("home:box-member-recommend.no-login")}
           </span>
         </div>
 
         <div className="info-summary">
-          <img src={data?.image} alt="img-member" />
+          <img
+            src={
+              data?.profile_image ?? "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
+            }
+            alt="img-member"
+          />
           <div className="member-info">
-            <p className="name">{data?.name}</p>
-            <p className="career">{data?.career}</p>
+            <p className="name">{data?.username}</p>
+            <p className="career">{data?.job_position}</p>
             <p className="review">
-              {t("home:box-member-recommend.review")}: {data?.review}
+              {t("home:box-member-recommend.review")}: {data?.review_count ?? 0}
             </p>
           </div>
         </div>
 
-        <div className="introduce">{data?.introduce}</div>
+        <div className="introduce">{data?.self_description}</div>
 
         <div className="tags">
           <ul>
@@ -85,14 +99,18 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, setOpenMatchingMo
           {t("home:box-member-recommend.label-description")}
         </p>
 
-        <p className="description">{data?.description}</p>
+        <p className="description">{data?.discussion_topic}</p>
 
-        <div className="div-review">
+        <div
+          className="div-review"
+          onClick={() => {
+            handleFavoriteAnUser(data?.is_favorite, data?.id);
+            setLiked(!liked);
+          }}
+        >
           <img
             alt="ic-like"
-            src={
-              data?.isLiked ? "/assets/images/home_page/ic_heart_empty.svg" : "/assets/images/home_page/ic_heart.svg"
-            }
+            src={liked ? "/assets/images/home_page/ic_heart.svg" : "/assets/images/home_page/ic_heart_empty.svg"}
           />
           <span>{t("home:box-member-recommend.like-string")}</span>
         </div>

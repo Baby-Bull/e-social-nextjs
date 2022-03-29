@@ -500,6 +500,11 @@
       font-weight: 700;
       margin-bottom: 24px;
 
+      &:hover{
+        background: #dcf9ff;
+        cursor: pointer;
+      }
+
       img {
         margin-right: 10px;
       }

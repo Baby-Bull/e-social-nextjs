@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Tabs, Typography, Avatar, Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -8,6 +8,7 @@ import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTa
 import EmptyMatchingComponent from "src/components/matching/blocks/EmptyMatchingComponent";
 import ThreadComponent from "src/components/matching/blocks/ThreadComponent";
 import ChildTabComponent, { IDataChild } from "src/components/matching/blocks/ChildTabComponent";
+import { getUserFavorite } from "src/services/user";
 
 interface IData {
   avatar: string;
@@ -29,6 +30,21 @@ interface ITabComponentProps {
 const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
   const { t } = useTranslation();
   const typeQuery = useRouter()?.query?.type;
+
+  // get favorite users
+  const [cursorUserFavorite, setCursorUserFavorite] = useState("");
+  const [userFavoriteData, setUserFavoriteData] = useState([]);
+  const limit = 10;
+  useEffect(() => {
+    const fetchUserFavorite = async () => {
+      const res = await getUserFavorite(limit, cursorUserFavorite);
+      setUserFavoriteData([...userFavoriteData, res?.items]);
+      if (res?.hasMore) {
+        setCursorUserFavorite(res?.cursor);
+      }
+    };
+    fetchUserFavorite();
+  }, [cursorUserFavorite]);
 
   const nestedCondition = (condition: any, then: any, otherwise: any) => (condition ? then : otherwise);
   const type = nestedCondition(
@@ -122,8 +138,8 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
             backgroundColor: theme.whiteBlue,
           }}
         >
-          {data[2]?.data?.length ? (
-            data[2]?.data?.map((tab, tabIndex) => (
+          {userFavoriteData?.length ? (
+            userFavoriteData?.map((tab, tabIndex) => (
               <React.Fragment key={tabIndex.toString()}>
                 <Box
                   sx={{

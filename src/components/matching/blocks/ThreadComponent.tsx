@@ -3,6 +3,7 @@ import { Box, Typography, Avatar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import { format } from "timeago.js";
 
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
@@ -114,7 +115,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                     width: ["32px", isConfirmOrFavouriteOrMatched ? "54px" : "80px"],
                     height: "100%",
                   }}
-                  src={data.avatar}
+                  src={data.profile_image}
                 />
 
                 <Avatar
@@ -153,7 +154,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                   fontWeight: 500,
                 }}
               >
-                {data.last_login}
+                {format(data?.last_login_at)}
               </Typography>
               {/* End Title bottom Avatar tab favourite */}
             </Box>
@@ -186,7 +187,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                   alignItems: ["flex-start", "center"],
                 }}
               >
-                {data.name}
+                {data.username}
                 <Typography
                   sx={{
                     pl: { sm: "7px" },
@@ -195,7 +196,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                     color: theme.gray,
                   }}
                 >
-                  {data.job}
+                  {data.job_position}
                 </Typography>
 
                 <Typography
@@ -316,10 +317,10 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
 
             {type === "favourite" && (
               <ButtonComponent
-                disabled={data?.is_applied}
+                disabled={data?.is_matched}
                 props={{
-                  color: data?.is_applied && theme.gray,
-                  bgColor: !data?.is_applied && theme.green,
+                  color: data?.is_matched && theme.gray,
+                  bgColor: !data?.is_matched && theme.green,
                   dimension: "small",
                 }}
                 sx={{
@@ -327,7 +328,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                 }}
                 onClick={handleShowModalMatching}
               >
-                {data?.is_applied ? t("thread:button.applied") : t("thread:button.apply-matching")}
+                {data?.is_matched ? t("thread:button.applied") : t("thread:button.apply-matching")}
               </ButtonComponent>
             )}
 
