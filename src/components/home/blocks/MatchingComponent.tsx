@@ -44,7 +44,6 @@ const MatchingComponent = () => {
   const { t } = useTranslation();
   // global auth
   const { auth } = useContext(AuthContext);
-  console.log(auth);
 
   const [dataMatching, setDataMatching] = useState<any>({
     request: {
