@@ -3,7 +3,7 @@ import { useTranslation } from "next-i18next";
 import React, { useEffect, useState } from "react";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
-import { getUserFavoriteTags } from "src/services/user";
+import { getUserFavoriteTags, getUserProvince, getUserRecentlyLogin, getUserNewMembers } from "src/services/user";
 
 import BannerComponent from "./blocks/BannerComponent";
 import MatchingComponent from "./blocks/MatchingComponent";
@@ -11,7 +11,6 @@ import ModalMatchingComponent from "./blocks/ModalMatchingComponent";
 import NotificationComponent from "./blocks/NotificationsComponent";
 import RecommendCommunityComponent from "./blocks/RecommendCommunityComponent";
 import RecommendMembersComponent from "./blocks/RecommendMembersComponent";
-import { recommendMembers } from "./mockData/mockData";
 
 const HomeIndexComponents = () => {
   const { t } = useTranslation();
@@ -34,24 +33,72 @@ const HomeIndexComponents = () => {
     fetchUserFavoriteTags();
   }, [cursorUserFavoriteTags, userFavoriteTagsData]);
 
+  // get users_provinces
+  const [cursorUserProvince, setCursorUserProvince] = useState("");
+  const [userProvinceData, setUserProvinceData] = useState([]);
+  useEffect(() => {
+    const fetchUserProvince = async () => {
+      const res = await getUserProvince(limit, cursorUserProvince);
+      if (!userProvinceData.some((e) => e?.id === res?.items[0]?.id)) {
+        setUserProvinceData(userProvinceData.concat(res?.items));
+      }
+      if (res?.hasMore) {
+        setCursorUserProvince(res?.cursor);
+      }
+    };
+    fetchUserProvince();
+  }, [cursorUserProvince, userProvinceData]);
+
+  // get users_Recently_login
+  const [cursorUserRecentlyLogin, setCursorUserRecentlyLogin] = useState("");
+  const [userRecentlyLoginData, setUserRecentlyLoginData] = useState([]);
+  useEffect(() => {
+    const fetchUserRecentlyLogin = async () => {
+      const res = await getUserRecentlyLogin(limit, cursorUserRecentlyLogin);
+      if (!userRecentlyLoginData.some((e) => e?.id === res?.items[0]?.id)) {
+        setUserRecentlyLoginData(userRecentlyLoginData.concat(res?.items));
+      }
+      if (res?.hasMore) {
+        setCursorUserRecentlyLogin(res?.cursor);
+      }
+    };
+    fetchUserRecentlyLogin();
+  }, [cursorUserRecentlyLogin, userRecentlyLoginData]);
+
+  // get users_New_members
+  const [cursorUserNewMember, setCursorUserNewMember] = useState("");
+  const [userNewMember, setUserNewMember] = useState([]);
+  useEffect(() => {
+    const fetchUserNewMember = async () => {
+      const res = await getUserNewMembers(limit, cursorUserNewMember);
+      if (!userNewMember.some((e) => e?.id === res?.items[0]?.id) && res?.items) {
+        setUserNewMember(userNewMember.concat(res?.items));
+      }
+      if (res?.hasMore) {
+        setCursorUserNewMember(res?.cursor);
+      }
+    };
+    fetchUserNewMember();
+  }, [cursorUserNewMember, userNewMember]);
+
   useEffect(() => {
     setMemberRecommends([
       // Newest
       {
         title: t("home:register-newest"),
-        data: recommendMembers(),
+        data: userNewMember,
       },
 
       // recent-login-member
       {
         title: t("home:recent-login-member"),
-        data: recommendMembers(),
+        data: userRecentlyLoginData,
       },
 
       // member-favorite-area
       {
         title: t("home:member-favorite-area"),
-        data: recommendMembers(),
+        data: userProvinceData,
       },
 
       // member-favorite-tags
@@ -60,7 +107,7 @@ const HomeIndexComponents = () => {
         data: userFavoriteTagsData,
       },
     ]);
-  }, [userFavoriteTagsData]);
+  }, [userFavoriteTagsData, userProvinceData, userRecentlyLoginData, userNewMember]);
 
   const [openModal, setOpenModal] = useState(false);
 

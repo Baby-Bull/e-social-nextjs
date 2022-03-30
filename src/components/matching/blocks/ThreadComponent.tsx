@@ -63,7 +63,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
             mb: "5px",
           }}
         >
-          {data.date_request}
+          {data?.date_request}
         </Typography>
 
         {/* Info user (avatar, ...) */}
@@ -115,7 +115,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                     width: ["32px", isConfirmOrFavouriteOrMatched ? "54px" : "80px"],
                     height: "100%",
                   }}
-                  src={data.profile_image}
+                  src={data?.profile_image}
                 />
 
                 <Avatar
@@ -425,7 +425,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                 }}
               >
                 <ThreadTitle>{t("thread:date-interview")}</ThreadTitle>
-                <ThreadContent>{data.purpose}</ThreadContent>
+                <ThreadContent>{data?.purpose}</ThreadContent>
               </Box>
               <Box
                 sx={{

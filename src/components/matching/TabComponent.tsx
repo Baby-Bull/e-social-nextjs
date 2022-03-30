@@ -36,15 +36,17 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
   const [userFavoriteData, setUserFavoriteData] = useState([]);
   const limit = 10;
   useEffect(() => {
-    const fetchUserFavorite = async () => {
+    const fetchUserFavoriteTags = async () => {
       const res = await getUserFavorite(limit, cursorUserFavorite);
-      setUserFavoriteData([...userFavoriteData, res?.data?.items]);
+      if (!userFavoriteData.some((e) => e?.id === res?.items[0]?.id)) {
+        setUserFavoriteData(userFavoriteData.concat(res?.items));
+      }
       if (res?.hasMore) {
         setCursorUserFavorite(res?.cursor);
       }
     };
-    fetchUserFavorite();
-  }, [cursorUserFavorite]);
+    fetchUserFavoriteTags();
+  }, [cursorUserFavorite, userFavoriteData]);
 
   const nestedCondition = (condition: any, then: any, otherwise: any) => (condition ? then : otherwise);
   const type = nestedCondition(
