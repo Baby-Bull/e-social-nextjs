@@ -118,7 +118,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, setOpenMatchingMo
         <div
           className="div-review"
           onClick={() => {
-            handleFavoriteAnUser(data?.is_favorite, data?.id);
+            handleFavoriteAnUser(liked, data?.id);
             setLiked(!liked);
           }}
         >

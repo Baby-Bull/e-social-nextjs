@@ -71,7 +71,7 @@ const HomeIndexComponents = () => {
   useEffect(() => {
     const fetchUserNewMember = async () => {
       const res = await getUserNewMembers(limit, cursorUserNewMember);
-      if (!userNewMember.some((e) => e?.id === res?.items[0]?.id) && res?.items) {
+      if (!userNewMember.some((e) => e?.id === res?.items[0]?.id)) {
         setUserNewMember(userNewMember.concat(res?.items));
       }
       if (res?.hasMore) {
