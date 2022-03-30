@@ -38,7 +38,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
   useEffect(() => {
     const fetchUserFavorite = async () => {
       const res = await getUserFavorite(limit, cursorUserFavorite);
-      setUserFavoriteData([...userFavoriteData, res?.items]);
+      setUserFavoriteData([...userFavoriteData, res?.data?.items]);
       if (res?.hasMore) {
         setCursorUserFavorite(res?.cursor);
       }

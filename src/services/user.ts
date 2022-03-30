@@ -12,17 +12,7 @@ export const getUserFavorite = async (limit: number, cursor: string) => {
 export const getUserFavoriteTags = async (limit: number, cursor: string) => {
     try {
         const res = await api.get(`/user/favorite/tag-users?limit=${limit}&cursor=${cursor}`);
-        if (res.data) return res.data;
-        else return [];
-    } catch (error) {
-        return error;
-    }
-}
-
-export const getUserFavoriteTag = async (limit: number, cursor: string) => {
-    try {
-        const res = await api.get(`/user/favorite/tag-users?limit=${limit}&cursor=${cursor}`);
-        return res.data;
+        return res?.data;
     } catch (error) {
         return error;
     }

@@ -19,18 +19,20 @@ const HomeIndexComponents = () => {
 
   // get favorite-tags users
   const [cursorUserFavoriteTags, setCursorUserFavoriteTags] = useState("");
-  const [userFavoriteTagsData, setUserFavoriteTagsData] = useState([]);
   const limit = 10;
+  const [userFavoriteTagsData, setUserFavoriteTagsData] = useState([]);
   useEffect(() => {
     const fetchUserFavoriteTags = async () => {
       const res = await getUserFavoriteTags(limit, cursorUserFavoriteTags);
-      setUserFavoriteTagsData([...userFavoriteTagsData, res?.items]);
+      if (!userFavoriteTagsData.some((e) => e?.id === res?.items[0]?.id)) {
+        setUserFavoriteTagsData(userFavoriteTagsData.concat(res?.items));
+      }
       if (res?.hasMore) {
         setCursorUserFavoriteTags(res?.cursor);
       }
     };
     fetchUserFavoriteTags();
-  }, [cursorUserFavoriteTags]);
+  }, [cursorUserFavoriteTags, userFavoriteTagsData]);
 
   useEffect(() => {
     setMemberRecommends([
@@ -58,7 +60,7 @@ const HomeIndexComponents = () => {
         data: userFavoriteTagsData,
       },
     ]);
-  }, []);
+  }, [userFavoriteTagsData]);
 
   const [openModal, setOpenModal] = useState(false);
 
