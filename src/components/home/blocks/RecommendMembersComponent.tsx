@@ -25,9 +25,10 @@ interface IRecommendDataItem {
   self_description: string;
   tags: Array<string>;
   discussion_topic: string;
-  status: number;
+  status: string;
   chatStatus: number;
   is_favorite: boolean;
+  is_matched: boolean;
 }
 
 interface IRecommendItemProps {
@@ -46,6 +47,19 @@ const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
   else deleteAnUserFavorite(tempData);
 };
 
+const handleMapChatStatus = (statusChatTemp: string) => {
+  switch (statusChatTemp) {
+    case "looking-for-friend":
+      return 1;
+    case "can-talk":
+      return 2;
+    case "need-consult":
+      return 3;
+    default:
+      return 2;
+  }
+};
+
 const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, setOpenMatchingModal }) => {
   const { t } = useTranslation();
   const [liked, setLiked] = useState(data?.is_favorite);
@@ -55,11 +69,11 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, setOpenMatchingMo
       <Box className={styles.boxRecommendMember}>
         <div className="status-summary">
           <ButtonComponent
-            mode={HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[data?.chatStatus]?.mode}
+            mode={HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.mode}
             size="small"
             style={{ borderRadius: "4px", width: "130px" }}
           >
-            {HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[data?.chatStatus]?.label}
+            {HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.label}
           </ButtonComponent>
           <span className="label-login-status">
             {format(data?.last_login_at)
@@ -77,14 +91,14 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, setOpenMatchingMo
           />
           <div className="member-info">
             <p className="name">{data?.username}</p>
-            <p className="career">{data?.job_position}</p>
+            <p className="career">{data?.job_position ?? "情報なし"}</p>
             <p className="review">
               {t("home:box-member-recommend.review")}: {data?.review_count ?? 0}
             </p>
           </div>
         </div>
 
-        <div className="introduce">{data?.self_description}</div>
+        <div className="introduce">{data?.self_description ?? "情報なし"}</div>
 
         <div className="tags">
           <ul>
@@ -99,7 +113,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, setOpenMatchingMo
           {t("home:box-member-recommend.label-description")}
         </p>
 
-        <p className="description">{data?.discussion_topic}</p>
+        <p className="description">{data?.discussion_topic ?? "情報なし"}</p>
 
         <div
           className="div-review"
@@ -117,11 +131,13 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, setOpenMatchingMo
 
         <ButtonComponent
           onClick={() => setOpenMatchingModal(true)}
-          mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[data?.status]?.mode}
+          mode={
+            data?.is_matched ? HOMEPAGE_RECOMMEND_MEMBER_STATUS[2]?.mode : HOMEPAGE_RECOMMEND_MEMBER_STATUS[1]?.mode
+          }
           fullWidth
-          disabled={data?.status === 2}
+          disabled={data?.is_matched}
         >
-          {HOMEPAGE_RECOMMEND_MEMBER_STATUS[data?.status]?.label}
+          {data?.is_matched ? HOMEPAGE_RECOMMEND_MEMBER_STATUS[2]?.label : HOMEPAGE_RECOMMEND_MEMBER_STATUS[1]?.label}
         </ButtonComponent>
       </Box>
     </Grid>

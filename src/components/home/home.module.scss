@@ -165,8 +165,8 @@
     &:hover {
       background-color: #d9f4fa;
       cursor: pointer;
-      -ms-transform: scale(0.95); 
-      -webkit-transform: scale(0.95); 
+      -ms-transform: scale(0.95);
+      -webkit-transform: scale(0.95);
       transform: scale(0.95);
     }
 
@@ -407,9 +407,7 @@
           font-size: 14px;
           font-weight: 700;
           color: #262a30;
-          width: calc(100% - 56px);
           text-overflow: ellipsis;
-          overflow: hidden;
           display: block;
           white-space: nowrap;
           margin: 0;
@@ -500,7 +498,7 @@
       font-weight: 700;
       margin-bottom: 24px;
 
-      &:hover{
+      &:hover {
         background: #dcf9ff;
         cursor: pointer;
       }
