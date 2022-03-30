@@ -3,6 +3,7 @@ import { useTranslation } from "next-i18next";
 import React, { useEffect, useState } from "react";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
+import { getUserFavoriteTags } from "src/services/user";
 
 import BannerComponent from "./blocks/BannerComponent";
 import MatchingComponent from "./blocks/MatchingComponent";
@@ -15,6 +16,23 @@ import { recommendMembers } from "./mockData/mockData";
 const HomeIndexComponents = () => {
   const { t } = useTranslation();
   const [memberRecommends, setMemberRecommends] = useState([]);
+
+  // get favorite-tags users
+  const [cursorUserFavoriteTags, setCursorUserFavoriteTags] = useState("");
+  const limit = 10;
+  const [userFavoriteTagsData, setUserFavoriteTagsData] = useState([]);
+  useEffect(() => {
+    const fetchUserFavoriteTags = async () => {
+      const res = await getUserFavoriteTags(limit, cursorUserFavoriteTags);
+      if (!userFavoriteTagsData.some((e) => e?.id === res?.items[0]?.id)) {
+        setUserFavoriteTagsData(userFavoriteTagsData.concat(res?.items));
+      }
+      if (res?.hasMore) {
+        setCursorUserFavoriteTags(res?.cursor);
+      }
+    };
+    fetchUserFavoriteTags();
+  }, [cursorUserFavoriteTags, userFavoriteTagsData]);
 
   useEffect(() => {
     setMemberRecommends([
@@ -39,10 +57,10 @@ const HomeIndexComponents = () => {
       // member-favorite-tags
       {
         title: t("home:member-favorite-tags"),
-        data: recommendMembers(),
+        data: userFavoriteTagsData,
       },
     ]);
-  }, []);
+  }, [userFavoriteTagsData]);
 
   const [openModal, setOpenModal] = useState(false);
 
