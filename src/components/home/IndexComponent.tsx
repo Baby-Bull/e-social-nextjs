@@ -1,9 +1,18 @@
 import { Box } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import React, { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
-import { getUserFavoriteTags, getUserProvince, getUserRecentlyLogin, getUserNewMembers } from "src/services/user";
+import {
+  getUserFavoriteTags,
+  getUserProvince,
+  getUserRecentlyLogin,
+  getUserNewMembers,
+  sendMatchingRequest,
+} from "src/services/user";
+
+import { REACT_QUERY_KEYS } from "../constants/constants";
 
 import BannerComponent from "./blocks/BannerComponent";
 import MatchingComponent from "./blocks/MatchingComponent";
@@ -12,87 +21,42 @@ import NotificationComponent from "./blocks/NotificationsComponent";
 import RecommendCommunityComponent from "./blocks/RecommendCommunityComponent";
 import RecommendMembersComponent from "./blocks/RecommendMembersComponent";
 
+const LIMIT = 10;
+
 const HomeIndexComponents = () => {
   const { t } = useTranslation();
   const [memberRecommends, setMemberRecommends] = useState([]);
 
-  // get favorite-tags users
-  const [cursorUserFavoriteTags, setCursorUserFavoriteTags] = useState("");
-  const limit = 10;
-  const [userFavoriteTagsData, setUserFavoriteTagsData] = useState([]);
-  useEffect(() => {
-    const fetchUserFavoriteTags = async () => {
-      const res = await getUserFavoriteTags(limit, cursorUserFavoriteTags);
-      if (!userFavoriteTagsData.some((e) => e?.id === res?.items[0]?.id)) {
-        setUserFavoriteTagsData(userFavoriteTagsData.concat(res?.items));
-      }
-      if (res?.hasMore) {
-        setCursorUserFavoriteTags(res?.cursor);
-      }
-    };
-    fetchUserFavoriteTags();
-  }, [cursorUserFavoriteTags, userFavoriteTagsData]);
-
   // get users_provinces
-  const [cursorUserProvince, setCursorUserProvince] = useState("");
-  const [userProvinceData, setUserProvinceData] = useState([]);
-  useEffect(() => {
-    const fetchUserProvince = async () => {
-      const res = await getUserProvince(limit, cursorUserProvince);
-      if (!userProvinceData.some((e) => e?.id === res?.items[0]?.id)) {
-        setUserProvinceData(userProvinceData.concat(res?.items));
-      }
-      if (res?.hasMore) {
-        setCursorUserProvince(res?.cursor);
-      }
-    };
-    fetchUserProvince();
-  }, [cursorUserProvince, userProvinceData]);
-
-  // get users_Recently_login
-  const [cursorUserRecentlyLogin, setCursorUserRecentlyLogin] = useState("");
-  const [userRecentlyLoginData, setUserRecentlyLoginData] = useState([]);
-  useEffect(() => {
-    const fetchUserRecentlyLogin = async () => {
-      const res = await getUserRecentlyLogin(limit, cursorUserRecentlyLogin);
-      if (!userRecentlyLoginData.some((e) => e?.id === res?.items[0]?.id)) {
-        setUserRecentlyLoginData(userRecentlyLoginData.concat(res?.items));
-      }
-      if (res?.hasMore) {
-        setCursorUserRecentlyLogin(res?.cursor);
-      }
-    };
-    fetchUserRecentlyLogin();
-  }, [cursorUserRecentlyLogin, userRecentlyLoginData]);
-
-  // get users_New_members
-  const [cursorUserNewMember, setCursorUserNewMember] = useState("");
-  const [userNewMember, setUserNewMember] = useState([]);
-  useEffect(() => {
-    const fetchUserNewMember = async () => {
-      const res = await getUserNewMembers(limit, cursorUserNewMember);
-      if (!userNewMember.some((e) => e?.id === res?.items[0]?.id)) {
-        setUserNewMember(userNewMember.concat(res?.items));
-      }
-      if (res?.hasMore) {
-        setCursorUserNewMember(res?.cursor);
-      }
-    };
-    fetchUserNewMember();
-  }, [cursorUserNewMember, userNewMember]);
+  const { data: userProvinceData } = useQuery(REACT_QUERY_KEYS.HOMEPAGE_GET_USER_PROVINCES, async () => {
+    const res = await getUserProvince(LIMIT);
+    return res?.items || [];
+  });
+  const { data: userRecentlyLoginData } = useQuery(REACT_QUERY_KEYS.HOMEPAGE_GET_USER_RECENT_LOGIN, async () => {
+    const res = await getUserRecentlyLogin(LIMIT);
+    return res?.items || [];
+  });
+  const { data: userNewMember } = useQuery(REACT_QUERY_KEYS.HOMEPAGE_GET_USER_NEW_MEMBERS, async () => {
+    const res = await getUserNewMembers(LIMIT);
+    return res?.items || [];
+  });
+  const { data: userFavoriteTagsData } = useQuery(REACT_QUERY_KEYS.HOMEPAGE_GET_USER_FAVORITE_TAGS, async () => {
+    const res = await getUserFavoriteTags(LIMIT);
+    return res?.items || [];
+  });
 
   useEffect(() => {
     setMemberRecommends([
       // Newest
       {
         title: t("home:register-newest"),
-        data: userNewMember,
+        data: userNewMember?.reverse(),
       },
 
       // recent-login-member
       {
         title: t("home:recent-login-member"),
-        data: userRecentlyLoginData,
+        data: userRecentlyLoginData?.reverse(),
       },
 
       // member-favorite-area
@@ -110,6 +74,18 @@ const HomeIndexComponents = () => {
   }, [userFavoriteTagsData, userProvinceData, userRecentlyLoginData, userNewMember]);
 
   const [openModal, setOpenModal] = useState(false);
+  const [userRequestMatching, setUserRequestMatching] = useState(null);
+
+  const handleSendMatchingRequest = async (matchingRequest) => {
+    const res = await sendMatchingRequest(userRequestMatching?.id, matchingRequest);
+    setOpenModal(false);
+    return res;
+  };
+
+  const handleOpenMatchingModal = (userMatching: any) => {
+    setOpenModal(true);
+    setUserRequestMatching(userMatching);
+  };
 
   return (
     <ContentComponent>
@@ -131,11 +107,18 @@ const HomeIndexComponents = () => {
             title={item?.title}
             dataRecommends={item?.data}
             key={index}
-            setOpenMatchingModal={setOpenModal}
+            handleOpenMatchingModal={handleOpenMatchingModal}
           />
         ))}
 
-        {openModal && <ModalMatchingComponent open={openModal} setOpen={setOpenModal} />}
+        {openModal && (
+          <ModalMatchingComponent
+            userRequestMatching={userRequestMatching}
+            open={openModal}
+            setOpen={setOpenModal}
+            handleSendMatchingRequest={handleSendMatchingRequest}
+          />
+        )}
       </Box>
     </ContentComponent>
   );

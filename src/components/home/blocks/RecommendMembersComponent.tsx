@@ -11,7 +11,7 @@ import {
 } from "src/components/constants/constants";
 import styles from "src/components/home/home.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
-import { deleteAnUserFavorite, postAnUserFavorite } from "src/services/user";
+import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 
 import SlickSliderRecommendComponent from "./SlickSliderRecommendComponent";
 
@@ -33,18 +33,18 @@ interface IRecommendDataItem {
 
 interface IRecommendItemProps {
   data: IRecommendDataItem;
-  setOpenMatchingModal: Function;
+  handleOpenMatchingModal: Function;
 }
 
 interface IRecommendMembersComponentProps {
   title: string;
   dataRecommends: Array<IRecommendDataItem>;
-  setOpenMatchingModal: Function;
+  handleOpenMatchingModal: Function;
 }
 
 const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
-  if (isFavorite) postAnUserFavorite(tempData);
-  else deleteAnUserFavorite(tempData);
+  if (isFavorite) deleteUserFavorite(tempData);
+  else addUserFavorite(tempData);
 };
 
 const handleMapChatStatus = (statusChatTemp: string) => {
@@ -60,7 +60,7 @@ const handleMapChatStatus = (statusChatTemp: string) => {
   }
 };
 
-const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, setOpenMatchingModal }) => {
+const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchingModal }) => {
   const { t } = useTranslation();
   const [liked, setLiked] = useState(data?.is_favorite);
 
@@ -130,7 +130,8 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, setOpenMatchingMo
         </div>
 
         <ButtonComponent
-          onClick={() => setOpenMatchingModal(true)}
+          className="button-matching"
+          onClick={() => handleOpenMatchingModal(data)}
           mode={
             data?.is_matched ? HOMEPAGE_RECOMMEND_MEMBER_STATUS[2]?.mode : HOMEPAGE_RECOMMEND_MEMBER_STATUS[1]?.mode
           }
@@ -147,7 +148,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, setOpenMatchingMo
 const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
   title,
   dataRecommends,
-  setOpenMatchingModal,
+  handleOpenMatchingModal,
 }) => {
   const { t } = useTranslation();
   const [dataElements, setDataElements] = useState([]);
@@ -155,7 +156,7 @@ const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
   useEffect(() => {
     setDataElements(
       dataRecommends?.map((item, index) => (
-        <RecommendItem data={item} key={index} setOpenMatchingModal={setOpenMatchingModal} />
+        <RecommendItem data={item} key={index} handleOpenMatchingModal={handleOpenMatchingModal} />
       )),
     );
   }, [dataRecommends]);

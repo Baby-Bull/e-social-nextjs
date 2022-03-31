@@ -75,6 +75,11 @@ api.interceptors.response.use(
           })
           .catch((error1) => {
             processQueue(error1, null);
+            setToken("");
+            setRefreshToken("");
+            if (typeof window !== "undefined") {
+              window.location.href = "/login";
+            }
             reject(err);
           })
           .then(() => {

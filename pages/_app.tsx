@@ -60,7 +60,7 @@ const MyApp = (props: MyAppProps) => {
   );
 };
 
-MyApp.getInitialProps = async ({ Component, ctx }) => {
+MyApp.getStaticProps = async ({ Component, ctx }) => {
   let pageProps = {};
   const { query, pathname, res } = ctx;
 
@@ -77,8 +77,8 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
       }
     }
   }
-  if (Component.getInitialProps) {
-    pageProps = await Component.getInitialProps(ctx);
+  if (Component.getStaticProps) {
+    pageProps = await Component.getStaticProps(ctx);
   }
   return {
     pageProps,

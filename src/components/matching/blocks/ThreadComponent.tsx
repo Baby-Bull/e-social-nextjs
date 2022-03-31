@@ -605,7 +605,12 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
 
       <PopupReportUser showPopup={showPopupReport} setShowPopup={setShowPopupReport} />
       <PopupReviewComponent showPopup={showPopupReview} setShowPopup={setShowPopupReview} />
-      <ModalMatchingComponent open={showModalMatching} setOpen={setModalMatching} />
+      <ModalMatchingComponent
+        open={showModalMatching}
+        setOpen={setModalMatching}
+        userRequestMatching={{}}
+        handleSendMatchingRequest={() => {}}
+      />
     </React.Fragment>
   );
 };
