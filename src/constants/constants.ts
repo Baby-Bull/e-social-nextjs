@@ -115,3 +115,26 @@ export const JAPAN_PROVINCE_OPTIONS = [
     value: item,
   })),
 ];
+
+export const MATCHING_PURPOSE_OPTIONS = [
+  {
+    label: "選択してください",
+    value: "",
+  },
+  {
+    label: "カジュアルにお話ししたい",
+    value: "talk-casually",
+  },
+  {
+    label: "技術的な相談がしたい",
+    value: "technical-consultation",
+  },
+  {
+    label: "一緒に働けるエンジニアを探している",
+    value: "work-with",
+  },
+  {
+    label: "その他",
+    value: "other",
+  },
+];

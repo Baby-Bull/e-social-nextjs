@@ -2,15 +2,18 @@ import { Avatar, Box, Button, Grid, Modal } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import React, { useState } from "react";
-import { useRouter } from "next/router";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import { Field } from "src/components/common/Form/_Field";
 import styles from "src/components/home/home.module.scss";
+import { MATCHING_PURPOSE_OPTIONS } from "src/constants/constants";
+import { VALIDATE_FORM_MATCHING_REQUEST } from "src/messages/validate";
 
 interface IModalMatchingComponentProps {
   open: boolean;
   setOpen: Function;
+  userRequestMatching?: any;
+  handleSendMatchingRequest?: Function;
 }
 
 const style = {
@@ -26,27 +29,64 @@ const style = {
   maxWidth: "90%",
 };
 
-const optionsPurposes = [
-  {
-    value: 1,
-    label: "選択してください",
-  },
-  {
-    value: 2,
-    label: "選択してください 2",
-  },
-];
-
-const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({ open, setOpen }) => {
+const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
+  open,
+  setOpen,
+  userRequestMatching,
+  handleSendMatchingRequest,
+}) => {
   const { t } = useTranslation();
-  const router = useRouter();
+
+  const [matchingRequest, setMatchingRequest] = useState({
+    desired_match_date: null,
+    purpose: "",
+    message: null,
+  });
+
+  const [errorValidates, setErrorValidates] = useState({
+    desired_match_date: null,
+    purpose: null,
+    message: null,
+  });
+
+  const onChangeMatchingRequest = (key: string, value: any) => {
+    setMatchingRequest({
+      ...matchingRequest,
+      [key]: typeof value === "string" ? value.trim() : value,
+    });
+  };
+
+  const handleValidateForm = () => {
+    let isValidForm = true;
+    const errorMessages = {
+      desired_match_date: null,
+      purpose: null,
+      message: null,
+    };
+    // validate purpose;
+    if (!matchingRequest?.purpose || matchingRequest?.purpose?.length === 0) {
+      isValidForm = false;
+      errorMessages.purpose = VALIDATE_FORM_MATCHING_REQUEST.purpose.required;
+    }
+    // validate message
+    if (!matchingRequest?.message && matchingRequest?.message?.length > 1000) {
+      isValidForm = false;
+      errorMessages.message = VALIDATE_FORM_MATCHING_REQUEST.message.max_length;
+    }
+    setErrorValidates(errorMessages);
+    return isValidForm;
+  };
+
+  const submitMatchingRequest = () => {
+    if (handleValidateForm()) {
+      handleSendMatchingRequest({
+        ...matchingRequest,
+        desired_match_date: "2022-02-22 22:22",
+      });
+    }
+  };
 
   const handleClose = () => setOpen(false);
-
-  const [data] = useState({
-    avatar: "/assets/images/home_page/ic_avatar_modal.svg",
-    name: "佐藤太郎さんへのマッチングリクエスト",
-  });
 
   return (
     <Modal
@@ -60,8 +100,12 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({ open,
           <img src="/assets/images/home_page/ic_close_modal.svg" alt="close-modal" />
         </Button>
         <div className="title-modal" id="modal-modal-title">
-          <Avatar alt="avatar" src={data.avatar} sx={{ width: 52, height: 52 }} />
-          <span className="name">{data.name}</span>
+          <Avatar
+            alt="avatar"
+            src={userRequestMatching?.profile_image || "/assets/images/home_page/ic_avatar_modal.svg"}
+            sx={{ width: 52, height: 52 }}
+          />
+          <span className="name">{`${userRequestMatching?.username}さんへのマッチングリクエスト`}</span>
         </div>
 
         <form>
@@ -71,16 +115,21 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({ open,
             label={t("home:modal-matching.purpose")}
             placeholder={t("home:modal-matching.purpose-placeholder")}
             editor="dropdown"
-            value={1}
-            options={optionsPurposes}
+            value={matchingRequest?.purpose}
+            options={MATCHING_PURPOSE_OPTIONS}
+            onChangeValue={onChangeMatchingRequest}
+            error={errorValidates.purpose}
           />
 
           <Field
-            id="frequency"
+            id="desired_match_date"
             required
             label={t("home:modal-matching.frequency")}
             placeholder={t("home:modal-matching.frequency-placeholder")}
             editor="textbox"
+            value={matchingRequest?.desired_match_date}
+            onChangeValue={onChangeMatchingRequest}
+            error={errorValidates.desired_match_date}
           />
 
           <Field
@@ -88,20 +137,14 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({ open,
             label={t("home:modal-matching.message")}
             placeholder={t("home:modal-matching.message-placeholder")}
             editor="textarea"
+            value={matchingRequest?.message}
+            onChangeValue={onChangeMatchingRequest}
+            error={errorValidates.message}
           />
 
           <Grid container>
-            <Grid xs={12} sx={{ mt: 4, textAlign: "center" }}>
-              <ButtonComponent
-                mode="gradient"
-                fullWidth
-                onClick={() =>
-                  router.push({
-                    pathname: "/matching",
-                    query: { type: "confirm" },
-                  })
-                }
-              >
+            <Grid item xs={12} sx={{ mt: 4, textAlign: "center" }}>
+              <ButtonComponent mode="gradient" fullWidth onClick={() => submitMatchingRequest()}>
                 {t("home:modal-matching.button")}
               </ButtonComponent>
             </Grid>

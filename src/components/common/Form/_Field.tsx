@@ -1,5 +1,5 @@
 import * as React from "react";
-import { InputLabel, InputBase, FormControl, Select, MenuItem, Box, Grid } from "@mui/material";
+import { InputLabel, InputBase, FormControl, Select, MenuItem, Box, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 import theme from "src/theme";
@@ -15,6 +15,8 @@ export interface FieldProps {
   /* The drop down items for the field */
   options?: Array<any>;
   value?: any;
+  error?: string;
+  onChangeValue: Function;
 }
 
 const InputCustom = styled(InputBase)({
@@ -70,74 +72,130 @@ const labelStyle = {
   fontSize: "16px",
   lineHeight: "48px",
 };
-export const Field: React.SFC<FieldProps> = ({ required, id, label, placeholder, editor, options, value }) => (
-  <Box
-    className="form-group"
-    sx={{
-      display: "flex",
-      justifyContent: "center",
-      marginTop: "32px",
-    }}
-  >
-    {editor!.toLowerCase() === "textbox" && (
-      <FormControl variant="standard" fullWidth>
-        <Grid container>
-          <Grid item md={3} xs={12} sx={{ height: "40px" }}>
-            <InputLabel shrink htmlFor={id} sx={labelStyle}>
-              <Box display="flex">
-                {label}
-                {required && <span className="input-required-mark">＊</span>}
-              </Box>
-            </InputLabel>
+export const Field: React.SFC<FieldProps> = ({
+  required,
+  id,
+  label,
+  placeholder,
+  editor,
+  options,
+  value,
+  error,
+  onChangeValue,
+}) => (
+  <React.Fragment>
+    <Box
+      className="form-group"
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        marginTop: "32px",
+      }}
+    >
+      {editor!.toLowerCase() === "textbox" && (
+        <FormControl variant="standard" fullWidth>
+          <Grid container>
+            <Grid item md={3} xs={12} sx={{ height: "40px" }}>
+              <InputLabel shrink htmlFor={id} sx={labelStyle}>
+                <Box display="flex">
+                  {label}
+                  {required && <span className="input-required-mark">＊</span>}
+                </Box>
+              </InputLabel>
+            </Grid>
+            <Grid item md={9} xs={12}>
+              <InputCustom
+                placeholder={placeholder}
+                defaultValue={value}
+                id={id}
+                onChange={(e) => onChangeValue(id, e.target.value)}
+                fullWidth
+              />
+            </Grid>
           </Grid>
-          <Grid item md={9} xs={12}>
-            <InputCustom placeholder={placeholder} defaultValue={value} id={id} fullWidth />
-          </Grid>
-        </Grid>
-      </FormControl>
-    )}
+        </FormControl>
+      )}
 
-    {editor!.toLowerCase() === "textarea" && (
-      <FormControl variant="standard" fullWidth>
-        <Grid container>
-          <Grid item md={3} xs={12} sx={{ height: "40px" }}>
-            <InputLabel shrink htmlFor={id} sx={labelStyle}>
-              <Box display="flex">
-                {label}
-                {required && <span className="input-required-mark">＊</span>}
-              </Box>
-            </InputLabel>
+      {editor!.toLowerCase() === "textarea" && (
+        <FormControl variant="standard" fullWidth>
+          <Grid container>
+            <Grid item md={3} xs={12} sx={{ height: "40px" }}>
+              <InputLabel shrink htmlFor={id} sx={labelStyle}>
+                <Box display="flex">
+                  {label}
+                  {required && <span className="input-required-mark">＊</span>}
+                </Box>
+              </InputLabel>
+            </Grid>
+            <Grid item md={9} xs={12}>
+              <InputCustom
+                multiline
+                rows={10}
+                placeholder={placeholder}
+                defaultValue={value}
+                id={id}
+                onChange={(e) => onChangeValue(id, e.target.value)}
+                fullWidth
+              />
+            </Grid>
           </Grid>
-          <Grid item md={9} xs={12}>
-            <InputCustom multiline rows={10} placeholder={placeholder} defaultValue={value} id={id} fullWidth />
-          </Grid>
-        </Grid>
-      </FormControl>
-    )}
+        </FormControl>
+      )}
 
-    {editor!.toLowerCase() === "dropdown" && (
-      <FormControl variant="standard" fullWidth>
-        <Grid container>
-          <Grid item md={3} xs={12} sx={{ height: "40px" }}>
-            <InputLabel shrink htmlFor={id} sx={labelStyle}>
-              <Box display="flex">
-                {label}
-                {required && <span className="input-required-mark">＊</span>}
-              </Box>
-            </InputLabel>
+      {editor!.toLowerCase() === "dropdown" && (
+        <FormControl variant="standard" fullWidth>
+          <Grid container>
+            <Grid item md={3} xs={12} sx={{ height: "40px" }}>
+              <InputLabel shrink htmlFor={id} sx={labelStyle}>
+                <Box display="flex">
+                  {label}
+                  {required && <span className="input-required-mark">＊</span>}
+                </Box>
+              </InputLabel>
+            </Grid>
+            <Grid item md={9} xs={12}>
+              <SelectCustom
+                autoWidth={false}
+                value={value}
+                defaultValue={options[0]?.value}
+                placeholder={placeholder}
+                onChange={(e) => onChangeValue(id, e.target.value)}
+                displayEmpty
+                fullWidth
+              >
+                {options &&
+                  options.map((option, index) => (
+                    <MenuItem key={index} value={option?.value}>
+                      {option?.label}
+                    </MenuItem>
+                  ))}
+              </SelectCustom>
+            </Grid>
           </Grid>
-          <Grid item md={9} xs={12}>
-            <SelectCustom autoWidth={false} value={value} displayEmpty placeholder={placeholder} fullWidth>
-              {options &&
-                options.map((option) => (
-                  <MenuItem key={option?.value} value={option?.value}>
-                    {option?.label}
-                  </MenuItem>
-                ))}
-            </SelectCustom>
-          </Grid>
-        </Grid>
-      </FormControl>
+        </FormControl>
+      )}
+    </Box>
+    {error && (
+      <Typography
+        sx={{
+          fontSize: "10px",
+          color: "red",
+          textAlign: editor === "checkbox" ? "center" : "left",
+          "&": {
+            "@media (max-width: 425px)": {
+              maxWidth: 320,
+            },
+            "@media (min-width: 768px)": {
+              maxWidth: 220,
+            },
+            "@media (min-width: 1024px)": {
+              maxWidth: 320,
+            },
+          },
+        }}
+      >
+        {error}
+      </Typography>
     )}
-  </Box>
+  </React.Fragment>
 );
