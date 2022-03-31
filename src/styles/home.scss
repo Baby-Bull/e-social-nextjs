@@ -111,4 +111,20 @@
   .slick-slider {
     width: 100%;
   }
+  .slick-track {
+    margin-left: initial;
+  }
+
+  .slick-track {
+    display: flex !important;
+  }
+
+  .slick-slide
+  {
+    height: inherit !important;
+    
+    & > div {
+      height: 100%;
+    }
+  }
 }
