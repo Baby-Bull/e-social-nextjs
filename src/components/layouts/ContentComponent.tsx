@@ -23,7 +23,7 @@ const ContentComponent: React.SFC<IContentComponentProps> = ({ children, showFoo
     </Head>
     <HeaderComponent authPage={authPage} />
     {children}
-    {showFooter && <FooterComponent />}
+    {showFooter && <FooterComponent authPage={authPage} />}
   </Box>
 );
 export default ContentComponent;
