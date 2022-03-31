@@ -11,17 +11,16 @@
         "chat": "メッセージ"
     },
     "recommend-community": "オススメのコミュニティ",
-    "register-newest": "新規登録メンバー",
-    "recent-login-member": "最近ログインしたメンバー",
-    "member-favorite-area": "お気に入りの地域のメンバー",
-    "member-favorite-tags": "お気に入りのタグのメンバー",
+    "register-newest": "新規登録エンジニア",
+    "recent-login-member": "最近ログインしたエンジニア",
+    "member-favorite-area": "地域が近いエンジニア",
+    "member-favorite-tags": "タグが一緒のエンジニア",
     "see-more": "もっと見る >",
-    
+
     "box-community-recommend": {
         "number-of-register": "ログイン中：%s人",
         "number-of-members": "参加人数：%s人"
     },
-
     "box-member-recommend": {
         "last-login": "ログイン：%s",
         "no-login": "ログイン中",

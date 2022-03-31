@@ -113,20 +113,12 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
 
   const currencies = [
     {
-      value: "",
+      value: "エンジニア",
       label: "エンジニア",
     },
     {
-      value: "EUR",
-      label: "€",
-    },
-    {
-      value: "BTC",
-      label: "฿",
-    },
-    {
-      value: "JPY",
-      label: "¥",
+      value: "コミュニティ一",
+      label: "コミュニティ一",
     },
   ];
 

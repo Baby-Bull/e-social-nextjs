@@ -21,7 +21,7 @@ import NotificationComponent from "./blocks/NotificationsComponent";
 import RecommendCommunityComponent from "./blocks/RecommendCommunityComponent";
 import RecommendMembersComponent from "./blocks/RecommendMembersComponent";
 
-const LIMIT = 10;
+const LIMIT = 20;
 
 const HomeIndexComponents = () => {
   const { t } = useTranslation();
