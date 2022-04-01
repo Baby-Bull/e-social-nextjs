@@ -60,7 +60,7 @@ const MyApp = (props: MyAppProps) => {
   );
 };
 
-MyApp.getStaticProps = async ({ Component, ctx }) => {
+MyApp.getInitialProps = async ({ Component, ctx }) => {
   let pageProps = {};
   const { query, pathname, res } = ctx;
 
@@ -68,17 +68,18 @@ MyApp.getStaticProps = async ({ Component, ctx }) => {
   if (!AUTH_PAGE_PATHS.includes(pathname)) {
     if (!cookies[USER_TOKEN]) {
       if (res) {
-        res.writeHead(302, {
-          Location: "/login",
-        });
-        res.end();
+        // ctx.res.writeHead(302, {
+        //   Location: "/login",
+        // });
+        // ctx.res.end();
+        // return {};
       } else {
         Router.push("/login");
       }
     }
   }
-  if (Component.getStaticProps) {
-    pageProps = await Component.getStaticProps(ctx);
+  if (Component.getInitialProps) {
+    pageProps = await Component.getInitialProps(ctx);
   }
   return {
     pageProps,
