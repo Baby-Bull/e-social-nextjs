@@ -1,6 +1,7 @@
 import { Box, Grid, Link } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { format } from "timeago.js";
 
@@ -12,6 +13,7 @@ import {
 import styles from "src/components/home/home.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
+// import { AuthContext } from "context/AuthContext";
 
 import SlickSliderRecommendComponent from "./SlickSliderRecommendComponent";
 
@@ -28,7 +30,7 @@ interface IRecommendDataItem {
   status: string;
   chatStatus: number;
   is_favorite: boolean;
-  is_matched: boolean;
+  match_status: string;
 }
 
 interface IRecommendItemProps {
@@ -59,10 +61,30 @@ const handleMapChatStatus = (statusChatTemp: string) => {
       return 2;
   }
 };
+const handleMapMatchingStatus = (statusMatchingTemp: string) => {
+  switch (statusMatchingTemp) {
+    case "pending":
+      return 1;
+    case "confirmed":
+      return 2;
+    case "rejected":
+      return 3;
+    default:
+      return 4;
+  }
+};
 
 const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchingModal }) => {
   const { t } = useTranslation();
+  const router = useRouter();
   const [liked, setLiked] = useState(data?.is_favorite);
+
+  const handleClickButtonModal = (tempValue: any) => {
+    if (tempValue === "rejected" || !tempValue) {
+      handleOpenMatchingModal(data);
+    } else router.push("/chat/personal");
+  };
+  // const { auth, dispatch } = useContext(AuthContext);
 
   return (
     <Grid item xs={12} className={classNames(styles.boxRecommend)}>
@@ -120,6 +142,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
           onClick={() => {
             handleFavoriteAnUser(liked, data?.id);
             setLiked(!liked);
+            //! liked && dispatch({ type: "ADD_FAVORITE", payload: auth });
           }}
         >
           <img
@@ -131,14 +154,12 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
 
         <ButtonComponent
           className="button-matching"
-          onClick={() => handleOpenMatchingModal(data)}
-          mode={
-            data?.is_matched ? HOMEPAGE_RECOMMEND_MEMBER_STATUS[2]?.mode : HOMEPAGE_RECOMMEND_MEMBER_STATUS[1]?.mode
-          }
+          onClick={() => handleClickButtonModal(data?.match_status)}
+          mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.mode}
           fullWidth
-          disabled={data?.is_matched}
+          disabled={data?.match_status === "pending"}
         >
-          {data?.is_matched ? HOMEPAGE_RECOMMEND_MEMBER_STATUS[2]?.label : HOMEPAGE_RECOMMEND_MEMBER_STATUS[1]?.label}
+          {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.label}
         </ButtonComponent>
       </Box>
     </Grid>

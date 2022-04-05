@@ -2,6 +2,13 @@ import React from "react";
 import { Link, Box } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
+import { useRouter } from "next/router";
+
+import { logout } from "src/services/auth";
+
+interface IFooterComponentProps {
+  authPage?: boolean;
+}
 
 const TagA = styled(Link)`
   color: #ffffff;
@@ -15,8 +22,15 @@ const TagA = styled(Link)`
     margin-left: 0;
   }
 `;
-const FooterComponent = () => {
+const FooterComponent: React.SFC<IFooterComponentProps> = ({ authPage = false }) => {
   const { t } = useTranslation();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/login");
+  };
+
   return (
     <Box sx={{ backgroundColor: "#1A2944" }}>
       <Box
@@ -34,12 +48,41 @@ const FooterComponent = () => {
               fontSize: "14px",
             }}
           >
-            <TagA href="/login" color="secondary" sx={{ mr: "26px !important" }}>
-              {t("footer.signin")}
-            </TagA>
-            <TagA href="/register" color="secondary" sx={{ mr: "26px !important" }}>
-              {t("footer.signout")}
-            </TagA>
+            <Box
+              sx={{
+                display: !authPage ? "none" : "inherit",
+              }}
+            >
+              <TagA href="/login" color="secondary" sx={{ mr: "26px !important" }}>
+                {t("footer.signin")}
+              </TagA>
+              <TagA href="/register" color="secondary" sx={{ mr: "26px !important" }}>
+                {t("footer.signout")}
+              </TagA>
+            </Box>
+            <Box
+              sx={{
+                display: authPage ? "none" : "flex",
+              }}
+            >
+              <TagA href="/" color="secondary" sx={{ mr: "26px !important" }}>
+                {t("footer.home")}
+              </TagA>
+              <TagA
+                href="/search_user"
+                color="secondary"
+                sx={{ mr: "26px !important", display: { xs: "none", lg: "inherit" } }}
+              >
+                {t("footer.engineer-search")}
+              </TagA>
+              <TagA
+                href="/search_community"
+                color="secondary"
+                sx={{ mr: "26px !important", display: { xs: "none", lg: "inherit" } }}
+              >
+                {t("footer.community-search")}
+              </TagA>
+            </Box>
           </Box>
           <Box
             sx={{
@@ -69,6 +112,18 @@ const FooterComponent = () => {
                 <TagA href="/#" color="secondary">
                   {t("footer.operating-company")}
                 </TagA>
+              </Box>
+              <Box
+                sx={{
+                  display: authPage ? "none" : "inherit",
+                }}
+                onClick={handleLogout}
+              >
+                <Box sx={{ display: { xs: "none", lg: "inherit" } }}>
+                  <TagA href="/#" color="secondary">
+                    {t("footer.logout")}
+                  </TagA>
+                </Box>
               </Box>
             </Box>
           </Box>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Box, Tabs, Typography, Avatar, Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -7,46 +7,30 @@ import theme from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabComponent";
 import EmptyMatchingComponent from "src/components/matching/blocks/EmptyMatchingComponent";
 import ThreadComponent from "src/components/matching/blocks/ThreadComponent";
-import ChildTabComponent, { IDataChild } from "src/components/matching/blocks/ChildTabComponent";
-import { getUserFavorite } from "src/services/user";
+// import ChildTabComponent, { IDataChild } from "src/components/matching/blocks/ChildTabComponent";
+import ChildTabComponent from "src/components/matching/blocks/ChildTabComponent";
 
-interface IData {
-  avatar: string;
-  name: string;
-  count_member: string;
-}
+// interface IData {
+//   avatar: string;
+//   name: string;
+//   count_member: string;
+// }
 
-interface ITabComponentData {
-  children: IDataChild[];
-  data: IData[];
-  text: string;
-  icon: string;
-}
+// interface ITabComponentData {
+//   children: IDataChild[];
+//   data: IData[];
+//   text: string;
+//   icon: string;
+// }
 
 interface ITabComponentProps {
-  data: ITabComponentData[];
+  // data: ITabComponentData[];
+  data: any;
 }
 
 const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
   const { t } = useTranslation();
   const typeQuery = useRouter()?.query?.type;
-
-  // get favorite users
-  const [cursorUserFavorite, setCursorUserFavorite] = useState("");
-  const [userFavoriteData, setUserFavoriteData] = useState([]);
-  const limit = 10;
-  useEffect(() => {
-    const fetchUserFavoriteTags = async () => {
-      const res = await getUserFavorite(limit, cursorUserFavorite);
-      if (!userFavoriteData.some((e) => e?.id === res?.items[0]?.id)) {
-        setUserFavoriteData(userFavoriteData.concat(res?.items));
-      }
-      if (res?.hasMore) {
-        setCursorUserFavorite(res?.cursor);
-      }
-    };
-    fetchUserFavoriteTags();
-  }, [cursorUserFavorite, userFavoriteData]);
 
   const nestedCondition = (condition: any, then: any, otherwise: any) => (condition ? then : otherwise);
   const type = nestedCondition(
@@ -125,11 +109,11 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
       </Tabs>
 
       <TabPanel value={valueParentTab} index={0}>
-        <ChildTabComponent dataId={1} dataChild={data[0]?.children} maxWidth="230px" />
+        <ChildTabComponent dataId={1} dataChild={data[0]?.children ?? []} maxWidth="230px" />
       </TabPanel>
 
       <TabPanel value={valueParentTab} index={1}>
-        <ChildTabComponent dataId={2} dataChild={data[1]?.children} maxWidth="160px" />
+        <ChildTabComponent dataId={2} dataChild={data[1]?.children ?? []} maxWidth="160px" />
       </TabPanel>
 
       <TabPanel value={valueParentTab} index={2}>
@@ -140,8 +124,8 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
             backgroundColor: theme.whiteBlue,
           }}
         >
-          {userFavoriteData?.length ? (
-            userFavoriteData?.map((tab, tabIndex) => (
+          {data[2]?.data?.length ? (
+            data[2]?.data?.map((tab, tabIndex) => (
               <React.Fragment key={tabIndex.toString()}>
                 <Box
                   sx={{

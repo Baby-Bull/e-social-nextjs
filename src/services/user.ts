@@ -62,12 +62,3 @@ export const deleteUserFavorite = async (userId: string) => {
     return error;
   }
 };
-
-export const sendMatchingRequest = async (userId: string, body: any) => {
-  try {
-    const res = await api.post(`/user/match/${userId}`, body);
-    return res.data;
-  } catch (error) {
-    return error;
-  }
-};

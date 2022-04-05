@@ -31,12 +31,20 @@ export const HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS = {
 
 export const HOMEPAGE_RECOMMEND_MEMBER_STATUS = {
   1: {
-    label: "マッチングのリクエストを送る",
-    mode: "green",
-  },
-  2: {
     label: "リクエスト送信済み",
     mode: "default",
+  },
+  2: {
+    label: "メッセージを開く",
+    mode: "info",
+  },
+  3: {
+    label: "レビューをする",
+    mode: "orange",
+  },
+  4: {
+    label: "マッチングのリクエストを送る",
+    mode: "green",
   },
 };
 
