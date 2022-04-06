@@ -4,13 +4,8 @@ import React, { useEffect, useState } from "react";
 // import { useQuery } from "react-query";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
-import {
-  getUserFavoriteTags,
-  getUserProvince,
-  getUserRecentlyLogin,
-  getUserNewMembers,
-  sendMatchingRequest,
-} from "src/services/user";
+import { getUserFavoriteTags, getUserProvince, getUserRecentlyLogin, getUserNewMembers } from "src/services/user";
+import { sendMatchingRequest } from "src/services/matching";
 
 // import { REACT_QUERY_KEYS } from "../constants/constants";
 
@@ -80,7 +75,6 @@ const HomeIndexComponents = () => {
         },
       ]);
     };
-
     fetchData();
   }, []);
 

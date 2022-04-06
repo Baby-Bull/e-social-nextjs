@@ -106,7 +106,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataId, dataChi
             backgroundColor: [theme.whiteBlue, "white"],
           }}
         >
-          {dataChild[1].data?.length ? (
+          {dataChild[1]?.data?.length ? (
             dataChild[1]?.data.map((tab, index) => (
               <React.Fragment key={index.toString()}>
                 <Box
@@ -145,7 +145,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataId, dataChi
             backgroundColor: [theme.whiteBlue, "white"],
           }}
         >
-          {dataChild[2].data?.length ? (
+          {dataChild[2]?.data?.length ? (
             dataChild[2]?.data.map((tab, index) => (
               <React.Fragment key={index.toString()}>
                 <Box

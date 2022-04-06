@@ -11,8 +11,14 @@ export const Logout = () => ({
     type: "LOGOUT",
 });
 
-export const UpdateStart = (authCredentials: any) => ({
-    type: "UPDATE_START",
+export const AddFavoriteUser = (auth: object) => ({
+    type: "ADD_FAVORITE",
+    payload: auth,
+});
+
+export const RemoveFavoriteUser = (auth: object) => ({
+    type: "REMOVE_FAVORITE",
+    payload: auth,
 });
 
 export const UpdateSuccess = (auth: object) => ({

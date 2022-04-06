@@ -10,6 +10,7 @@ import ButtonComponent from "src/components/common/ButtonComponent";
 import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
 import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupReviewComponent";
 import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
+import { rejectMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
 
 const ThreadTitle = styled(Typography)({
   paddingLeft: "20px",
@@ -40,7 +41,16 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
   const handleShowReview = () => setShowPopupReview(true);
 
   const [showModalMatching, setModalMatching] = React.useState(false);
-  const handleShowModalMatching = () => setModalMatching(true);
+  const [userRequestMatchingId, setUserRequestMatchingId] = React.useState(null);
+  const handleSendMatchingRequest = async (matchingRequest) => {
+    const res = await sendMatchingRequest(userRequestMatchingId, matchingRequest);
+    setModalMatching(false);
+    return res;
+  };
+  const handleOpenMatchingModal = (userMatchingId: any) => {
+    setModalMatching(true);
+    setUserRequestMatchingId(userMatchingId);
+  };
 
   return (
     <React.Fragment>
@@ -63,7 +73,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
             mb: "5px",
           }}
         >
-          {data?.date_request}
+          {format(data?.desired_match_date)}
         </Typography>
 
         {/* Info user (avatar, ...) */}
@@ -115,7 +125,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                     width: ["32px", isConfirmOrFavouriteOrMatched ? "54px" : "80px"],
                     height: "100%",
                   }}
-                  src={data?.profile_image}
+                  src={type === "favourite" ? data?.profile_image : data?.user?.profile_image}
                 />
 
                 <Avatar
@@ -196,7 +206,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                     color: theme.gray,
                   }}
                 >
-                  {data.job_position}
+                  {data?.job_position ?? "情報なし"}
                 </Typography>
 
                 <Typography
@@ -215,7 +225,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                   display: ["none", type === "favourite" && "inherit"],
                 }}
               >
-                {data.message}
+                {data?.message ?? "情報なし"}
               </Typography>
             </Box>
             {/* End Grid right Info */}
@@ -239,6 +249,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                     display: !data?.is_cancel && "none",
                     borderRadius: "12px",
                   }}
+                  onClick={() => console.log("test")}
                 >
                   {t("thread:button.canceled")}
                 </ButtonComponent>
@@ -264,6 +275,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                   sx={{
                     display: data?.is_cancel && "none",
                   }}
+                  onClick={() => rejectMatchingRequestReceived(data?.id)}
                 >
                   {t("thread:button.reject")}
                 </ButtonComponent>
@@ -317,18 +329,18 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
 
             {type === "favourite" && (
               <ButtonComponent
-                disabled={data?.is_matched}
+                disabled={data?.match_status}
                 props={{
-                  color: data?.is_matched && theme.gray,
-                  bgColor: !data?.is_matched && theme.green,
+                  color: data?.match_status && theme.gray,
+                  bgColor: !data?.match_status && theme.green,
                   dimension: "small",
                 }}
                 sx={{
                   ml: "15px",
                 }}
-                onClick={handleShowModalMatching}
+                onClick={() => handleOpenMatchingModal(data?.id)}
               >
-                {data?.is_matched ? t("thread:button.applied") : t("thread:button.apply-matching")}
+                {data?.match_status ? t("thread:button.applied") : t("thread:button.apply-matching")}
               </ButtonComponent>
             )}
 
@@ -393,7 +405,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                 fontWeight: 500,
               }}
             >
-              {data.last_login}
+              {format(data?.user?.last_login_at)}
             </Typography>
 
             <Box
@@ -415,7 +427,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                 }}
               >
                 <ThreadTitle>{t("thread:purpose")}</ThreadTitle>
-                <ThreadContent>{data.purpose}</ThreadContent>
+                <ThreadContent>{data?.purpose}</ThreadContent>
               </Box>
               <Box
                 sx={{
@@ -435,7 +447,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                 }}
               >
                 <ThreadTitle>{t("thread:message")}</ThreadTitle>
-                <ThreadContent>{data.message}</ThreadContent>
+                <ThreadContent>{data?.message}</ThreadContent>
               </Box>
             </Box>
           </Box>
@@ -558,9 +570,9 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                 mt: "20px",
                 height: 40,
               }}
-              onClick={handleShowModalMatching}
+              onClick={() => handleOpenMatchingModal(data?.id)}
             >
-              {data?.is_applied ? t("thread:button.applied") : t("thread:button.apply-matching")}
+              {data?.match_status ? t("thread:button.applied") : t("thread:button.apply-matching")}
             </ButtonComponent>
           )}
 
@@ -609,7 +621,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
         open={showModalMatching}
         setOpen={setModalMatching}
         userRequestMatching={{}}
-        handleSendMatchingRequest={() => {}}
+        handleSendMatchingRequest={handleSendMatchingRequest}
       />
     </React.Fragment>
   );

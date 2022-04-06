@@ -10,9 +10,31 @@ const Reducer = (state, action) => {
                 auth: null,
                 error: true,
             };
-        case "UPDATE_START":
+        case "ADD_FAVORITE":
             return {
-                ...state
+                auth: {
+                    ...state?.auth,
+                    user: {
+                        ...state?.auth?.user,
+                        profile: {
+                            ...state?.auth?.user?.profile,
+                            favorite_count: state?.auth?.user?.profile?.favorite_count + 1,
+                        }
+                    }
+                }
+            };
+        case "REMOVE_FAVORITE":
+            return {
+                auth: {
+                    ...state?.auth,
+                    user: {
+                        ...state?.auth?.user,
+                        profile: {
+                            ...state?.auth?.user?.profile,
+                            favorite_count: state?.auth?.user?.profile?.favorite_count - 1,
+                        }
+                    }
+                }
             };
         case "UPDATE_SUCCESS":
             return {
