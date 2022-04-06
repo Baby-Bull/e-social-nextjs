@@ -52,101 +52,16 @@ const MatchingComponent = () => {
           children: [
             {
               text: "未承認",
-              data: [
-                {
-                  avatar: "/assets/images/svg/account.svg",
-                  name: "佐藤 太郎",
-                  date_request: "2021年8月27日13時48分にリクエスト",
-                  job: "フロントエンドエンジニア",
-                  last_login: "8分前",
-                  purpose: "カジュアルにお会いしたい",
-                  date_interview: "10月19日希望",
-                  message: `コメントがここに全文表示されますコメントがここに全文表示されますコメントがここに全文表示されます
-                      コメントがここに全文表示されますコメントがここに全文表示されますコメントがここに全文表示されます
-                      コメントがここに全文表示されますコメントがここに全文表示されます。`,
-                  is_cancel: true,
-                },
-                {
-                  avatar: "/assets/images/svg/account.svg",
-                  name: "佐藤 太郎",
-                  date_request: "2021年8月27日13時48分にリクエスト",
-                  job: "フロントエンドエンジニア",
-                  last_login: "8分前",
-                  purpose: "カジュアルにお会いしたい",
-                  date_interview: "10月19日希望",
-                  message: `コメントがここに全文表示されますコメントがここに全文表示されますコメントがここに全文表示されます
-                      コメントがここに全文表示されますコメントがここに全文表示されますコメントがここに全文表示されます
-                      コメントがここに全文表示されますコメントがここに全文表示されます。`,
-                  is_cancel: true,
-                },
-              ],
-              count: 4,
+              data: res[3].items?.reverse() || [],
+              count: res[3].items?.length,
             },
             {
               text: "マッチング済み",
-              data: [
-                {
-                  avatar: "/assets/images/svg/account.svg",
-                  name: "佐藤 太郎",
-                  date_request: "2021年8月27日13時48分にリクエスト",
-                  job: "フロントエンドエンジニア",
-                  last_login: "8分前",
-                  is_reviewed: false,
-                },
-                {
-                  avatar: "/assets/images/svg/account.svg",
-                  name: "佐藤 太郎",
-                  date_request: "2021年8月27日13時48分にリクエスト",
-                  job: "フロントエンドエンジニア",
-                  last_login: "8分前",
-                  is_reviewed: false,
-                },
-                {
-                  avatar: "/assets/images/svg/account.svg",
-                  name: "佐藤 太郎",
-                  date_request: "2021年8月27日13時48分にリクエスト",
-                  job: "フロントエンドエンジニア",
-                  last_login: "8分前",
-                  is_reviewed: true,
-                },
-                {
-                  avatar: "/assets/images/svg/account.svg",
-                  name: "佐藤 太郎",
-                  date_request: "2021年8月27日13時48分にリクエスト",
-                  job: "フロントエンドエンジニア",
-                  last_login: "8分前",
-                  is_reviewed: false,
-                },
-              ],
+              data: res[4].items?.reverse() || [],
             },
             {
               text: "否承認",
-              data: [
-                {
-                  avatar: "/assets/images/svg/account.svg",
-                  name: "佐藤 太郎",
-                  date_request: "2021年8月27日13時48分にリクエスト",
-                  job: "フロントエンドエンジニア",
-                  last_login: "8分前",
-                  purpose: "カジュアルにお会いしたい",
-                  date_interview: "10月19日希望",
-                  message: `コメントがここに全文表示されますコメントがここに全文表示されますコメントがここに全文表示されます
-                      コメントがここに全文表示されますコメントがここに全文表示されますコメントがここに全文表示されます
-                      コメントがここに全文表示されますコメントがここに全文表示されます。`,
-                },
-                {
-                  avatar: "/assets/images/svg/account.svg",
-                  name: "佐藤 太郎",
-                  date_request: "2021年8月27日13時48分にリクエスト",
-                  job: "フロントエンドエンジニア",
-                  last_login: "8分前",
-                  purpose: "カジュアルにお会いしたい",
-                  date_interview: "10月19日希望",
-                  message: `コメントがここに全文表示されますコメントがここに全文表示されますコメントがここに全文表示されます
-                      コメントがここに全文表示されますコメントがここに全文表示されますコメントがここに全文表示されます
-                      コメントがここに全文表示されますコメントがここに全文表示されます。`,
-                },
-              ],
+              data: res[5].items?.reverse() || [],
             },
           ],
           // children: [
