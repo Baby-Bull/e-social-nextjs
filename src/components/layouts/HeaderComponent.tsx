@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -13,6 +13,7 @@ import { Button, Select, Avatar, Typography, Link } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
 import { logout } from "src/services/auth";
+import { AuthContext } from "context/AuthContext";
 import { menuNotificationsData } from "src/components/home/mockData/mockData";
 import styles from "src/components/home/home.module.scss";
 import theme from "src/theme";
@@ -129,6 +130,8 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   const [notifyAnchorEl, setNotifyAnchorEl] = React.useState(null);
   const [currency, setCurrency] = React.useState(currencies[0].label);
 
+  const { dispatch } = useContext(AuthContext);
+
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const isNotifyMenuOpen = Boolean(notifyAnchorEl);
@@ -166,6 +169,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
 
   const handleLogout = async () => {
     await logout();
+    dispatch({ type: "LOGOUT" });
     router.push("/login");
   };
   const menuId = "primary-search-account-menu";
