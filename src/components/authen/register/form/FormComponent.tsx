@@ -174,6 +174,9 @@ const FormRegisterComponents = () => {
     if (!userInfo?.tags || userInfo?.tags?.length === 0) {
       isValidForm = false;
       errorMessages.tags = VALIDATE_MESSAGE_FORM_REGISTER.tags.required;
+    } else if (userInfo?.tags?.length < 2) {
+      isValidForm = false;
+      errorMessages.tags = VALIDATE_MESSAGE_FORM_REGISTER.tags.min_count;
     }
 
     // validate checkbox

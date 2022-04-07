@@ -105,7 +105,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
             src={userRequestMatching?.profile_image || "/assets/images/home_page/ic_avatar_modal.svg"}
             sx={{ width: 52, height: 52 }}
           />
-          <span className="name">{`${userRequestMatching?.username}さんへのマッチングリクエスト`}</span>
+          <span className="name">{`${userRequestMatching?.username ?? ""} さんへのマッチングリクエスト`}</span>
         </div>
 
         <form>
