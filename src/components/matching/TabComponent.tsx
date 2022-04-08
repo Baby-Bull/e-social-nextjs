@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Tabs, Typography, Avatar, Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -9,6 +9,7 @@ import EmptyMatchingComponent from "src/components/matching/blocks/EmptyMatching
 import ThreadComponent from "src/components/matching/blocks/ThreadComponent";
 // import ChildTabComponent, { IDataChild } from "src/components/matching/blocks/ChildTabComponent";
 import ChildTabComponent from "src/components/matching/blocks/ChildTabComponent";
+import { getMatchedRequest } from "src/services/matching";
 
 // interface IData {
 //   avatar: string;
@@ -28,6 +29,13 @@ interface ITabComponentProps {
   data: any;
 }
 
+const LIMIT = 20;
+const OPTIONS = [
+  { value: "newest", label: "新しい順" },
+  { value: "oldest", label: "古い順" },
+  { value: "name-asc", label: "名前順" },
+];
+
 const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
   const { t } = useTranslation();
   const typeQuery = useRouter()?.query?.type;
@@ -44,7 +52,6 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
   );
 
   const [valueParentTab, setValueParentTab] = React.useState(0);
-
   const onChangeParentTab = (event: React.SyntheticEvent, newValue: number) => {
     setValueParentTab(newValue);
   };
@@ -55,17 +62,19 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
     }
   }, [typeQuery]);
 
-  const options = [
-    { value: 0, label: "新しい順" },
-    { value: 1, label: "古い順" },
-    { value: 2, label: "名前順" },
-  ];
-
-  const [optionSelected, setOption] = React.useState("0");
-
+  const [optionSelected, setOption] = React.useState("newest");
   const handleChange = (event: SelectChangeEvent) => {
     setOption(event.target.value);
   };
+
+  const [matchedUsers, setMatchUsers] = useState([]);
+  useEffect(() => {
+    const fetchMatchedUsers = async () => {
+      const res = await getMatchedRequest(LIMIT, "", optionSelected);
+      setMatchUsers(res?.items);
+    };
+    fetchMatchedUsers();
+  }, [optionSelected]);
 
   return (
     <React.Fragment>
@@ -180,8 +189,8 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
                     },
                   }}
                 >
-                  {options &&
-                    options.map((option, index) => (
+                  {OPTIONS &&
+                    OPTIONS.map((option, index) => (
                       <MenuItem key={index.toString()} value={option.value}>
                         {option.label}
                       </MenuItem>
@@ -189,7 +198,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
                 </Select>
               </Box>
 
-              {data[3]?.data?.map((tab, tabIndex) => (
+              {matchedUsers?.map((tab, tabIndex) => (
                 <React.Fragment key={tabIndex.toString()}>
                   <Box
                     sx={{

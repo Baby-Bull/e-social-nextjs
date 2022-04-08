@@ -1,16 +1,22 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { format } from "timeago.js";
 
+import { AuthContext } from "context/AuthContext";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
 import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupReviewComponent";
 import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
-import { rejectMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
+import {
+  rejectMatchingRequestReceived,
+  sendMatchingRequest,
+  acceptMatchingRequestReceived,
+  cancelMatchingRequestSent,
+} from "src/services/matching";
 
 const ThreadTitle = styled(Typography)({
   paddingLeft: "20px",
@@ -27,9 +33,23 @@ interface IThreadComponentProps {
   type?: "unconfirm" | "confirm" | "reject" | "favourite" | "matched" | "community";
 }
 
+const handlePurposeMatchingTab12 = (tempValue: string) => {
+  switch (tempValue) {
+    case "talk-casually":
+      return "カジュアルにお話ししたい";
+    case "technical-consultation":
+      return "技術的な相談がしたい";
+    case "work-with":
+      return "一緒に働けるエンジニアを探している";
+    default:
+      return "その他";
+  }
+};
+
 const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const { auth } = useContext(AuthContext);
 
   const isShowThread = type === "unconfirm" || type === "reject";
   const isConfirmOrFavouriteOrMatched = type === "confirm" || type === "favourite" || type === "matched";
@@ -50,6 +70,11 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
   const handleOpenMatchingModal = (userMatchingId: any) => {
     setModalMatching(true);
     setUserRequestMatchingId(userMatchingId);
+  };
+  const handleFormatTime = (tempValue: string) => {
+    if (tempValue === "favourite") return "";
+    if (tempValue === "matched") return format(data?.matchRequest?.match_date);
+    return format(data?.created_at);
   };
 
   return (
@@ -102,7 +127,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
             sx={{
               display: "flex",
               alignItems: "center",
-              pl: type === "matched" && !data.is_send_message ? "25px" : "7px",
+              pl: type === "matched" && data?.matchRequest?.match_direction !== "sent" ? "25px" : "7px",
             }}
           >
             <Box
@@ -116,29 +141,31 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
               <Box
                 sx={{
                   position: "relative",
-                  mr: type === "matched" && data.is_send_message && "18px",
+                  mr: type === "matched" && data?.matchRequest?.match_direction === "sent" && "18px",
                 }}
               >
                 <Avatar
                   variant="square"
                   sx={{
+                    borderRadius: "50%",
                     width: ["32px", isConfirmOrFavouriteOrMatched ? "54px" : "80px"],
                     height: "100%",
                   }}
-                  src={type === "favourite" ? data?.profile_image : data?.user?.profile_image}
+                  src={type === "favourite" || type === "matched" ? data?.profile_image : data?.user?.profile_image}
                 />
 
                 <Avatar
                   variant="square"
                   sx={{
+                    borderRadius: "50%",
                     display: type !== "matched" && "none",
                     position: "absolute",
-                    top: !data.is_send_message ? "-15px" : "42px",
-                    left: !data.is_send_message ? "-20px" : "52px",
+                    top: data?.matchRequest?.match_direction === "sent" ? "-15px" : "42px",
+                    left: data?.matchRequest?.match_direction === "sent" ? "-20px" : "52px",
                     width: ["15px", "24px"],
                     height: ["15px", "24px"],
                   }}
-                  src={data.avatar2}
+                  src={auth?.user?.profile?.profile_image}
                 />
 
                 <Box
@@ -148,8 +175,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                     backgroundSize: "contain",
                     backgroundRepeat: "no-repeat",
                     position: "absolute",
-                    top: !data.is_send_message ? "-5px" : "34px",
-                    left: !data.is_send_message ? "0" : "43px",
+                    top: data?.matchRequest?.match_direction === "sent" ? "-5px" : "34px",
+                    left: data?.matchRequest?.match_direction === "sent" ? "0" : "43px",
                     width: ["15px", "20px"],
                     height: ["100%"],
                   }}
@@ -185,7 +212,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                   fontWeight: 400,
                 }}
               >
-                {data.date_request}
+                {handleFormatTime(type)}
+                {/* {(type === "favourite") ? "" : ((type === "matched") ? format(data?.matchRequest?.match_date) : format(data?.created_at))} */}
               </Typography>
 
               <Box
@@ -197,7 +225,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                   alignItems: ["flex-start", "center"],
                 }}
               >
-                {data.username}
+                {(type === "favourite" || type === "matched" ? data?.username : data?.user?.username) ?? "情報なし"}
                 <Typography
                   sx={{
                     pl: { sm: "7px" },
@@ -206,7 +234,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                     color: theme.gray,
                   }}
                 >
-                  {data?.job_position ?? "情報なし"}
+                  {(type === "favourite" || type === "matched" ? data?.job_position : data?.user?.job_position) ??
+                    "情報なし"}
                 </Typography>
 
                 <Typography
@@ -225,7 +254,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                   display: ["none", type === "favourite" && "inherit"],
                 }}
               >
-                {data?.message ?? "情報なし"}
+                {data?.discussion_topic ?? "情報なし"}
               </Typography>
             </Box>
             {/* End Grid right Info */}
@@ -246,10 +275,10 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                     dimension: "x-small",
                   }}
                   sx={{
-                    display: !data?.is_cancel && "none",
+                    display: !data?.receiver_id && "none",
                     borderRadius: "12px",
                   }}
-                  onClick={() => console.log("test")}
+                  onClick={() => cancelMatchingRequestSent(data?.id)}
                 >
                   {t("thread:button.canceled")}
                 </ButtonComponent>
@@ -259,8 +288,9 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                     bgColor: theme.orange,
                     dimension: "x-small",
                   }}
+                  onClick={() => acceptMatchingRequestReceived(data?.id)}
                   sx={{
-                    display: data?.is_cancel && "none",
+                    display: data?.receiver_id && "none",
                     mr: "20px",
                   }}
                 >
@@ -273,7 +303,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                     dimension: "x-small",
                   }}
                   sx={{
-                    display: data?.is_cancel && "none",
+                    display: data?.receiver_id && "none",
                   }}
                   onClick={() => rejectMatchingRequestReceived(data?.id)}
                 >
@@ -389,7 +419,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
         {/* Thread */}
         <Box
           sx={{
-            display: isShowThread ? "flex" : "none",
+            display: isShowThread ? "block" : "none",
             justifyContent: "space-between",
             alignItems: "center",
           }}
@@ -415,6 +445,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                 ml: [0, "18px"],
                 pt: "20px",
                 pb: "5px",
+                width: "100%",
                 backgroundColor: theme.whiteBlue,
                 borderRadius: "12px",
               }}
@@ -427,7 +458,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                 }}
               >
                 <ThreadTitle>{t("thread:purpose")}</ThreadTitle>
-                <ThreadContent>{data?.purpose}</ThreadContent>
+                <ThreadContent>{handlePurposeMatchingTab12(data?.purpose)}</ThreadContent>
               </Box>
               <Box
                 sx={{
@@ -437,7 +468,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                 }}
               >
                 <ThreadTitle>{t("thread:date-interview")}</ThreadTitle>
-                <ThreadContent>{data?.purpose}</ThreadContent>
+                <ThreadContent>{format(data?.desired_match_date)}</ThreadContent>
               </Box>
               <Box
                 sx={{
@@ -473,7 +504,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                 }}
                 sx={{
                   mb: "20px",
-                  display: !data?.is_cancel && "none",
+                  display: !data?.receiver_id && "none",
                   borderRadius: "12px",
                 }}
               >
@@ -486,7 +517,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                   dimension: "medium",
                 }}
                 sx={{
-                  display: data?.is_cancel && "none",
+                  display: data?.receiver_id && "none",
                 }}
               >
                 {t("thread:button.approve")}
@@ -498,7 +529,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                   dimension: "x-small",
                 }}
                 sx={{
-                  display: data?.is_cancel && "none",
+                  display: data?.receiver_id && "none",
                   mt: "42px",
                   mb: "20px",
                 }}
@@ -620,7 +651,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
       <ModalMatchingComponent
         open={showModalMatching}
         setOpen={setModalMatching}
-        userRequestMatching={{}}
+        userRequestMatching={data}
         handleSendMatchingRequest={handleSendMatchingRequest}
       />
     </React.Fragment>

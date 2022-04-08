@@ -28,9 +28,35 @@ export const getMatchingRequestReceived = async (limit: number, cursor: string, 
     }
 }
 
-export const rejectMatchingRequestReceived = async (matchRequestReceivedId: string)=>{
+export const getMatchedRequest = async (limit: number, cursor: string, sort: string) => {
+    try {
+        const res = await api.get(`/user/match/?limit=${limit}&cursor=${cursor}&sort=${sort}`);
+        return res.data;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const acceptMatchingRequestReceived = async (matchRequestReceivedId: string) => {
+    try {
+        const res = await api.post(`/user/match-requests/${matchRequestReceivedId}/accept`);
+        return res.data;
+    } catch (error) {
+        return error;
+    }
+}
+
+export const rejectMatchingRequestReceived = async (matchRequestReceivedId: string) => {
     try {
         const res = await api.post(`/user/match-requests/${matchRequestReceivedId}/reject`);
+        return res.data;
+    } catch (error) {
+        return error;
+    }
+}
+export const cancelMatchingRequestSent = async (matchRequestSentId: string) => {
+    try {
+        const res = await api.post(`/user/match-requests/${matchRequestSentId}/cancel`);
         return res.data;
     } catch (error) {
         return error;

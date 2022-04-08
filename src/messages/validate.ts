@@ -29,6 +29,7 @@ export const VALIDATE_MESSAGE_FORM_REGISTER = {
   tags: {
     required: "タグを入力してください",
     max_length: "1タグにつき20文字以内で入力してください",
+    min_count: "タグの数は2以上である必要があります",
   },
   checkbox: "利用規約に同意してください",
 };

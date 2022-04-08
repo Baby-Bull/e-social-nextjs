@@ -111,6 +111,7 @@ const TypoLabel = styled(Typography)({
 const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const { auth, dispatch } = useContext(AuthContext);
 
   const currencies = [
     {
@@ -129,8 +130,6 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [notifyAnchorEl, setNotifyAnchorEl] = React.useState(null);
   const [currency, setCurrency] = React.useState(currencies[0].label);
-
-  const { dispatch } = useContext(AuthContext);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -210,7 +209,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     >
       <Box sx={{ p: "22px 0 22px 12px", borderBottom: "1px solid #D8D8D8" }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Avatar src="/assets/images/svg/avatar.svg" sx={{ width: "20px", height: "20px", mr: "4px" }} />
+          <Avatar src={auth?.user?.profile?.profile_image} sx={{ width: "20px", height: "20px", mr: "4px" }} />
           <Typography fontWeight={500} fontSize={12} lineHeight="17.38px">
             マイプロフィール
           </Typography>
@@ -411,7 +410,13 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                     height: "100%",
                   }}
                 >
-                  <img src="/assets/images/svg/avatar.svg" alt="avatar" width="40" height="40" />
+                  <img
+                    src={auth?.user?.profile?.profile_image ?? "/assets/images/svg/avatar.svg"}
+                    alt="avatar"
+                    width="40"
+                    height="40"
+                    style={{ borderRadius: "50%" }}
+                  />
                 </IconButton>
               </Box>
             </Box>
@@ -434,7 +439,12 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 onClick={handleMobileMenuOpen}
                 sx={{ p: 0, ml: "33px" }}
               >
-                <img src="/assets/images/svg/avatar.svg" alt="avatar" width="28" height="28" />
+                <img
+                  src={auth?.user?.profile?.profile_image ?? "/assets/images/svg/avatar.svg"}
+                  alt="avatar"
+                  width="28"
+                  height="28"
+                />
               </IconButton>
             </Box>
           </Box>

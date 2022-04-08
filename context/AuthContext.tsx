@@ -27,8 +27,7 @@ export const AuthContext = createContext<authContextType>(INITIAL_STATE);
 export const AuthContextProvider = ({ children }: Props) => {
     const [state, dispatch] = useReducer(Reducer, INITIAL_STATE);
     useEffect(() => {
-        if (state.auth) sessionStorage.setItem("auth", JSON.stringify(state.auth));
-        else sessionStorage.setItem("auth", sessionStorage.getItem("auth"));
+        sessionStorage.setItem("auth", JSON.stringify(state.auth));
     }, [state.auth]);
     return (
         <AuthContext.Provider

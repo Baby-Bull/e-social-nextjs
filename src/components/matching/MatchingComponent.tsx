@@ -58,29 +58,14 @@ const MatchingComponent = () => {
             {
               text: "マッチング済み",
               data: res[4].items?.reverse() || [],
+              count: res[4].items?.length,
             },
             {
               text: "否承認",
               data: res[5].items?.reverse() || [],
+              count: res[5].items?.length,
             },
           ],
-          // children: [
-          //   {
-          //     text: "未承認",
-          //     data: res[3].items?.reverse() || [],
-          //     count: res[3].items?.length,
-          //   },
-          //   {
-          //     text: "マッチング済み",
-          //     data: res[4].items?.reverse() || [],
-          //     count: res[4].items?.length,
-          //   },
-          //   {
-          //     text: "否承認",
-          //     data: res[5].items?.reverse() || [],
-          //     count: res[5].items?.length,
-          //   },
-          // ],
         },
         {
           text: "話したい人リスト",
