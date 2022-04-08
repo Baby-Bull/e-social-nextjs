@@ -11,12 +11,15 @@ import Menu from "@mui/material/Menu";
 import { useRouter } from "next/router";
 import { Button, Select, Avatar, Typography, Link } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import { ToastContainer } from "react-toastify";
 
 import { logout } from "src/services/auth";
 import { AuthContext } from "context/AuthContext";
 import { menuNotificationsData } from "src/components/home/mockData/mockData";
 import styles from "src/components/home/home.module.scss";
 import theme from "src/theme";
+
+import "react-toastify/dist/ReactToastify.css";
 
 interface IHeaderComponentProps {
   authPage?: boolean;
@@ -323,6 +326,15 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   );
   return (
     <Box sx={{ flexGrow: 1 }}>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        theme="colored"
+      />
       <AppBar
         position="static"
         sx={{
