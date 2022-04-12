@@ -27,6 +27,7 @@ import { getMatchedRequest } from "src/services/matching";
 interface ITabComponentProps {
   // data: ITabComponentData[];
   data: any;
+  setKeyRefetchData: Function;
 }
 
 const LIMIT = 20;
@@ -36,7 +37,7 @@ const OPTIONS = [
   { value: "name-asc", label: "名前順" },
 ];
 
-const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
+const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData }) => {
   const { t } = useTranslation();
   const typeQuery = useRouter()?.query?.type;
 
@@ -118,11 +119,23 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
       </Tabs>
 
       <TabPanel value={valueParentTab} index={0}>
-        <ChildTabComponent dataId={1} dataChild={data[0]?.children ?? []} maxWidth="230px" />
+        <ChildTabComponent
+          dataId={1}
+          dataType={data[0]?.type}
+          dataChild={data[0]?.children ?? []}
+          maxWidth="230px"
+          setKeyRefetchData={setKeyRefetchData}
+        />
       </TabPanel>
 
       <TabPanel value={valueParentTab} index={1}>
-        <ChildTabComponent dataId={2} dataChild={data[1]?.children ?? []} maxWidth="160px" />
+        <ChildTabComponent
+          dataId={2}
+          dataType={data[0]?.type}
+          dataChild={data[1]?.children ?? []}
+          maxWidth="160px"
+          setKeyRefetchData={setKeyRefetchData}
+        />
       </TabPanel>
 
       <TabPanel value={valueParentTab} index={2}>
@@ -145,7 +158,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
                     },
                   }}
                 >
-                  <ThreadComponent data={tab} type="favourite" />
+                  <ThreadComponent data={tab} type="favourite" setKeyRefetchData={setKeyRefetchData} />
                 </Box>
               </React.Fragment>
             ))

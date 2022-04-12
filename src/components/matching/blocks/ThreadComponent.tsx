@@ -17,6 +17,7 @@ import {
   acceptMatchingRequestReceived,
   cancelMatchingRequestSent,
 } from "src/services/matching";
+import { TYPE } from "src/constants/matching";
 
 const ThreadTitle = styled(Typography)({
   paddingLeft: "20px",
@@ -30,7 +31,9 @@ const ThreadContent = styled(Typography)({
 
 interface IThreadComponentProps {
   data: any;
+  dataType?: string;
   type?: "unconfirm" | "confirm" | "reject" | "favourite" | "matched" | "community";
+  setKeyRefetchData?: Function;
 }
 
 const handlePurposeMatchingTab12 = (tempValue: string) => {
@@ -46,7 +49,7 @@ const handlePurposeMatchingTab12 = (tempValue: string) => {
   }
 };
 
-const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
+const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyRefetchData, dataType }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const { auth } = useContext(AuthContext);
@@ -64,9 +67,45 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
   const [userRequestMatchingId, setUserRequestMatchingId] = React.useState(null);
   const handleSendMatchingRequest = async (matchingRequest) => {
     const res = await sendMatchingRequest(userRequestMatchingId, matchingRequest);
+    if (setKeyRefetchData) {
+      setKeyRefetchData({
+        type: TYPE.FAVORITE,
+      });
+    }
     setModalMatching(false);
     return res;
   };
+
+  const handleRejectMatchingRequest = async (userId: string) => {
+    const res = await rejectMatchingRequestReceived(userId);
+    if (setKeyRefetchData) {
+      setKeyRefetchData({
+        type: dataType,
+      });
+    }
+    return res;
+  };
+
+  const handleCancelMatchingRequest = async (userId: string) => {
+    const res = await cancelMatchingRequestSent(userId);
+    if (setKeyRefetchData) {
+      setKeyRefetchData({
+        type: dataType,
+      });
+    }
+    return res;
+  };
+
+  const handleAcceptMatchingRequest = async (userId: string) => {
+    const res = await acceptMatchingRequestReceived(userId);
+    if (setKeyRefetchData) {
+      setKeyRefetchData({
+        type: dataType,
+      });
+    }
+    return res;
+  };
+
   const handleOpenMatchingModal = (userMatchingId: any) => {
     setModalMatching(true);
     setUserRequestMatchingId(userMatchingId);
@@ -278,7 +317,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                     display: !data?.receiver_id && "none",
                     borderRadius: "12px",
                   }}
-                  onClick={() => cancelMatchingRequestSent(data?.id)}
+                  onClick={() => handleCancelMatchingRequest(data?.id)}
                 >
                   {t("thread:button.canceled")}
                 </ButtonComponent>
@@ -288,7 +327,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                     bgColor: theme.orange,
                     dimension: "x-small",
                   }}
-                  onClick={() => acceptMatchingRequestReceived(data?.id)}
+                  onClick={() => handleAcceptMatchingRequest(data?.id)}
                   sx={{
                     display: data?.receiver_id && "none",
                     mr: "20px",
@@ -305,7 +344,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type }) => {
                   sx={{
                     display: data?.receiver_id && "none",
                   }}
-                  onClick={() => rejectMatchingRequestReceived(data?.id)}
+                  onClick={() => handleRejectMatchingRequest(data?.id)}
                 >
                   {t("thread:button.reject")}
                 </ButtonComponent>

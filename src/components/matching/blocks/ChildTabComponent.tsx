@@ -15,11 +15,13 @@ export interface IDataChild {
 
 interface IChildTabComponentProps {
   dataId: number;
+  dataType?: string;
   dataChild: IDataChild[];
   maxWidth?: string;
+  setKeyRefetchData?: Function;
 }
 
-const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataId, dataChild, maxWidth }) => {
+const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataId, dataChild, dataType, maxWidth }) => {
   const { t } = useTranslation();
 
   const [valueChildTab, setValueChildTab] = React.useState(0);
@@ -81,7 +83,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataId, dataChi
                     },
                   }}
                 >
-                  <ThreadComponent data={tab} type="unconfirm" />
+                  <ThreadComponent data={tab} type="unconfirm" dataType={dataType} />
                 </Box>
               </React.Fragment>
             ))
@@ -120,7 +122,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataId, dataChi
                     },
                   }}
                 >
-                  <ThreadComponent data={tab} type="confirm" />
+                  <ThreadComponent data={tab} type="confirm" dataType={dataType} />
                 </Box>
               </React.Fragment>
             ))
@@ -156,7 +158,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataId, dataChi
                     },
                   }}
                 >
-                  <ThreadComponent data={tab} type="reject" />
+                  <ThreadComponent data={tab} type="reject" dataType={dataType} />
                 </Box>
               </React.Fragment>
             ))
