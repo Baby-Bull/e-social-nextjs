@@ -4,7 +4,9 @@ import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { format } from "timeago.js";
+import Moment from "react-moment";
 
+import "moment/locale/ja";
 import { AuthContext } from "context/AuthContext";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
@@ -507,7 +509,12 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 }}
               >
                 <ThreadTitle>{t("thread:date-interview")}</ThreadTitle>
-                <ThreadContent>{format(data?.desired_match_date)}</ThreadContent>
+                {/* <ThreadContent>{format(data?.desired_match_date)}</ThreadContent> */}
+                <ThreadContent>
+                  <Moment format="LL" locale="ja">
+                    {data?.desired_match_date}
+                  </Moment>
+                </ThreadContent>
               </Box>
               <Box
                 sx={{
