@@ -56,7 +56,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataId, dataChi
               mdFontSize: "21px",
             }}
             iconPosition="top"
-            label={tab.text + (tab?.count ? `（${tab?.count}）` : "")}
+            label={tab.text + (tab?.count && index === 0 ? `（${tab?.count}）` : "")}
             {...a11yProps(index)}
           />
         ))}

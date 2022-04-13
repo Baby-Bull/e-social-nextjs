@@ -119,11 +119,11 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
             alt="img-member"
           />
           <div className="member-info">
-            <p className="name">{data?.username}</p>
-            <p className="career">{data?.job_position ?? "情報なし"}</p>
-            <p className="review">
+            <div className="name">{data?.username}</div>
+            <div className="career">{data?.job_position ?? "情報なし"}</div>
+            <div className="review">
               {t("home:box-member-recommend.review")}: {data?.review_count ?? 0}
-            </p>
+            </div>
           </div>
         </div>
 
@@ -137,12 +137,12 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
           </ul>
         </div>
 
-        <p className="label-description">
+        <div className="label-description">
           <img alt="" src="/assets/images/home_page/ic_chat.svg" />
           {t("home:box-member-recommend.label-description")}
-        </p>
+        </div>
 
-        <p className="description">{data?.discussion_topic ?? "情報なし"}</p>
+        <div className="description">{data?.discussion_topic ?? "情報なし"}</div>
 
         <div className="div-review" onClick={handleClickFavoriteButton}>
           <img
