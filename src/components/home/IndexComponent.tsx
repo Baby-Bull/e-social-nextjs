@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Backdrop, Box, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import React, { useEffect, useState } from "react";
 // import { useQuery } from "react-query";
@@ -8,6 +8,8 @@ import { getUserFavoriteTags, getUserProvince, getUserRecentlyLogin, getUserNewM
 import { sendMatchingRequest } from "src/services/matching";
 
 // import { REACT_QUERY_KEYS } from "../constants/constants";
+
+import theme from "../../theme";
 
 import BannerComponent from "./blocks/BannerComponent";
 import MatchingComponent from "./blocks/MatchingComponent";
@@ -21,6 +23,7 @@ const LIMIT = 20;
 const HomeIndexComponents = () => {
   const { t } = useTranslation();
   const [memberRecommends, setMemberRecommends] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // get users_provinces
   // const { data: userProvinceData } = useQuery(REACT_QUERY_KEYS.HOMEPAGE_GET_USER_PROVINCES, async () => {
@@ -41,6 +44,7 @@ const HomeIndexComponents = () => {
   // });
 
   useEffect(() => {
+    setIsLoading(true);
     const fetchData = async () => {
       const fetchDataPromise = [
         getUserProvince(LIMIT),
@@ -74,6 +78,7 @@ const HomeIndexComponents = () => {
           data: results[3]?.items || [],
         },
       ]);
+      setIsLoading(false);
     };
     fetchData();
   }, []);
@@ -94,6 +99,11 @@ const HomeIndexComponents = () => {
 
   return (
     <ContentComponent>
+      {isLoading && (
+        <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       <Box
         sx={{
           display: "flex",

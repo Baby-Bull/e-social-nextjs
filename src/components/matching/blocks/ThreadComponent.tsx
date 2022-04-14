@@ -3,8 +3,8 @@ import { Box, Typography, Avatar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import { format } from "timeago.js";
 import Moment from "react-moment";
+import moment from "moment";
 
 import "moment/locale/ja";
 import { AuthContext } from "context/AuthContext";
@@ -114,8 +114,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
   };
   const handleFormatTime = (tempValue: string) => {
     if (tempValue === "favourite") return "";
-    if (tempValue === "matched") return format(data?.matchRequest?.match_date);
-    return format(data?.created_at);
+    if (tempValue === "matched") return moment(data?.matchRequest?.match_date).fromNow();
+    return moment(data?.created_at).fromNow();
   };
 
   return (
@@ -139,7 +139,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
             mb: "5px",
           }}
         >
-          {format(data?.desired_match_date)}
+          {moment(data?.desired_match_date).fromNow()}
         </Typography>
 
         {/* Info user (avatar, ...) */}
@@ -232,7 +232,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   fontWeight: 500,
                 }}
               >
-                {format(data?.last_login_at)}
+                {moment(data?.last_login_at).fromNow()}
               </Typography>
               {/* End Title bottom Avatar tab favourite */}
             </Box>
@@ -476,7 +476,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 fontWeight: 500,
               }}
             >
-              {format(data?.user?.last_login_at)}
+              {moment(data?.user?.last_login_at).fromNow()}
             </Typography>
 
             <Box

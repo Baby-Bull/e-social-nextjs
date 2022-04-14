@@ -181,9 +181,8 @@ const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
       )),
     );
   }, [dataRecommends]);
-
   return (
-    <Grid container className={styles.recommendList}>
+    <Grid container className={styles.recommendList} sx={{ display: dataRecommends.length > 0 ? "block" : "none" }}>
       <div className="div-title">
         <span className="title">{title}</span>
         <Link className="link-see-more content-pc" href="/search_user" underline="none">
