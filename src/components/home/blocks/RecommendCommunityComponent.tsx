@@ -86,9 +86,12 @@ const RecommendCommunityComponent = () => {
       recommendCommunities.map((item, index) => <RecommendCommunityItem data={item} key={index} />),
     );
   }, [recommendCommunities]);
-
   return (
-    <Grid container className={styles.recommendList}>
+    <Grid
+      container
+      className={styles.recommendList}
+      sx={{ display: recommendCommunityItems.length > 0 ? "block" : "none" }}
+    >
       <div className="div-title">
         <span className="title">{t("home:recommend-community")}</span>
         <Link className="link-see-more content-pc" href="/search_community" underline="none">
