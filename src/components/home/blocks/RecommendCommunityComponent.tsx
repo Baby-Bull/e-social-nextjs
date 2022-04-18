@@ -102,10 +102,11 @@ const RecommendCommunityComponent = () => {
       <div className="content">
         <SlickSliderRecommendComponent items={recommendCommunityItems} />
       </div>
-
-      <Link className="link-see-more content-mobile" href="/search_community" underline="none">
-        {t("home:see-more")}
-      </Link>
+      <div style={{ textAlign: "center" }}>
+        <Link className="link-see-more content-mobile" href="/search_community" underline="none">
+          {t("home:see-more")}
+        </Link>
+      </div>
     </Grid>
   );
 };

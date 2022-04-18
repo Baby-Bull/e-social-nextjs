@@ -192,10 +192,11 @@ const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
       <div className="content">
         <SlickSliderRecommendComponent items={dataElements} />
       </div>
-
-      <Link className="link-see-more content-mobile" href="/search_user" underline="none">
-        {t("home:see-more")}
-      </Link>
+      <div style={{ textAlign: "center" }}>
+        <Link className="link-see-more content-mobile" href="/search_user" underline="none">
+          {t("home:see-more")}
+        </Link>
+      </div>
     </Grid>
   );
 };

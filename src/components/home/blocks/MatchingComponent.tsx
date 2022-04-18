@@ -48,13 +48,13 @@ const MatchingComponent = () => {
   const [dataMatching, setDataMatching] = useState<any>({
     request: {
       label: t("home:matching.request"),
-      data: auth?.user?.profile?.match_request_count ?? 0,
+      data: auth?.user?.profile?.match_application_count ?? 0,
       unit: t("home:matching.request-unit"),
       link: "/matching?type=unConfirm",
     },
     application: {
       label: t("home:matching.application"),
-      data: auth?.user?.profile?.match_application_count ?? 0,
+      data: auth?.user?.profile?.match_request_count ?? 0,
       unit: t("home:matching.application-unit"),
       link: "/matching?type=confirm",
     },
@@ -74,13 +74,13 @@ const MatchingComponent = () => {
   const [dataMatchingMobile] = useState<any>({
     request: {
       label: t("home:matching.request"),
-      data: auth?.user?.profile?.match_request_count ?? 0,
+      data: auth?.user?.profile?.match_application_count ?? 0,
       icon: "/assets/images/home_page/ic_user.svg",
       link: "/matching?type=unConfirm",
     },
     application: {
       label: t("home:matching.application"),
-      data: auth?.user?.profile?.match_application_count ?? 0,
+      data: auth?.user?.profile?.match_request_count ?? 0,
       icon: "/assets/images/home_page/ic_hand.svg",
       link: "/matching?type=confirm",
     },

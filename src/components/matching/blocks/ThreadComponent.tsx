@@ -124,7 +124,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
         sx={{
           py: ["20px", "22px"],
           px: ["20px", 0],
-          mb: [isConfirmOrfavoriteOrMatched ? "20px" : "0px", 0],
+          mb: [isConfirmOrfavoriteOrMatched ? "20px" : "40px", 0],
           borderTop: [`1px solid ${theme.lightGray}`, `2px solid ${theme.lightGray}`],
           borderBottom: [`1px solid ${theme.lightGray}`, "none"],
           color: theme.navy,
@@ -167,7 +167,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
           <Box
             sx={{
               display: "flex",
-              alignItems: "center",
+              alignItems: type === "favorite" ? "start" : "center",
               pl: type === "matched" && data?.matchRequest?.match_direction !== "sent" ? "25px" : "7px",
             }}
           >
@@ -230,6 +230,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   color: theme.gray,
                   fontSize: [10, 14],
                   fontWeight: 500,
+                  mt: "9px",
                 }}
               >
                 {moment(data?.last_login_at).fromNow()}

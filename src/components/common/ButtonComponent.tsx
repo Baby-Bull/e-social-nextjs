@@ -46,7 +46,7 @@ const ButtonRounded = styled(Button)<IButtonComponentProps>(
         ),
       ),
     ),
-    height: props?.height || 48,
+    height: props?.height || 40,
     borderRadius: props?.square ? 4 : 40,
     fontSize: 16,
     fontWeight: 700,
