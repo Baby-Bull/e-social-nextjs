@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import type { NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 

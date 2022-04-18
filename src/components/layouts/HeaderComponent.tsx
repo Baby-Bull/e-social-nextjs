@@ -250,7 +250,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
             <TypoLabel>{t("header.message")}</TypoLabel>
           </MenuItemCustom>
         </Link>
-        <MenuItemCustom onClick={() => handleRedirectMatching("unconfirm")}>
+        <MenuItemCustom onClick={() => handleRedirectMatching("unConfirm")}>
           <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
             <img src="/assets/images/ic_nav_profile/ic_user.svg" alt="ic_user" />
           </IconButtonCustom>
@@ -262,7 +262,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
           </IconButtonCustom>
           <TypoLabel>{t("header.matching-you-applied-for")}</TypoLabel>
         </MenuItemCustom>
-        <MenuItemCustom onClick={() => handleRedirectMatching("favourite")}>
+        <MenuItemCustom onClick={() => handleRedirectMatching("favorite")}>
           <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
             <img src="/assets/images/ic_nav_profile/ic_heart.svg" alt="ic_heart" />
           </IconButtonCustom>
@@ -423,7 +423,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                   }}
                 >
                   <img
-                    src={auth?.user?.profile?.profile_image ?? "/assets/images/svg/avatar.svg"}
+                    src={auth?.user?.profile?.profile_image || "/assets/images/svg/avatar.svg"}
                     alt="avatar"
                     width="40"
                     height="40"
@@ -452,7 +452,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 sx={{ p: 0, ml: "33px" }}
               >
                 <img
-                  src={auth?.user?.profile?.profile_image ?? "/assets/images/svg/avatar.svg"}
+                  src={auth?.user?.profile?.profile_image || "/assets/images/svg/avatar.svg"}
                   alt="avatar"
                   width="28"
                   height="28"

@@ -9,8 +9,6 @@ import {
   setRefreshToken,
 } from "./storage";
 
-const PREVENT_CORS_URL: string = "https://cors.bridged.cc";
-
 let isRefreshing = false;
 let failedQueue = [];
 
@@ -42,7 +40,7 @@ export function setToken(token: string) {
 
 api.interceptors.response.use(
   (response) => response,
-  (err) => {
+  (err: any) => {
     const originalRequest = err.config;
     if (err.response.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
@@ -61,7 +59,7 @@ api.interceptors.response.use(
 
       return new Promise((resolve, reject) => {
         axios
-          .post(`${PREVENT_CORS_URL}/${process.env.NEXT_PUBLIC_API}/auth/tokens`, {
+          .post(`${process.env.NEXT_PUBLIC_API}/auth/tokens`, {
             access_token: getToken(),
             refresh_token: getRefreshToken(),
           })

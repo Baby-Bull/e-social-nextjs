@@ -83,7 +83,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataId, dataChi
                     },
                   }}
                 >
-                  <ThreadComponent data={tab} type="unconfirm" dataType={dataType} />
+                  <ThreadComponent data={tab} type="unConfirm" dataType={dataType} />
                 </Box>
               </React.Fragment>
             ))
