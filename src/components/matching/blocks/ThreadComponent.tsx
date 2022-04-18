@@ -34,7 +34,7 @@ const ThreadContent = styled(Typography)({
 interface IThreadComponentProps {
   data: any;
   dataType?: string;
-  type?: "unconfirm" | "confirm" | "reject" | "favourite" | "matched" | "community";
+  type?: "unConfirm" | "confirm" | "reject" | "favorite" | "matched" | "community";
   setKeyRefetchData?: Function;
 }
 
@@ -56,8 +56,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
   const router = useRouter();
   const { auth } = useContext(AuthContext);
 
-  const isShowThread = type === "unconfirm" || type === "reject";
-  const isConfirmOrFavouriteOrMatched = type === "confirm" || type === "favourite" || type === "matched";
+  const isShowThread = type === "unConfirm" || type === "reject";
+  const isConfirmOrfavoriteOrMatched = type === "confirm" || type === "favorite" || type === "matched";
 
   const [showPopupReport, setShowPopupReport] = React.useState(false);
   const handleShowReport = () => setShowPopupReport(true);
@@ -113,7 +113,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
     setUserRequestMatchingId(userMatchingId);
   };
   const handleFormatTime = (tempValue: string) => {
-    if (tempValue === "favourite") return "";
+    if (tempValue === "favorite") return "";
     if (tempValue === "matched") return moment(data?.matchRequest?.match_date).fromNow();
     return moment(data?.created_at).fromNow();
   };
@@ -124,7 +124,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
         sx={{
           py: ["20px", "22px"],
           px: ["20px", 0],
-          mb: [isConfirmOrFavouriteOrMatched ? "20px" : "0px", 0],
+          mb: [isConfirmOrfavoriteOrMatched ? "20px" : "0px", 0],
           borderTop: [`1px solid ${theme.lightGray}`, `2px solid ${theme.lightGray}`],
           borderBottom: [`1px solid ${theme.lightGray}`, "none"],
           color: theme.navy,
@@ -151,10 +151,10 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
             position: "relative",
           }}
         >
-          {/* Absolute icon heart tab favourite SP */}
+          {/* Absolute icon heart tab favorite SP */}
           <Typography
             sx={{
-              display: [type !== "favourite" && "none", "none"],
+              display: [type !== "favorite" && "none", "none"],
               position: "absolute",
               top: "-8px",
               right: "-8px",
@@ -162,7 +162,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
           >
             <img src="/assets/images/svg/heart.svg" alt="heart" />
           </Typography>
-          {/* End Absolute icon heart tab favourite SP */}
+          {/* End Absolute icon heart tab favorite SP */}
 
           <Box
             sx={{
@@ -173,7 +173,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
           >
             <Box
               sx={{
-                display: type === "favourite" ? "flex" : "inherit",
+                display: type === "favorite" ? "flex" : "inherit",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "space-between",
@@ -189,10 +189,10 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   variant="square"
                   sx={{
                     borderRadius: "50%",
-                    width: ["32px", isConfirmOrFavouriteOrMatched ? "54px" : "80px"],
+                    width: ["32px", isConfirmOrfavoriteOrMatched ? "54px" : "80px"],
                     height: "100%",
                   }}
-                  src={type === "favourite" || type === "matched" ? data?.profile_image : data?.user?.profile_image}
+                  src={type === "favorite" || type === "matched" ? data?.profile_image : data?.user?.profile_image}
                 />
 
                 <Avatar
@@ -223,10 +223,10 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   }}
                 />
               </Box>
-              {/* Title bottom Avatar tab favourite */}
+              {/* Title bottom Avatar tab favorite */}
               <Typography
                 sx={{
-                  display: [type === "matched" ? "none" : "inherit", type === "favourite" ? "inherit" : "none"],
+                  display: [type === "matched" ? "none" : "inherit", type === "favorite" ? "inherit" : "none"],
                   color: theme.gray,
                   fontSize: [10, 14],
                   fontWeight: 500,
@@ -234,13 +234,13 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
               >
                 {moment(data?.last_login_at).fromNow()}
               </Typography>
-              {/* End Title bottom Avatar tab favourite */}
+              {/* End Title bottom Avatar tab favorite */}
             </Box>
 
             {/* Grid right Info */}
             <Box
               sx={{
-                pl: type === "favourite" ? "26px" : "20px",
+                pl: type === "favorite" ? "26px" : "20px",
                 display: "flex",
                 flexDirection: "column",
               }}
@@ -254,7 +254,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 }}
               >
                 {handleFormatTime(type)}
-                {/* {(type === "favourite") ? "" : ((type === "matched") ? format(data?.matchRequest?.match_date) : format(data?.created_at))} */}
+                {/* {(type === "favorite") ? "" : ((type === "matched") ? format(data?.matchRequest?.match_date) : format(data?.created_at))} */}
               </Typography>
 
               <Box
@@ -266,7 +266,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   alignItems: ["flex-start", "center"],
                 }}
               >
-                {(type === "favourite" || type === "matched" ? data?.username : data?.user?.username) ?? "情報なし"}
+                {(type === "favorite" || type === "matched" ? data?.username : data?.user?.username) ?? "情報なし"}
                 <Typography
                   sx={{
                     pl: { sm: "7px" },
@@ -275,14 +275,14 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                     color: theme.gray,
                   }}
                 >
-                  {(type === "favourite" || type === "matched" ? data?.job_position : data?.user?.job_position) ??
+                  {(type === "favorite" || type === "matched" ? data?.job_position : data?.user?.job_position) ??
                     "情報なし"}
                 </Typography>
 
                 <Typography
                   sx={{
                     pl: "15px",
-                    display: ["none", type === "favourite" && "inherit"],
+                    display: ["none", type === "favorite" && "inherit"],
                   }}
                 >
                   <img src="/assets/images/svg/heart.svg" alt="heart" />
@@ -292,7 +292,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
               <Typography
                 component="span"
                 sx={{
-                  display: ["none", type === "favourite" && "inherit"],
+                  display: ["none", type === "favorite" && "inherit"],
                 }}
               >
                 {data?.discussion_topic ?? "情報なし"}
@@ -307,7 +307,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
               display: ["none", "flex"],
             }}
           >
-            {type === "unconfirm" && (
+            {type === "unConfirm" && (
               <React.Fragment>
                 <ButtonComponent
                   props={{
@@ -398,7 +398,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
               </ButtonComponent>
             )}
 
-            {type === "favourite" && (
+            {type === "favorite" && (
               <ButtonComponent
                 disabled={data?.match_status}
                 props={{
@@ -451,7 +451,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
         <Box
           sx={{
             pr: "20px",
-            display: [type !== "favourite" && "none", "none"],
+            display: [type !== "favorite" && "none", "none"],
           }}
         >
           {data.message}
@@ -535,12 +535,12 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
         <Box
           sx={{
             display: ["flex", "none"],
-            flexDirection: type === "unconfirm" ? "column" : "row",
+            flexDirection: type === "unConfirm" ? "column" : "row",
             justifyContent: type === "confirm" || type === "matched" ? "space-between" : "center",
             alignItems: "center",
           }}
         >
-          {type === "unconfirm" && (
+          {type === "unConfirm" && (
             <React.Fragment>
               <ButtonComponent
                 props={{
@@ -637,7 +637,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
             </ButtonComponent>
           )}
 
-          {type === "favourite" && (
+          {type === "favorite" && (
             <ButtonComponent
               props={{
                 dimension: "small",

@@ -23,6 +23,9 @@ export const getMatchingRequestSent = async (limit: number, cursor: string, stat
   }
 };
 
+export const getMatchingRequestSentPromise = async (limit: number, cursor: string, status: string) =>
+  api.get(`/user/me/match-requests/sent?limit=${limit}&cursor=${cursor}&status=${status}`);
+
 export const getMatchingRequestReceived = async (limit: number, cursor: string, status: string) => {
   try {
     const res = await api.get(`/user/me/match-requests/received?limit=${limit}&cursor=${cursor}&status=${status}`);
@@ -32,6 +35,9 @@ export const getMatchingRequestReceived = async (limit: number, cursor: string, 
     return error;
   }
 };
+
+export const getMatchingRequestReceivedPromise = async (limit: number, cursor: string, status: string) =>
+  api.get(`/user/me/match-requests/received?limit=${limit}&cursor=${cursor}&status=${status}`);
 
 export const getMatchedRequest = async (limit: number, cursor: string, sort: string) => {
   try {

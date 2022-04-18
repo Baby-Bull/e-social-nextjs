@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Tabs, Typography, Avatar, Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabComponent";
@@ -10,6 +9,7 @@ import ThreadComponent from "src/components/matching/blocks/ThreadComponent";
 // import ChildTabComponent, { IDataChild } from "src/components/matching/blocks/ChildTabComponent";
 import ChildTabComponent from "src/components/matching/blocks/ChildTabComponent";
 import { getMatchedRequest } from "src/services/matching";
+import { TAB_VALUE_BY_KEY } from "src/constants/matching";
 
 // interface IData {
 //   avatar: string;
@@ -28,6 +28,8 @@ interface ITabComponentProps {
   // data: ITabComponentData[];
   data: any;
   setKeyRefetchData: Function;
+  tabValue: number;
+  setTabValue: Function;
 }
 
 const LIMIT = 20;
@@ -37,31 +39,12 @@ const OPTIONS = [
   { value: "name-asc", label: "名前順" },
 ];
 
-const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData }) => {
+const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, tabValue, setTabValue }) => {
   const { t } = useTranslation();
-  const typeQuery = useRouter()?.query?.type;
 
-  const nestedCondition = (condition: any, then: any, otherwise: any) => (condition ? then : otherwise);
-  const type = nestedCondition(
-    typeQuery === "unconfirm",
-    0,
-    nestedCondition(
-      typeQuery === "confirm",
-      1,
-      nestedCondition(typeQuery === "favourite", 2, nestedCondition(typeQuery === "reject", 4, 3)),
-    ),
-  );
-
-  const [valueParentTab, setValueParentTab] = React.useState(0);
   const onChangeParentTab = (event: React.SyntheticEvent, newValue: number) => {
-    setValueParentTab(newValue);
+    setTabValue(newValue);
   };
-
-  React.useEffect(() => {
-    if (typeQuery) {
-      setValueParentTab(type);
-    }
-  }, [typeQuery]);
 
   const [optionSelected, setOption] = React.useState("newest");
   const handleChange = (event: SelectChangeEvent) => {
@@ -70,17 +53,19 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData }
 
   const [matchedUsers, setMatchUsers] = useState([]);
   useEffect(() => {
-    const fetchMatchedUsers = async () => {
-      const res = await getMatchedRequest(LIMIT, "", optionSelected);
-      setMatchUsers(res?.items);
-    };
-    fetchMatchedUsers();
-  }, [optionSelected]);
+    if (tabValue === TAB_VALUE_BY_KEY.other) {
+      const fetchMatchedUsers = async () => {
+        const res = await getMatchedRequest(LIMIT, "", optionSelected);
+        setMatchUsers(res?.items);
+      };
+      fetchMatchedUsers();
+    }
+  }, [optionSelected, tabValue]);
 
   return (
     <React.Fragment>
       <Tabs
-        value={valueParentTab}
+        value={tabValue}
         onChange={onChangeParentTab}
         aria-label="tab children"
         TabIndicatorProps={{
@@ -89,7 +74,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData }
           },
         }}
       >
-        {data?.map((tab, index) => (
+        {data?.map((tab: any, index: number) => (
           <TabCustom
             key={index.toString()}
             props={{
@@ -118,7 +103,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData }
         ))}
       </Tabs>
 
-      <TabPanel value={valueParentTab} index={0}>
+      <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.unConfirm}>
         <ChildTabComponent
           dataId={1}
           dataType={data[0]?.type}
@@ -128,7 +113,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData }
         />
       </TabPanel>
 
-      <TabPanel value={valueParentTab} index={1}>
+      <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.confirm}>
         <ChildTabComponent
           dataId={2}
           dataType={data[0]?.type}
@@ -138,7 +123,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData }
         />
       </TabPanel>
 
-      <TabPanel value={valueParentTab} index={2}>
+      <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.favorite}>
         <Box
           sx={{
             pb: ["120px", "98px"],
@@ -158,7 +143,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData }
                     },
                   }}
                 >
-                  <ThreadComponent data={tab} type="favourite" setKeyRefetchData={setKeyRefetchData} />
+                  <ThreadComponent data={tab} type="favorite" setKeyRefetchData={setKeyRefetchData} />
                 </Box>
               </React.Fragment>
             ))
@@ -168,7 +153,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData }
         </Box>
       </TabPanel>
 
-      <TabPanel value={valueParentTab} index={3}>
+      <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.other}>
         <Box
           sx={{
             pb: ["120px", "98px"],
@@ -232,7 +217,8 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData }
           )}
         </Box>
       </TabPanel>
-      <TabPanel value={valueParentTab} index={4}>
+
+      <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.reject}>
         {data[4]?.data?.length ? (
           <Box
             sx={{

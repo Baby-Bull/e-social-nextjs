@@ -50,7 +50,7 @@ const MatchingComponent = () => {
       label: t("home:matching.request"),
       data: auth?.user?.profile?.match_request_count ?? 0,
       unit: t("home:matching.request-unit"),
-      link: "/matching?type=unconfirm",
+      link: "/matching?type=unConfirm",
     },
     application: {
       label: t("home:matching.application"),
@@ -62,7 +62,7 @@ const MatchingComponent = () => {
       label: t("home:matching.people"),
       data: auth?.user?.profile?.favorite_count ?? 0,
       unit: t("home:matching.people-unit"),
-      link: "/matching?type=favourite",
+      link: "/matching?type=favorite",
     },
     community: {
       label: t("home:matching.community"),
@@ -76,7 +76,7 @@ const MatchingComponent = () => {
       label: t("home:matching.request"),
       data: auth?.user?.profile?.match_request_count ?? 0,
       icon: "/assets/images/home_page/ic_user.svg",
-      link: "/matching?type=unconfirm",
+      link: "/matching?type=unConfirm",
     },
     application: {
       label: t("home:matching.application"),
@@ -88,7 +88,7 @@ const MatchingComponent = () => {
       label: t("home:matching.people"),
       data: auth?.user?.profile?.favorite_count ?? 0,
       icon: "/assets/images/home_page/ic_heart_blue.svg",
-      link: "/matching?type=favourite",
+      link: "/matching?type=favorite",
     },
     chat: {
       label: t("home:matching.chat"),
