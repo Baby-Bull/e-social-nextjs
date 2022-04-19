@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import TabComponent from "src/components/matching/TabComponent";
-import { getMatchingRequestReceivedPromise, getMatchingRequestSentPromise } from "src/services/matching";
+import { getMatchingRequestReceived, getMatchingRequestSent } from "src/services/matching";
 import { getUserFavorite } from "src/services/user";
 import { TAB_VALUE_BY_KEY, TYPE } from "src/constants/matching";
 
@@ -184,58 +184,49 @@ const MatchingComponent = () => {
     },
   ]);
   const [keyRefetchData, setKeyRefetchData] = useState(null);
-  const [tabValue, setTabValue] = useState(0);
-
-  React.useEffect(() => {
-    if (typeQuery) {
-      setTabValue(TAB_VALUE_BY_KEY[typeQuery] || TAB_VALUE_BY_KEY.other);
-    } else {
-      setTabValue(0);
-    }
-    return () => {
-      setTabValue(0);
-    };
-  }, [typeQuery]);
+  const [tabValue, setTabValue] = useState(TAB_VALUE_BY_KEY[typeQuery] || TAB_VALUE_BY_KEY.unConfirm);
 
   useEffect(() => {
     const refetchData = async () => {
       let dataRefetch;
-      switch (tabValue) {
-        case TAB_VALUE_BY_KEY.confirm:
-          dataRefetch = [
-            getMatchingRequestReceivedPromise(LIMIT, "", "pending"),
-            getMatchingRequestReceivedPromise(LIMIT, "", "confirmed"),
-            getMatchingRequestReceivedPromise(LIMIT, "", "rejected"),
-          ];
-          break;
-        case TAB_VALUE_BY_KEY.unConfirm:
-          dataRefetch = [
-            getMatchingRequestSentPromise(LIMIT, "", "pending"),
-            getMatchingRequestSentPromise(LIMIT, "", "confirmed"),
-            getMatchingRequestSentPromise(LIMIT, "", "rejected"),
-          ];
-          break;
-        case TAB_VALUE_BY_KEY.favorite: {
-          const res = await getUserFavorite(LIMIT, "");
-          const tabTemp = tabs?.find((item) => item?.tabValue === tabValue);
-          tabTemp.data = res.items || [];
-          setTabs(tabs.map((item) => (item?.tabValue === tabValue ? tabTemp : item)));
-          break;
-        }
-        default:
-          break;
-      }
-
       const tabTemp = tabs?.find((item) => item?.tabValue === tabValue);
-      if (dataRefetch && dataRefetch.length && (keyRefetchData || !tabTemp?.isFetched)) {
-        const result = await Promise.all(dataRefetch);
-        tabTemp.children = tabTemp?.children?.map((item: any, index: number) => ({
-          ...item,
-          data: result[index]?.data?.items?.reverse() || [],
-          count: result[index]?.data?.items?.length,
-        }));
-        tabTemp.isFetched = true;
-        setTabs(tabs.map((item) => (item?.tabValue === tabValue ? tabTemp : item)));
+      if (tabTemp && (keyRefetchData || !tabTemp?.isFetched)) {
+        switch (tabValue) {
+          case TAB_VALUE_BY_KEY.confirm:
+            dataRefetch = [
+              getMatchingRequestReceived(LIMIT, "", "pending"),
+              getMatchingRequestReceived(LIMIT, "", "confirmed"),
+              getMatchingRequestReceived(LIMIT, "", "rejected"),
+            ];
+
+            break;
+          case TAB_VALUE_BY_KEY.unConfirm:
+            dataRefetch = [
+              getMatchingRequestSent(LIMIT, "", "pending"),
+              getMatchingRequestSent(LIMIT, "", "confirmed"),
+              getMatchingRequestSent(LIMIT, "", "rejected"),
+            ];
+            break;
+          case TAB_VALUE_BY_KEY.favorite: {
+            const res = await getUserFavorite(LIMIT, "");
+            tabTemp.data = res.items || [];
+            tabTemp.isFetched = true;
+            setTabs(tabs.map((item) => (item?.tabValue === tabValue ? tabTemp : item)));
+            break;
+          }
+          default:
+            break;
+        }
+        if (dataRefetch && dataRefetch.length) {
+          const result = await Promise.all(dataRefetch);
+          tabTemp.children = tabTemp?.children?.map((item: any, index: number) => ({
+            ...item,
+            data: result[index]?.items?.reverse() || [],
+            count: result[index]?.items?.length,
+          }));
+          tabTemp.isFetched = true;
+          setTabs(tabs.map((item) => (item?.tabValue === tabValue ? tabTemp : item)));
+        }
       }
     };
     refetchData();

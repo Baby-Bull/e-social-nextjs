@@ -161,3 +161,5 @@ export const USER_REPORT_OPTIONS = [
     value: "other",
   },
 ];
+
+export const LIMIT_PER_PAGE = 20;

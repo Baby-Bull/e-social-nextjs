@@ -1,12 +1,10 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import React, { useState } from "react";
+import React from "react";
 import { Box, Grid, IconButton, Menu, MenuItem, Paper, Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
-
-import { listThreadsMockData } from "../../mockData";
 
 interface IThreadDropDownProps {
   open: boolean;
@@ -22,9 +20,8 @@ const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({ open, handleClose, an
   </Menu>
 );
 
-const ChatBoxLeftComponent = ({ toggleRenderSide }) => {
+const ChatBoxLeftComponent = ({ listRooms, userId, onSelectRoom }) => {
   const { t } = useTranslation();
-  const [listThreads] = useState(listThreadsMockData);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -56,15 +53,15 @@ const ChatBoxLeftComponent = ({ toggleRenderSide }) => {
       </Box>
       <Box className="box-content">
         <ul className={styles.boxThreads}>
-          {listThreads?.map((thread, index) => (
-            <li key={index} onClick={toggleRenderSide}>
-              <div className={`thread-item ${thread.status === 2 ? "active" : ""}`}>
+          {listRooms?.map((thread, index: number) => (
+            <li key={index} onClick={() => onSelectRoom(index)}>
+              <div className={`thread-item ${thread.id === userId ? "active" : ""}`}>
                 <div className="avatar">
-                  <img alt="avatar" src={thread?.avatar} />
+                  <img alt="avatar" src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"} />
                 </div>
                 <div className="thread-content">
-                  <Typography className="name">{thread?.name}</Typography>
-                  <Typography className="message-hide">{thread?.messageHide}</Typography>
+                  <Typography className="name">{thread?.user?.username}</Typography>
+                  <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
                 </div>
                 <div className="more-options">
                   <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
