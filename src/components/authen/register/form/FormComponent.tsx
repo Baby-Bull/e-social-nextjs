@@ -220,7 +220,7 @@ const FormRegisterComponents = () => {
             <CircularProgress color="inherit" />
           </Backdrop>
         )}
-        <Box>
+        <Box sx={{ marginTop: "55px" }}>
           <Grid container>
             <GridLeftComponent smAndUp />
 

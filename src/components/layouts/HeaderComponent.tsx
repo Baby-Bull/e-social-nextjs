@@ -206,13 +206,17 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
       sx={{
         top: "9px",
         "& .MuiMenu-paper": {
+          width: "160px",
           borderRadius: "12px",
         },
       }}
     >
       <Box sx={{ p: "22px 0 22px 12px", borderBottom: "1px solid #D8D8D8" }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Avatar src={auth?.user?.profile?.profile_image} sx={{ width: "20px", height: "20px", mr: "4px" }} />
+          <Avatar
+            src={auth?.user?.profile?.profile_image}
+            sx={{ width: "20px", height: "20px", mr: "4px", borderRadius: "50%" }}
+          />
           <Typography fontWeight={500} fontSize={12} lineHeight="17.38px">
             マイプロフィール
           </Typography>
@@ -336,7 +340,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
         theme="colored"
       />
       <AppBar
-        position="static"
+        position="fixed"
         sx={{
           background: "#fff",
           boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
@@ -456,6 +460,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                   alt="avatar"
                   width="28"
                   height="28"
+                  style={{ borderRadius: "50%" }}
                 />
               </IconButton>
             </Box>

@@ -245,7 +245,7 @@ const MatchingComponent = () => {
     <ContentComponent>
       <Box
         sx={{
-          mt: ["9px", "84px"],
+          mt: ["88px"],
           px: [0, "8.4%"],
           mb: ["0", "114px"],
         }}

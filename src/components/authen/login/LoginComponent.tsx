@@ -76,7 +76,7 @@ const LoginComponent = () => {
           <CircularProgress color="inherit" />
         </Backdrop>
       )}
-      <Box>
+      <Box sx={{ marginTop: "55px" }}>
         <Grid container sx={{ flexDirection: { xs: "column-reverse", sm: "unset" } }}>
           <GridLeftComponent />
           <Grid item xs={12} sm={6}>

@@ -5,9 +5,10 @@ export const TYPE = {
 };
 
 export const TAB_VALUE_BY_KEY = {
-  unConfirm: 0,
-  confirm: 1,
+  confirm: 0,
+  unConfirm: 1,
   favorite: 2,
-  reject: 3,
-  other: 4,
+  other: 3,
+  reject: 4,
+  
 };
