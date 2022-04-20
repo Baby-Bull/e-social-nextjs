@@ -22,6 +22,7 @@ const EmptyMatchingComponent: React.SFC<IEmptyMatchingComponentProps> = ({ text,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        textAlign: "center",
         backgroundColor: [theme.whiteBlue, "white"],
       }}
     >

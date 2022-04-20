@@ -245,6 +245,7 @@ const MatchingComponent = () => {
     <ContentComponent>
       <Box
         sx={{
+          minHeight: "60vh",
           mt: ["88px"],
           px: [0, "8.4%"],
           mb: ["0", "114px"],

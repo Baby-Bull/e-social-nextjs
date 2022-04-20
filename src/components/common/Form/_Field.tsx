@@ -24,10 +24,10 @@ const InputCustom = styled(InputBase)({
     position: "relative",
     backgroundColor: "white",
     border: `1px solid ${theme.blue}`,
-    fontSize: 16,
+    fontSize: 14,
     padding: "10px 8px",
     borderRadius: 12,
-    fontFamily: "Noto Sans",
+    fontFamily: "Noto Sans JP",
     "&:focus": {
       boxShadow: `${theme.blue} 0 0 0 0.1rem`,
       borderColor: theme.blue,
@@ -52,10 +52,10 @@ const SelectCustom = styled(Select)({
     position: "relative",
     backgroundColor: "white",
     border: `1px solid ${theme.blue}`,
-    fontSize: 16,
+    fontSize: 14,
     padding: "8px 10px",
     borderRadius: 12,
-    fontFamily: "Noto Sans",
+    fontFamily: "Noto Sans JP",
     "&:focus": {
       borderRadius: 12,
       boxShadow: `${theme.blue} 0 0 0 0.1rem`,
@@ -165,7 +165,7 @@ export const Field: React.SFC<FieldProps> = ({
               >
                 {options &&
                   options.map((option, index) => (
-                    <MenuItem key={index} value={option?.value}>
+                    <MenuItem sx={{ fontSize: "14px" }} key={index} value={option?.value}>
                       {option?.label}
                     </MenuItem>
                   ))}

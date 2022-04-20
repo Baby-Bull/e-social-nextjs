@@ -15,17 +15,24 @@ export const bannersMockData = [
 
 export const notificationMockData = {
   title: "お知らせ",
-  content: "【コミュニティ機能など】2021年10月にRebaseがリニューアルしました🎉",
+  data: [
+    {
+      content: "【コミュニティ機能など】2021年10月にRebaseがリニューアルしました🎉",
+    },
+    {
+      content: "【コミュニティ機能など】2021年10月にRebaseがリニューアルしました🎉",
+    },
+  ],
 };
 
 export const notificationsMockData = [
   {
     title: "ヒント",
-    content: "goodhubへようこそ！まずはプロフィール詳細を記入してみると、マッチング率がUPします☆",
+    content: "goodhub1へようこそ！まずはプロフィール詳細を記入してみると、マッチング率がUPします☆",
   },
   {
     title: "ヒント",
-    content: "goodhubへようこそ！まずはプロフィール詳細を記入してみると、マッチング率がUPします☆",
+    content: "goodhub2へようこそ！まずはプロフィール詳細を記入してみると、マッチング率がUPします☆",
   },
 ];
 

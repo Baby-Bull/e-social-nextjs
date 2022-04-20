@@ -152,7 +152,7 @@ const LoginComponent = () => {
               >
                 <Box sx={{ display: "flex" }}>
                   <Box>{t("login:cannot-login")}</Box>
-                  <Link href="/about" color="secondary">
+                  <Link href="/register" color="secondary">
                     <Box color={theme.blue}>{t("login:register")}</Box>
                   </Link>
                 </Box>

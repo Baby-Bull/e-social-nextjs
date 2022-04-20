@@ -153,7 +153,7 @@ const RegisterComponents = () => {
               </Box>
 
               <Link
-                href="/about"
+                href="/login"
                 color="secondary"
                 sx={{
                   textDecoration: "none",
