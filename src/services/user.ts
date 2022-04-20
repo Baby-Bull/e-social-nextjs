@@ -1,4 +1,5 @@
 import { api } from "src/helpers/api";
+import {toast} from "react-toastify";
 
 export const getUserFavorite = async (limit: number, cursor: string) => {
   try {
@@ -59,6 +60,21 @@ export const deleteUserFavorite = async (userId: string) => {
     const res = await api.delete(`/user/favorite/${userId}`);
     return res.data;
   } catch (error) {
+    return error;
+  }
+};
+
+export const userReport = async (userId: string, body: object) => {
+  try {
+    const res = await api.post(`/user/${userId}/report`, body);
+    if (res.data.error_code !== "200" || res.data.error_code !== "201") {
+      toast.error(res.data.message);
+    } else {
+      toast.success("運営に通報が送信されました。");
+    }
+    return res.data;
+  } catch (error) {
+    toast.error("server error");
     return error;
   }
 };
