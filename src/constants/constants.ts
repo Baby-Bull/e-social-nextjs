@@ -138,3 +138,26 @@ export const MATCHING_PURPOSE_OPTIONS = [
     value: "other",
   },
 ];
+
+export const USER_REPORT_OPTIONS = [
+  {
+    label: "選択してください",
+    value: "",
+  },
+  {
+    label: "他の利用者のなりすましをしている",
+    value: "impersonate",
+  },
+  {
+    label: "暴言、脅迫、差別的な発言を行っている",
+    value: "abuse",
+  },
+  {
+    label: "案件の仲介業者である",
+    value: "project-broker",
+  },
+  {
+    label: "他の",
+    value: "other",
+  },
+];

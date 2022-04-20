@@ -692,7 +692,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
         {/* End Button SP */}
       </Box>
 
-      <PopupReportUser showPopup={showPopupReport} setShowPopup={setShowPopupReport} />
+      <PopupReportUser showPopup={showPopupReport} setShowPopup={setShowPopupReport} userId={data?.id} />
       <PopupReviewComponent showPopup={showPopupReview} setShowPopup={setShowPopupReview} />
       <ModalMatchingComponent
         open={showModalMatching}

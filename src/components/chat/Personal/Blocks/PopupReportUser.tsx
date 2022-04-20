@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -13,9 +13,13 @@ import MenuItem from "@mui/material/MenuItem";
 
 import { nameUser } from "src/components/chat/mockData";
 import theme from "src/theme";
+import { userReport } from "src/services/user";
+import { USER_REPORT_OPTIONS } from "src/constants/constants";
+import { VALIDATE_FORM_USER_PORT } from "src/messages/validate";
 
 interface IReportUserProps {
   showPopup: boolean;
+  userId?: string;
   // eslint-disable-next-line no-unused-vars
   setShowPopup: (status: boolean) => void;
 }
@@ -107,39 +111,62 @@ const TypoContentReport = styled(Typography)({
   },
 });
 
-const options = [
-  {
-    value: null,
-    label: "選択してください",
-  },
-  {
-    value: "1",
-    label: "1",
-  },
-  {
-    value: "2",
-    label: "2",
-  },
-];
-
-const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup }) => {
+const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup, userId }) => {
   const { t } = useTranslation();
   const router = useRouter();
-
-  const [option, setOption] = React.useState(options[0].label);
+  const [option, setOption] = React.useState(USER_REPORT_OPTIONS[0].value);
   const [report, setReport] = React.useState(false);
+  const [userReportRequest, setUserReportRequest] = useState({
+    reason: null,
+    detail: "",
+  });
+
+  const errorMessages = {
+    reason: null,
+  };
+
+  const [errorValidates, setErrorValidates] = useState({
+    reason: null,
+  });
+
+  const onChangeReportRequest = (key: string, value: any) => {
+    // eslint-disable-next-line no-use-before-define
+    if (key === "reason") {
+      setOption(value);
+    }
+    setUserReportRequest({
+      ...userReportRequest,
+      [key]: typeof value === "string" ? value.trim() : value,
+    });
+  };
+
+  const handleValidateForm = () => {
+    let isValidForm = true;
+    // validate purpose;
+    if (!userReportRequest?.reason || userReportRequest?.reason?.length === 0) {
+      isValidForm = false;
+      errorMessages.reason = VALIDATE_FORM_USER_PORT.reason.required;
+    }
+    setErrorValidates(errorMessages);
+    return isValidForm;
+  };
+
+  const submitUserReportRequest = async () => {
+    if (handleValidateForm()) {
+      const res = await userReport(userId, userReportRequest);
+      if (res.error_code === "200" || res.error_code === "201") {
+        setReport(true);
+        return res.data;
+      }
+    }
+  };
 
   const handleClose = () => {
+    errorMessages.reason = null;
+    setOption(USER_REPORT_OPTIONS[0].value);
+    setErrorValidates(errorMessages);
     setShowPopup(false);
     setReport(false);
-  };
-
-  const handleChange = (event) => {
-    setOption(event.target.value);
-  };
-
-  const handleChangeReport = () => {
-    setReport(true);
   };
 
   return (
@@ -224,21 +251,26 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup 
                   </Typography>
                 </Box>
               </Box>
-              <SelectCustom value={option} onChange={handleChange}>
-                {options.map((optionValue) => (
-                  <MenuItem key={optionValue.value} value={optionValue.label}>
-                    <Typography
-                      component="span"
-                      sx={{
-                        color: optionValue.value ? theme.navy : theme.gray,
-                        fontSize: optionValue.value ? "16px" : "14px",
-                      }}
-                    >
-                      {optionValue.label}
-                    </Typography>
+              <SelectCustom
+                onChange={(e) => onChangeReportRequest("reason", e.target.value)}
+                defaultValue={USER_REPORT_OPTIONS[0].value}
+                displayEmpty
+                value={option}
+              >
+                {USER_REPORT_OPTIONS.map((optionValue, index) => (
+                  <MenuItem
+                    key={index}
+                    value={optionValue.value}
+                    sx={{
+                      color: optionValue.value ? theme.navy : theme.gray,
+                      fontSize: optionValue.value ? "16px" : "14px",
+                    }}
+                  >
+                    {optionValue.label}
                   </MenuItem>
                 ))}
               </SelectCustom>
+              <Box sx={{ color: "red" }}>{errorValidates.reason}</Box>
             </Box>
             <Box sx={{ m: "40px 0 46px 0" }}>
               <Typography component="span" color={theme.navy}>
@@ -249,6 +281,7 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup 
                   height: "195px",
                 }}
                 placeholder={t("chat:popup.form.placeholder.background-to-the-report")}
+                onChange={(e) => onChangeReportRequest("detail", e.target.value)}
               />
             </Box>
             <Box sx={{ textAlign: "center" }}>
@@ -278,7 +311,7 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup 
             </ButtonAction>
             {/* eslint-disable-next-line max-len */}
             <ButtonAction
-              onClick={handleChangeReport}
+              onClick={() => submitUserReportRequest()}
               sx={{ backgroundColor: "#FFDA58", color: "#000000", "&:hover": { backgroundColor: "#FFDA58" } }}
             >
               {t("chat:popup.send-report")}
