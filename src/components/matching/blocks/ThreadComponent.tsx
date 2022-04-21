@@ -57,7 +57,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
   const { auth } = useContext(AuthContext);
 
   const isShowThread = type === "unConfirm" || type === "reject";
-  const isConfirmOrfavoriteOrMatched = type === "confirm" || type === "favorite" || type === "matched";
+  const isConfirmOrFavoriteOrMatched = type === "confirm" || type === "favorite" || type === "matched";
 
   const [showPopupReport, setShowPopupReport] = React.useState(false);
   const handleShowReport = () => setShowPopupReport(true);
@@ -124,7 +124,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
         sx={{
           py: ["20px", "22px"],
           px: ["20px", 0],
-          mb: [isConfirmOrfavoriteOrMatched ? "20px" : "40px", 0],
+          mb: [isConfirmOrFavoriteOrMatched ? "20px" : "40px", 0],
           borderTop: [`1px solid ${theme.lightGray}`, `2px solid ${theme.lightGray}`],
           borderBottom: [`1px solid ${theme.lightGray}`, "none"],
           color: theme.navy,
@@ -189,7 +189,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   variant="square"
                   sx={{
                     borderRadius: "50%",
-                    width: ["32px", isConfirmOrfavoriteOrMatched ? "54px" : "80px"],
+                    width: ["32px", isConfirmOrFavoriteOrMatched ? "54px" : "80px"],
                     height: "100%",
                   }}
                   src={type === "favorite" || type === "matched" ? data?.profile_image : data?.user?.profile_image}

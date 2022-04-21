@@ -1,10 +1,13 @@
 import * as React from "react";
 import type { NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import dynamic from "next/dynamic";
 
-import PersonalChatComponent from "src/components/chat/Personal/PersonalChatComponent";
+const PersonalChatComponent = dynamic(() => import("src/components/chat/Personal/PersonalChatComponent"), {
+  ssr: false,
+});
 
-const ChatPersonalPage: NextPage = () => <PersonalChatComponent hasData />;
+const ChatPersonalPage: NextPage = () => <PersonalChatComponent />;
 
 export const getStaticProps = async ({ locale }: { locale: string }) => ({
   props: {
