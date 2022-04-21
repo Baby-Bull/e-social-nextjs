@@ -42,3 +42,9 @@ export const VALIDATE_FORM_MATCHING_REQUEST = {
     max_length: "文字数の制限を超えています。1000文字以内で入力してください",
   },
 };
+
+export const VALIDATE_FORM_USER_PORT = {
+  reason: {
+    required: "通報理由を選択してください。",
+  },
+};
