@@ -1,5 +1,5 @@
 import { Avatar, Box, Button, Checkbox, Typography } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -10,12 +10,14 @@ import { styled } from "@mui/material/styles";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { useTranslation } from "next-i18next";
 
+import { userReview } from "src/services/user";
 import theme from "src/theme";
 
 interface IReportUserProps {
   showPopup: boolean;
   // eslint-disable-next-line no-unused-vars
   setShowPopup: (status: boolean) => void;
+  userId?: string;
 }
 
 /* event change select option */
@@ -108,50 +110,72 @@ const BoxContentReviewIsCheck = styled(Box)({
   },
 });
 
-const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup }) => {
+const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup, userId }) => {
   const { t } = useTranslation();
   const [isCheck, setIsCheck] = React.useState(false);
   const [isPost, setIsPost] = React.useState(false);
-
-  const handleIsCheck = () => {
-    setIsCheck(true);
-  };
-
-  const handleIsPost = () => {
-    setIsPost(true);
-  };
 
   const handleUnCheck = () => {
     setIsCheck(false);
   };
 
+  const isGood = "good";
+  const isBad = "bad";
+  const [selectedValueRating, setSelectedValueRating] = React.useState(isGood);
+  const [selectedHideReviewer, setSelectedHideReviewer] = React.useState(false);
+  const [selectedReportToAdmin, setSelectedReportToAdmin] = React.useState(false);
+  const [valueComment, setValueComment] = React.useState("");
+  const [userReviewRequest, setUserReviewRequest] = useState({
+    rating: selectedValueRating,
+    comment: "",
+    hide_reviewer: selectedHideReviewer,
+    send_report_to_admin: selectedReportToAdmin,
+  });
+
   const handleClose = () => {
     setShowPopup(false);
     setIsPost(false);
     setIsCheck(false);
+    setSelectedValueRating(isGood);
   };
 
-  const [selectedValueEvaluation, setSelectedValueEvaluation] = React.useState("良かった");
-  const [selectedValueReport, setSelectedValueReport] = React.useState("");
-  const [selectedValueAnonymous, setSelectedValueAnonymous] = React.useState("");
-  const [valueComment, setValueComment] = React.useState("");
-
-  const handleChangeEvaluation = (event) => {
-    setSelectedValueEvaluation(event.target.value);
+  const handleIsCheck = () => {
+    setIsCheck(true);
   };
 
-  const handleChangeReport = (event) => {
-    setSelectedValueReport(event.target.value);
+  const onChangeReviewRequest = (key: string, value: any) => {
+    if (key === "rating") {
+      setSelectedValueRating(value);
+    }
+
+    if (key === "hide_reviewer") {
+      setSelectedHideReviewer(value);
+    }
+
+    if (key === "send_report_to_admin") {
+      setSelectedReportToAdmin(value);
+    }
+
+    if (key === "comment") {
+      setValueComment(value);
+    }
+
+    // eslint-disable-next-line no-unreachable
+    setUserReviewRequest({
+      ...userReviewRequest,
+      [key]: typeof value === "string" ? value.trim() : value,
+    });
   };
 
-  const handleChangeAnonymous = (event) => {
-    setSelectedValueAnonymous(event.target.value);
+  const submitUserReviewRequest = async () => {
+    const res = await userReview(userId, userReviewRequest);
+    if (res.error_code === "200" || res.error_code === "201") {
+      setIsPost(true);
+      return res.data;
+    }
   };
 
-  const handleChangeComment = (event) => {
-    setValueComment(event.target.value);
-  };
-
+  // @ts-ignore
   return (
     <Box>
       <DialogReview
@@ -236,9 +260,9 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
               <Box sx={{ display: "flex" }}>
                 <Box sx={{ display: "flex", alignItems: "center" }}>
                   <Radio
-                    checked={selectedValueEvaluation === "良かった"}
-                    onChange={handleChangeEvaluation}
-                    value="良かった"
+                    checked={selectedValueRating === isGood}
+                    onChange={(e) => onChangeReviewRequest("rating", e.target.value)}
+                    value={isGood}
                     name="radio-buttons"
                     sx={{
                       color: theme.blue,
@@ -255,9 +279,9 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center", ml: "29px" }}>
                   <Radio
-                    checked={selectedValueEvaluation === "悪かった"}
-                    onChange={handleChangeEvaluation}
-                    value="悪かった"
+                    checked={selectedValueRating === isBad}
+                    onChange={(e) => onChangeReviewRequest("rating", e.target.value)}
+                    value={isBad}
                     name="radio-buttons"
                     sx={{
                       color: theme.blue,
@@ -278,8 +302,8 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
               <TypoTitleReview>{t("chat:popup.report")}</TypoTitleReview>
               <Box sx={{ display: "flex" }}>
                 <Checkbox
-                  onChange={handleChangeReport}
-                  value="運営に通報する"
+                  onChange={(e) => onChangeReviewRequest("send_report_to_admin", e.target.checked)}
+                  value
                   sx={{
                     p: 0,
                     mr: "15px",
@@ -298,8 +322,8 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
               <TypoTitleReview>{t("chat:popup.anonymous")}</TypoTitleReview>
               <Box sx={{ display: "flex" }}>
                 <Checkbox
-                  onChange={handleChangeAnonymous}
-                  value="匿名で投稿"
+                  onChange={(e) => onChangeReviewRequest("hide_reviewer", e.target.checked)}
+                  value
                   sx={{
                     p: 0,
                     mr: "15px",
@@ -316,56 +340,44 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
             </BoxContentReview>
             <BoxContentReview>
               <TypoTitleReview sx={{ alignItems: "unset" }}>{t("chat:popup.comment")}</TypoTitleReview>
-              <FieldTextAreaReview
-                minRows={12}
-                required
-                placeholder={t("chat:popup.form.placeholder.comment")}
-                value={valueComment}
-                onChange={handleChangeComment}
-              />
+              <Box>
+                <FieldTextAreaReview
+                  minRows={12}
+                  placeholder={t("chat:popup.form.placeholder.comment")}
+                  onChange={(e) => onChangeReviewRequest("comment", e.target.value)}
+                />
+              </Box>
             </BoxContentReview>
           </DialogContentText>
         </DialogContent>
         <DialogContent sx={{ p: "0", display: isCheck ? "block" : "none" }}>
           <DialogContentText id="alert-dialog-description">
             <BoxContentReviewIsCheck>
-              <TypoTitleReview>
-                {t("chat:popup.evaluation")}{" "}
-                <Typography
-                  fontSize={12}
-                  fontWeight={700}
-                  lineHeight="17.38px"
-                  color={theme.blue}
-                  sx={{ mt: "-15px", ml: "2px" }}
-                >
-                  *
-                </Typography>
-              </TypoTitleReview>
-              <TypoContentReview>{selectedValueEvaluation}</TypoContentReview>
+              <TypoTitleReview>{t("chat:popup.evaluation")} </TypoTitleReview>
+              <TypoContentReview>
+                {selectedValueRating === isGood ? t("chat:popup.form.it-was-good") : t("chat:popup.form.it-was-bad")}
+              </TypoContentReview>
             </BoxContentReviewIsCheck>
             <BoxContentReviewIsCheck>
               <TypoTitleReview>{t("chat:popup.report")}</TypoTitleReview>
-              <TypoContentReview>{selectedValueReport}</TypoContentReview>
+              <TypoContentReview>
+                {selectedReportToAdmin
+                  ? t("chat:popup.form.report-management")
+                  : t("chat:popup.form.report-management-null")}
+              </TypoContentReview>
             </BoxContentReviewIsCheck>
             <BoxContentReviewIsCheck>
               <TypoTitleReview>{t("chat:popup.anonymous")}</TypoTitleReview>
-              <TypoContentReview>{selectedValueAnonymous}</TypoContentReview>
+              <TypoContentReview>
+                {selectedHideReviewer
+                  ? t("chat:popup.form.post-anonymously")
+                  : t("chat:popup.form.post-anonymously-null")}
+              </TypoContentReview>
             </BoxContentReviewIsCheck>
-            <BoxContentReviewIsCheck sx={{ display: "block !important" }}>
-              <TypoTitleReview sx={{ alignItems: "unset" }}>
-                {t("chat:popup.comment")}
-                <Typography
-                  fontSize={12}
-                  fontWeight={700}
-                  lineHeight="17.38px"
-                  color={theme.blue}
-                  sx={{ mt: "-5px", ml: "2px" }}
-                >
-                  *
-                </Typography>
-              </TypoTitleReview>
+            <BoxContentReviewIsCheck sx={{ display: "display !important" }}>
+              <TypoTitleReview sx={{ alignItems: "unset" }}>{t("chat:popup.comment")}</TypoTitleReview>
               <Box>
-                <FieldTextAreaCheck>{valueComment}</FieldTextAreaCheck>
+                <FieldTextAreaCheck minRows={12} value={valueComment} />
               </Box>
             </BoxContentReviewIsCheck>
           </DialogContentText>
@@ -380,7 +392,7 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
                 width: { xs: "240px", lg: "280px" },
                 height: { xs: "56px", lg: "48px" },
               }}
-              onClick={handleIsCheck}
+              onClick={() => handleIsCheck()}
             >
               {t("chat:popup.check-review")}
             </Button>
@@ -396,7 +408,7 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
                   height: { xs: "56px", lg: "48px" },
                   mb: "20px",
                 }}
-                onClick={handleIsPost}
+                onClick={() => submitUserReviewRequest()}
               >
                 {t("chat:popup.post-review")}
               </Button>

@@ -21,7 +21,13 @@ interface IChildTabComponentProps {
   setKeyRefetchData?: Function;
 }
 
-const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataId, dataChild, dataType, maxWidth }) => {
+const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
+  dataId,
+  dataChild,
+  dataType,
+  maxWidth,
+  setKeyRefetchData,
+}) => {
   const { t } = useTranslation();
 
   const [valueChildTab, setValueChildTab] = React.useState(0);
@@ -83,7 +89,12 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataId, dataChi
                     },
                   }}
                 >
-                  <ThreadComponent data={tab} type="unConfirm" dataType={dataType} />
+                  <ThreadComponent
+                    data={tab}
+                    type="unConfirm"
+                    dataType={dataType}
+                    setKeyRefetchData={setKeyRefetchData}
+                  />
                 </Box>
               </React.Fragment>
             ))
@@ -122,7 +133,12 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataId, dataChi
                     },
                   }}
                 >
-                  <ThreadComponent data={tab} type="confirm" dataType={dataType} />
+                  <ThreadComponent
+                    data={tab}
+                    type="confirm"
+                    dataType={dataType}
+                    setKeyRefetchData={setKeyRefetchData}
+                  />
                 </Box>
               </React.Fragment>
             ))
@@ -158,7 +174,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataId, dataChi
                     },
                   }}
                 >
-                  <ThreadComponent data={tab} type="reject" dataType={dataType} />
+                  <ThreadComponent data={tab} type="reject" dataType={dataType} setKeyRefetchData={setKeyRefetchData} />
                 </Box>
               </React.Fragment>
             ))

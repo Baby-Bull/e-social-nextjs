@@ -10,8 +10,8 @@ import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
 import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupReviewComponent";
 import scrollEl from "src/helpers/scrollEl";
-
-import { listMessagesMockData } from "../../mockData";
+import { getMessages } from "src/services/chat";
+import { formatChatDate } from "src/utils/utils";
 
 interface IBoxChatProps {
   avatar?: string;
@@ -78,10 +78,10 @@ const NameOfChatSP: React.SFC<INameOfChatSPProps> = ({ name, handleClick }) => (
   </React.Fragment>
 );
 
-const ChatBoxRightComponent = ({ isMobile, toggleRenderSide }) => {
+const ChatBoxRightComponent = ({ isMobile, toggleRenderSide, userId, roomSelect }) => {
   const { t } = useTranslation();
 
-  const [listMessages] = useState(listMessagesMockData);
+  const [listMessages, setListMessages] = useState([]);
 
   const [showPopup, setShowPopup] = useState(false);
   const handleShow = () => {
@@ -93,13 +93,26 @@ const ChatBoxRightComponent = ({ isMobile, toggleRenderSide }) => {
 
   useEffect(() => {
     scrollEl(document.querySelector("#box-message"));
-  }, [listMessagesMockData]);
+  }, [listMessages]);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const res = await getMessages(userId);
+      setListMessages(res?.items || []);
+    };
+
+    fetchMessages();
+  }, [userId]);
 
   return (
     <Grid item className={styles.chatBoxRight}>
       <Box className="box-title">
         <Typography className="username">
-          {isMobile ? <NameOfChatSP name="福くん株式会社" handleClick={toggleRenderSide} /> : listMessages?.name}
+          {isMobile ? (
+            <NameOfChatSP name="福くん株式会社" handleClick={toggleRenderSide} />
+          ) : (
+            roomSelect?.user?.username
+          )}
         </Typography>
         <ButtonComponent mode="info" size="medium" className="btn-chat" onClick={handleShow}>
           {t("chat:btn-report")}
@@ -112,21 +125,21 @@ const ChatBoxRightComponent = ({ isMobile, toggleRenderSide }) => {
       </Box>
       <Box className="box-content">
         <Box className={styles.boxData} id="box-message">
-          {listMessages?.messages?.map((message, index) =>
-            message?.isMe ? (
+          {listMessages?.map((message, index) =>
+            message?.sender_id !== userId ? (
               <BoxMyChat
                 key={index}
-                message={message?.message}
-                time={message?.time}
-                isStartOfDay={!!message?.isStartOfDay}
-                isErrorMessage={!!message?.isErrorMessage}
+                message={message?.content}
+                time={formatChatDate(message?.created_at)}
+                // isStartOfDay={!!message?.isStartOfDay}
+                // isErrorMessage={!!message?.isErrorMessage}
               />
             ) : (
               <BoxChatOthers
                 key={index}
-                avatar={listMessages?.avatar}
-                message={message?.message}
-                time={message?.time}
+                avatar={message?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+                message={message?.content}
+                time={formatChatDate(message?.created_at)}
               />
             ),
           )}

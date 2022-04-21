@@ -78,3 +78,18 @@ export const userReport = async (userId: string, body: object) => {
     return error;
   }
 };
+
+export const userReview = async (userId: string, body: object) => {
+  try {
+    const res = await api.post(`/user/${userId}/review`, body);
+    if (res.data.error_code !== "200" || res.data.error_code !== "201") {
+      toast.error(res.data.message);
+    } else {
+      toast.success("リビューを投稿しました。");
+    }
+    return res.data;
+  } catch (error) {
+    toast.error("server error");
+    return error;
+  }
+};
