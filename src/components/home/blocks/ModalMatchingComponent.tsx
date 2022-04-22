@@ -27,6 +27,9 @@ const style = {
   p: 5,
   pb: 4,
   maxWidth: "90%",
+  marginTop: "100px",
+  paddingTop: "60px",
+  padding: "21px",
 };
 
 const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
@@ -94,6 +97,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
+      sx={{ overflow: "scroll" }}
     >
       <Box sx={style} className={classNames(styles.modalMatchingRequest, "gth-modal")}>
         <Button className="icon-close" onClick={handleClose}>

@@ -136,7 +136,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
             display: { sm: "none" },
             fontSize: [12, 14],
             fontWeight: 400,
-            mb: "5px",
+            mb: "15px",
           }}
         >
           {moment(data?.desired_match_date).fromNow()}
@@ -201,8 +201,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                     borderRadius: "50%",
                     display: type !== "matched" && "none",
                     position: "absolute",
-                    top: data?.matchRequest?.match_direction === "sent" ? "-15px" : "42px",
-                    left: data?.matchRequest?.match_direction === "sent" ? "-20px" : "52px",
+                    top: data?.matchRequest?.match_direction === "sent" ? "-15px" : ["30px", "42px"],
+                    left: data?.matchRequest?.match_direction === "sent" ? ["-10px", "-20px"] : ["30px", "52px"],
                     width: ["15px", "24px"],
                     height: ["15px", "24px"],
                   }}
@@ -216,8 +216,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                     backgroundSize: "contain",
                     backgroundRepeat: "no-repeat",
                     position: "absolute",
-                    top: data?.matchRequest?.match_direction === "sent" ? "-5px" : "34px",
-                    left: data?.matchRequest?.match_direction === "sent" ? "0" : "43px",
+                    top: data?.matchRequest?.match_direction === "sent" ? "-5px" : ["24px", "34px"],
+                    left: data?.matchRequest?.match_direction === "sent" ? "0" : ["23px", "43px"],
                     width: ["15px", "20px"],
                     height: ["100%"],
                   }}

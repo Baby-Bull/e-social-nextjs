@@ -53,6 +53,18 @@ const BannerComponent = () => {
       },
     ],
   };
+  const settingNotificationSlick = {
+    dots: false,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    loop: true,
+    arrows: false,
+    infinite: true,
+    autoplay: true,
+    speed: 5000,
+    autoplaySpeed: 5000,
+    cssEase: "linear",
+  };
 
   return (
     <div className={classNames(styles.sliderContainer, "homepage-banner")}>
@@ -66,7 +78,13 @@ const BannerComponent = () => {
       <div className={styles.notificationBanner}>
         <img src="/assets/images/home_page/ic_spiker_mute.svg" alt="spiker-mute" />
         <span className="title">{notification?.title}</span>
-        <span className="content">{notification?.content}</span>
+        <Slider style={{ display: "inline-grid", height: "initial" }} {...settingNotificationSlick}>
+          {notification?.data?.map((item, index) => (
+            <span key={index} className="content">
+              {item?.content}
+            </span>
+          ))}
+        </Slider>
       </div>
     </div>
   );

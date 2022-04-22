@@ -116,7 +116,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
       <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.confirm}>
         <ChildTabComponent
           dataId={2}
-          dataType={data[0]?.type}
+          dataType={data[1]?.type}
           dataChild={data[1]?.children ?? []}
           maxWidth="160px"
           setKeyRefetchData={setKeyRefetchData}

@@ -66,6 +66,7 @@ const StyledButtonList = styled(Button)({
   height: "48px",
   marginLeft: "40px",
   "@media (max-width: 1200px)": {
+    marginLeft: "10px",
     fontSize: "12px",
     lineHeight: "17.38px",
     height: "30px",
@@ -254,13 +255,13 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
             <TypoLabel>{t("header.message")}</TypoLabel>
           </MenuItemCustom>
         </Link>
-        <MenuItemCustom onClick={() => handleRedirectMatching("unConfirm")}>
+        <MenuItemCustom onClick={() => handleRedirectMatching("confirm")}>
           <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
             <img src="/assets/images/ic_nav_profile/ic_user.svg" alt="ic_user" />
           </IconButtonCustom>
           <TypoLabel>{t("header.matching-request")}</TypoLabel>
         </MenuItemCustom>
-        <MenuItemCustom onClick={() => handleRedirectMatching("confirm")}>
+        <MenuItemCustom onClick={() => handleRedirectMatching("unConfirm")}>
           <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
             <img src="/assets/images/ic_nav_profile/ic_hand.svg" alt="ic_hand" />
           </IconButtonCustom>

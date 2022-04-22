@@ -49,7 +49,9 @@ export const TabCustom = styled(Tab)<ITabCustomProps>(({ props }) => ({
   paddingLeft: "7px",
   paddingRight: "7px",
   "& img": {
-    width: "26px",
+    width: "29px",
+    minHeight: "32px",
+    objectFit: "contain",
     filter: theme.filter.blue,
   },
   "&.Mui-selected": {
@@ -62,6 +64,7 @@ export const TabCustom = styled(Tab)<ITabCustomProps>(({ props }) => ({
     color: "white",
   },
   "@media (max-width: 425px)": {
+    justifyContent: "flex-start",
     display: "flex",
     color: props?.xsColor || "black",
     fontWeight: 500,

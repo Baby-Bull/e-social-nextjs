@@ -153,12 +153,6 @@ export const Field: React.SFC<IFieldProps> = ({
       }
     }
   };
-
-  const onClickTagChip = (tag: string) => {
-    if (onChangeValue && !value.includes(tag)) {
-      onChangeValue("tags", [...value, tag]);
-    }
-  };
   const [listChipData] = React.useState([
     { key: 0, label: "React" },
     { key: 1, label: "Ruby on Rails" },
@@ -169,6 +163,17 @@ export const Field: React.SFC<IFieldProps> = ({
     { key: 6, label: "サーバーサイドエンジニア" },
     { key: 7, label: "レビュー" },
   ]);
+  const onClickTagChip = (tag: string) => {
+    if (onChangeValue && !value.includes(tag)) {
+      onChangeValue("tags", [...value, tag]);
+    }
+  };
+  const checkTagSelected = (tag: string) => {
+    if (onChangeValue && !value?.includes(tag)) {
+      return false;
+    }
+    return true;
+  };
 
   const [date, setDate] = React.useState(null);
 
@@ -303,7 +308,7 @@ export const Field: React.SFC<IFieldProps> = ({
                       }}
                     >
                       <Chip
-                        variant="outlined"
+                        variant={checkTagSelected(data.label) ? "filled" : "outlined"}
                         size="small"
                         icon={icon}
                         label={data.label}
