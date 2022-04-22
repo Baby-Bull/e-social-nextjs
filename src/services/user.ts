@@ -1,5 +1,7 @@
+import { toast } from "react-toastify";
+
 import { api } from "src/helpers/api";
-import {toast} from "react-toastify";
+import {USER_REPORT, USER_REVIEW, SETTING_EMAIL, SERVER_ERROR, SETTING_NOTIFICATION} from "src/messages/notification";
 
 export const getUserFavorite = async (limit: number, cursor: string) => {
   try {
@@ -70,11 +72,11 @@ export const userReport = async (userId: string, body: object) => {
     if (res.data.error_code !== "200" || res.data.error_code !== "201") {
       toast.error(res.data.message);
     } else {
-      toast.success("運営に通報が送信されました。");
+      toast.success(USER_REPORT);
     }
     return res.data;
   } catch (error) {
-    toast.error("server error");
+    toast.error(SERVER_ERROR);
     return error;
   }
 };
@@ -82,14 +84,45 @@ export const userReport = async (userId: string, body: object) => {
 export const userReview = async (userId: string, body: object) => {
   try {
     const res = await api.post(`/user/${userId}/review`, body);
+    console.log(res)
     if (res.data.error_code !== "200" || res.data.error_code !== "201") {
       toast.error(res.data.message);
     } else {
-      toast.success("リビューを投稿しました。");
+      toast.success(USER_REVIEW);
     }
     return res.data;
   } catch (error) {
-    toast.error("server error");
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const userSettingEmail = async (body: any) => {
+  try {
+    const res = await api.patch("/user/email", body);
+    if (!res.data) {
+      toast.error(SERVER_ERROR);
+    } else {
+      toast.success(SETTING_EMAIL);
+    }
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const userSettingNotification = async (body: any) => {
+  try {
+    const res = await api.patch("/user/setting", body);
+    if (!res.data) {
+      toast.error(SERVER_ERROR);
+    } else {
+      toast.success(SETTING_NOTIFICATION);
+    }
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
     return error;
   }
 };
