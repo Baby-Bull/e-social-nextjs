@@ -1,7 +1,9 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Box, Grid, IconButton, Paper, Typography, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import dayjs from "dayjs";
+import InfiniteScroll from "react-infinite-scroller";
 
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
@@ -12,6 +14,7 @@ import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupRevie
 import scrollEl from "src/helpers/scrollEl";
 import { getMessages } from "src/services/chat";
 import { formatChatDate } from "src/utils/utils";
+import { MESSAGE_CONTENT_TYPES } from "src/constants/constants";
 
 interface IBoxChatProps {
   avatar?: string;
@@ -78,10 +81,25 @@ const NameOfChatSP: React.SFC<INameOfChatSPProps> = ({ name, handleClick }) => (
   </React.Fragment>
 );
 
-const ChatBoxRightComponent = ({ isMobile, toggleRenderSide, userId, roomSelect }) => {
+const ChatBoxRightComponent = ({
+  isMobile,
+  toggleRenderSide,
+  userId,
+  roomSelect,
+  sendTextMessage,
+  newMessageOfRoom,
+}) => {
   const { t } = useTranslation();
+  const inputChatRef = useRef(null);
+  const boxMessageRef = useRef(null);
+  const isFirstRender = useRef(true);
 
   const [listMessages, setListMessages] = useState([]);
+
+  const [hasMoreParams, setHasMoreParams] = useState({
+    cursor: null,
+    hasMore: false,
+  });
 
   const [showPopup, setShowPopup] = useState(false);
   const handleShow = () => {
@@ -92,17 +110,78 @@ const ChatBoxRightComponent = ({ isMobile, toggleRenderSide, userId, roomSelect 
   const handleShowReview = () => setShowPopupReview(true);
 
   useEffect(() => {
-    scrollEl(document.querySelector("#box-message"));
+    if (
+      isFirstRender.current ||
+      boxMessageRef.current.offsetHeight + boxMessageRef.current.scrollTop + 100 >= boxMessageRef.current.scrollHeight
+    ) {
+      scrollEl(boxMessageRef.current);
+      if (listMessages?.length) {
+        isFirstRender.current = false;
+      }
+    }
   }, [listMessages]);
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      const res = await getMessages(userId);
-      setListMessages(res?.items || []);
-    };
-
-    fetchMessages();
+    if (userId) {
+      const fetchMessages = async () => {
+        setListMessages([]);
+        setHasMoreParams({
+          cursor: null,
+          hasMore: false,
+        });
+        const res = await getMessages(userId);
+        setListMessages(res?.items?.reverse() || []);
+        setHasMoreParams({
+          cursor: res?.cursor,
+          hasMore: res?.hasMore,
+        });
+        isFirstRender.current = true;
+      };
+      fetchMessages();
+      inputChatRef.current.focus();
+    }
   }, [userId]);
+
+  const loadMoreData = async () => {
+    if (hasMoreParams?.cursor?.length && listMessages.length) {
+      const res = await getMessages(userId, hasMoreParams?.cursor);
+      setListMessages([...(res?.items?.reverse() || []), ...listMessages]);
+      setHasMoreParams({
+        cursor: res?.cursor,
+        hasMore: res?.hasMore,
+      });
+      isFirstRender.current = false;
+    }
+  };
+
+  useEffect(() => {
+    if (newMessageOfRoom && newMessageOfRoom?.chat_room_id === roomSelect.id) {
+      setListMessages([...listMessages, newMessageOfRoom]);
+    }
+  }, [newMessageOfRoom]);
+
+  const handleSendTextMessage = () => {
+    const message = inputChatRef.current.value;
+    if (message) {
+      sendTextMessage(message);
+      setListMessages([
+        ...listMessages,
+        {
+          content: message,
+          content_type: MESSAGE_CONTENT_TYPES.TEXT,
+          created_at: dayjs(new Date()).toISOString(),
+          sender_id: "123",
+        },
+      ]);
+      inputChatRef.current.value = "";
+    }
+  };
+
+  const onKeyUpMessageText = (e) => {
+    if (!e.shiftKey && e.keyCode === 13 && e.target.value) {
+      handleSendTextMessage();
+    }
+  };
 
   return (
     <Grid item className={styles.chatBoxRight}>
@@ -124,38 +203,48 @@ const ChatBoxRightComponent = ({ isMobile, toggleRenderSide, userId, roomSelect 
         </div>
       </Box>
       <Box className="box-content">
-        <Box className={styles.boxData} id="box-message">
-          {listMessages?.map((message, index) =>
-            message?.sender_id !== userId ? (
-              <BoxMyChat
-                key={index}
-                message={message?.content}
-                time={formatChatDate(message?.created_at)}
-                // isStartOfDay={!!message?.isStartOfDay}
-                // isErrorMessage={!!message?.isErrorMessage}
-              />
-            ) : (
-              <BoxChatOthers
-                key={index}
-                avatar={message?.user?.profile_image || "/assets/images/svg/avatar.svg"}
-                message={message?.content}
-                time={formatChatDate(message?.created_at)}
-              />
-            ),
-          )}
+        <Box className={styles.boxData} id="box-message" ref={boxMessageRef}>
+          {listMessages?.length ? (
+            <InfiniteScroll
+              loadMore={loadMoreData}
+              hasMore={!!listMessages?.length && hasMoreParams.hasMore && !isFirstRender.current}
+              loader="loading..."
+              isReverse
+              useWindow={false}
+            >
+              {listMessages?.map((message, index) =>
+                message?.sender_id !== userId ? (
+                  <BoxMyChat
+                    key={index}
+                    message={message?.content}
+                    time={formatChatDate(message?.created_at)}
+                    // isStartOfDay={!!message?.isStartOfDay}
+                    // isErrorMessage={!!message?.isErrorMessage}
+                  />
+                ) : (
+                  <BoxChatOthers
+                    key={index}
+                    avatar={message?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+                    message={message?.content}
+                    time={formatChatDate(message?.created_at)}
+                  />
+                ),
+              )}
+            </InfiniteScroll>
+          ) : null}
         </Box>
       </Box>
       <Box className={styles.boxChat}>
-        <Paper
-          component="form"
-          className="paper-chat"
-          sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}
-        >
+        <Paper className="paper-chat" sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}>
           <InputCustom
+            multiline
             className="input-chat"
+            inputRef={inputChatRef}
+            id="input_chat_text"
             sx={{ ml: 1, flex: 1 }}
             placeholder={t("chat:input-chat-placeholder")}
             inputProps={{ "aria-label": t("chat:input-chat-placeholder") }}
+            onKeyUp={onKeyUpMessageText}
           />
           <input accept="image/*" hidden id="icon-button-file" type="file" />
           <label htmlFor="icon-button-file">
@@ -163,7 +252,7 @@ const ChatBoxRightComponent = ({ isMobile, toggleRenderSide, userId, roomSelect 
               <img alt="search" src="/assets/images/svg/ic_attachment.svg" />
             </IconButton>
           </label>
-          <IconButton color="primary" sx={{ p: "10px" }} aria-label="directions">
+          <IconButton color="primary" sx={{ p: "10px" }} aria-label="directions" onClick={handleSendTextMessage}>
             <img alt="search" src="/assets/images/svg/ic_send_message.svg" />
           </IconButton>
         </Paper>

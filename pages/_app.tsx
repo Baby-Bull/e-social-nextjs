@@ -13,6 +13,7 @@ import theme from "src/theme";
 import createEmotionCache from "src/createEmotionCache";
 import { AUTH_PAGE_PATHS } from "src/constants/constants";
 import { USER_TOKEN } from "src/helpers/storage";
+import { refreshToken } from "src/services/auth";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -38,6 +39,11 @@ const MyApp = (props: MyAppProps) => {
     if (!AUTH_PAGE_PATHS.includes(pathname) && !cookies[USER_TOKEN]) {
       Router.push("/login");
     }
+
+    refreshToken();
+    setInterval(() => {
+      refreshToken();
+    }, 2700000);
   }, []);
 
   return (

@@ -163,3 +163,8 @@ export const USER_REPORT_OPTIONS = [
 ];
 
 export const LIMIT_PER_PAGE = 20;
+
+export const MESSAGE_CONTENT_TYPES = {
+  TEXT: "text",
+  IMAGE: "image",
+};
