@@ -35,14 +35,14 @@ const PrevArrow = (props: any) => {
   );
 };
 
+const setInfiniteSlick = (temp: number) => temp > 4;
 const SlickSliderRecommendComponent: React.SFC<ISlickSliderRecommendComponentProps> = ({ items }) => {
   const settingsSlickOfNotification = {
-    dots: false,
-    infinite: false,
+    dots: 4,
+    infinite: setInfiniteSlick(items?.length),
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 4,
-    loop: false,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
 

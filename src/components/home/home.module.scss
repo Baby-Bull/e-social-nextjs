@@ -41,6 +41,13 @@
   @media screen and (max-width: 992px) {
     padding-left: 27px;
   }
+  .notificationSlick {
+    height: initial;
+    display: contents;
+    @media screen and (max-width: 992px) {
+      display: flex;
+    }
+  }
 
   :global {
     .title {
@@ -240,7 +247,12 @@
 .recommendList {
   padding-left: 40px;
   margin-bottom: 80px;
-  padding-right: 20px;
+  padding-right: 40px;
+
+  @media screen and (max-width: 992px) {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 
   :global {
     .div-title {
@@ -271,10 +283,12 @@
         color: #03bcdb;
         width: 100%;
         text-align: center;
-        margin-top: 20px;
+        margin-top: 40px;
+        margin-left: 0px;
       }
     }
     .content {
+      margin-bottom: 20px;
       width: 100%;
     }
   }
@@ -531,7 +545,8 @@
       margin-bottom: 24px;
       position: absolute;
       bottom: 45px;
-      width: 100%;
+      width: 82%;
+      margin-left: 9%;
 
       &:hover {
         background: #dcf9ff;
