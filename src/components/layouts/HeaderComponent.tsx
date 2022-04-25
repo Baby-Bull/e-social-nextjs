@@ -255,13 +255,13 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
             <TypoLabel>{t("header.message")}</TypoLabel>
           </MenuItemCustom>
         </Link>
-        <MenuItemCustom onClick={() => handleRedirectMatching("confirm")}>
+        <MenuItemCustom onClick={() => handleRedirectMatching("received")}>
           <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
             <img src="/assets/images/ic_nav_profile/ic_user.svg" alt="ic_user" />
           </IconButtonCustom>
           <TypoLabel>{t("header.matching-request")}</TypoLabel>
         </MenuItemCustom>
-        <MenuItemCustom onClick={() => handleRedirectMatching("unConfirm")}>
+        <MenuItemCustom onClick={() => handleRedirectMatching("sent")}>
           <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
             <img src="/assets/images/ic_nav_profile/ic_hand.svg" alt="ic_hand" />
           </IconButtonCustom>
@@ -273,7 +273,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
           </IconButtonCustom>
           <TypoLabel>{t("header.list-people-you-want-to-talk")}</TypoLabel>
         </MenuItemCustom>
-        <MenuItemCustom onClick={() => handleRedirectMatching("reject")}>
+        <MenuItemCustom onClick={() => handleRedirectMatching("community")}>
           <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
             <img src="/assets/images/ic_nav_profile/ic_star.svg" alt="ic_star" />
           </IconButtonCustom>
@@ -469,18 +469,21 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
         </Toolbar>
         {!authPage && (
           <Box sx={{ display: { xs: "flex", lg: "none" }, justifyContent: "center" }}>
-            <StyledButtonList
-              startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" width="16px" height="11.33px" />}
-              sx={{ mr: { xs: "40px", md: "0" } }}
-            >
-              {t("header.list-engineers")}
-            </StyledButtonList>
-
-            <StyledButtonList
-              startIcon={<img alt="" src="/assets/images/svg/users.svg" width="15.36px" height="10.88px" />}
-            >
-              {t("header.list-community")}
-            </StyledButtonList>
+            <Link underline="none" href="/search_user">
+              <StyledButtonList
+                startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" width="16px" height="11.33px" />}
+                sx={{ mr: { xs: "40px", md: "0" } }}
+              >
+                {t("header.list-engineers")}
+              </StyledButtonList>
+            </Link>
+            <Link underline="none" href="/search_community">
+              <StyledButtonList
+                startIcon={<img alt="" src="/assets/images/svg/users.svg" width="15.36px" height="10.88px" />}
+              >
+                {t("header.list-community")}
+              </StyledButtonList>
+            </Link>
           </Box>
         )}
       </AppBar>

@@ -6,6 +6,7 @@ import ContentComponent from "src/components/layouts/ContentComponent";
 import TabComponent from "src/components/matching/TabComponent";
 import { getMatchingRequestReceived, getMatchingRequestSent } from "src/services/matching";
 import { getUserFavorite } from "src/services/user";
+import { getListCommunities } from "src/services/community";
 import { TAB_VALUE_BY_KEY, TYPE } from "src/constants/matching";
 
 const LIMIT = 20;
@@ -17,8 +18,8 @@ const MatchingComponent = () => {
     {
       text: "マッチングリクエスト",
       icon: <img src="/assets/images/svg/person.svg" alt="person" />,
-      type: TYPE.RECEIVE,
-      tabValue: TAB_VALUE_BY_KEY.unConfirm,
+      type: TYPE.RECEIVED,
+      tabValue: TAB_VALUE_BY_KEY.received,
       isFetched: false,
       children: [
         {
@@ -45,7 +46,7 @@ const MatchingComponent = () => {
       text: "申請中のマッチング",
       icon: <img src="/assets/images/svg/pan_tool.svg" alt="pan_tool" />,
       type: TYPE.SENT,
-      tabValue: TAB_VALUE_BY_KEY.confirm,
+      tabValue: TAB_VALUE_BY_KEY.sent,
       isFetched: false,
       children: [
         {
@@ -79,7 +80,8 @@ const MatchingComponent = () => {
     {
       text: "マッチング済",
       icon: <img src="/assets/images/svg/perm_contact_calendar.svg" alt="perm_contact_calendar" />,
-      tabValue: TAB_VALUE_BY_KEY.reject,
+      type: TYPE.MATCHED,
+      tabValue: TAB_VALUE_BY_KEY.matched,
       data: [
         {
           avatar: "/assets/images/svg/account.svg",
@@ -138,7 +140,8 @@ const MatchingComponent = () => {
     {
       text: "参加中のコミュニティ",
       icon: <img src="/assets/images/svg/stars.svg" alt="stars" />,
-      tabValue: TAB_VALUE_BY_KEY.other,
+      type: TYPE.COMMUNITY,
+      tabValue: TAB_VALUE_BY_KEY.community,
       data: [
         {
           avatar: "/assets/images/svg/account.svg",
@@ -184,7 +187,7 @@ const MatchingComponent = () => {
     },
   ]);
   const [keyRefetchData, setKeyRefetchData] = useState(null);
-  const [tabValue, setTabValue] = useState(TAB_VALUE_BY_KEY[typeQuery] || TAB_VALUE_BY_KEY.unConfirm);
+  const [tabValue, setTabValue] = useState(TAB_VALUE_BY_KEY[typeQuery] || TAB_VALUE_BY_KEY.received);
 
   useEffect(() => {
     const refetchData = async () => {
@@ -192,7 +195,7 @@ const MatchingComponent = () => {
       const tabTemp = tabs?.find((item) => item?.tabValue === tabValue);
       if (tabTemp && (keyRefetchData || !tabTemp?.isFetched)) {
         switch (tabValue) {
-          case TAB_VALUE_BY_KEY.confirm:
+          case TAB_VALUE_BY_KEY.received:
             dataRefetch = [
               getMatchingRequestReceived(LIMIT, "", "pending"),
               getMatchingRequestReceived(LIMIT, "", "confirmed"),
@@ -200,7 +203,7 @@ const MatchingComponent = () => {
             ];
 
             break;
-          case TAB_VALUE_BY_KEY.unConfirm:
+          case TAB_VALUE_BY_KEY.sent:
             dataRefetch = [
               getMatchingRequestSent(LIMIT, "", "pending"),
               getMatchingRequestSent(LIMIT, "", "confirmed"),
@@ -209,6 +212,13 @@ const MatchingComponent = () => {
             break;
           case TAB_VALUE_BY_KEY.favorite: {
             const res = await getUserFavorite(LIMIT, "");
+            tabTemp.data = res.items || [];
+            tabTemp.isFetched = true;
+            setTabs(tabs.map((item) => (item?.tabValue === tabValue ? tabTemp : item)));
+            break;
+          }
+          case TAB_VALUE_BY_KEY.community: {
+            const res = await getListCommunities(LIMIT, "");
             tabTemp.data = res.items || [];
             tabTemp.isFetched = true;
             setTabs(tabs.map((item) => (item?.tabValue === tabValue ? tabTemp : item)));

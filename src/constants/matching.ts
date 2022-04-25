@@ -1,14 +1,15 @@
 export const TYPE = {
-  RECEIVE: 1,
+  RECEIVED: 1,
   SENT: 2,
   FAVORITE: 3,
+  MATCHED: 4,
+  COMMUNITY: 5,
 };
 
 export const TAB_VALUE_BY_KEY = {
-  confirm: 0,
-  unConfirm: 1,
+  received: 0,
+  sent: 1,
   favorite: 2,
-  other: 3,
-  reject: 4,
-  
+  matched: 3,
+  community: 4,
 };

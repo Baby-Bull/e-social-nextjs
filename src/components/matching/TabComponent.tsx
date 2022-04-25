@@ -53,7 +53,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
 
   const [matchedUsers, setMatchUsers] = useState([]);
   useEffect(() => {
-    if (tabValue === TAB_VALUE_BY_KEY.other) {
+    if (tabValue === TAB_VALUE_BY_KEY.matched) {
       const fetchMatchedUsers = async () => {
         const res = await getMatchedRequest(LIMIT, "", optionSelected);
         setMatchUsers(res?.items);
@@ -103,7 +103,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
         ))}
       </Tabs>
 
-      <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.unConfirm}>
+      <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.received}>
         <ChildTabComponent
           dataId={1}
           dataType={data[0]?.type}
@@ -113,7 +113,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
         />
       </TabPanel>
 
-      <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.confirm}>
+      <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.sent}>
         <ChildTabComponent
           dataId={2}
           dataType={data[1]?.type}
@@ -153,7 +153,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
         </Box>
       </TabPanel>
 
-      <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.other}>
+      <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.matched}>
         <Box
           sx={{
             pb: ["120px", "98px"],
@@ -218,7 +218,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
         </Box>
       </TabPanel>
 
-      <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.reject}>
+      <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.community}>
         {data[4]?.data?.length ? (
           <Box
             sx={{
@@ -248,7 +248,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
                       width: ["149px", "124px"],
                       height: ["149px", "124px"],
                     }}
-                    src={tab.avatar}
+                    src={tab?.profile_image}
                   />
 
                   <Typography
@@ -260,7 +260,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
                       color: "black",
                     }}
                   >
-                    {tab.name}
+                    {tab?.name}
                   </Typography>
                   <Typography
                     component="span"
@@ -270,7 +270,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
                       color: theme.gray,
                     }}
                   >
-                    {t("matching:count-member")} {tab.count_member}
+                    {t("matching:count-member")} {tab?.member_count}
                   </Typography>
                 </Box>
               </React.Fragment>

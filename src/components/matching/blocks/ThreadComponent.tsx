@@ -640,9 +640,11 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
 
           {type === "favorite" && (
             <ButtonComponent
+              disabled={data?.match_status}
               props={{
                 dimension: "small",
-                bgColor: theme.green,
+                color: data?.match_status && theme.gray,
+                bgColor: !data?.match_status && theme.green,
               }}
               sx={{
                 mt: "20px",
