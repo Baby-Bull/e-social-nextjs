@@ -63,7 +63,7 @@ export const ChildTabCustom = styled(Tab)<IChildTabCustomProps>(({ props }) => (
     marginRight: "12px",
     fontSize: props?.mdFontSize || "",
     minWidth: props?.mdWidth || "230px",
-    maxWidth: props?.mdWidth || "230px",
+    maxWidth: "fit-content",
     "&.Mui-selected": {
       textDecoration: "underline",
     },
