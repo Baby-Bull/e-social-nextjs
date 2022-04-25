@@ -6,6 +6,7 @@
   background: white;
   display: flex;
   flex-direction: row;
+  margin-top: 64px;
 
   @media screen and (max-width: 992px) {
     height: calc(100vh - 56px);
@@ -427,6 +428,11 @@
           text-overflow: ellipsis;
           overflow: hidden;
         }
+      }
+      .thread-last-time {
+        margin-left: auto;
+        font-size: 10px;
+        color: #1A2944;
       }
       .more-options {
         margin-left: auto;

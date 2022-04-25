@@ -10,7 +10,7 @@ const PersonalChatComponent = () => {
 
   useEffect(() => {
     const fetchListRooms = async () => {
-      const listRooms = await getListChatRooms();
+      const listRooms = await getListChatRooms(null, null, 1);
       if (listRooms?.items?.length) {
         setHasData(true);
       }

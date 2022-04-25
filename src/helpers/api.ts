@@ -76,7 +76,7 @@ api.interceptors.response.use(
             setToken("");
             setRefreshToken("");
             if (typeof window !== "undefined") {
-              window.location.href = "/login";
+              // window.location.href = "/login";
             }
             reject(err);
           })
