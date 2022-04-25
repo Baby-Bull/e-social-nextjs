@@ -1,5 +1,5 @@
 import { Avatar, Box, Typography, Button, Chip, InputLabel, InputBase } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
@@ -13,8 +13,12 @@ import { useTranslation } from "next-i18next";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import PopupOptionRecommendComponent from "src/components/mail-setting/PopupOptionRecommendComponent";
+// eslint-disable-next-line import/order
 import theme from "src/theme";
 import "typeface-roboto";
+
+import { REGEX_RULES, VALIDATE_MESSAGE_FORM_REGISTER } from "src/messages/validate";
+import { userSettingEmail, userSettingNotification } from "src/services/user";
 
 import { notifyMess, notifyRecommend } from "./mockData";
 
@@ -122,7 +126,20 @@ const MailSettingComponent = () => {
   const [isNotifyMess, setIsNotifyMess] = React.useState(true);
   const [valueOnchange, setValueOnchange] = React.useState(false);
   const [mailOnChange, setMailOnChange] = React.useState(false);
-  const [mail] = React.useState("tanakataro@rebase.com");
+  const [newMessage, setNewMessage] = React.useState(false);
+  const [newRecommended, setNewRecommended] = React.useState(false);
+  const [email, setEmail] = React.useState(null);
+  const [settingNotificationRequest, setSettingNotificationRequest] = useState({
+    new_message_email_notify: newMessage,
+    new_recommended_user_email_notify: newRecommended,
+  });
+
+  useEffect(() => {
+    const auth = JSON.parse(sessionStorage.getItem("auth"));
+    setNewMessage(auth?.user?.profile?.setting?.new_message_email_notify);
+    setNewRecommended(auth?.user?.profile?.setting?.new_recommended_user_email_notify);
+    setEmail(auth?.user?.profile?.email);
+  }, []);
 
   const [showPopup, setShowPopup] = useState(false);
 
@@ -140,20 +157,80 @@ const MailSettingComponent = () => {
     setValue(newValue);
   };
 
-  const handleOnChange = () => {
+  const [settingMailRequest, setSettingMailRequest] = useState({
+    email: null,
+  });
+
+  const errorMessages = {
+    email: null,
+  };
+
+  const [errorValidates, setErrorValidates] = useState({
+    email: null,
+  });
+
+  // setting notification
+  const onChangeSettingNotificationRequest = (key: string, valueRequest: any) => {
     setValueOnchange(true);
+    if (key === "new_message_email_notify") {
+      setNewMessage(valueRequest);
+    }
+    if (key === "new_recommended_user_email_notify") {
+      setNewRecommended(valueRequest);
+    }
+    setSettingNotificationRequest({
+      ...settingNotificationRequest,
+      [key]: typeof valueRequest === "string" ? valueRequest.trim() : valueRequest,
+    });
+  };
+  // submit setting notification
+  const handleSaveSettingNotification = async () => {
+    const res = await userSettingNotification(settingNotificationRequest);
+    if (res) {
+      const auth = JSON.parse(sessionStorage.getItem("auth"));
+      auth.user.profile.setting = settingNotificationRequest;
+      sessionStorage.setItem("auth", JSON.stringify(auth));
+      return res.data;
+    }
   };
 
-  const handleSave = () => {
-    setValueOnchange(false);
-  };
-
-  const handleMail = () => {
+  // on chage email
+  const onChangeSettingMailRequest = (key: string, valueRequest: any) => {
+    setEmail(valueRequest);
     setMailOnChange(true);
+    setSettingMailRequest({
+      ...settingMailRequest,
+      [key]: typeof valueRequest === "string" ? valueRequest.trim() : valueRequest,
+    });
   };
 
-  const handleMailSave = () => {
-    setMailOnChange(false);
+  // validate form
+  const handleValidateForm = () => {
+    let isValidForm = true;
+    // validate purpose;
+    if (!settingMailRequest?.email || settingMailRequest?.email?.length === 0) {
+      isValidForm = false;
+      errorMessages.email = VALIDATE_MESSAGE_FORM_REGISTER.email.required;
+    } else if (!REGEX_RULES.email.test(settingMailRequest.email)) {
+      isValidForm = false;
+      errorMessages.email = VALIDATE_MESSAGE_FORM_REGISTER.email.invalid;
+    }
+    setErrorValidates(errorMessages);
+    return isValidForm;
+  };
+
+  // submit setting mail
+  const submitSettingMailRequest = async () => {
+    if (handleValidateForm()) {
+      setMailOnChange(false);
+      const res = await userSettingEmail(settingMailRequest);
+      if (res) {
+        const auth = JSON.parse(sessionStorage.getItem("auth"));
+        auth.user.profile.email = settingMailRequest.email;
+        sessionStorage.setItem("auth", JSON.stringify(auth));
+        return res.data;
+      }
+    }
   };
 
   // @ts-ignore
@@ -234,7 +311,7 @@ const MailSettingComponent = () => {
                   </Box>
                   <Box sx={{ display: "flex", alignItems: "center", mt: "18px" }}>
                     <Typography component="div" fontSize={14} fontWeight={400} lineHeight="18.75px" color={theme.navy}>
-                      {mail}
+                      tanakataro@rebase.co.jp
                     </Typography>
                   </Box>
 
@@ -265,7 +342,13 @@ const MailSettingComponent = () => {
                       </Box>
                     </InputLabel>
                   </Box>
-                  <InputCustom onChange={handleMail} placeholder="tanakataro@rebase.co.jp" id="mail" />
+                  <InputCustom
+                    onChange={(e) => onChangeSettingMailRequest("email", e.target.value)}
+                    placeholder="tanakataro@rebase.co.jp"
+                    id="mail"
+                    value={email}
+                  />
+                  <Box sx={{ color: "#FF0000", fontSize: "10px" }}>{errorValidates.email}</Box>
                   <Box sx={{ display: "flex", alignItems: "center", mt: "55px" }}>
                     <ButtonComponent
                       sx={{
@@ -279,7 +362,7 @@ const MailSettingComponent = () => {
                         mode: "gradient",
                         dimension: "x-medium",
                       }}
-                      onClick={handleMailSave}
+                      onClick={submitSettingMailRequest}
                     >
                       {t("mail-setting:send")}
                     </ButtonComponent>
@@ -307,7 +390,7 @@ const MailSettingComponent = () => {
                     </Typography>
                     <IcQuestion src="/assets/images/icon/ic_question_blue.png" onClick={handleShowPopupNotifyMess} />
                     <Checkbox
-                      defaultChecked
+                      checked={newMessage}
                       sx={{
                         ml: "65px",
                         color: theme.blue,
@@ -315,7 +398,7 @@ const MailSettingComponent = () => {
                           color: theme.blue,
                         },
                       }}
-                      onChange={handleOnChange}
+                      onChange={(e) => onChangeSettingNotificationRequest("new_message_email_notify", e.target.checked)}
                       icon={<RadioButtonUncheckedIcon />}
                       checkedIcon={<CheckCircleIcon />}
                     />
@@ -329,7 +412,7 @@ const MailSettingComponent = () => {
                       onClick={handleShowPopupNotifyRecommend}
                     />
                     <Checkbox
-                      defaultChecked
+                      checked={newRecommended}
                       sx={{
                         ml: "65px",
                         color: theme.blue,
@@ -337,7 +420,9 @@ const MailSettingComponent = () => {
                           color: theme.blue,
                         },
                       }}
-                      onChange={handleOnChange}
+                      onChange={(e) =>
+                        onChangeSettingNotificationRequest("new_recommended_user_email_notify", e.target.checked)
+                      }
                       icon={<RadioButtonUncheckedIcon />}
                       checkedIcon={<CheckCircleIcon />}
                     />
@@ -351,7 +436,7 @@ const MailSettingComponent = () => {
                           background: valueOnchange ? "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)" : theme.gray,
                         },
                       }}
-                      onClick={handleSave}
+                      onClick={handleSaveSettingNotification}
                     >
                       {t("mail-setting:save-changes")}
                     </BtnSave>
