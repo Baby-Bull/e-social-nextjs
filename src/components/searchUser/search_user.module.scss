@@ -46,7 +46,6 @@
             padding-left: 0;
     
             li {
-              display: inline-block;
               white-space: nowrap;
               text-overflow: ellipsis;
               overflow: hidden;
@@ -196,6 +195,7 @@
     box-sizing: border-box;
     padding: 20px;
     margin-bottom: -7px;
+    height: 540px;
 
     @media screen and (max-width: 992px) {
       margin-left: 0;
@@ -218,19 +218,21 @@
       }
       .info-summary {
         display: flex;
-        justify-content: space-between;
-
         img {
           width: 56px;
+          height: 56px;
           margin-right: 13px;
+          border-radius: 74px;
+          border: 1px solid rgba(156, 172, 194, 0.3);
         }
 
         .member-info {
+          height: 66px;
           .name {
             font-size: 14px;
             font-weight: 700;
             color: #262A30;
-            width: calc(100% - 56px);
+            width: 100%;
             text-overflow: ellipsis;
             overflow: hidden;
             display: block;
@@ -257,7 +259,6 @@
         margin-top: 11px;
         margin-bottom: 20px;
         border-radius: 12px;
-        padding: 8px;
         background: #F5F5F5;
         font-weight: bold;
         font-size: 12px;
@@ -265,36 +266,53 @@
         display: flex;
         align-items: center;
         color: #1A2944;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 9.5px 8px;
+        height: 40px;
       }
       .tags {
+        height: 55px;
+        overflow-y: auto;
+        &::-webkit-scrollbar {
+          width: 4px;
+          background-color: #d7d7d7;
+        }
+        &::-webkit-scrollbar-thumb {
+          background-color: #b3b3b3;
+        }
         ul {
           display: flex;
           flex-wrap: wrap;
           padding: 0;
-
+          margin: 0;
           li {
             display: inline-block;
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
-            background: #F4FDFF;
+            background: #f4fdff;
             padding: 4px 8px;
             font-size: 12px;
-            color: #1A2944;
+            color: #1a2944;
             margin-left: 2px;
             margin-right: 2px;
+            margin-top: 4px;
           }
         }
       }
 
       .label-description {
         display: inline-flex;
-        margin: 0;
+        margin-top: 20px;
+        margin-bottom: 0;
         font-weight: 700;
         font-size: 14px;
-        color: #262A30;
+        color: #262a30;
         line-height: 24px;
-
         img {
           width: 22px;
           margin-right: 7px;
@@ -302,11 +320,18 @@
       }
 
       .description {
-        margin: 6px 0 20px;
+        margin-bottom: 20px;
+        margin-top: 0;
         font-weight: 400;
         font-size: 12px;
-        color: #262A30;
+        color: #262a30;
         line-height: 24px;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 8em;
       }
 
       .div-review {
@@ -314,7 +339,7 @@
         border: 1px solid #03BCDB;
         box-sizing: border-box;
         border-radius: 40px;
-        height: 40px;
+        height: 32px;
         display: flex;
         align-items: center;
         justify-content: center;

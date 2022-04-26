@@ -48,6 +48,21 @@ export const HOMEPAGE_RECOMMEND_MEMBER_STATUS = {
   },
 };
 
+export const USER_SEARCH_STATUS = {
+  "can-talk": {
+    label: "今すぐ話せます",
+    mode: "orange",
+  },
+  "looking-for-friend": {
+    label: "友達募集しています",
+    mode: "cleam",
+  },
+  "need-consult": {
+    label: "相談に乗って欲しいです",
+    mode: "info",
+  },
+};
+
 export const USER_STATUS_OPTIONS = [
   {
     label: "今すぐ話せます",

@@ -1,7 +1,9 @@
 import { toast } from "react-toastify";
+import moment from "moment";
 
 import { api } from "src/helpers/api";
-import {USER_REPORT, USER_REVIEW, SETTING_EMAIL, SERVER_ERROR, SETTING_NOTIFICATION} from "src/messages/notification";
+import { USER_REPORT, USER_REVIEW, SETTING_EMAIL, SERVER_ERROR, SETTING_NOTIFICATION } from "src/messages/notification";
+import { typeTimeLogin, typeReview } from "src/constants/searchUserConstants";
 
 export const getUserFavorite = async (limit: number, cursor: string) => {
   try {
@@ -84,7 +86,6 @@ export const userReport = async (userId: string, body: object) => {
 export const userReview = async (userId: string, body: object) => {
   try {
     const res = await api.post(`/user/${userId}/review`, body);
-    console.log(res)
     if (res.data.error_code !== "200" || res.data.error_code !== "201") {
       toast.error(res.data.message);
     } else {
@@ -119,6 +120,88 @@ export const userSettingNotification = async (body: any) => {
       toast.error(SERVER_ERROR);
     } else {
       toast.success(SETTING_NOTIFICATION);
+    }
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+// @ts-ignore
+export const UserSearch = async (params?: any, inputTags?: any, limit: number, cursor: string = "") => {
+  let query = `/user/search?limit=${limit}&cursor=${cursor}`;
+  // Query job
+  query += params?.job ? `&job=${params?.job}` : "";
+  // Query employment status
+
+  query += params?.employeeStatus ? `&employment_status=${params?.employeeStatus}` : "";
+  // Query status
+  query += params?.statusCanTalk ? `&status[]=can-talk` : "";
+  query += params?.statusLookingForFriend ? `&status[]=looking-for-friend` : "";
+  query += params?.statusNeedConsult ? `&status[]=need-consult` : "";
+
+  // Query last login
+  query += params?.lastLogin === typeTimeLogin.login ? `&is_online=true` : "";
+
+  query +=
+    params?.lastLogin === typeTimeLogin.one_hour
+      ? `&last_login[]=${moment().subtract(1, "hours").toISOString()}&last_login[]=${moment().toISOString()}`
+      : "";
+
+  query +=
+    params?.lastLogin === typeTimeLogin.one_day
+      ? `&last_login[]=${moment().subtract(1, "days").toISOString()}&last_login[]=${moment().toISOString()}`
+      : "";
+
+  query +=
+    params?.lastLogin === typeTimeLogin.on_day_to_week
+      ? `&last_login[]=${moment().subtract(1, "weeks").toISOString()}&last_login[]=${moment()
+          .subtract(1, "days")
+          .toISOString()}`
+      : "";
+
+  query +=
+    params?.lastLogin === typeTimeLogin.week_to_two_week
+      ? `&last_login[]=${moment().subtract(2, "weeks").toISOString()}&last_login[]=${moment()
+          .subtract(1, "weeks")
+          .toISOString()}`
+      : "";
+
+  query +=
+    params?.lastLogin === typeTimeLogin.two_week_to_month
+      ? `&last_login[]=${moment().subtract(1, "months").toISOString()}&last_login[]=${moment()
+          .subtract(1, "weeks")
+          .toISOString()}`
+      : "";
+
+  query +=
+    params?.lastLogin === typeTimeLogin.two_week_to_month
+      ? `&last_login[]=${moment().subtract(1, "months").toISOString()}&last_login[]=${moment()
+          .subtract(2, "weeks")
+          .toISOString()}`
+      : "";
+
+  query +=
+    params?.lastLogin === typeTimeLogin.month_or_than
+      ? `&last_login[]=&last_login[]=${moment().subtract(1, "months").toISOString()}`
+      : "";
+  // Query count review
+  query += params?.review === typeReview.no_0 ? `&review_count[]=1&review_count[]=` : "";
+  query += params?.review === typeReview.less_than_10 ? `&review_count[]=0&review_count[]=10` : "";
+  query += params?.review === typeReview.from_11_to_50 ? `&review_count[]=11&review_count[]=50` : "";
+  query += params?.review === typeReview.from_51_to_100 ? `&review_count[]=51&review_count[]=100` : "";
+  query += params?.review === typeReview.more_than_100 ? `&review_count[]=101&review_count[]=` : "";
+
+  // query input tag
+  for (let i = 0; i < inputTags.length; i++) {
+    query += `&tags[]=${inputTags[i]}`;
+  }
+
+  try {
+    const res = await api.get(query);
+    if (!res.data) {
+      toast.error(SERVER_ERROR);
     }
     return res.data;
   } catch (error) {
