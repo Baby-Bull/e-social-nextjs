@@ -76,16 +76,24 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
       isValidForm = false;
       errorMessages.message = VALIDATE_FORM_MATCHING_REQUEST.message.max_length;
     }
+    // validate desired_match_date
+    if (matchingRequest?.desired_match_date) {
+      if (
+        JSON.stringify(matchingRequest?.desired_match_date) === "null" ||
+        new Date().getFullYear() < matchingRequest?.desired_match_date?.substring(0, 4) ||
+        matchingRequest?.desired_match_date?.substring(0, 4) < 1900
+      ) {
+        isValidForm = false;
+        errorMessages.desired_match_date = VALIDATE_FORM_MATCHING_REQUEST.desired_match_date.invalid_date;
+      }
+    }
     setErrorValidates(errorMessages);
     return isValidForm;
   };
 
   const submitMatchingRequest = () => {
     if (handleValidateForm()) {
-      handleSendMatchingRequest({
-        ...matchingRequest,
-        desired_match_date: "2022-02-22 22:22",
-      });
+      handleSendMatchingRequest(matchingRequest);
     }
   };
 
@@ -130,7 +138,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
             required
             label={t("home:modal-matching.frequency")}
             placeholder={t("home:modal-matching.frequency-placeholder")}
-            editor="textbox"
+            editor="date-picker"
             value={matchingRequest?.desired_match_date}
             onChangeValue={onChangeMatchingRequest}
             error={errorValidates.desired_match_date}

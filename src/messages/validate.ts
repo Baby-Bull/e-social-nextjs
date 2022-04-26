@@ -41,6 +41,9 @@ export const VALIDATE_FORM_MATCHING_REQUEST = {
   message: {
     max_length: "文字数の制限を超えています。1000文字以内で入力してください",
   },
+  desired_match_date: {
+    invalid_date: "日付値が無効です",
+  },
 };
 
 export const VALIDATE_FORM_USER_PORT = {

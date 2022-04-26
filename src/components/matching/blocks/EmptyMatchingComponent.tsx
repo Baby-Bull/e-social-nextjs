@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Link } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
@@ -38,16 +38,18 @@ const EmptyMatchingComponent: React.SFC<IEmptyMatchingComponentProps> = ({ text,
       <Box display={mode === "community" && "none"}>
         <img src="/assets/images/svg/account_with_phone.svg" width="156px" alt="account_with_phone" />
       </Box>
-      <ButtonComponent
-        props={{
-          mode: "gradient",
-        }}
-        sx={{
-          mt: ["30px", "15px"],
-        }}
-      >
-        {t("matching:button.find-engineer")}
-      </ButtonComponent>
+      <Link underline="none" href="/search_user">
+        <ButtonComponent
+          props={{
+            mode: "gradient",
+          }}
+          sx={{
+            mt: ["30px", "15px"],
+          }}
+        >
+          {t("matching:button.find-engineer")}
+        </ButtonComponent>
+      </Link>
 
       <ButtonComponent
         props={{
