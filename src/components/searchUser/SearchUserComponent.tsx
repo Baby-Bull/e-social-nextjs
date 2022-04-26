@@ -69,11 +69,12 @@ const SearchUserComponent = () => {
   const viewPort = useViewport();
   const isMobile = viewPort.width <= 992;
 
-  const LIMIT = 999;
+  const LIMIT = 15;
   const [isLoading, setIsLoading] = useState(false);
   const [inputTags, setInputTags] = useState([]);
   const [resultSearch, setResultSearch] = useState([]);
   const [isRefresh, setIsRefresh] = useState(false);
+  const [isSort, setIsSort] = useState("");
   const [formSearch, setFormSearch] = useState({
     job: jobs[0]?.value,
     employeeStatus: employeeStatus[0]?.value,
@@ -84,11 +85,16 @@ const SearchUserComponent = () => {
     statusNeedConsult: false,
   });
 
-  const fetchData = async () => {
+  const fetchData = async (typeSort: string = "") => {
     setIsLoading(true);
-    const res = await UserSearch(formSearch, inputTags, LIMIT);
+    const res = await UserSearch(formSearch, inputTags, typeSort, LIMIT);
     setResultSearch(res?.items);
     setIsLoading(false);
+  };
+
+  const handleSort = (typeSort) => {
+    fetchData(typeSort);
+    setIsSort(typeSort);
   };
 
   useEffect(() => {
@@ -266,8 +272,18 @@ const SearchUserComponent = () => {
               <Grid item xs={6} className="sort-by-block">
                 <Typography className="sort-by-label">{t("user-search:sort-by")}</Typography>
                 <Divider orientation="vertical" flexItem />
-                <Link className="sort-link">{t("user-search:recommend-order")}</Link>
-                <Link className="sort-link active">{t("user-search:last-login-order")}</Link>
+                <Box
+                  onClick={() => handleSort("recommended")}
+                  className={isSort === "recommended" ? "sort-link active" : "sort-link"}
+                >
+                  {t("user-search:recommend-order")}
+                </Box>
+                <Box
+                  onClick={() => handleSort("login_at")}
+                  className={isSort === "login_at" ? "sort-link active" : "sort-link"}
+                >
+                  {t("user-search:last-login-order")}
+                </Box>
                 <Divider orientation="vertical" flexItem />
               </Grid>
             )}

@@ -2,12 +2,15 @@ import { Box, Grid } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import React from "react";
+// eslint-disable-next-line import/order
 import moment from "moment";
 
 import "moment/locale/ja";
+import { useRouter } from "next/router";
+
 import styles from "src/components/searchUser/search_user.module.scss";
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
-import { USER_SEARCH_STATUS } from "src/components/constants/constants";
+import { HOMEPAGE_RECOMMEND_MEMBER_STATUS, USER_SEARCH_STATUS } from "src/components/constants/constants";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
 import { sendMatchingRequest } from "src/services/matching";
@@ -25,6 +28,7 @@ interface IUserItemProps {
   status: number;
   chatStatus: number;
   is_favorite: boolean;
+  match_status?: string;
 }
 
 interface IBoxUserComponentProps {
@@ -35,13 +39,36 @@ interface IBoxUserComponentProps {
 
 const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbackHandleIsRefresh, isRefresh }) => {
   const { t } = useTranslation();
+  const router = useRouter();
   const [showModalMatching, setModalMatching] = React.useState(false);
-  const handleShowModalMatching = () => setModalMatching(true);
+  const handleShowModalMatching = (matchStatus) => {
+    // handleShowModalMatching
+    if (!matchStatus) {
+      setModalMatching(true);
+    } else if (matchStatus === "confirmed") {
+      router.push("/chat/personal");
+    } else {
+      return 1;
+    }
+  };
   const handleSendMatchingRequest = async (matchingRequest) => {
     const res = await sendMatchingRequest(data?.id, matchingRequest);
     setModalMatching(false);
     callbackHandleIsRefresh(!isRefresh);
     return res;
+  };
+
+  const handleMapMatchingStatus = (statusMatchingTemp: string) => {
+    switch (statusMatchingTemp) {
+      case "pending":
+        return 1;
+      case "confirmed":
+        return 2;
+      case "rejected":
+        return 3;
+      default:
+        return 4;
+    }
   };
 
   return (
@@ -106,8 +133,12 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
             <span>{t("user-search:btn-add-favorite")}</span>
           </div>
 
-          <ButtonComponent mode="green" fullWidth onClick={handleShowModalMatching}>
-            {t("user-search:btn-send-matching-request")}
+          <ButtonComponent
+            fullWidth
+            onClick={() => handleShowModalMatching(data?.match_status)}
+            mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.mode}
+          >
+            {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.label}
           </ButtonComponent>
         </Box>
       </Grid>

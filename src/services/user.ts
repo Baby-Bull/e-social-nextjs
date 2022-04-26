@@ -129,7 +129,7 @@ export const userSettingNotification = async (body: any) => {
 };
 
 // @ts-ignore
-export const UserSearch = async (params?: any, inputTags?: any, limit: number, cursor: string = "") => {
+export const UserSearch = async (params?: any, inputTags?: any, isSort: string, limit: number, cursor: string = "") => {
   let query = `/user/search?limit=${limit}&cursor=${cursor}`;
   // Query job
   query += params?.job ? `&job=${params?.job}` : "";
@@ -192,7 +192,8 @@ export const UserSearch = async (params?: any, inputTags?: any, limit: number, c
   query += params?.review === typeReview.from_11_to_50 ? `&review_count[]=11&review_count[]=50` : "";
   query += params?.review === typeReview.from_51_to_100 ? `&review_count[]=51&review_count[]=100` : "";
   query += params?.review === typeReview.more_than_100 ? `&review_count[]=101&review_count[]=` : "";
-
+  // Sort
+  query += isSort ? `&sort_order=${isSort}` : "";
   // query input tag
   for (let i = 0; i < inputTags.length; i++) {
     query += `&tags[]=${inputTags[i]}`;
