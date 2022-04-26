@@ -195,7 +195,7 @@ const TypoxEstimatedStar = styled(Typography)({
 });
 
 const ListItem = styled("li")({
-  margin: theme.spacing(0.5),
+  marginRight: "6px",
 });
 
 const ProfileSkillComponent = () => {
