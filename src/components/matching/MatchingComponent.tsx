@@ -143,46 +143,31 @@ const MatchingComponent = () => {
       type: TYPE.COMMUNITY,
       tabValue: TAB_VALUE_BY_KEY.community,
       data: [
-        {
-          avatar: "/assets/images/svg/account.svg",
-          name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
-          count_member: 0,
-        },
-        {
-          avatar: "/assets/images/svg/account.svg",
-          name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
-          count_member: 0,
-        },
-        {
-          avatar: "/assets/images/svg/account.svg",
-          name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
-          count_member: 0,
-        },
-        {
-          avatar: "/assets/images/svg/account.svg",
-          name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
-          count_member: 0,
-        },
-        {
-          avatar: "/assets/images/svg/account.svg",
-          name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
-          count_member: 0,
-        },
-        {
-          avatar: "/assets/images/svg/account.svg",
-          name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
-          count_member: 0,
-        },
-        {
-          avatar: "/assets/images/svg/account.svg",
-          name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
-          count_member: 0,
-        },
-        {
-          avatar: "/assets/images/svg/account.svg",
-          name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
-          count_member: 0,
-        },
+        // {
+        //   avatar: "/assets/images/svg/account.svg",
+        //   name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
+        //   count_member: 0,
+        // },
+        // {
+        //   avatar: "/assets/images/svg/account.svg",
+        //   name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
+        //   count_member: 0,
+        // },
+        // {
+        //   avatar: "/assets/images/svg/account.svg",
+        //   name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
+        //   count_member: 0,
+        // },
+        // {
+        //   avatar: "/assets/images/svg/account.svg",
+        //   name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
+        //   count_member: 0,
+        // },
+        // {
+        //   avatar: "/assets/images/svg/account.svg",
+        //   name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
+        //   count_member: 0,
+        // }
       ],
     },
   ]);

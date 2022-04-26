@@ -115,7 +115,12 @@ const TypoLabel = styled(Typography)({
 const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false }) => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { auth, dispatch } = useContext(AuthContext);
+  const { dispatch } = useContext(AuthContext);
+  const [auth, setAuth] = useState<any>();
+  React.useEffect(() => {
+    const tempAuth = JSON.parse(sessionStorage.getItem("auth"));
+    setAuth(tempAuth);
+  }, []);
 
   const currencies = [
     {

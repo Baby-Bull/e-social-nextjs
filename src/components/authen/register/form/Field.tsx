@@ -49,6 +49,7 @@ const InputCustom = styled(InputBase)({
     backgroundColor: "white",
     border: `1px solid ${theme.blue}`,
     fontSize: 16,
+    height: "fit-content!important",
     padding: "10px 12px",
     borderRadius: 12,
     fontFamily: "Noto Sans JP",
@@ -84,7 +85,7 @@ const SelectCustom = styled(Select)({
     borderRadius: 12,
     fontFamily: "Noto Sans JP",
     "@media (max-width: 425px)": {
-      height: 40,
+      height: "fit-content",
     },
     "@media (min-width: 769px)": {
       height: 18,
@@ -510,7 +511,7 @@ export const Field: React.SFC<IFieldProps> = ({
                         fontSize: "16px",
                         width: "100%",
                       }}
-                      placeholder="Click to select date"
+                      placeholder="クリックして日付を選択"
                       ref={inputRef}
                       {...inputProps}
                     />
