@@ -41,7 +41,8 @@
       "text-demo": "Reactエンジニアを2年しているのでフロント開発についてお話しできます。フルスタックエンジニアを目指していて、PHPを習得したいと考えているので、フルスタックエンジニアの方に色々お話しを...",
       "send-request": "マッチングのリクエストを送る",
       "button-add": "話したい人リストに登録",
-      "button-redirect-home": "ホームへ"
+      "button-redirect-home": "ホームへ",
+      "next-tutorial": "次へ"
     }
   },
   "login-text-1": "アカウントをお持ちの方は",

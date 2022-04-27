@@ -147,10 +147,10 @@ const FormRegisterComponents = () => {
     }
 
     // validate birthday
-    if (!userInfo?.birthday?.dob_value || userInfo?.birthday?.dob_value?.length === 0) {
+    if (!userInfo?.birthday || userInfo?.birthday?.length === 0) {
       isValidForm = false;
       errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.required;
-    } else if (userInfo?.birthday?.dob_value?.length !== 0 && userInfo?.birthday?.error_invalid) {
+    } else if (userInfo?.birthday?.length !== 0 && userInfo?.birthday?.error_invalid) {
       isValidForm = false;
       errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.invalid_date;
     }
@@ -190,7 +190,7 @@ const FormRegisterComponents = () => {
 
   const submitUpdateProfile = async () => {
     if (handleValidateForm()) {
-      userInfo.birthday = userInfo?.birthday?.dob_value;
+      userInfo.birthday = userInfo?.birthday?.dob_value || userInfo.birthday;
       setIsLoading(true);
       const resUpdate = await updateProfile(userInfo);
       setIsLoading(false);
@@ -345,7 +345,7 @@ const FormRegisterComponents = () => {
         <DialogTitle
           id="scroll-dialog-title"
           sx={{
-            backgroundColor: theme.blue,
+            backgroundColor: theme.whiteBlue,
             textAlign: "right",
             p: [0, "27px"],
             position: "relative",
@@ -387,7 +387,7 @@ const FormRegisterComponents = () => {
           <DialogContent
             sx={{
               pb: "46px",
-              backgroundColor: theme.blue,
+              backgroundColor: theme.whiteBlue,
             }}
           >
             <Box
@@ -651,7 +651,7 @@ const FormRegisterComponents = () => {
                 sx={{
                   flex: 1,
                   pl: [0, 3],
-                  color: "white",
+                  color: "black",
                   fontSize: [16, 20],
                   fontWeight: 700,
                 }}
@@ -693,12 +693,33 @@ const FormRegisterComponents = () => {
                 <img src="/assets/images/svg/line-white.svg" alt="line-white" />
               </Box>
             </Box>
+            <div
+              style={{
+                textAlign: "center",
+                marginTop: "40px",
+              }}
+            >
+              <ButtonComponent
+                onClick={handleTutorialDone}
+                props={{
+                  dimension: "medium",
+                  color: "white",
+                  bgColor: theme.blue,
+                }}
+                sx={{
+                  height: "56px",
+                  "&:hover": { backgroundColor: theme.lightBlue },
+                }}
+              >
+                {t("register:form.tutorial.next-tutorial")}
+              </ButtonComponent>
+            </div>
           </DialogContent>
         ) : (
           <React.Fragment>
             <DialogContent
               sx={{
-                backgroundColor: theme.blue,
+                backgroundColor: theme.whiteBlue,
                 textAlign: "center",
               }}
             >
@@ -706,7 +727,7 @@ const FormRegisterComponents = () => {
                 sx={{
                   pt: ["63px", "85px"],
                   display: "flex",
-                  color: "white",
+                  color: "black",
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
@@ -735,7 +756,7 @@ const FormRegisterComponents = () => {
 
             <DialogActions
               sx={{
-                backgroundColor: theme.blue,
+                backgroundColor: theme.whiteBlue,
                 display: "flex",
                 justifyContent: "center",
                 pt: ["39px", "inherit"],
@@ -744,8 +765,9 @@ const FormRegisterComponents = () => {
             >
               <ButtonComponent
                 props={{
+                  bgColor: theme.blue,
                   dimension: "medium",
-                  color: theme.blue,
+                  color: "white",
                 }}
                 sx={{
                   height: "56px",

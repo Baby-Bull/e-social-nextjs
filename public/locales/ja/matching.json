@@ -1,6 +1,7 @@
 {
   "button": {
     "find-engineer": "エンジニアを探す",
+    "find-community": "ミュニティを探す",
     "create-community": "コミュニティ作成"
   },
   "text-empty": {

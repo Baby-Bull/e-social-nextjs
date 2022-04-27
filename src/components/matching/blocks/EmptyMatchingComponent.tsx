@@ -38,7 +38,7 @@ const EmptyMatchingComponent: React.SFC<IEmptyMatchingComponentProps> = ({ text,
       <Box display={mode === "community" && "none"}>
         <img src="/assets/images/svg/account_with_phone.svg" width="156px" alt="account_with_phone" />
       </Box>
-      <Link underline="none" href="/search_user">
+      <Link underline="none" href={mode === "community" ? "/search_community" : "/search_user"}>
         <ButtonComponent
           props={{
             mode: "gradient",
@@ -47,23 +47,25 @@ const EmptyMatchingComponent: React.SFC<IEmptyMatchingComponentProps> = ({ text,
             mt: ["30px", "15px"],
           }}
         >
-          {t("matching:button.find-engineer")}
+          {mode === "community" ? t("matching:button.find-community") : t("matching:button.find-engineer")}
         </ButtonComponent>
       </Link>
 
-      <ButtonComponent
-        props={{
-          dimension: "medium",
-          bgColor: theme.orange,
-        }}
-        sx={{
-          mt: "40px",
-          display: mode !== "community" && "none",
-          borderRadius: "4px",
-        }}
-      >
-        {t("matching:button.create-community")}
-      </ButtonComponent>
+      <Link underline="none" href="/community/setting">
+        <ButtonComponent
+          props={{
+            dimension: "medium",
+            bgColor: theme.orange,
+          }}
+          sx={{
+            mt: "40px",
+            display: mode !== "community" && "none",
+            borderRadius: "4px",
+          }}
+        >
+          {t("matching:button.create-community")}
+        </ButtonComponent>
+      </Link>
     </Box>
   );
 };
