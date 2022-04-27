@@ -35,22 +35,46 @@ const BlockChatComponent = () => {
     cursor: null,
   });
 
+  const listRoomRef = useRef([]);
+  const chatRoomIdRef = useRef(null);
+
   const sk = useRef(null);
 
-  const updateLastMessageOfListRooms = (message: string, roomId: string) => {
+  const updateLastMessageOfListRooms = async (message: any) => {
+    let hasChatRoomExist = false;
     setListRooms(
-      listRooms?.map((item) => {
-        if (item.id === roomId) {
+      listRoomRef.current?.map((item) => {
+        if (item.id === message.chat_room_id) {
+          hasChatRoomExist = true;
           return {
             ...item,
             last_chat_message_at: dayjs(new Date()).toISOString(),
-            last_chat_message_received: message,
+            last_chat_message_received: message.content,
           };
         }
         return item;
       }),
     );
+    if (!hasChatRoomExist && message?.user) {
+      setListRooms([
+        {
+          id: message.chat_room_id,
+          user: message?.user || {},
+          last_chat_message_at: dayjs(new Date()).toISOString(),
+          last_chat_message_received: message.content,
+        },
+        ...listRoomRef.current,
+      ]);
+    }
   };
+
+  useEffect(() => {
+    listRoomRef.current = listRooms;
+  }, [listRooms]);
+
+  useEffect(() => {
+    chatRoomIdRef.current = roomSelect?.id || null;
+  }, [roomSelect]);
 
   useEffect(() => {
     if (isMobile) {
@@ -69,13 +93,16 @@ const BlockChatComponent = () => {
     });
 
     sk.current.addEventListener("message", (e: any) => {
-      console.log("WebSocket received a message", e);
       const messageReceived = JSON.parse(e.data);
-      console.log("messageReceived", messageReceived);
+      console.log("WebSocket received a message", Object.keys(messageReceived));
+      console.log(messageReceived);
       if (messageReceived["get.chatRoom.message"]) {
         const message = messageReceived["get.chatRoom.message"];
-        setNewMessageOfRoom(message);
-        updateLastMessageOfListRooms(message.content, message.chat_room_id);
+        if (chatRoomIdRef.current === message.chat_room_id) {
+          setNewMessageOfRoom(message);
+        }
+
+        updateLastMessageOfListRooms(message);
       }
     });
   }, []);
@@ -116,7 +143,10 @@ const BlockChatComponent = () => {
         content_type: "text",
       };
       sk.current.send(JSON.stringify(payload));
-      updateLastMessageOfListRooms(message, roomSelect?.id);
+      updateLastMessageOfListRooms({
+        content: message,
+        chat_room_id: roomSelect.id,
+      });
     }
   };
 
