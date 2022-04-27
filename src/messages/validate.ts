@@ -43,6 +43,7 @@ export const VALIDATE_FORM_MATCHING_REQUEST = {
   },
   desired_match_date: {
     invalid_date: "日付値が無効です",
+    required_date:"時間の入力が必要です",
   },
 };
 
