@@ -202,17 +202,33 @@ export const Field: React.SFC<FieldProps> = ({
                       onChangeValue(id, newValue?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }));
                       setDate(newValue);
                     }}
-                    // renderInput={(params) => {
-                    //   return (
+                    // renderInput={(params) => (
+                    //   <Box
+                    //     sx={{
+                    //       backgroundColor: "white",
+                    //       border: `1px solid ${theme.blue}`,
+                    //       padding: "10px 12px",
+                    //       borderRadius: "12px",
+                    //       fontFamily: "Noto Sans JP",
+                    //       alignItems: "center",
+                    //       display: "flex",
+                    //     }}
+                    //   >
                     //     <TextField
+                    //       fullWidth
                     //       {...params}
                     //       inputProps={{
                     //         ...params.inputProps,
-                    //         placeholder: "tt.mm.jjjj"
+                    //         placeholder: "日日/月月/年年年年"
+                    //       }}
+                    //       variant="standard"
+                    //       InputProps={{
+                    //         disableUnderline: true,
                     //       }}
                     //     />
-                    //   );
-                    // }}
+                    //     {params.InputProps?.endAdornment}
+                    //   </Box>
+                    // )}
                     renderInput={({ inputRef, inputProps, InputProps }) => (
                       <Box
                         sx={{

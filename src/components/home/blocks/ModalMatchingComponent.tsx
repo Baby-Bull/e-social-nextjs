@@ -80,12 +80,16 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
     if (matchingRequest?.desired_match_date) {
       if (
         JSON.stringify(matchingRequest?.desired_match_date) === "null" ||
-        new Date().getFullYear() < matchingRequest?.desired_match_date?.substring(0, 4) ||
-        matchingRequest?.desired_match_date?.substring(0, 4) < 1900
+        matchingRequest?.desired_match_date === "Invalid Date" ||
+        new Date().getFullYear() < matchingRequest?.desired_match_date?.split("-")[0] ||
+        matchingRequest?.desired_match_date?.split("-")[0] < 1900
       ) {
         isValidForm = false;
         errorMessages.desired_match_date = VALIDATE_FORM_MATCHING_REQUEST.desired_match_date.invalid_date;
       }
+    } else {
+      isValidForm = false;
+      errorMessages.desired_match_date = VALIDATE_FORM_MATCHING_REQUEST.desired_match_date.invalid_date;
     }
     setErrorValidates(errorMessages);
     return isValidForm;
@@ -93,10 +97,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
 
   const submitMatchingRequest = () => {
     if (handleValidateForm()) {
-      handleSendMatchingRequest({
-        ...matchingRequest,
-      });
-
+      handleSendMatchingRequest(matchingRequest);
       setMatchingRequest({
         desired_match_date: null,
         purpose: "",
