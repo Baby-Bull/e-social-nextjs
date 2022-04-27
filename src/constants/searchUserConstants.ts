@@ -1,71 +1,64 @@
-export const careers = [
+
+export const jobs = [
   {
     label: "職種",
     value: 0,
   },
   {
     label: "フロントエンドエンジニア",
-    value: 1,
+    value: "frontend",
   },
   {
     label: "バックエンドエンジニア",
-    value: 2,
+    value: "backend",
   },
   {
-    label: "〇〇エンジニア",
-    value: 3,
-  },
-  {
-    label: "〇〇エンジニア",
-    value: 4,
-  },
-  {
-    label: " データサイエンティスト",
-    value: 5,
+    label: "データサイエンティスト",
+    value: "data-scientist",
   },
   {
     label: "プロジェクトマネージャー",
-    value: 6,
+    value: "project-manager",
   },
   {
     label: " プロジェクトリーダー",
-    value: 7,
+    value: "project-leader",
   },
   {
     label: "テストエンジニア",
-    value: 8,
+    value: "test-engineer",
+  },
+  {
+    label: "データベースエンジニア",
+    value: "database-engineer",
+  },
+  {
+    label: "セキュリティエンジニア",
+    value: "security-engineer",
+  },
+  {
+    label: "インフラエンジニア",
+    value: "infrastructure-engineer",
+  },
+  {
+    label: "ネットワークエンジニア",
+    value: "network-engineer",
+  },
+  {
+    label: "サーバーエンジニア",
+    value: "server-engineer",
   },
   {
     label: "フロントエンドエンジニア",
-    value: 9,
+    value: "support-engineer",
   },
   {
     label: "フロントエンドエンジニア",
-    value: 10,
+    value: "help-desk",
   },
   {
     label: "フロントエンドエンジニア",
-    value: 11,
-  },
-  {
-    label: "フロントエンドエンジニア",
-    value: 12,
-  },
-  {
-    label: "フロントエンドエンジニア",
-    value: 13,
-  },
-  {
-    label: "フロントエンドエンジニア",
-    value: 14,
-  },
-  {
-    label: "フロントエンドエンジニア",
-    value: 15,
-  },
-  {
-    label: "フロントエンドエンジニア",
-    value: 16,
+    value: "markup-engineer",
   },
 ];
 
@@ -76,41 +69,51 @@ export const employeeStatus = [
   },
   {
     label: "正社員",
-    value: 1,
+    value: "fulltime",
   },
   {
     label: "契約社員",
-    value: 2,
+    value: "contract",
   },
   {
     label: "派遣社員",
-    value: 3,
+    value: "temporary",
   },
   {
     label: "フリーランス",
-    value: 4,
+    value: "freelance",
   },
   {
-    label: " 社長",
-    value: 5,
+    label: "社長",
+    value: "president",
   },
   {
     label: "役員",
-    value: 6,
+    value: "officer",
   },
   {
     label: " 転職活動中",
-    value: 7,
+    value: "part-time",
   },
   {
     label: "アルバイト",
-    value: 8,
+    value: "intern",
   },
   {
     label: "インターン",
-    value: 9,
+    value: "during-job-change",
   },
 ];
+
+export const typeTimeLogin = {
+  login: 1,
+  one_hour: 2,
+  one_day: 3,
+  on_day_to_week: 4,
+  week_to_two_week: 5,
+  two_week_to_month: 6,
+  month_or_than: 7,
+};
 
 export const lastLogins = [
   {
@@ -134,7 +137,7 @@ export const lastLogins = [
     value: 4,
   },
   {
-    label: " 週間〜2週間",
+    label: "週間〜2週間",
     value: 5,
   },
   {
@@ -173,3 +176,11 @@ export const reviews = [
     value: 5,
   },
 ];
+
+export const typeReview = {
+  no_0: 1,
+  less_than_10: 2,
+  from_11_to_50: 3,
+  from_51_to_100: 4,
+  more_than_100: 5,
+};
