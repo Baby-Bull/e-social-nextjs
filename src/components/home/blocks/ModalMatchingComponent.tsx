@@ -80,6 +80,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
     if (matchingRequest?.desired_match_date) {
       if (
         JSON.stringify(matchingRequest?.desired_match_date) === "null" ||
+        matchingRequest?.desired_match_date === "Invalid Date" ||
         new Date().getFullYear() < matchingRequest?.desired_match_date?.substring(0, 4) ||
         matchingRequest?.desired_match_date?.substring(0, 4) < 1900
       ) {
