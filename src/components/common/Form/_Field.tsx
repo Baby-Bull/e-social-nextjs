@@ -281,6 +281,9 @@ export const Field: React.SFC<FieldProps> = ({
               "@media (min-width: 1024px)": {
                 maxWidth: 320,
               },
+              "@media (min-width: 900px)": {
+                marginLeft: "150px",
+              },
             },
           }}
         >
