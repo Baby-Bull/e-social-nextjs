@@ -115,6 +115,7 @@ const TypoLabel = styled(Typography)({
 const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const fullText = router.query?.fulltext;
   const { dispatch } = useContext(AuthContext);
   const [auth, setAuth] = useState<any>();
   React.useEffect(() => {
@@ -122,7 +123,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     setAuth(tempAuth);
   }, []);
 
-  const currencies = [
+  const typeSearchs = [
     {
       value: "エンジニア",
       label: "エンジニア",
@@ -138,14 +139,15 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [notifyAnchorEl, setNotifyAnchorEl] = React.useState(null);
-  const [currency, setCurrency] = React.useState(currencies[0].label);
+  const [typeSearch, setTypeSearch] = React.useState(typeSearchs[0].label);
+  const [valueSearch, setValueSearch] = useState(fullText);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const isNotifyMenuOpen = Boolean(notifyAnchorEl);
 
   const handleChange = (event) => {
-    setCurrency(event.target.value);
+    setTypeSearch(event.target.value);
   };
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -179,6 +181,18 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     await logout();
     dispatch({ type: "LOGOUT" });
     router.push("/login");
+  };
+
+  const onKeyPress = (e) => {
+    if (e.key === "Enter") {
+      setValueSearch(e.target.value);
+      if (typeSearch === "エンジニア") {
+        router.push({
+          pathname: "/search_user",
+          query: { fulltext: e.target.value },
+        });
+      }
+    }
   };
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -382,7 +396,12 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
               <SearchIconWrapper>
                 <img src="/assets/images/icon/ic_search_2.png" alt="ic_search" width="18px" height="18px" />
               </SearchIconWrapper>
-              <StyledInputBase placeholder="言語、趣味、地域" inputProps={{ "aria-label": "言語、趣味、地域" }} />
+              <StyledInputBase
+                placeholder="言語、趣味、地域"
+                inputProps={{ "aria-label": "言語、趣味、地域" }}
+                onKeyPress={onKeyPress}
+                defaultValue={valueSearch}
+              />
               <Box
                 sx={{
                   width: "120px",
@@ -393,8 +412,8 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                   borderLeft: "1px solid #D8D8D8",
                 }}
               >
-                <SelectCustom id="outlined-select-currency" value={currency} onChange={handleChange}>
-                  {currencies.map((option) => (
+                <SelectCustom id="outlined-select-typeSearch" value={typeSearch} onChange={handleChange}>
+                  {typeSearchs.map((option) => (
                     <MenuItem key={option.label} value={option.label}>
                       {option.label}
                     </MenuItem>
