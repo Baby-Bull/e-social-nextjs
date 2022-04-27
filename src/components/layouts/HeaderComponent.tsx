@@ -186,7 +186,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   const onKeyPress = (e) => {
     if (e.key === "Enter") {
       setValueSearch(e.target.value);
-      if (typeSearch === "エンジニア") {
+      if (typeSearch === typeSearchs[0].value) {
         router.push({
           pathname: "/search_user",
           query: { fulltext: e.target.value },
