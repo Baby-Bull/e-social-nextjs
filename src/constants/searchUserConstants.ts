@@ -49,15 +49,15 @@ export const jobs = [
     value: "server-engineer",
   },
   {
-    label: "フロントエンドエンジニア",
+    label: "サポートエンジニア",
     value: "support-engineer",
   },
   {
-    label: "フロントエンドエンジニア",
+    label: "ヘルプデスク",
     value: "help-desk",
   },
   {
-    label: "フロントエンドエンジニア",
+    label: "マークアップエンジニア",
     value: "markup-engineer",
   },
 ];
