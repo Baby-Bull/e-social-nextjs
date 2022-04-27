@@ -3,7 +3,6 @@ import { Box, Typography, Avatar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import Moment from "react-moment";
 import moment from "moment";
 
 import "moment/locale/ja";
@@ -115,8 +114,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
   };
   const handleFormatTime = (tempValue: string) => {
     if (tempValue === "favorite") return "";
-    if (tempValue === "matched") return moment(data?.matchRequest?.match_date).fromNow();
-    return moment(data?.created_at).format("lll").toString();
+    if (tempValue === "matched") return moment(data?.matchRequest?.match_date).utc().fromNow() + t("thread:request");
+    return moment(data?.created_at).utc().format("lll").toString() + t("thread:request");
   };
 
   return (
@@ -140,7 +139,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
             mb: "15px",
           }}
         >
-          {moment(data?.desired_match_date).fromNow()}
+          {moment(data?.desired_match_date).utc().fromNow()}
         </Typography>
 
         {/* Info user (avatar, ...) */}
@@ -234,7 +233,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   mt: "9px",
                 }}
               >
-                {data?.activity_status === isOnline ? moment(data?.last_login_at).fromNow() : "ログイン中"}
+                {data?.activity_status === isOnline ? moment(data?.last_login_at).utc().fromNow() : "ログイン中"}
               </Typography>
               {/* End Title bottom Avatar tab favorite */}
             </Box>
@@ -255,7 +254,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   fontWeight: 400,
                 }}
               >
-                {handleFormatTime(type)} {t("thread:request")}
+                {handleFormatTime(type)}
               </Typography>
 
               <Box
@@ -477,7 +476,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 fontWeight: 500,
               }}
             >
-              {data?.activity_status === isOnline ? moment(data?.last_login_at).fromNow() : "ログイン中"}
+              {data?.activity_status === isOnline ? moment(data?.last_login_at).utc().fromNow() : "ログイン中"}
             </Typography>
 
             <Box
@@ -511,11 +510,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
               >
                 <ThreadTitle>{t("thread:date-interview")}</ThreadTitle>
                 {/* <ThreadContent>{format(data?.desired_match_date)}</ThreadContent> */}
-                <ThreadContent>
-                  <Moment format="LL" locale="ja">
-                    {data?.desired_match_date}
-                  </Moment>
-                </ThreadContent>
+                <ThreadContent>{moment(data?.desired_match_date).utc().format("LL")}</ThreadContent>
               </Box>
               <Box
                 sx={{
