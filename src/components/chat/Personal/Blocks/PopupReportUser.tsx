@@ -197,7 +197,7 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup,
                 ml: "20px",
               }}
             >
-              {user?.username} {t("chat:report_user")}
+              {user?.username} {t("chat:popup.report_user")}
             </Typography>
           </Box>
         </DialogTitle>
