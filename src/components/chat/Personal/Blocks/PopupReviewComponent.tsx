@@ -17,7 +17,7 @@ interface IReportUserProps {
   showPopup: boolean;
   // eslint-disable-next-line no-unused-vars
   setShowPopup: (status: boolean) => void;
-  userId?: string;
+  user?: any;
 }
 
 /* event change select option */
@@ -110,7 +110,7 @@ const BoxContentReviewIsCheck = styled(Box)({
   },
 });
 
-const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup, userId }) => {
+const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup, user }) => {
   const { t } = useTranslation();
   const [isCheck, setIsCheck] = React.useState(false);
   const [isPost, setIsPost] = React.useState(false);
@@ -168,11 +168,9 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
   };
 
   const submitUserReviewRequest = async () => {
-    const res = await userReview(userId, userReviewRequest);
-    if (res.error_code === "200" || res.error_code === "201") {
-      setIsPost(true);
-      return res.data;
-    }
+    const res = await userReview(user.id, userReviewRequest);
+    setIsPost(true);
+    return res.data;
   };
 
   // @ts-ignore
@@ -240,7 +238,7 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
         </Box>
         <DialogTitle sx={{ p: isCheck ? "40px 0 40px 0" : "0 0 40px 0" }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Avatar src="/assets/images/avatar_review.png" />
+            <Avatar src={user?.profile_image} />
             <Typography
               sx={{
                 fontSize: "20px",
@@ -249,7 +247,7 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
                 ml: "20px",
               }}
             >
-              佐藤太郎さんへのレビュー
+              {user?.username} {t("chat:popup.review")}
             </Typography>
           </Box>
         </DialogTitle>

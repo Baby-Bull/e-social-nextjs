@@ -6,7 +6,11 @@ import { ACCEPT_MATCHING, REJECT_MATCHING, CANCEL_MATCHING, SERVER_ERROR } from 
 export const sendMatchingRequest = async (userId: string, body: any) => {
   try {
     const res = await api.post(`/user/match/${userId}`, body);
-    toast.success("マッチングリクエストを送りました。");
+    if (res.data.error_code) {
+      toast.error(SERVER_ERROR);
+    } else {
+      toast.success("マッチングリクエストを送りました。");
+    }
     return res.data;
   } catch (error) {
     toast.error(SERVER_ERROR);

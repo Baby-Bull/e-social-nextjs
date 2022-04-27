@@ -55,6 +55,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
   const { t } = useTranslation();
   const router = useRouter();
   const { auth } = useContext(AuthContext);
+  const isOnline = "online";
 
   const isShowThread = type === "unConfirm" || type === "reject";
   const isConfirmOrFavoriteOrMatched = type === "confirm" || type === "favorite" || type === "matched";
@@ -115,7 +116,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
   const handleFormatTime = (tempValue: string) => {
     if (tempValue === "favorite") return "";
     if (tempValue === "matched") return moment(data?.matchRequest?.match_date).fromNow();
-    return moment(data?.created_at).fromNow();
+    return moment(data?.created_at).format("lll").toString();
   };
 
   return (
@@ -233,7 +234,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   mt: "9px",
                 }}
               >
-                {moment(data?.last_login_at).fromNow()}
+                {data?.activity_status === isOnline ? moment(data?.last_login_at).fromNow() : "ログイン中"}
               </Typography>
               {/* End Title bottom Avatar tab favorite */}
             </Box>
@@ -254,8 +255,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   fontWeight: 400,
                 }}
               >
-                {handleFormatTime(type)}
-                {/* {(type === "favorite") ? "" : ((type === "matched") ? format(data?.matchRequest?.match_date) : format(data?.created_at))} */}
+                {handleFormatTime(type)} {t("thread:request")}
               </Typography>
 
               <Box
@@ -477,7 +477,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 fontWeight: 500,
               }}
             >
-              {moment(data?.user?.last_login_at).fromNow()}
+              {data?.activity_status === isOnline ? moment(data?.last_login_at).fromNow() : "ログイン中"}
             </Typography>
 
             <Box
@@ -695,8 +695,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
         {/* End Button SP */}
       </Box>
 
-      <PopupReportUser showPopup={showPopupReport} setShowPopup={setShowPopupReport} userId={data?.id} />
-      <PopupReviewComponent showPopup={showPopupReview} setShowPopup={setShowPopupReview} userId={data?.id} />
+      <PopupReportUser showPopup={showPopupReport} setShowPopup={setShowPopupReport} user={data.user} />
+      <PopupReviewComponent showPopup={showPopupReview} setShowPopup={setShowPopupReview} user={data.user} />
       <ModalMatchingComponent
         open={showModalMatching}
         setOpen={setModalMatching}

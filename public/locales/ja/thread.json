@@ -2,6 +2,7 @@
   "purpose": "目的",
   "date-interview": "面談希望日",
   "message": "メッセージ",
+  "request": "にリクエスト",
   "button": {
     "approve": "承認する",
     "reject": "拒否する",

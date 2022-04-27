@@ -26,5 +26,8 @@
     "engineer-search": "エンジニア検索",
     "community-search": "コミュニティ検索",
     "logout": "ログアウト"
+  },
+  "body": {
+    "is_login": "ログイン中"
   }
 }

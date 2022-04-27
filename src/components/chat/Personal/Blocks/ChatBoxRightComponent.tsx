@@ -88,6 +88,7 @@ const ChatBoxRightComponent = ({
   roomSelect,
   sendTextMessage,
   newMessageOfRoom,
+  user,
 }) => {
   const { t } = useTranslation();
   const inputChatRef = useRef(null);
@@ -162,7 +163,7 @@ const ChatBoxRightComponent = ({
 
   const handleSendTextMessage = () => {
     const message = inputChatRef.current.value;
-    if (message) {
+    if (message && message.trim().length > 0) {
       sendTextMessage(message);
       setListMessages([
         ...listMessages,
@@ -257,8 +258,8 @@ const ChatBoxRightComponent = ({
           </IconButton>
         </Paper>
       </Box>
-      <PopupReportUser showPopup={showPopup} setShowPopup={setShowPopup} />
-      <PopupReviewComponent showPopup={showPopupReview} setShowPopup={setShowPopupReview} />
+      <PopupReportUser showPopup={showPopup} setShowPopup={setShowPopup} user={user} />
+      <PopupReviewComponent showPopup={showPopupReview} setShowPopup={setShowPopupReview} user={user} />
     </Grid>
   );
 };
