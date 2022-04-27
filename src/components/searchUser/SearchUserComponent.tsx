@@ -18,6 +18,7 @@ import {
 import { useTranslation } from "next-i18next";
 import React, { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
+import { useRouter } from "next/router";
 
 import styles from "src/components/searchUser/search_user.module.scss";
 import ContentComponent from "src/components/layouts/ContentComponent";
@@ -68,6 +69,8 @@ const SearchUserComponent = () => {
   // Responsive
   const viewPort = useViewport();
   const isMobile = viewPort.width <= 992;
+  const router = useRouter();
+  // const query = useQuery();
 
   const LIMIT = 15;
   const [isLoading, setIsLoading] = useState(false);
@@ -85,9 +88,11 @@ const SearchUserComponent = () => {
     statusNeedConsult: false,
   });
 
+  const fullText = router.query?.fulltext;
+
   const fetchData = async (typeSort: string = "") => {
     setIsLoading(true);
-    const res = await UserSearch(formSearch, inputTags, typeSort, LIMIT);
+    const res = await UserSearch(formSearch, inputTags, fullText, typeSort, LIMIT);
     setResultSearch(res?.items);
     setIsLoading(false);
   };
@@ -99,7 +104,7 @@ const SearchUserComponent = () => {
 
   useEffect(() => {
     fetchData();
-  }, [isRefresh]);
+  }, [isRefresh, fullText]);
 
   const removeSearchTag = (indexRemove) => {
     setInputTags(inputTags.filter((_, index) => index !== indexRemove));
@@ -264,7 +269,7 @@ const SearchUserComponent = () => {
               <Typography className="title-search">
                 {t("user-search:title")}
                 <span className="item-total-result">
-                  {isMobile && <br />} 全{resultSearch.length}件
+                  {isMobile && <br />} 全{resultSearch?.length ?? 0}件
                 </span>
               </Typography>
             </Grid>

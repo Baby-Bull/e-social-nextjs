@@ -129,8 +129,17 @@ export const userSettingNotification = async (body: any) => {
 };
 
 // @ts-ignore
-export const UserSearch = async (params?: any, inputTags?: any, isSort: string, limit: number, cursor: string = "") => {
+export const UserSearch = async (
+  params?: any,
+  inputTags?: any,
+  fullText?: string | string[],
+  isSort?: string,
+  limit?: number,
+  cursor: string = "",
+) => {
   let query = `/user/search?limit=${limit}&cursor=${cursor}`;
+  // Query full text
+  query += fullText ? `&fulltext=${fullText}` : "";
   // Query job
   query += params?.job ? `&job=${params?.job}` : "";
   // Query employment status
