@@ -94,11 +94,26 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
 
   const submitMatchingRequest = () => {
     if (handleValidateForm()) {
-      handleSendMatchingRequest(matchingRequest);
+      handleSendMatchingRequest({
+        ...matchingRequest,
+      });
+
+      setMatchingRequest({
+        desired_match_date: null,
+        purpose: "",
+        message: null,
+      });
     }
   };
 
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setMatchingRequest({
+      desired_match_date: null,
+      purpose: "",
+      message: null,
+    });
+    setOpen(false);
+  };
 
   return (
     <Modal

@@ -1,7 +1,9 @@
 import {
+  Backdrop,
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   Divider,
   FormControlLabel,
   Grid,
@@ -14,16 +16,16 @@ import {
   Typography,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 
 import styles from "src/components/searchUser/search_user.module.scss";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import theme from "src/theme";
-import { careers, employeeStatus, lastLogins, reviews } from "src/constants/searchUserConstants";
+import { jobs, employeeStatus, lastLogins, reviews } from "src/constants/searchUserConstants";
 import useViewport from "src/helpers/useViewport";
+import { UserSearch } from "src/services/user";
 
-import { resultSearchMockData } from "./mockData";
 import BoxItemUserComponent from "./BoxItemUserComponent";
 
 const SelectCustom = styled(Select)({
@@ -67,17 +69,37 @@ const SearchUserComponent = () => {
   const viewPort = useViewport();
   const isMobile = viewPort.width <= 992;
 
-  const [inputTags, setInputTags] = useState(["デザイナー", "エンジニア"]);
+  const LIMIT = 15;
+  const [isLoading, setIsLoading] = useState(false);
+  const [inputTags, setInputTags] = useState([]);
+  const [resultSearch, setResultSearch] = useState([]);
+  const [isRefresh, setIsRefresh] = useState(false);
+  const [isSort, setIsSort] = useState("");
   const [formSearch, setFormSearch] = useState({
-    career: careers[0]?.value,
-    status: employeeStatus[0]?.value,
+    job: jobs[0]?.value,
+    employeeStatus: employeeStatus[0]?.value,
     lastLogin: lastLogins[0]?.value,
     review: reviews[0]?.value,
-    checkBox1: true,
-    checkBox2: false,
-    checkBox3: false,
+    statusCanTalk: false,
+    statusLookingForFriend: false,
+    statusNeedConsult: false,
   });
-  const [resultSearch] = useState(resultSearchMockData);
+
+  const fetchData = async (typeSort: string = "") => {
+    setIsLoading(true);
+    const res = await UserSearch(formSearch, inputTags, typeSort, LIMIT);
+    setResultSearch(res?.items);
+    setIsLoading(false);
+  };
+
+  const handleSort = (typeSort) => {
+    fetchData(typeSort);
+    setIsSort(typeSort);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [isRefresh]);
 
   const removeSearchTag = (indexRemove) => {
     setInputTags(inputTags.filter((_, index) => index !== indexRemove));
@@ -97,8 +119,35 @@ const SearchUserComponent = () => {
     });
   };
 
+  const clearFormSearch = () => {
+    setFormSearch({
+      job: jobs[0]?.value,
+      employeeStatus: employeeStatus[0]?.value,
+      lastLogin: lastLogins[0]?.value,
+      review: reviews[0]?.value,
+      statusCanTalk: false,
+      statusLookingForFriend: false,
+      statusNeedConsult: false,
+    });
+
+    setInputTags([]);
+  };
+
+  const submitSearch = async () => {
+    fetchData();
+  };
+
+  const callbackHandleIsRefresh = (status: any) => {
+    setIsRefresh(status);
+  };
+
   return (
     <ContentComponent>
+      {isLoading && (
+        <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       <Grid className={styles.boxContainer}>
         <Box className={styles.boxSearchLeft}>
           <div className={styles.blockInputTag}>
@@ -131,8 +180,8 @@ const SearchUserComponent = () => {
             </div>
           </div>
           {/* Career */}
-          <SelectCustom value={formSearch?.career} onChange={(e) => handleChangeInputSearch(e, "career")}>
-            {careers.map((option) => (
+          <SelectCustom value={formSearch?.job} onChange={(e) => handleChangeInputSearch(e, "job")}>
+            {jobs.map((option) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
@@ -140,7 +189,10 @@ const SearchUserComponent = () => {
           </SelectCustom>
 
           {/* Status */}
-          <SelectCustom value={formSearch?.status} onChange={(e) => handleChangeInputSearch(e, "status")}>
+          <SelectCustom
+            value={formSearch?.employeeStatus}
+            onChange={(e) => handleChangeInputSearch(e, "employeeStatus")}
+          >
             {employeeStatus.map((option) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
@@ -169,8 +221,9 @@ const SearchUserComponent = () => {
           <FormControlLabelCustom
             control={
               <Checkbox
-                checked={formSearch?.checkBox1}
-                onChange={() => setFormSearch({ ...formSearch, checkBox1: !formSearch?.checkBox1 })}
+                value="can-talk"
+                checked={formSearch?.statusCanTalk}
+                onChange={() => setFormSearch({ ...formSearch, statusCanTalk: !formSearch?.statusCanTalk })}
               />
             }
             label={t("user-search:label-checkbox-1").toString()}
@@ -178,8 +231,11 @@ const SearchUserComponent = () => {
           <FormControlLabelCustom
             control={
               <Checkbox
-                checked={formSearch?.checkBox2}
-                onChange={() => setFormSearch({ ...formSearch, checkBox2: !formSearch?.checkBox2 })}
+                checked={formSearch?.statusLookingForFriend}
+                value="looking-for-friend"
+                onChange={() =>
+                  setFormSearch({ ...formSearch, statusLookingForFriend: !formSearch?.statusLookingForFriend })
+                }
               />
             }
             label={t("user-search:label-checkbox-2").toString()}
@@ -187,17 +243,18 @@ const SearchUserComponent = () => {
           <FormControlLabelCustom
             control={
               <Checkbox
-                checked={formSearch?.checkBox3}
-                onChange={() => setFormSearch({ ...formSearch, checkBox3: !formSearch?.checkBox3 })}
+                checked={formSearch?.statusNeedConsult}
+                value="needConsult"
+                onChange={() => setFormSearch({ ...formSearch, statusNeedConsult: !formSearch?.statusNeedConsult })}
               />
             }
             label={t("user-search:label-checkbox-3").toString()}
           />
 
-          <Button className="btn-user-search btn-search" fullWidth>
+          <Button className="btn-user-search btn-search" fullWidth onClick={submitSearch}>
             {t("user-search:btn-search")}
           </Button>
-          <Button className="btn-user-search btn-clear" fullWidth>
+          <Button className="btn-user-search btn-clear" fullWidth onClick={clearFormSearch}>
             {t("user-search:btn-clear-condition")}
           </Button>
         </Box>
@@ -206,15 +263,27 @@ const SearchUserComponent = () => {
             <Grid item md={6} xs={12}>
               <Typography className="title-search">
                 {t("user-search:title")}
-                <span className="item-total-result">{isMobile && <br />} 全1500件</span>
+                <span className="item-total-result">
+                  {isMobile && <br />} 全{resultSearch.length}件
+                </span>
               </Typography>
             </Grid>
             {!isMobile && (
               <Grid item xs={6} className="sort-by-block">
                 <Typography className="sort-by-label">{t("user-search:sort-by")}</Typography>
                 <Divider orientation="vertical" flexItem />
-                <Link className="sort-link">{t("user-search:recommend-order")}</Link>
-                <Link className="sort-link active">{t("user-search:last-login-order")}</Link>
+                <Box
+                  onClick={() => handleSort("recommended")}
+                  className={isSort === "recommended" ? "sort-link active" : "sort-link"}
+                >
+                  {t("user-search:recommend-order")}
+                </Box>
+                <Box
+                  onClick={() => handleSort("login_at")}
+                  className={isSort === "login_at" ? "sort-link active" : "sort-link"}
+                >
+                  {t("user-search:last-login-order")}
+                </Box>
                 <Divider orientation="vertical" flexItem />
               </Grid>
             )}
@@ -229,7 +298,11 @@ const SearchUserComponent = () => {
           <Grid container className={styles.resultSearch} spacing={{ md: "27px", xs: "20px" }}>
             {resultSearch?.map((item, key) => (
               <Grid item key={key} md={4} xs={12} sm={12}>
-                <BoxItemUserComponent data={item} />
+                <BoxItemUserComponent
+                  data={item}
+                  isRefresh={isRefresh}
+                  callbackHandleIsRefresh={callbackHandleIsRefresh}
+                />
               </Grid>
             ))}
           </Grid>
