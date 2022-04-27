@@ -1,15 +1,13 @@
 import { Backdrop, Box, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import React, { useEffect, useState } from "react";
-// import { useQuery } from "react-query";
+import React, { useEffect, useRef, useState } from "react";
+import { useQuery } from "react-query";
 
+import { REACT_QUERY_KEYS } from "src/constants/constants";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import { getUserFavoriteTags, getUserProvince, getUserRecentlyLogin, getUserNewMembers } from "src/services/user";
 import { sendMatchingRequest } from "src/services/matching";
-
-// import { REACT_QUERY_KEYS } from "../constants/constants";
-
-import theme from "../../theme";
+import theme from "src/theme";
 
 import BannerComponent from "./blocks/BannerComponent";
 import MatchingComponent from "./blocks/MatchingComponent";
@@ -22,79 +20,156 @@ const LIMIT = 20;
 
 const HomeIndexComponents = () => {
   const { t } = useTranslation();
-  const [memberRecommends, setMemberRecommends] = useState([]);
+  const [memberRecommends, setMemberRecommends] = useState([
+    // Newest
+    {
+      title: t("home:register-newest"),
+      data: [],
+    },
+
+    // recent-login-member
+    {
+      title: t("home:recent-login-member"),
+      data: [],
+    },
+
+    // member-favorite-area
+    {
+      title: t("home:member-favorite-area"),
+      data: [],
+    },
+
+    // member-favorite-tags
+    {
+      title: t("home:member-favorite-tags"),
+      data: [],
+    },
+  ]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // get users_provinces
-  // const { data: userProvinceData } = useQuery(REACT_QUERY_KEYS.HOMEPAGE_GET_USER_PROVINCES, async () => {
-  //   const res = await getUserProvince(LIMIT);
-  //   return res?.items || [];
-  // });
-  // const { data: userRecentlyLoginData } = useQuery(REACT_QUERY_KEYS.HOMEPAGE_GET_USER_RECENT_LOGIN, async () => {
-  //   const res = await getUserRecentlyLogin(LIMIT);
-  //   return res?.items || [];
-  // });
-  // const { data: userNewMember } = useQuery(REACT_QUERY_KEYS.HOMEPAGE_GET_USER_NEW_MEMBERS, async () => {
-  //   const res = await getUserNewMembers(LIMIT);
-  //   return res?.items || [];
-  // });
-  // const { data: userFavoriteTagsData } = useQuery(REACT_QUERY_KEYS.HOMEPAGE_GET_USER_FAVORITE_TAGS, async () => {
-  //   const res = await getUserFavoriteTags(LIMIT);
-  //   return res?.items || [];
-  // });
+  const {
+    data: userProvinceData,
+    refetch: refetchUserProvince,
+    isLoading: isLoading1,
+  } = useQuery(
+    REACT_QUERY_KEYS.HOMEPAGE_GET_USER_PROVINCES,
+    async () => {
+      setIsLoading(false);
+      const res = await getUserProvince(LIMIT);
+      return res?.items || [];
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+  const {
+    data: userRecentlyLoginData,
+    refetch: refetchRecentlyLoginData,
+    isLoading: isLoading2,
+  } = useQuery(
+    REACT_QUERY_KEYS.HOMEPAGE_GET_USER_RECENT_LOGIN,
+    async () => {
+      setIsLoading(false);
+      const res = await getUserRecentlyLogin(LIMIT);
+      return res?.items || [];
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+  const {
+    data: userNewMember,
+    refetch: refetchNewMember,
+    isLoading: isLoading3,
+  } = useQuery(
+    REACT_QUERY_KEYS.HOMEPAGE_GET_USER_NEW_MEMBERS,
+    async () => {
+      setIsLoading(false);
+      const res = await getUserNewMembers(LIMIT);
+      return res?.items || [];
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+  const {
+    data: userFavoriteTagsData,
+    refetch: refetchFavoriteTags,
+    isLoading: isLoading4,
+  } = useQuery(
+    REACT_QUERY_KEYS.HOMEPAGE_GET_USER_FAVORITE_TAGS,
+    async () => {
+      setIsLoading(false);
+      const res = await getUserFavoriteTags(LIMIT);
+      return res?.items || [];
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
 
   useEffect(() => {
-    setIsLoading(true);
-    const fetchData = async () => {
-      const fetchDataPromise = [
-        getUserProvince(LIMIT),
-        getUserRecentlyLogin(LIMIT),
-        getUserNewMembers(LIMIT),
-        getUserFavoriteTags(LIMIT),
-      ];
-      const results = await Promise.all(fetchDataPromise);
-      setMemberRecommends([
-        // Newest
-        {
-          title: t("home:register-newest"),
-          data: results[2]?.items?.reverse() || [],
-        },
+    setIsLoading(isLoading1 || isLoading2 || isLoading3 || isLoading4);
+  }, [isLoading1, isLoading2, isLoading3, isLoading4]);
 
-        // recent-login-member
-        {
-          title: t("home:recent-login-member"),
-          data: results[1]?.items?.reverse() || [],
-        },
+  useEffect(() => {
+    const memberRecommendsTmp = [...memberRecommends];
+    memberRecommendsTmp[0].data = userProvinceData || [];
+    setMemberRecommends(memberRecommendsTmp);
+  }, [userProvinceData]);
 
-        // member-favorite-area
-        {
-          title: t("home:member-favorite-area"),
-          data: results[0]?.items || [],
-        },
+  useEffect(() => {
+    const memberRecommendsTmp = [...memberRecommends];
+    memberRecommendsTmp[1].data = userRecentlyLoginData || [];
+    setMemberRecommends(memberRecommendsTmp);
+  }, [userRecentlyLoginData]);
 
-        // member-favorite-tags
-        {
-          title: t("home:member-favorite-tags"),
-          data: results[3]?.items || [],
-        },
-      ]);
-      setIsLoading(false);
-    };
-    fetchData();
-  }, []);
+  useEffect(() => {
+    const memberRecommendsTmp = [...memberRecommends];
+    memberRecommendsTmp[2].data = userNewMember || [];
+    setMemberRecommends(memberRecommendsTmp);
+  }, [userNewMember]);
+
+  useEffect(() => {
+    const memberRecommendsTmp = [...memberRecommends];
+    memberRecommendsTmp[3].data = userFavoriteTagsData || [];
+    setMemberRecommends(memberRecommendsTmp);
+  }, [userFavoriteTagsData]);
 
   const [openModal, setOpenModal] = useState(false);
   const [userRequestMatching, setUserRequestMatching] = useState(null);
+  const indexRefetch = useRef(null);
+
+  const handleRefetchData = () => {
+    switch (indexRefetch.current) {
+      case 0:
+        refetchUserProvince();
+        break;
+      case 1:
+        refetchRecentlyLoginData();
+        break;
+      case 2:
+        refetchNewMember();
+        break;
+      case 3:
+        refetchFavoriteTags();
+        break;
+      default:
+        break;
+    }
+  };
 
   const handleSendMatchingRequest = async (matchingRequest) => {
     const res = await sendMatchingRequest(userRequestMatching?.id, matchingRequest);
     setOpenModal(false);
+    handleRefetchData();
     return res;
   };
 
-  const handleOpenMatchingModal = (userMatching: any) => {
+  const handleOpenMatchingModal = (userMatching: any, index: number) => {
     setOpenModal(true);
     setUserRequestMatching(userMatching);
+    indexRefetch.current = index;
   };
 
   return (
@@ -123,6 +198,7 @@ const HomeIndexComponents = () => {
             title={item?.title}
             dataRecommends={item?.data}
             key={index}
+            indexFetch={index}
             handleOpenMatchingModal={handleOpenMatchingModal}
           />
         ))}

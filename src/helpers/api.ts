@@ -33,8 +33,8 @@ const set = (token: string) => {
   axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 };
 
-export function setToken(token: string) {
-  setTokenStorage(token);
+export function setToken(token: string, expiresIn?: number) {
+  setTokenStorage(token, expiresIn);
   set(token);
 }
 

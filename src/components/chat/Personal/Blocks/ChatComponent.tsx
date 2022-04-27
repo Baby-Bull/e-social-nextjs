@@ -1,18 +1,25 @@
 /* eslint-disable no-console */
 import React, { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/router";
 import { Grid } from "@mui/material";
 import classNames from "classnames";
 import dayjs from "dayjs";
+import { useQuery } from "react-query";
 
 import styles from "src/components/chat/chat.module.scss";
 import ChatBoxLeftComponent from "src/components/chat/Personal/Blocks/ChatBoxLeftComponent";
 import useViewport from "src/helpers/useViewport";
 import { getListChatRooms } from "src/services/chat";
 import { getToken } from "src/helpers/storage";
+import { REACT_QUERY_KEYS } from "src/constants/constants";
+import { sortListRoomChat } from "src/helpers/helper";
 
 import ChatBoxRightComponent from "./ChatBoxRightComponent";
+import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
 
-const BlockChatComponent = () => {
+const BlockChatComponent = ({ hasData, setHasData }) => {
+  const router = useRouter();
+  const { room: roomQuery } = router.query;
   // Responsive
   const viewPort = useViewport();
   const isMobile = viewPort.width <= 992;
@@ -44,37 +51,54 @@ const BlockChatComponent = () => {
   const updateLastMessageOfListRooms = async (message: any) => {
     let hasChatRoomExist = false;
     setListRooms(
-      listRoomRef.current?.map((item) => {
-        if (item.id === message.chat_room_id) {
-          hasChatRoomExist = true;
-          return {
-            ...item,
-            last_chat_message_at: dayjs(new Date()).toISOString(),
-            last_chat_message_received: message.content,
-          };
-        }
-        return item;
-      }),
+      sortListRoomChat(
+        listRoomRef.current?.map((item) => {
+          if (item.id === message.chat_room_id) {
+            hasChatRoomExist = true;
+            return {
+              ...item,
+              last_chat_message_at: dayjs(new Date()).toISOString(),
+              last_chat_message_received: message.content,
+            };
+          }
+          return item;
+        }),
+      ),
     );
     if (!hasChatRoomExist && message?.user) {
-      setListRooms([
-        {
-          id: message.chat_room_id,
-          user: message?.user || {},
-          last_chat_message_at: dayjs(new Date()).toISOString(),
-          last_chat_message_received: message.content,
-        },
-        ...listRoomRef.current,
-      ]);
+      setListRooms(
+        sortListRoomChat([
+          {
+            id: message.chat_room_id,
+            user: message?.user || {},
+            last_chat_message_at: dayjs(new Date()).toISOString(),
+            last_chat_message_received: message.content,
+          },
+          ...listRoomRef.current,
+        ]),
+      );
     }
   };
 
   useEffect(() => {
     listRoomRef.current = listRooms;
+    if (!hasData && listRooms?.length) {
+      setHasData(true);
+    }
   }, [listRooms]);
 
   useEffect(() => {
     chatRoomIdRef.current = roomSelect?.id || null;
+    if (roomSelect?.id) {
+      router.push(
+        {
+          pathname: "/chat/personal",
+          query: { room: roomSelect?.id },
+        },
+        undefined,
+        { shallow: true },
+      );
+    }
   }, [roomSelect]);
 
   useEffect(() => {
@@ -96,7 +120,6 @@ const BlockChatComponent = () => {
     sk.current.addEventListener("message", (e: any) => {
       const messageReceived = JSON.parse(e.data);
       console.log("WebSocket received a message", Object.keys(messageReceived));
-      console.log(messageReceived);
       if (messageReceived["get.chatRoom.message"]) {
         const message = messageReceived["get.chatRoom.message"];
         if (chatRoomIdRef.current === message.chat_room_id) {
@@ -108,27 +131,41 @@ const BlockChatComponent = () => {
     });
   }, []);
 
+  const { data: listRoomResQuery } = useQuery(
+    [REACT_QUERY_KEYS.PERSONAL_CHAT.LIST_CHAT_ROOMS, searchChatRoom],
+    async () => {
+      const res = await getListChatRooms(searchChatRoom?.search, searchChatRoom?.cursor);
+      return res;
+    },
+    {
+      refetchOnWindowFocus: false,
+    },
+  );
+
   useEffect(() => {
-    const fetchListRooms = async () => {
-      const listRoomRes = await getListChatRooms(searchChatRoom?.search, searchChatRoom?.cursor);
-      setListRooms(listRoomRes?.items || []);
-      if (!roomSelect) {
-        setRoomSelect(listRoomRes?.items[0] || {});
-        setUserId(listRoomRes?.items[0]?.user?.id);
-        setUser(listRoomRes?.items[0]?.user);
+    setListRooms(sortListRoomChat(listRoomResQuery?.items || []));
+    if (!roomSelect?.id) {
+      const roomQuerySelect = listRoomResQuery?.items?.find((item: any) => item.id === roomQuery);
+      if (roomQuerySelect) {
+        setRoomSelect(roomQuerySelect);
+        setUserId(roomQuerySelect?.user?.id);
+        setUser(roomQuerySelect?.user);
+      } else {
+        setRoomSelect(listRoomResQuery?.items[0] || {});
+        setUserId(listRoomResQuery?.items[0]?.user?.id);
+        setUser(listRoomResQuery?.items[0]?.user);
       }
-      setHasMoreChatRoom({
-        cursor: listRoomRes?.cursor,
-        hasMore: listRoomRes?.hasMore,
-      });
-    };
-    fetchListRooms();
-  }, [searchChatRoom]);
+    }
+    setHasMoreChatRoom({
+      cursor: listRoomResQuery?.cursor,
+      hasMore: listRoomResQuery?.hasMore,
+    });
+  }, [listRoomResQuery]);
 
   const loadMoreChatRooms = async () => {
     if (hasMoreChatRoom.cursor?.length) {
       const listRoomRes = await getListChatRooms(searchChatRoom?.search, hasMoreChatRoom.cursor);
-      setListRooms([...listRooms, ...(listRoomRes?.items || [])]);
+      setListRooms(sortListRoomChat([...listRooms, ...(listRoomRes?.items || [])]));
       setHasMoreChatRoom({
         cursor: listRoomRes?.cursor,
         hasMore: listRoomRes?.hasMore,
@@ -174,7 +211,8 @@ const BlockChatComponent = () => {
           loadMoreChatRooms={loadMoreChatRooms}
         />
       ) : null}
-      {!isMobile || (isMobile && isRenderRightSide) ? (
+      {!hasData && <ChatBoxRightNoDataComponent />}
+      {hasData && (!isMobile || (isMobile && isRenderRightSide)) ? (
         <ChatBoxRightComponent
           isMobile={isMobile}
           toggleRenderSide={toggleRenderSide}

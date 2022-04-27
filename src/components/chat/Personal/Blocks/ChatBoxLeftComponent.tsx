@@ -7,7 +7,7 @@ import InfiniteScroll from "react-infinite-scroller";
 
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
-import { formatChatDate } from "src/utils/utils";
+import { formatChatDateRoom } from "src/helpers/helper";
 
 // interface IThreadDropDownProps {
 //   open: boolean;
@@ -93,7 +93,7 @@ const ChatBoxLeftComponent = ({
                     <Typography className="name">{thread?.user?.username}</Typography>
                     <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
                   </div>
-                  <div className="thread-last-time">{formatChatDate(thread?.last_chat_message_at)}</div>
+                  <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
                   {/* <div className="more-options">
                   <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
                     <img alt="more-options" src="/assets/images/chat/more_options.svg" />

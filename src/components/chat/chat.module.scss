@@ -6,10 +6,11 @@
   background: white;
   display: flex;
   flex-direction: row;
-  margin-top: 80px;
+  margin-top: 64px;
 
   @media screen and (max-width: 992px) {
     height: calc(100vh - 56px);
+    margin-top: 80px;
   }
 
 
@@ -422,7 +423,7 @@
           font-size: 14px;
           font-weight: 400;
           color: #989EA8;
-          width: 223px;
+          width: 208px;
           display: block;
           white-space: nowrap;
           text-overflow: ellipsis;

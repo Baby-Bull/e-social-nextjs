@@ -37,10 +37,12 @@ interface IRecommendDataItem {
 
 interface IRecommendItemProps {
   data: IRecommendDataItem;
+  indexKey?: number;
   handleOpenMatchingModal: Function;
 }
 
 interface IRecommendMembersComponentProps {
+  indexFetch?: number;
   title: string;
   dataRecommends: Array<IRecommendDataItem>;
   handleOpenMatchingModal: Function;
@@ -76,7 +78,7 @@ const handleMapMatchingStatus = (statusMatchingTemp: string) => {
   }
 };
 
-const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchingModal }) => {
+const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchingModal, indexKey }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [liked, setLiked] = useState(data?.is_favorite);
@@ -85,7 +87,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
 
   const handleClickButtonModal = (tempValue: any) => {
     if (tempValue === "rejected" || !tempValue) {
-      handleOpenMatchingModal(data);
+      handleOpenMatchingModal(data, indexKey);
     } else router.push("/chat/personal");
   };
 
@@ -181,6 +183,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
 const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
   title,
   dataRecommends,
+  indexFetch,
   handleOpenMatchingModal,
 }) => {
   const { t } = useTranslation();
@@ -189,7 +192,12 @@ const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
   useEffect(() => {
     setDataElements(
       dataRecommends?.map((item, index) => (
-        <RecommendItem data={item} key={index} handleOpenMatchingModal={handleOpenMatchingModal} />
+        <RecommendItem
+          data={item}
+          key={index}
+          handleOpenMatchingModal={handleOpenMatchingModal}
+          indexKey={indexFetch}
+        />
       )),
     );
   }, [dataRecommends]);
