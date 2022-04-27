@@ -95,8 +95,8 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
     if (handleValidateForm()) {
       handleSendMatchingRequest({
         ...matchingRequest,
-        desired_match_date: "2022-02-22 22:22",
       });
+
       setMatchingRequest({
         desired_match_date: null,
         purpose: "",
