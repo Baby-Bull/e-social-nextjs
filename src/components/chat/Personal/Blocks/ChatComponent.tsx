@@ -20,6 +20,7 @@ const BlockChatComponent = () => {
 
   const [listRooms, setListRooms] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [user, setUser] = useState({});
   const [roomSelect, setRoomSelect] = useState(null);
 
   const [hasMoreChatRoom, setHasMoreChatRoom] = useState({
@@ -114,6 +115,7 @@ const BlockChatComponent = () => {
       if (!roomSelect) {
         setRoomSelect(listRoomRes?.items[0] || {});
         setUserId(listRoomRes?.items[0]?.user?.id);
+        setUser(listRoomRes?.items[0]?.user);
       }
       setHasMoreChatRoom({
         cursor: listRoomRes?.cursor,
@@ -149,13 +151,12 @@ const BlockChatComponent = () => {
       });
     }
   };
-
   const onSelectRoom = (index: number) => {
     setIsRenderRightSide(!isRenderRightSide);
-
     if (listRooms[index]?.user?.id !== userId) {
       setRoomSelect(listRooms[index]);
       setUserId(listRooms[index]?.user?.id);
+      setUser(listRooms[index]?.user);
     }
   };
 
@@ -178,6 +179,7 @@ const BlockChatComponent = () => {
           isMobile={isMobile}
           toggleRenderSide={toggleRenderSide}
           userId={userId}
+          user={user}
           roomSelect={roomSelect}
           sendTextMessage={sendTextMessage}
           newMessageOfRoom={newMessageOfRoom}

@@ -33,6 +33,8 @@
     "comment": "コメント",
     "check-review": "レビューを確認",
     "post-review": "レビューを投稿",
+    "review" : "へのレビュー",
+    "report_user": "を運営に通報する",
     "to-fix": "修正する",
     "twitter": "ツイートする",
     "text-thanks-review": "レビュー投稿ありがとうございます！",
@@ -48,7 +50,7 @@
       "report-management": "運営に通報する",
       "post-anonymously": "匿名で投稿",
       "report-management-null": "通報しない",
-      "post-anonymously-null": "使用しない"
+      "post-anonymously-null": "使用しない",
     }
   }
 }

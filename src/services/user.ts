@@ -71,7 +71,7 @@ export const deleteUserFavorite = async (userId: string) => {
 export const userReport = async (userId: string, body: object) => {
   try {
     const res = await api.post(`/user/${userId}/report`, body);
-    if (res.data.error_code !== "200" || res.data.error_code !== "201") {
+    if (res.data.error_code) {
       toast.error(res.data.message);
     } else {
       toast.success(USER_REPORT);
@@ -86,7 +86,7 @@ export const userReport = async (userId: string, body: object) => {
 export const userReview = async (userId: string, body: object) => {
   try {
     const res = await api.post(`/user/${userId}/review`, body);
-    if (res.data.error_code !== "200" || res.data.error_code !== "201") {
+    if (res.data.error_code) {
       toast.error(res.data.message);
     } else {
       toast.success(USER_REVIEW);

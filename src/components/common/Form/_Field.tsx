@@ -4,6 +4,7 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DesktopDatePicker from "@mui/lab/DatePicker";
 import { styled } from "@mui/material/styles";
+import { ja } from "date-fns/locale";
 
 import theme from "src/theme";
 
@@ -20,6 +21,7 @@ export interface FieldProps {
   value?: any;
   error?: string;
   onChangeValue: Function;
+  readOnly?: boolean;
 }
 
 const InputCustom = styled(InputBase)({
@@ -86,7 +88,7 @@ export const Field: React.SFC<FieldProps> = ({
   error,
   onChangeValue,
 }) => {
-  const [date, setDate] = React.useState(null);
+  const [date, setDate] = React.useState(new Date());
 
   return (
     <React.Fragment>
@@ -193,9 +195,9 @@ export const Field: React.SFC<FieldProps> = ({
                 </InputLabel>
               </Grid>
               <Grid item md={9} xs={12}>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <LocalizationProvider dateAdapter={AdapterDateFns} locale={ja}>
                   <DesktopDatePicker
-                    maxDate={new Date()}
+                    minDate={new Date()}
                     value={date}
                     inputFormat="dd/MM/yyyy"
                     onChange={(newValue) => {
@@ -251,6 +253,7 @@ export const Field: React.SFC<FieldProps> = ({
                           placeholder="クリックして日付を選択"
                           ref={inputRef}
                           {...inputProps}
+                          readOnly
                         />
                         {InputProps?.endAdornment}
                       </Box>

@@ -11,7 +11,6 @@ import { useTranslation } from "next-i18next";
 import { Avatar, Box, Select, Typography } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 
-import { nameUser } from "src/components/chat/mockData";
 import theme from "src/theme";
 import { userReport } from "src/services/user";
 import { USER_REPORT_OPTIONS } from "src/constants/constants";
@@ -19,7 +18,7 @@ import { VALIDATE_FORM_USER_PORT } from "src/messages/validate";
 
 interface IReportUserProps {
   showPopup: boolean;
-  userId?: string;
+  user?: any;
   // eslint-disable-next-line no-unused-vars
   setShowPopup: (status: boolean) => void;
 }
@@ -111,7 +110,7 @@ const TypoContentReport = styled(Typography)({
   },
 });
 
-const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup, userId }) => {
+const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup, user }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [option, setOption] = React.useState(USER_REPORT_OPTIONS[0].value);
@@ -153,11 +152,9 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup,
 
   const submitUserReportRequest = async () => {
     if (handleValidateForm()) {
-      const res = await userReport(userId, userReportRequest);
-      if (res.error_code === "200" || res.error_code === "201") {
-        setReport(true);
-        return res.data;
-      }
+      const res = await userReport(user.id, userReportRequest);
+      setReport(true);
+      return res.data;
     }
   };
 
@@ -190,7 +187,7 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup,
         </Box>
         <DialogTitle sx={{ p: 0, mb: "32px", display: report ? "none" : "block" }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Avatar src="/assets/images/avatar_review.png" />
+            <Avatar src={user?.profile_image} />
             <Typography
               component="span"
               sx={{
@@ -200,7 +197,7 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup,
                 ml: "20px",
               }}
             >
-              {nameUser}
+              {user?.username} {t("chat:poreport_user")}
             </Typography>
           </Box>
         </DialogTitle>
