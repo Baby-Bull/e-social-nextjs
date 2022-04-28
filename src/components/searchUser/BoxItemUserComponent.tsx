@@ -1,7 +1,7 @@
 import { Box, Grid } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
-import React from "react";
+import React, { useContext, useState } from "react";
 // eslint-disable-next-line import/order
 import moment from "moment";
 
@@ -14,6 +14,9 @@ import { HOMEPAGE_RECOMMEND_MEMBER_STATUS, USER_SEARCH_STATUS, JOBS } from "src/
 import { replaceLabelByTranslate } from "src/utils/utils";
 import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
 import { sendMatchingRequest } from "src/services/matching";
+import { addUserFavorite, deleteUserFavorite } from "src/services/user";
+
+import { AuthContext } from "../../../context/AuthContext";
 
 interface IUserItemProps {
   id: string;
@@ -41,6 +44,8 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
   const { t } = useTranslation();
   const router = useRouter();
   const [showModalMatching, setModalMatching] = React.useState(false);
+  const [liked, setLiked] = useState(data?.is_favorite);
+  const { auth, dispatch } = useContext(AuthContext);
   const handleShowModalMatching = (matchStatus) => {
     // handleShowModalMatching
     if (!matchStatus) {
@@ -69,6 +74,18 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
       default:
         return 4;
     }
+  };
+
+  const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
+    if (isFavorite) deleteUserFavorite(tempData);
+    else addUserFavorite(tempData);
+  };
+
+  const handleClickFavoriteButton = () => {
+    handleFavoriteAnUser(liked, data?.id);
+    if (liked) dispatch({ type: "REMOVE_FAVORITE", payload: auth });
+    else dispatch({ type: "ADD_FAVORITE", payload: auth });
+    setLiked(!liked);
   };
 
   return (
@@ -121,14 +138,10 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
 
           <p className="description">{data?.discussion_topic}</p>
 
-          <div className="div-review">
+          <div className="div-review" onClick={handleClickFavoriteButton}>
             <img
               alt="ic-like"
-              src={
-                data?.is_favorite
-                  ? "/assets/images/home_page/ic_heart.svg"
-                  : "/assets/images/home_page/ic_heart_empty.svg"
-              }
+              src={liked ? "/assets/images/home_page/ic_heart.svg" : "/assets/images/home_page/ic_heart_empty.svg"}
             />
             <span>{t("user-search:btn-add-favorite")}</span>
           </div>
