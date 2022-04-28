@@ -65,10 +65,7 @@ const ChatBoxLeftComponent = ({
         <Typography className="title">{t("chat:box-left-title")}</Typography>
       </Box>
       <Box className="box-search">
-        <Paper
-          className="input-search"
-          sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}
-        >
+        <Paper className="input-search" sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}>
           <img alt="search" src="/assets/images/svg/ic_search.svg" />
           <InputCustom
             inputRef={inputSearchRef}
