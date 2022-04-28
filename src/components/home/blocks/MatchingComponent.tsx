@@ -18,6 +18,7 @@ interface IMatchingItemMobileProps {
   icon: string;
   data: number;
   label: string;
+  link: string;
 }
 
 const MatchingItem: React.SFC<IMatchingItemProps> = ({ label, data, unit, link }) => (
@@ -35,12 +36,14 @@ const MatchingItem: React.SFC<IMatchingItemProps> = ({ label, data, unit, link }
   </Link>
 );
 
-const MatchingItemMobile: React.SFC<IMatchingItemMobileProps> = ({ label, data, icon }) => (
-  <Box className={styles.boxMatchingMobile}>
-    <img src={icon} alt="icon" />
-    <span className="label-type">{label}</span>
-    {data ? <span className="span-has-data" /> : ""}
-  </Box>
+const MatchingItemMobile: React.SFC<IMatchingItemMobileProps> = ({ label, data, icon, link }) => (
+  <Link sx={{ color: "black" }} underline="none" href={link}>
+    <Box className={styles.boxMatchingMobile}>
+      <img src={icon} alt="icon" />
+      <span className="label-type">{label}</span>
+      {data ? <span className="span-has-data" /> : ""}
+    </Box>
+  </Link>
 );
 
 const MatchingComponent = () => {
@@ -80,26 +83,31 @@ const MatchingComponent = () => {
       label: t("home:matching.request"),
       data: auth?.user?.profile?.match_application_count ?? 0,
       icon: "/assets/images/home_page/ic_user.svg",
+      link: "/matching?type=received",
     },
     application: {
       label: t("home:matching.application"),
       data: auth?.user?.profile?.match_request_count ?? 0,
       icon: "/assets/images/home_page/ic_hand.svg",
+      link: "/matching?type=sent",
     },
     people: {
       label: t("home:matching.people"),
       data: auth?.user?.profile?.favorite_count ?? 0,
       icon: "/assets/images/home_page/ic_heart_blue.svg",
+      link: "/matching?type=favorite",
     },
     chat: {
       label: t("home:matching.chat"),
       data: 1,
       icon: "/assets/images/home_page/ic_chat.svg",
+      link: "/matching?type=matched",
     },
     community: {
       label: t("home:matching.community"),
       data: auth?.user?.profile?.community_count ?? 0,
       icon: "/assets/images/home_page/ic_star_circle.svg",
+      link: "/matching?type=community",
     },
   });
 
@@ -137,6 +145,7 @@ const MatchingComponent = () => {
               label={dataMatchingMobile[key]?.label}
               icon={dataMatchingMobile[key]?.icon}
               data={dataMatchingMobile[key]?.data}
+              link={dataMatchingMobile[key]?.link}
             />
           </Grid>
         ))}

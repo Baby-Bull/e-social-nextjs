@@ -46,7 +46,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
     setTabValue(newValue);
   };
 
-  const [optionSelected, setOption] = React.useState("newest");
+  const [optionSelected, setOption] = React.useState("oldest");
   const handleChange = (event: SelectChangeEvent) => {
     setOption(event.target.value);
   };

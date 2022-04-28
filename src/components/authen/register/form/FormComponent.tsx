@@ -54,7 +54,7 @@ const FormRegisterComponents = () => {
   const [userInfo, setUserInfo] = useState({
     username: null,
     birthday: null,
-    status: USER_STATUS_OPTIONS[0].value,
+    status: null,
     email: null,
     address: null,
     tags: [],
@@ -170,6 +170,12 @@ const FormRegisterComponents = () => {
       errorMessages.address = VALIDATE_MESSAGE_FORM_REGISTER.address.required;
     }
 
+    // validate status
+    if (!userInfo?.status || userInfo?.status?.length === 0) {
+      isValidForm = false;
+      errorMessages.status = VALIDATE_MESSAGE_FORM_REGISTER.status.required;
+    }
+
     // validate tags
     if (!userInfo?.tags || userInfo?.tags?.length === 0) {
       isValidForm = false;
@@ -181,6 +187,7 @@ const FormRegisterComponents = () => {
 
     // validate checkbox
     if (!hasAgree) {
+      isValidForm = false;
       errorMessages.checkbox = VALIDATE_MESSAGE_FORM_REGISTER.checkbox;
     }
 

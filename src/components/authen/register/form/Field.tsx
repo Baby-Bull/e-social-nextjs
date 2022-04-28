@@ -43,6 +43,11 @@ export interface IFieldProps {
   error?: string;
 }
 
+interface IPlaceholderProps {
+  children: any;
+}
+const Placeholder: React.SFC<IPlaceholderProps> = ({ children }) => <div style={{ color: "#aaa" }}>{children}</div>;
+
 const InputCustom = styled(InputBase)({
   "& .MuiInputBase-input": {
     position: "relative",
@@ -177,6 +182,7 @@ export const Field: React.SFC<IFieldProps> = ({
   };
 
   const [date, setDate] = React.useState(null);
+  const [valueDropdown, setValueDropdown] = React.useState<any>();
 
   return (
     <React.Fragment>
@@ -252,9 +258,13 @@ export const Field: React.SFC<IFieldProps> = ({
             <SelectCustom
               autoWidth={false}
               value={value}
-              onChange={(e) => onChangeValue(id, e.target.value)}
+              onChange={(e) => {
+                onChangeValue(id, e.target.value);
+                setValueDropdown(e.target.value);
+              }}
               displayEmpty
-              defaultValue={options[0]?.value}
+              renderValue={valueDropdown ? undefined : () => <Placeholder>選択してください</Placeholder>}
+              // defaultValue={options[0]?.value}
             >
               {options &&
                 options.map((option, index) => (

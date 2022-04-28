@@ -129,8 +129,8 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
       label: "エンジニア",
     },
     {
-      value: "コミュニティ一",
-      label: "コミュニティ一",
+      value: "コミュニティ",
+      label: "コミュニティ",
     },
   ];
 

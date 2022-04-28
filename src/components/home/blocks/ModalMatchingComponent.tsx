@@ -89,7 +89,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
       }
     } else {
       isValidForm = false;
-      errorMessages.desired_match_date = VALIDATE_FORM_MATCHING_REQUEST.desired_match_date.invalid_date;
+      errorMessages.desired_match_date = VALIDATE_FORM_MATCHING_REQUEST.desired_match_date.required_date;
     }
     setErrorValidates(errorMessages);
     return isValidForm;
