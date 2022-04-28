@@ -133,7 +133,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
       >
         <Typography
           sx={{
-            display: { sm: "none" },
+            display: { sm: "none", xs: type !== "favorite" ? "inherit" : "none" },
             fontSize: [12, 14],
             fontWeight: 400,
             mb: "15px",

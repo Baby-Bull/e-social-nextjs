@@ -63,6 +63,23 @@ export const USER_SEARCH_STATUS = {
   },
 };
 
+export const JOBS = {
+  frontend: { label: "フロントエンドエンジニア" },
+  backend: { label: "データサイエンティスト" },
+  "data-scientist": { label: "データサイエンティスト" },
+  "project-manager": { label: "プロジェクトマネージャー" },
+  "project-leader": { label: "プロジェクトリーダー" },
+  "test-engineer": { label: "テストエンジニア" },
+  "database-engineer": { label: "データベースエンジニア" },
+  "security-engineer": { label: "セキュリティエンジニア" },
+  "infrastructure-engineer": { label: "インフラエンジニア" },
+  "network-engineer": { label: "ネットワークエンジニア" },
+  "server-engineer": { label: "サーバーエンジニア" },
+  "support-engineer": { label: "サポートエンジニア" },
+  "help-desk": { label: "ヘルプデスク" },
+  "markup-engineer": { label: "マークアップエンジニア" },
+};
+
 export const USER_STATUS_OPTIONS = [
   {
     label: "今すぐ話せます",
