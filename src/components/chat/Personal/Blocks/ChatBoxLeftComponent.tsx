@@ -66,7 +66,6 @@ const ChatBoxLeftComponent = ({
       </Box>
       <Box className="box-search">
         <Paper
-          component="form"
           className="input-search"
           sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}
         >
