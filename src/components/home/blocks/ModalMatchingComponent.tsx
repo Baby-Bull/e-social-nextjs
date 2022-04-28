@@ -41,7 +41,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
   const { t } = useTranslation();
 
   const [matchingRequest, setMatchingRequest] = useState({
-    desired_match_date: null,
+    desired_match_date: new Date()?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }),
     purpose: "",
     message: null,
   });
@@ -80,9 +80,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
     if (matchingRequest?.desired_match_date) {
       if (
         JSON.stringify(matchingRequest?.desired_match_date) === "null" ||
-        matchingRequest?.desired_match_date === "Invalid Date" ||
-        new Date().getFullYear() < matchingRequest?.desired_match_date?.split("-")[0] ||
-        matchingRequest?.desired_match_date?.split("-")[0] < 1900
+        matchingRequest?.desired_match_date === "Invalid Date"
       ) {
         isValidForm = false;
         errorMessages.desired_match_date = VALIDATE_FORM_MATCHING_REQUEST.desired_match_date.invalid_date;

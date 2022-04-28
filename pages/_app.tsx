@@ -17,6 +17,7 @@ import { refreshToken } from "src/services/auth";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "react-toastify/dist/ReactToastify.css";
 import "src/styles/index.scss";
 
 import { AuthContextProvider } from "../context/AuthContext";
