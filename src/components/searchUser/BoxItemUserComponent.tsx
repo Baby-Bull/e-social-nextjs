@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 
 import styles from "src/components/searchUser/search_user.module.scss";
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
-import { HOMEPAGE_RECOMMEND_MEMBER_STATUS, USER_SEARCH_STATUS } from "src/components/constants/constants";
+import { HOMEPAGE_RECOMMEND_MEMBER_STATUS, USER_SEARCH_STATUS, JOBS } from "src/components/constants/constants";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
 import { sendMatchingRequest } from "src/services/matching";
@@ -97,14 +97,14 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
             <img src={data?.profile_image} alt="img-member" />
             <div className="member-info">
               <p className="name">{data?.username}</p>
-              <p className="career">{data?.job_position}</p>
+              <p className="career">{JOBS[data?.job_position]?.label}</p>
               <p className="review">
                 {t("home:box-member-recommend.review")}: {data?.review_count}
               </p>
             </div>
           </div>
 
-          <div className="introduce">{data?.self_description}</div>
+          <div className="introduce">{data?.self_description ? data?.self_description : "情報なし"}</div>
 
           <div className="tags">
             <ul>

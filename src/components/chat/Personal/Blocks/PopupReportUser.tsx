@@ -122,10 +122,12 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup,
 
   const errorMessages = {
     reason: null,
+    detail: null,
   };
 
   const [errorValidates, setErrorValidates] = useState({
     reason: null,
+    detail: null,
   });
 
   const onChangeReportRequest = (key: string, value: any) => {
@@ -146,6 +148,11 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup,
       isValidForm = false;
       errorMessages.reason = VALIDATE_FORM_USER_PORT.reason.required;
     }
+
+    if (!userReportRequest?.detail || userReportRequest?.detail?.length > 1000) {
+      isValidForm = false;
+      errorMessages.detail = VALIDATE_FORM_USER_PORT.detail.max_length;
+    }
     setErrorValidates(errorMessages);
     return isValidForm;
   };
@@ -160,6 +167,7 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup,
 
   const handleClose = () => {
     errorMessages.reason = null;
+    errorMessages.detail = null;
     setOption(USER_REPORT_OPTIONS[0].value);
     setErrorValidates(errorMessages);
     setShowPopup(false);
@@ -280,6 +288,7 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup,
                 placeholder={t("chat:popup.form.placeholder.background-to-the-report")}
                 onChange={(e) => onChangeReportRequest("detail", e.target.value)}
               />
+              <Box sx={{ color: "red" }}>{errorValidates.detail}</Box>
             </Box>
             <Box sx={{ textAlign: "center" }}>
               <Typography component="span" color={theme.navy} fontSize={14}>

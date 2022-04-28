@@ -12,6 +12,7 @@ import { useTranslation } from "next-i18next";
 
 import { userReview } from "src/services/user";
 import theme from "src/theme";
+import { VALIDATE_FORM_USER_REVIEW } from "src/messages/validate";
 
 interface IReportUserProps {
   showPopup: boolean;
@@ -132,6 +133,25 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
     send_report_to_admin: selectedReportToAdmin,
   });
 
+  const errorMessages = {
+    comment: null,
+  };
+
+  const [errorValidates, setErrorValidates] = useState({
+    comment: null,
+  });
+
+  const handleValidateForm = () => {
+    let isValidForm = true;
+    if (!userReviewRequest?.comment || userReviewRequest?.comment.length > 400) {
+      isValidForm = false;
+      errorMessages.comment = VALIDATE_FORM_USER_REVIEW.comment.max_length;
+    }
+
+    setErrorValidates(errorMessages);
+    return isValidForm;
+  };
+
   const handleClose = () => {
     setShowPopup(false);
     setIsPost(false);
@@ -140,7 +160,9 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
   };
 
   const handleIsCheck = () => {
-    setIsCheck(true);
+    if (handleValidateForm()) {
+      setIsCheck(true);
+    }
   };
 
   const onChangeReviewRequest = (key: string, value: any) => {
@@ -344,6 +366,7 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
                   placeholder={t("chat:popup.form.placeholder.comment")}
                   onChange={(e) => onChangeReviewRequest("comment", e.target.value)}
                 />
+                <Box sx={{ color: "red" }}>{errorValidates.comment}</Box>
               </Box>
             </BoxContentReview>
           </DialogContentText>

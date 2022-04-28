@@ -51,4 +51,13 @@ export const VALIDATE_FORM_USER_PORT = {
   reason: {
     required: "通報理由を選択してください。",
   },
+  detail: {
+    max_length: "1タグにつき1000文字以内で入力してください",
+  },
+};
+
+export const VALIDATE_FORM_USER_REVIEW = {
+  comment: {
+    max_length: "1タグにつき1000文字以内で入力してください",
+  },
 };
