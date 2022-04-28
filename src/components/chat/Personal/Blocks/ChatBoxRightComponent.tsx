@@ -4,6 +4,7 @@ import { Box, Grid, IconButton, Paper, Typography, Avatar } from "@mui/material"
 import { useTranslation } from "next-i18next";
 import dayjs from "dayjs";
 import InfiniteScroll from "react-infinite-scroller";
+import { useQuery } from "react-query";
 
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
@@ -14,7 +15,7 @@ import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupRevie
 import scrollEl from "src/helpers/scrollEl";
 import { getMessages } from "src/services/chat";
 import { formatChatDate } from "src/utils/utils";
-import { MESSAGE_CONTENT_TYPES } from "src/constants/constants";
+import { MESSAGE_CONTENT_TYPES, REACT_QUERY_KEYS } from "src/constants/constants";
 
 interface IBoxChatProps {
   avatar?: string;
@@ -122,26 +123,35 @@ const ChatBoxRightComponent = ({
     }
   }, [listMessages]);
 
-  useEffect(() => {
-    if (userId) {
-      const fetchMessages = async () => {
-        setListMessages([]);
-        setHasMoreParams({
-          cursor: null,
-          hasMore: false,
-        });
-        const res = await getMessages(userId);
-        setListMessages(res?.items?.reverse() || []);
-        setHasMoreParams({
-          cursor: res?.cursor,
-          hasMore: res?.hasMore,
-        });
-        isFirstRender.current = true;
+  const { data: listMessageResQuery } = useQuery(
+    [REACT_QUERY_KEYS.PERSONAL_CHAT.LIST_MESSAGES, userId],
+    async () => {
+      const res = await getMessages(userId);
+      return {
+        ...res,
+        items: res?.items?.reverse() || [],
       };
-      fetchMessages();
-      inputChatRef.current.focus();
-    }
-  }, [userId]);
+    },
+    {
+      refetchOnWindowFocus: false,
+      enabled: !!userId,
+    },
+  );
+
+  useEffect(() => {
+    setListMessages([]);
+    setHasMoreParams({
+      cursor: null,
+      hasMore: false,
+    });
+    setListMessages(listMessageResQuery?.items || []);
+    setHasMoreParams({
+      cursor: listMessageResQuery?.cursor,
+      hasMore: listMessageResQuery?.hasMore,
+    });
+    isFirstRender.current = true;
+    inputChatRef.current.focus();
+  }, [listMessageResQuery]);
 
   const loadMoreData = async () => {
     if (hasMoreParams?.cursor?.length && listMessages.length) {
@@ -162,8 +172,8 @@ const ChatBoxRightComponent = ({
   }, [newMessageOfRoom]);
 
   const handleSendTextMessage = () => {
-    const message = inputChatRef.current.value;
-    if (message && message.trim().length > 0) {
+    const message = inputChatRef.current.value.trim();
+    if (message) {
       sendTextMessage(message);
       setListMessages([
         ...listMessages,

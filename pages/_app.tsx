@@ -40,10 +40,18 @@ const MyApp = (props: MyAppProps) => {
       Router.push("/login");
     }
 
-    refreshToken();
-    setInterval(() => {
-      refreshToken();
-    }, 2700000);
+    if (!AUTH_PAGE_PATHS.includes(pathname) && cookies[USER_TOKEN]) {
+      const now = new Date();
+      const expiresIn = parseInt(cookies.EXPIRES_IN, 10) || now.getTime();
+
+      const timeOutFreshToken = expiresIn - now.getTime() - 300000;
+      setTimeout(() => {
+        refreshToken();
+        setInterval(() => {
+          refreshToken();
+        }, 2700000);
+      }, timeOutFreshToken);
+    }
   }, []);
 
   return (
