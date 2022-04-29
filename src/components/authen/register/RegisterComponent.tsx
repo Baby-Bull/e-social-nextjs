@@ -110,7 +110,7 @@ const RegisterComponents = () => {
 
               <Box pt="63px">
                 <ButtonComponent props={{ mode: "twitter" }} href={urlRedirectTwitter}>
-                  {t("login:right.register-twitter")}
+                  {t("register:register-twitter")}
                 </ButtonComponent>
               </Box>
               <Box pt="48px">
@@ -128,7 +128,7 @@ const RegisterComponents = () => {
                     setIsLoading(false);
                   }}
                 >
-                  <ButtonComponent props={{ mode: "google" }}>{t("login:right.register-google")}</ButtonComponent>
+                  <ButtonComponent props={{ mode: "google" }}>{t("register:register-google")}</ButtonComponent>
                 </LoginSocialGoogle>
               </Box>
 
@@ -148,7 +148,7 @@ const RegisterComponents = () => {
                     setIsLoading(false);
                   }}
                 >
-                  <ButtonComponent props={{ mode: "github" }}>{t("login:right.register-git")}</ButtonComponent>
+                  <ButtonComponent props={{ mode: "github" }}>{t("register:register-git")}</ButtonComponent>
                 </LoginSocialGithub>
               </Box>
 
