@@ -181,3 +181,6 @@ export const REACT_QUERY_KEYS = {
     LIST_MESSAGES: "PERSONAL_CHAT_LIST_MESSAGES",
   },
 };
+
+export class USER_SEARCH_STATUS {
+}

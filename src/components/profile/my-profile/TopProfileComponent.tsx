@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 
-import PopupChartProfileComponent from "src/components/profile/PopupChartProfileComponent";
+import PopupChartProfileComponent from "src/components/profile/my-profile/PopupChartProfileComponent";
 import theme from "src/theme";
 
 interface TopProfileComponentProps {

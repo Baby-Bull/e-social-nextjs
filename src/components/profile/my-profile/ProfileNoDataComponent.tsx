@@ -3,17 +3,17 @@ import React from "react";
 import { useTranslation } from "next-i18next";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
-import TopProfileComponent from "src/components/profile/TopProfileComponent";
-import ProfileSkillComponent from "src/components/profile/ProfileSkillComponent";
-import BoxRecommendMemberComponent from "src/components/profile/BoxRecommendMemberComponent";
-import ReviewComponent from "src/components/profile/ReviewComponent";
-import ParticipatingCommunityComponent from "src/components/profile/ParticipatingCommunityComponent";
+import TopProfileComponent from "src/components/profile/my-profile/TopProfileComponent";
+import ProfileSkillComponent from "src/components/profile/my-profile/ProfileSkillComponent";
+import BoxNoDataComponent from "src/components/profile/my-profile/BoxNoDataComponent";
+import BoxRecommendMemberComponent from "src/components/profile/my-profile/BoxRecommendMemberComponent";
 
 import {
   review,
   cumulativMatching,
   participatingCommunity,
   countParticipatingCommunity,
+  countReview,
   lastLogin,
   profileStatus,
   profileOneThing,
@@ -25,8 +25,6 @@ import {
   profileAddress,
   profileTag,
   recommendMember,
-  contentReview,
-  participatingCommunityData,
   ProfileSkillLanguage,
   ProfileSkillFramework,
   ProfileSkillInfrastructure,
@@ -35,8 +33,9 @@ import {
   ProfileSkillLanguageExperience,
 } from "./mockData";
 
-const ProfileHaveDataComponent = () => {
+const ProfileNoDataComponent = () => {
   const { t } = useTranslation();
+
   return (
     <ContentComponent>
       <Box
@@ -79,7 +78,7 @@ const ProfileHaveDataComponent = () => {
           }}
         >
           {t("profile:title-participating-community")} ({countParticipatingCommunity})
-          <ParticipatingCommunityComponent participatingCommunityData={participatingCommunityData} />
+          <BoxNoDataComponent content={t("profile:participating-community-no-data")} />
         </Box>
         <Box
           sx={{
@@ -90,16 +89,8 @@ const ProfileHaveDataComponent = () => {
             fontWeight: 700,
           }}
         >
-          {t("profile:title-review")}（{review}）
-          {contentReview?.map((item) => (
-            <ReviewComponent
-              statusLogin={item.statusLogin}
-              statusReview={item.statusReview}
-              content={item.content}
-              avatar={item.avatar}
-              time={item.time}
-            />
-          ))}
+          {t("profile:title-review")}（{countReview}）
+          <BoxNoDataComponent content={t("profile:review-no-data")} />
         </Box>
       </Box>
       <Box>
@@ -176,4 +167,4 @@ const ProfileHaveDataComponent = () => {
     </ContentComponent>
   );
 };
-export default ProfileHaveDataComponent;
+export default ProfileNoDataComponent;

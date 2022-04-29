@@ -5,10 +5,10 @@ import { useTranslation } from "next-i18next";
 import theme from "src/theme";
 
 interface BoxNodataProps {
-  communities: any;
+  participatingCommunityData: Array<any>;
 }
 
-const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({ communities }) => {
+const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({ participatingCommunityData }) => {
   const { t } = useTranslation();
   return (
     <Box
@@ -19,15 +19,15 @@ const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({ communitie
       }}
     >
       <Grid container>
-        {communities?.map((item, key) => (
-          <Grid item xs={12} lg={3} key={key}>
+        {participatingCommunityData?.map((item) => (
+          <Grid item xs={12} lg={3}>
             <Box
               sx={{
                 textAlign: "center",
                 p: "20px 40px",
               }}
             >
-              <img src={item.profile_image} alt="rectangle" />
+              <img src={item.img} alt="rectangle" />
               <Typography
                 sx={{
                   fontWeight: 700,
@@ -36,7 +36,7 @@ const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({ communitie
                   color: theme.black,
                 }}
               >
-                {item.name}
+                {item.communityName}
               </Typography>
               <Typography
                 sx={{
@@ -45,7 +45,7 @@ const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({ communitie
                   color: theme.blue,
                 }}
               >
-                {t("profile:number-participants")}:{item.member_count} {t("profile:man")}
+                {t("profile:number-participants")}:{item.numberParticipants} {t("profile:man")}
               </Typography>
             </Box>
           </Grid>

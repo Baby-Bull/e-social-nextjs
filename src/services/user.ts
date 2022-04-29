@@ -219,3 +219,30 @@ export const UserSearch = async (
     return error;
   }
 };
+
+export const getOrtherUserProfile = async (userId: string) => {
+  try {
+    const res = await api.get(`/user/${userId}/profile`);
+    return res?.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getCommunites = async (userId: string) => {
+  try {
+    const res = await api.get(`/user/${userId}/communities`);
+    return res?.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getRecommended = async (limit: number, cursor: string = "") => {
+  try {
+    const res = await api.get(`/user/recommended-users/?limit=${limit}&cursor=${cursor}`);
+    return res?.data;
+  } catch (error) {
+    return error;
+  }
+};

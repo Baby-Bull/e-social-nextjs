@@ -2,7 +2,7 @@ import React from "react";
 import type { NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
-import MyProfileComponent from "src/components/profile/MyProfileComponent";
+import MyProfileComponent from "src/components/profile/my-profile/MyProfileComponent";
 
 const MyProfile: NextPage = () => <MyProfileComponent />;
 
