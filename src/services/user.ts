@@ -229,7 +229,7 @@ export const getOrtherUserProfile = async (userId: string) => {
   }
 };
 
-export const getCommunites = async (userId: string) => {
+export const getUserCommunites = async (userId: string) => {
   try {
     const res = await api.get(`/user/${userId}/communities`);
     return res?.data;
@@ -238,9 +238,18 @@ export const getCommunites = async (userId: string) => {
   }
 };
 
-export const getRecommended = async (limit: number, cursor: string = "") => {
+export const getUserRecommended = async (limit: number, cursor: string = "") => {
   try {
     const res = await api.get(`/user/recommended-users/?limit=${limit}&cursor=${cursor}`);
+    return res?.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getUserReviews = async (userId: string) => {
+  try {
+    const res = await api.get(`/user/${userId}/reviews`);
     return res?.data;
   } catch (error) {
     return error;

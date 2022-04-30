@@ -3,15 +3,15 @@ import React from "react";
 import { useTranslation } from "next-i18next";
 
 interface reviewProps {
-  statusLogin: boolean;
-  statusReview: boolean;
-  avatar: string;
-  content: Array<string>;
-  time: string;
+  user: any;
+  rating: string;
+  comment: string;
 }
 
-const ReviewComponent: React.SFC<reviewProps> = ({ statusLogin, statusReview, content, avatar, time }) => {
+const ReviewComponent: React.SFC<reviewProps> = ({ user, rating, comment }) => {
   const { t } = useTranslation();
+  const GOOD = "good";
+
   return (
     <Box>
       <Box
@@ -30,11 +30,12 @@ const ReviewComponent: React.SFC<reviewProps> = ({ statusLogin, statusReview, co
             component="img"
             sx={{
               width: { xs: "32px", lg: "56px" },
+              borderRadius: "50%",
             }}
             alt="avatar"
-            src={avatar}
+            src={user.profile_image}
           />
-          {statusLogin ? (
+          {rating ? (
             <Box
               sx={{
                 color: "#1A2944",
@@ -101,7 +102,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ statusLogin, statusReview, co
                 justifyContent: { xs: "left" },
               }}
             >
-              {statusLogin ? (
+              {rating ? (
                 <Box
                   sx={{
                     color: "#1A2944",
@@ -111,7 +112,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ statusLogin, statusReview, co
                     display: { xs: "none", lg: "block" },
                   }}
                 >
-                  おじろ＠フルスタックエンジニア
+                  {user.username}
                 </Box>
               ) : (
                 <Box
@@ -128,53 +129,42 @@ const ReviewComponent: React.SFC<reviewProps> = ({ statusLogin, statusReview, co
               )}
               <Box
                 sx={{
+                  color: rating === GOOD ? "#FF9458" : "#03BCDB",
+                  fontSize: "16px",
+                  lineHeight: "23px",
+                  fontWeight: 700,
+                  display: "flex",
+                  marginLeft: "20px",
+                  alignItems: "center",
+                }}
+              >
+                <Box
+                  sx={{
+                    mr: "5.63px",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <img
+                    src={
+                      rating === GOOD ? "/assets/images/icon/ic_very_good.png" : "/assets/images/icon/ic_very_bad.png"
+                    }
+                    alt="ic_rating"
+                  />
+                </Box>
+                <Box>{rating === GOOD ? t("profile:it-good") : t("profile:it-bad")}</Box>
+              </Box>
+              <Box
+                sx={{
                   color: "#989EA8",
                   fontSize: "14px",
                   lineHeight: "20.27px",
-                  mx: 3,
+                  marginLeft: "20px",
+                  fontWeight: 400,
                 }}
               >
-                {time}
+                2021年8月27日にレビュー
               </Box>
-              {statusReview ? (
-                <Box
-                  sx={{
-                    color: "#FF9458",
-                    fontSize: "16px",
-                    lineHeight: "23px",
-                    fontWeight: 700,
-                    display: "flex",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      mr: "5.63px",
-                    }}
-                  >
-                    <img src="/assets/images/icon/ic_very_good.png" alt="ic_very_good" />
-                  </Box>
-                  <Box>{t("profile:it-good")}</Box>
-                </Box>
-              ) : (
-                <Box
-                  sx={{
-                    color: "#03BCDB",
-                    fontSize: "16px",
-                    lineHeight: "23px",
-                    fontWeight: 700,
-                    display: "flex",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      mr: "5.63px",
-                    }}
-                  >
-                    <img src="/assets/images/icon/ic_very_bad.png" alt="ic_very_good" />
-                  </Box>
-                  <Box>{t("profile:it-bad")}</Box>
-                </Box>
-              )}
             </Box>
             <Box
               sx={{
@@ -184,11 +174,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ statusLogin, statusReview, co
                 mt: "11px",
               }}
             >
-              <Box>
-                {content?.map((item) => (
-                  <Box sx={{ mb: 2 }}>{item}</Box>
-                ))}
-              </Box>
+              <Box>{comment}</Box>
             </Box>
           </Box>
         </Box>

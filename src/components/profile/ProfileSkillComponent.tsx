@@ -223,8 +223,9 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:language")}</TitleContentTab>
                   <ContentTab>
-                    {data?.skills?.code_skills?.map((item) => (
+                    {data?.skills?.code_skills?.map((item, key) => (
                       <Box
+                        key={key}
                         sx={{
                           display: item.category === LANGUAGE ? "flex" : "none",
                         }}
@@ -250,8 +251,9 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:framework")}</TitleContentTab>
                   <ContentTab>
-                    {data?.skills?.code_skills?.map((item) => (
+                    {data?.skills?.code_skills?.map((item, key) => (
                       <Box
+                        key={key}
                         sx={{
                           display: item.category === FRAMEWORK ? "flex" : "none",
                         }}
@@ -277,8 +279,9 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:infrastructure")}</TitleContentTab>
                   <ContentTab>
-                    {data?.skills?.code_skills?.map((item) => (
+                    {data?.skills?.code_skills?.map((item, key) => (
                       <Box
+                        key={key}
                         sx={{
                           display: item.category === INFRASTRUCTURE ? "flex" : "none",
                         }}

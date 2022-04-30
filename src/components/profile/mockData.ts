@@ -88,37 +88,45 @@ export const recommendMember = [
 
 export const contentReview = [
   {
-    statusLogin: false,
-    statusReview: true,
-    content: [
-      "この度はありがとうございました！自分の中にある、考えなどを改めて言語化した上で相談させて頂きトライすること、ストーリーを話せることがとても大事なんだなと思いました。",
-      "いろいろご指導いただき、未経験で無事転職する事が出来ました。",
-    ],
-    avatar: "/assets/images/rectangle.png",
-    time: "2021年8月27日にレビュー",
+    id: "string",
+    user: {
+      id: "string",
+      profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+      username: "user name",
+    },
+    rating: "good",
+    comment: "review message",
+    hide_reviewer: false,
   },
   {
-    statusLogin: true,
-    statusReview: false,
-    content: [],
-    avatar: "/assets/images/avatar_user.png",
-    time: "2021年8月27日にレビュー",
+    id: "string",
+    user: {
+      id: "string",
+      profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+      username: "user name",
+    },
+    rating: "good",
+    comment: "review message",
+    hide_reviewer: false,
   },
   {
-    statusLogin: false,
-    statusReview: true,
-    content: [
-      "一言で表現すると、これまで受けてきたWeb制作スクールとは全く異なるものでした。",
-      "具体的には、初回カウンセリングで、どの程度のスキルなのか、今後のゴール設定をすり合わせていただき十分に理解をしてもらえました。",
-      "カリキュラム主導ではなく、メンタリングとある通り、その人の方向性をすり合わせてもらえるイメージです。",
-      "課題についても、その人のスキルに合わせて「ひょっとして出来るかも」というギリギリ手の届く範囲で出題してもらえるため、挫折せず学習にのめり込むことができます。",
-      "どうしてもわからない箇所がある場合には、チャットで質問すると「お忙しい方なのになぜ？」と感じるほど、遅くても翌日には返信があり、アドバイスをしてもらえました。",
-      "アドバイスも悩みに的確で、、",
-      "遅くても翌日には返信があり、アドバイスをしてもらえました。アドバイスも悩みに的確で、、遅くても翌日には返信があり、アドバイスをしてもらえました。アドバイスも悩みに的確で、、",
-    ],
-    avatar: "/assets/images/rectangle.png",
-    time: "2021年8月27日にレビュー",
+    id: "string",
+    user: {
+      id: "string",
+      profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+      username: "user name",
+    },
+    rating: "bad",
+    comment: "review message",
+    hide_reviewer: false,
   },
+  // {
+  //   statusLogin: true,
+  //   statusReview: false,
+  //   content: [],
+  //   avatar: "/assets/images/avatar_user.png",
+  //   time: "2021年8月27日にレビュー",
+  // },
 ];
 
 export const participatingCommunityData = [
