@@ -99,7 +99,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
   };
 
   const handleClickToProfile = () => {
-    router.push("/profile/profile-have-data");
+    router.push(`/profile/${data.id}`);
   };
 
   return (

@@ -13,10 +13,24 @@ import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 
 import theme from "src/theme";
-import { USER_STATUS } from "src/components/constants/constants";
 
-interface IProfileDataProps {
-  data: any;
+interface ProfileSkillComponentProps {
+  profileStatus: string;
+  profileOneThing: string;
+  profileSelfIntroduction: string;
+  profileOccupation: string;
+  profilePosition: string;
+  profileEmploymentStatus: string;
+  profileIntroduceYourself: string;
+  profileAddress: string;
+  profileTag: Array<string>;
+  ProfileSkillLanguage: Array<any>;
+  ProfileSkillFramework: Array<any>;
+  ProfileSkillInfrastructure: string;
+  ProfileSkillUpstreamProcess: string;
+  ProfileSkillEnglishExperience: string;
+  ProfileSkillLanguageExperience: string;
+  myProfile: boolean;
 }
 
 const BoxContentTab = styled(Box)`
@@ -90,36 +104,25 @@ const TabsList = styled(TabsListUnstyled)`
   align-items: center;
 `;
 
-interface IRecommendMembersComponentProps {
-  countStar?: number;
-}
-
-const ImgStar: React.SFC<IRecommendMembersComponentProps> = ({ countStar }) => {
-  const rows = [];
-  for (let i = 0; i < countStar; i++) {
-    rows.push("/assets/images/star.png");
-  }
-
-  for (let i = 0; i < 5 - countStar; i++) {
-    rows.push("/assets/images/empty_star.png");
-  }
-  return (
-    <Box sx={{ display: "flex" }}>
-      {rows?.map((value, key) => (
-        <Box key={key}>
-          <img src={value} alt="star" />
-        </Box>
-      ))}
-    </Box>
-  );
-};
-
-const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
+const ProfileSkillComponent: React.SFC<ProfileSkillComponentProps> = ({
+  profileStatus,
+  profileOneThing,
+  profileSelfIntroduction,
+  profileOccupation,
+  profilePosition,
+  profileEmploymentStatus,
+  profileIntroduceYourself,
+  profileAddress,
+  profileTag,
+  ProfileSkillLanguage,
+  ProfileSkillFramework,
+  ProfileSkillInfrastructure,
+  ProfileSkillUpstreamProcess,
+  ProfileSkillEnglishExperience,
+  ProfileSkillLanguageExperience,
+  myProfile,
+}) => {
   const { t } = useTranslation();
-  const FRAMEWORK = "framework";
-  const INFRASTRUCTURE = "infrastructure";
-  const LANGUAGE = "programLanguage";
-
   return (
     <Grid item xs={12} sm={12} lg={12} xl={12}>
       <Box
@@ -129,6 +132,27 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
           m: { xs: "40px 0", lg: "0" },
         }}
       >
+        <Box
+          sx={{
+            background: "#ffffff",
+            border: "1px solid #03BCDB",
+            borderRadius: "40px",
+            width: "240px",
+            height: "32px",
+            margin: "0 auto",
+            mb: "63px",
+            fontSize: "14px",
+            fontWeight: 700,
+            color: "#03BCDB",
+            display: myProfile ? "none" : { xs: "none", lg: "flex" },
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <img src="/assets/images/icon/ic_heart.png" alt="" />
+
+          <Box sx={{ ml: 1 }}>{t("profile:add-friend")}</Box>
+        </Box>
         <Box sx={{ width: "100%" }}>
           <TabsUnstyled defaultValue={0}>
             <TabsList>
@@ -156,9 +180,9 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                   <TitleContentTab>{t("profile:status")}</TitleContentTab>
                   <Box
                     sx={{
-                      background: USER_STATUS[data?.status]?.bg,
+                      background: "#FF9458",
                       borderRadius: "4px",
-                      color: USER_STATUS[data?.status]?.color,
+                      color: "#ffffff",
                       fontSize: "10px",
                       fontWeight: 700,
                       width: "138.13px",
@@ -167,44 +191,57 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                       justifyContent: "center",
                     }}
                   >
-                    {USER_STATUS[data?.status]?.label}
+                    {profileStatus}
                   </Box>
                 </Box>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:one-thing")}</TitleContentTab>
-                  <ContentTab>{data?.hitokoto}</ContentTab>
+                  <ContentTab>{profileOneThing}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:self-introduction")}</TitleContentTab>
-                  <ContentTab>{data?.self_description}</ContentTab>
+                  <ContentTab>{profileSelfIntroduction}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:occupation")}</TitleContentTab>
-                  <ContentTab>{data?.job}</ContentTab>
+                  <ContentTab>{profileOccupation}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:position")}</TitleContentTab>
-                  <ContentTab>{data?.job_position}</ContentTab>
+                  <ContentTab>{profilePosition}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:employment-status")}</TitleContentTab>
-                  <ContentTab>{data?.employment_status}</ContentTab>
+                  <ContentTab>{profileEmploymentStatus}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:introduce-yourself")}</TitleContentTab>
-                  <ContentTab>{data?.discussion_topic}</ContentTab>
+                  <ContentTab>{profileIntroduceYourself}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:address")}</TitleContentTab>
-                  <ContentTab>{data?.address}</ContentTab>
+                  <ContentTab>{profileAddress}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:tag")}</TitleContentTab>
                   <ContentTab>
                     <Box sx={{ display: "flex" }}>
-                      {data?.tags?.map((item, key) => (
+                      {profileTag?.map((item) => (
                         <Box
-                          key={key}
+                          sx={{
+                            background: "#F4FDFF",
+                            fontSize: "12px",
+                            mr: 1,
+                            px: 1,
+                          }}
+                        >
+                          {item}
+                        </Box>
+                      ))}
+                    </Box>
+                    <Box sx={{ display: "flex", mt: 1 }}>
+                      {profileTag?.map((item) => (
+                        <Box
                           sx={{
                             background: "#F4FDFF",
                             fontSize: "12px",
@@ -223,26 +260,29 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:language")}</TitleContentTab>
                   <ContentTab>
-                    {data?.skills?.code_skills?.map((item, key) => (
-                      <Box
-                        key={key}
-                        sx={{
-                          display: item.category === LANGUAGE ? "flex" : "none",
-                        }}
-                      >
-                        <Box>
-                          <ImgStar countStar={item?.level} />
-                        </Box>
+                    {ProfileSkillLanguage?.map((item) => (
+                      <Box>
                         <Box
                           sx={{
-                            mx: 1,
+                            display: "flex",
                           }}
                         >
-                          {item?.name}
-                        </Box>
+                          <Box>
+                            {item.star?.map((star) => (
+                              <img src={star} alt="star" />
+                            ))}
+                          </Box>
+                          <Box
+                            sx={{
+                              mx: 1,
+                            }}
+                          >
+                            {item.language}
+                          </Box>
 
-                        <Box>
-                          {item.experience_year} {t("profile:year")}
+                          <Box>
+                            {item.languageExperience} {t("profile:year")}
+                          </Box>
                         </Box>
                       </Box>
                     ))}
@@ -251,26 +291,29 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:framework")}</TitleContentTab>
                   <ContentTab>
-                    {data?.skills?.code_skills?.map((item, key) => (
-                      <Box
-                        key={key}
-                        sx={{
-                          display: item.category === FRAMEWORK ? "flex" : "none",
-                        }}
-                      >
-                        <Box>
-                          <ImgStar countStar={item?.level} />
-                        </Box>
+                    {ProfileSkillFramework?.map((item) => (
+                      <Box>
                         <Box
                           sx={{
-                            mx: 1,
+                            display: "flex",
                           }}
                         >
-                          {item?.name}
-                        </Box>
+                          <Box>
+                            {item.star?.map((star) => (
+                              <img src={star} alt="star" />
+                            ))}
+                          </Box>
+                          <Box
+                            sx={{
+                              mx: 1,
+                            }}
+                          >
+                            {item.language}
+                          </Box>
 
-                        <Box>
-                          {item.experience_year} {t("profile:year")}
+                          <Box>
+                            {item.languageExperience} {t("profile:year")}
+                          </Box>
                         </Box>
                       </Box>
                     ))}
@@ -278,43 +321,19 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:infrastructure")}</TitleContentTab>
-                  <ContentTab>
-                    {data?.skills?.code_skills?.map((item, key) => (
-                      <Box
-                        key={key}
-                        sx={{
-                          display: item.category === INFRASTRUCTURE ? "flex" : "none",
-                        }}
-                      >
-                        <Box>
-                          <ImgStar countStar={item?.level} />
-                        </Box>
-                        <Box
-                          sx={{
-                            mx: 1,
-                          }}
-                        >
-                          {item?.name}
-                        </Box>
-
-                        <Box>
-                          {item.experience_year} {t("profile:year")}
-                        </Box>
-                      </Box>
-                    ))}
-                  </ContentTab>
+                  <ContentTab>{ProfileSkillInfrastructure}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:upstream-process")}</TitleContentTab>
-                  <ContentTab>{data?.skills?.upstream_process}</ContentTab>
+                  <ContentTab>{ProfileSkillUpstreamProcess}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:english-experience")}</TitleContentTab>
-                  <ContentTab>{data?.skills?.english_level}</ContentTab>
+                  <ContentTab>{ProfileSkillEnglishExperience}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:language-experience")}</TitleContentTab>
-                  <ContentTab>{data?.skills?.other_language_level}</ContentTab>
+                  <ContentTab>{ProfileSkillLanguageExperience}</ContentTab>
                 </BoxContentTab>
               </TabPanel>
             </Box>

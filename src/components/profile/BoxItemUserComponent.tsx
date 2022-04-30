@@ -8,7 +8,7 @@ import moment from "moment";
 import "moment/locale/ja";
 import { useRouter } from "next/router";
 
-import styles from "src/components/searchUser/search_user.module.scss";
+import styles from "src/components/profile/profile.module.scss";
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import { HOMEPAGE_RECOMMEND_MEMBER_STATUS, USER_SEARCH_STATUS, JOBS } from "src/components/constants/constants";
 import { replaceLabelByTranslate } from "src/utils/utils";
@@ -36,8 +36,8 @@ interface IUserItemProps {
 
 interface IBoxUserComponentProps {
   data: IUserItemProps;
-  callbackHandleIsRefresh: any;
-  isRefresh: boolean;
+  callbackHandleIsRefresh?: any;
+  isRefresh?: boolean;
 }
 
 const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbackHandleIsRefresh, isRefresh }) => {
@@ -95,7 +95,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
   return (
     <React.Fragment>
       <Grid item xs={12} className={classNames(styles.boxItemUser)}>
-        <Box className={styles.boxItemSearchUser}>
+        <Box className={styles.boxItemRecommend}>
           <Box onClick={handleClickToProfile} sx={{ cursor: "pointer" }}>
             <div className="status-summary">
               <ButtonComponent
@@ -153,6 +153,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
 
           <ButtonComponent
             fullWidth
+            sx={{ width: "278px" }}
             onClick={() => handleShowModalMatching(data?.match_status)}
             mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.mode}
           >

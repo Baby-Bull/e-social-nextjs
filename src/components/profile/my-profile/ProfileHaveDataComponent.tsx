@@ -1,19 +1,19 @@
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import React from "react";
 import { useTranslation } from "next-i18next";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
-import TopProfileComponent from "src/components/profile/TopProfileComponent";
-import ProfileSkillComponent from "src/components/profile/ProfileSkillComponent";
-import BoxNoDataComponent from "src/components/profile/BoxNoDataComponent";
-import BoxRecommendMemberComponent from "src/components/profile/BoxRecommendMemberComponent";
+import TopProfileComponent from "src/components/profile/my-profile/TopProfileComponent";
+import ProfileSkillComponent from "src/components/profile/my-profile/ProfileSkillComponent";
+import BoxRecommendMemberComponent from "src/components/profile/my-profile/BoxRecommendMemberComponent";
+import ReviewComponent from "src/components/profile/my-profile/ReviewComponent";
+import ParticipatingCommunityComponent from "src/components/profile/my-profile/ParticipatingCommunityComponent";
 
 import {
   review,
   cumulativMatching,
   participatingCommunity,
   countParticipatingCommunity,
-  countReview,
   lastLogin,
   profileStatus,
   profileOneThing,
@@ -25,6 +25,8 @@ import {
   profileAddress,
   profileTag,
   recommendMember,
+  contentReview,
+  participatingCommunityData,
   ProfileSkillLanguage,
   ProfileSkillFramework,
   ProfileSkillInfrastructure,
@@ -33,14 +35,13 @@ import {
   ProfileSkillLanguageExperience,
 } from "./mockData";
 
-const MyProfileComponent = () => {
+const ProfileHaveDataComponent = () => {
   const { t } = useTranslation();
-
   return (
     <ContentComponent>
       <Box
         sx={{
-          p: { xs: "0 20px", lg: "70px 120px 120px 120px" },
+          p: { xs: "0 20px", lg: "140px 120px 120px 120px" },
         }}
       >
         <TopProfileComponent
@@ -48,7 +49,7 @@ const MyProfileComponent = () => {
           cumulativMatching={cumulativMatching}
           participatingCommunity={participatingCommunity}
           lastLogin={lastLogin}
-          myProfile
+          myProfile={false}
         />
         <ProfileSkillComponent
           profileStatus={profileStatus}
@@ -66,7 +67,7 @@ const MyProfileComponent = () => {
           ProfileSkillUpstreamProcess={ProfileSkillUpstreamProcess}
           ProfileSkillEnglishExperience={ProfileSkillEnglishExperience}
           ProfileSkillLanguageExperience={ProfileSkillLanguageExperience}
-          myProfile
+          myProfile={false}
         />
         <Box
           sx={{
@@ -77,10 +78,8 @@ const MyProfileComponent = () => {
             fontWeight: 700,
           }}
         >
-          <Box>
-            {t("profile:title-participating-community")} ({countParticipatingCommunity})
-          </Box>
-          <BoxNoDataComponent content={t("profile:participating-community-no-data")} />
+          {t("profile:title-participating-community")} ({countParticipatingCommunity})
+          <ParticipatingCommunityComponent participatingCommunityData={participatingCommunityData} />
         </Box>
         <Box
           sx={{
@@ -91,8 +90,16 @@ const MyProfileComponent = () => {
             fontWeight: 700,
           }}
         >
-          {t("profile:title-review")}（{countReview}）
-          <BoxNoDataComponent content={t("profile:review-no-data")} />
+          {t("profile:title-review")}（{review}）
+          {contentReview?.map((item) => (
+            <ReviewComponent
+              statusLogin={item.statusLogin}
+              statusReview={item.statusReview}
+              content={item.content}
+              avatar={item.avatar}
+              time={item.time}
+            />
+          ))}
         </Box>
       </Box>
       <Box>
@@ -130,14 +137,43 @@ const MyProfileComponent = () => {
               recommendMemberEvaluate={item.recommendMemberEvaluate}
               recommendMemberYouSpeak={item.recommendMemberYouSpeak}
               recommendMemberTag={item.recommendMemberTag}
-              status={item.status}
-              txtBtn={item.txtBtn}
+              status={t(item.status)}
+              txtBtn={t(item.txtBtn)}
               statusLogin={item.statusLogin}
             />
           ))}
         </Box>
       </Box>
+      <Box
+        sx={{
+          background: "#F5F5F5",
+          display: "flex",
+          justifyContent: "center",
+          position: "fixed",
+          top: "91.5%",
+          opacity: 0.8,
+          width: "100%",
+        }}
+      >
+        <Button
+          sx={{
+            width: "280px",
+            height: "56px",
+            fontSize: "16px",
+            fontWeight: 700,
+            color: "#ffffff",
+            display: "flex",
+            alignItems: "center",
+            textAlign: "center",
+            lineHeight: "24px",
+            background: "#1BD0B0",
+            borderRadius: "40px",
+          }}
+        >
+          {t("profile:send-request")}
+        </Button>
+      </Box>
     </ContentComponent>
   );
 };
-export default MyProfileComponent;
+export default ProfileHaveDataComponent;

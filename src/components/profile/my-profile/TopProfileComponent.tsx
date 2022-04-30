@@ -1,18 +1,16 @@
 import { Box, Button, Avatar, Grid, Link } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
-import moment from "moment";
 
+import PopupChartProfileComponent from "src/components/profile/my-profile/PopupChartProfileComponent";
 import theme from "src/theme";
-import { addUserFavorite, deleteUserFavorite } from "src/services/user";
-
-import { AuthContext } from "../../../context/AuthContext";
-
-import "moment/locale/ja";
 
 interface TopProfileComponentProps {
-  user: any;
+  review: number;
+  cumulativMatching: number;
+  participatingCommunity: number;
+  lastLogin: number;
   myProfile: boolean;
 }
 
@@ -32,23 +30,19 @@ const BoxInfoProfile = styled(Box)`
   margin-right: 20px;
 `;
 
-const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProfile }) => {
+const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
+  review,
+  cumulativMatching,
+  participatingCommunity,
+  lastLogin,
+  myProfile,
+}) => {
   const { t } = useTranslation();
-  const [liked, setLiked] = useState(user?.is_favorite);
-  const { auth, dispatch } = useContext(AuthContext);
+  const [showPopup, setShowPopup] = useState(false);
 
-  const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
-    if (isFavorite) deleteUserFavorite(tempData);
-    else addUserFavorite(tempData);
+  const handleShowPopup = () => {
+    setShowPopup(true);
   };
-
-  const handleClickFavoriteButton = () => {
-    handleFavoriteAnUser(liked, user?.id);
-    if (liked) dispatch({ type: "REMOVE_FAVORITE", payload: auth });
-    else dispatch({ type: "ADD_FAVORITE", payload: auth });
-    setLiked(!liked);
-  };
-
   return (
     <Box>
       <Grid container>
@@ -228,14 +222,14 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                 >
                   <Avatar
                     alt="Remy Sharp"
-                    src={user?.profile_image}
+                    src="/assets/images/profile/avatar.png"
                     sx={{
                       width: "160px",
                       height: "160px",
                     }}
                   />
                   <Box sx={{ display: myProfile ? "none" : "block" }}>
-                    {t("profile:login")}：{moment(user?.last_login_at).utc().fromNow()} {t("profile:minutes-ago")}
+                    {t("profile:login")}：{lastLogin} {t("profile:minutes-ago")}
                   </Box>
                   <Box sx={{ display: myProfile ? "block" : "none" }}>{t("profile:login-2")}</Box>
                 </Box>
@@ -257,7 +251,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                         color: "#1A2944",
                       }}
                     >
-                      {user?.username}
+                      佐藤 太郎
                     </Box>
                     <Box
                       sx={{
@@ -312,6 +306,30 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   <Box
                     sx={{
                       mt: "13px",
+                      display: myProfile ? "none" : "flex",
+                    }}
+                  >
+                    <Button
+                      sx={{
+                        boxShadow: "unset",
+                        width: "280px",
+                        height: "48px",
+                        background: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)",
+                        borderRadius: "12px",
+                        color: "#ffffff",
+                        mr: "9.3px",
+                      }}
+                      onClick={handleShowPopup}
+                    >
+                      <Box>{t("profile:character-analysis")}</Box>111
+                    </Button>
+                    <Box>
+                      <img src="/assets/images/icon/ic_question_mark.png" alt="ic_question_mark" />
+                    </Box>
+                  </Box>
+                  <Box
+                    sx={{
+                      mt: "13px",
                       display: myProfile ? "flex" : "none",
                       position: "relative",
                     }}
@@ -353,7 +371,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                             fontWeight: 700,
                           }}
                         >
-                          {user?.review_count ?? 0}
+                          {review}
                         </Box>{" "}
                         <Box>件</Box>
                       </Box>
@@ -372,7 +390,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                             fontWeight: 700,
                           }}
                         >
-                          {user?.match_count ?? 0}
+                          {cumulativMatching}
                         </Box>{" "}
                         <Box>人</Box>
                       </Box>
@@ -395,41 +413,13 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                             fontWeight: 700,
                           }}
                         >
-                          {user?.community_count ?? 0}
+                          {participatingCommunity}
                         </Box>{" "}
                         <Box>つ</Box>
                       </Box>
                     </BoxInfoProfile>
                   </Box>
                 </Box>
-              </Box>
-              <Box
-                sx={{
-                  fontWeight: 700,
-                  fontSize: "14px",
-                  lineHeight: "24px",
-                  textAlign: "center",
-                  background: "#F4FDFF",
-                  color: "#03BCDB",
-                  border: "1px solid #03BCDB",
-                  width: "240px",
-                  height: "32px",
-                  borderRadius: "40px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "0 auto",
-                  marginTop: "24px",
-                  cursor: "pointer",
-                }}
-                onClick={handleClickFavoriteButton}
-              >
-                <Avatar
-                  src={liked ? "/assets/images/home_page/ic_heart.svg" : "/assets/images/home_page/ic_heart_empty.svg"}
-                  alt="ic_heart"
-                  sx={{ width: "16.67px", height: "14.17px", marginRight: "5px" }}
-                />{" "}
-                話したい人リストに登録
               </Box>
             </Box>
           </Box>
@@ -459,7 +449,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
               >
                 <Avatar
                   alt="Remy Sharp"
-                  src={user?.profile_image}
+                  src="/assets/images/profile/avatar.png"
                   sx={{
                     width: "80px",
                     height: "80px",
@@ -472,14 +462,8 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     right: 10,
                     display: myProfile ? "none" : "block",
                   }}
-                  onClick={handleClickFavoriteButton}
                 >
-                  <img
-                    src={
-                      liked ? "/assets/images/home_page/ic_heart.svg" : "/assets/images/home_page/ic_heart_empty.svg"
-                    }
-                    alt="ic_heart"
-                  />
+                  <img src="/assets/images/icon/ic_heart.png" alt="ic_heart" />
                 </Box>
               </Box>
               <Box
@@ -491,7 +475,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   mt: 2,
                 }}
               >
-                {user?.username}
+                佐藤 太郎
               </Box>
               <Box
                 sx={{
@@ -504,7 +488,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   fontSize: "10px",
                 }}
               >
-                {moment(user?.last_login_at).utc().fromNow()}
+                {lastLogin}
                 {t("profile:minutes-ago")}
               </Box>
 
@@ -539,7 +523,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                       fontWeight: 500,
                     }}
                   >
-                    {user?.review_count ?? 0}
+                    {review}
                   </Box>
                 </Box>
                 <Box
@@ -568,7 +552,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                       fontWeight: 500,
                     }}
                   >
-                    {user?.match_count ?? 0}
+                    {cumulativMatching}
                   </Box>
                 </Box>
                 <Box
@@ -597,7 +581,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                       fontWeight: 500,
                     }}
                   >
-                    {user?.community_count ?? 0}
+                    {participatingCommunity}
                   </Box>
                 </Box>
               </Box>
@@ -652,6 +636,34 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                 </Box>
               </Box>
             </Box>
+            <Box
+              sx={{
+                mt: "20px",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                sx={{
+                  boxShadow: "unset",
+                  width: "252px",
+                  height: "36px",
+                  background: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)",
+                  borderRadius: "12px",
+                  color: "#ffffff",
+                  mr: "7.67px",
+                  fontWeight: 700,
+                  fontSize: "14px",
+                }}
+                onClick={handleShowPopup}
+              >
+                <Box>{t("profile:character-analysis")}</Box>
+              </Button>
+              <Box>
+                <img src="/assets/images/icon/ic_question_mark.png" alt="ic_question_mark" width="16.7" />
+              </Box>
+            </Box>
+
             <Box
               sx={{
                 display: myProfile ? "none" : "flex",
@@ -783,6 +795,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
           </Box>
         </Grid>
       </Grid>
+      <PopupChartProfileComponent showPopup={showPopup} setShowPopup={setShowPopup} />
     </Box>
   );
 };

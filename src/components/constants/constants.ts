@@ -94,3 +94,24 @@ export const USER_STATUS_OPTIONS = [
     value: "need-consult",
   },
 ];
+
+export const USER_STATUS = {
+  "can-talk": {
+    label: "今すぐ話せます",
+    mode: "orange",
+    bg: "#FF9458",
+    color: "#FFFFFF",
+  },
+  "looking-for-friend": {
+    label: "友達募集しています",
+    mode: "cleam",
+    bg: "rgb(255, 249, 229)",
+    color: "rgb(26, 41, 68)",
+  },
+  "need-consult": {
+    label: "相談に乗って欲しいです",
+    mode: "info",
+    bg: "rgb(255, 249, 229)",
+    color: "rgb(26, 41, 68)",
+  },
+};
