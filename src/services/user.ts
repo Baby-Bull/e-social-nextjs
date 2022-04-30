@@ -220,7 +220,7 @@ export const UserSearch = async (
   }
 };
 
-export const getOrtherUserProfile = async (userId: string) => {
+export const getOrtherUserProfile = async (userId: string | string[]) => {
   try {
     const res = await api.get(`/user/${userId}/profile`);
     return res?.data;
@@ -229,7 +229,7 @@ export const getOrtherUserProfile = async (userId: string) => {
   }
 };
 
-export const getUserCommunites = async (userId: string) => {
+export const getUserCommunites = async (userId: string | string[]) => {
   try {
     const res = await api.get(`/user/${userId}/communities`);
     return res?.data;
@@ -247,7 +247,7 @@ export const getUserRecommended = async (limit: number, cursor: string = "") => 
   }
 };
 
-export const getUserReviews = async (userId: string) => {
+export const getUserReviews = async (userId: string | string[]) => {
   try {
     const res = await api.get(`/user/${userId}/reviews`);
     return res?.data;

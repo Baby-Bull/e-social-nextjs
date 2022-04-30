@@ -3,11 +3,10 @@ import type { NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import ProfileComponent from "../../src/components/profile/ProfileComponent";
-// import ProfileComponent from "../../src/components/profile/ProfileComponent";
 
 const sampleUserId = "624cf8551b8a720009e2e1db";
 
-const Profile: NextPage = () => <ProfileComponent userId={sampleUserId} />;
+const Profile: NextPage = () => <ProfileComponent />;
 
 export async function getStaticPaths() {
   return {

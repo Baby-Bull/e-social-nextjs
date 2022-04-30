@@ -88,56 +88,61 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
     setLiked(!liked);
   };
 
+  const handleClickToProfile = () => {
+    router.push(`/profile/${data.id}`);
+  };
+
   return (
     <React.Fragment>
       <Grid item xs={12} className={classNames(styles.boxItemUser)}>
         <Box className={styles.boxItemRecommend}>
-          <div className="status-summary">
-            <ButtonComponent
-              mode={USER_SEARCH_STATUS[data?.status]?.mode}
-              size="small"
-              style={{ borderRadius: "4px", width: "130px" }}
-            >
-              {USER_SEARCH_STATUS[data?.status]?.label}
-            </ButtonComponent>
-            <span className="label-login-status">
-              {data?.last_login_at
-                ? replaceLabelByTranslate(
-                    t("home:box-member-recommend.last-login"),
-                    moment(data?.last_login_at).utc().fromNow(),
-                  )
-                : t("home:box-member-recommend.no-login")}
-            </span>
-          </div>
-
-          <div className="info-summary">
-            <img src={data?.profile_image} alt="img-member" />
-            <div className="member-info">
-              <p className="name">{data?.username}</p>
-              <p className="career">{JOBS[data?.job_position]?.label}</p>
-              <p className="review">
-                {t("home:box-member-recommend.review")}: {data?.review_count}
-              </p>
+          <Box onClick={handleClickToProfile} sx={{ cursor: "pointer" }}>
+            <div className="status-summary">
+              <ButtonComponent
+                mode={USER_SEARCH_STATUS[data?.status]?.mode}
+                size="small"
+                style={{ borderRadius: "4px", width: "130px" }}
+              >
+                {USER_SEARCH_STATUS[data?.status]?.label}
+              </ButtonComponent>
+              <span className="label-login-status">
+                {data?.last_login_at
+                  ? replaceLabelByTranslate(
+                      t("home:box-member-recommend.last-login"),
+                      moment(data?.last_login_at).utc().fromNow(),
+                    )
+                  : t("home:box-member-recommend.no-login")}
+              </span>
             </div>
-          </div>
 
-          <div className="introduce">{data?.self_description ? data?.self_description : "情報なし"}</div>
+            <div className="info-summary">
+              <img src={data?.profile_image} alt="img-member" />
+              <div className="member-info">
+                <p className="name">{data?.username}</p>
+                <p className="career">{JOBS[data?.job_position]?.label}</p>
+                <p className="review">
+                  {t("home:box-member-recommend.review")}: {data?.review_count}
+                </p>
+              </div>
+            </div>
 
-          <div className="tags">
-            <ul>
-              {data?.tags?.map((tag, index) => (
-                <li key={index}>{tag}</li>
-              ))}
-            </ul>
-          </div>
+            <div className="introduce">{data?.self_description ? data?.self_description : "情報なし"}</div>
 
-          <p className="label-description">
-            <img alt="" src="/assets/images/home_page/ic_chat.svg" />
-            {t("home:box-member-recommend.label-description")}
-          </p>
+            <div className="tags">
+              <ul>
+                {data?.tags?.map((tag, index) => (
+                  <li key={index}>{tag}</li>
+                ))}
+              </ul>
+            </div>
 
-          <p className="description">{data?.discussion_topic}</p>
+            <p className="label-description">
+              <img alt="" src="/assets/images/home_page/ic_chat.svg" />
+              {t("home:box-member-recommend.label-description")}
+            </p>
 
+            <p className="description">{data?.discussion_topic}</p>
+          </Box>
           <div className="div-review" onClick={handleClickFavoriteButton}>
             <img
               alt="ic-like"

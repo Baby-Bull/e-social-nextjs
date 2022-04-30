@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { api } from "src/helpers/api";
 import { ACCEPT_MATCHING, REJECT_MATCHING, CANCEL_MATCHING, SERVER_ERROR } from "src/messages/notification";
 
-export const sendMatchingRequest = async (userId: string, body: any) => {
+export const sendMatchingRequest = async (userId: string | string[], body: any) => {
   try {
     const res = await api.post(`/user/match/${userId}`, body);
     if (res.data.error_code) {

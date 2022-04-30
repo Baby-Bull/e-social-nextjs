@@ -1,6 +1,7 @@
 import { Backdrop, Box, Button, CircularProgress, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ProfileSkillComponent from "src/components/profile/ProfileSkillComponent";
@@ -15,7 +16,7 @@ import theme from "../../theme";
 import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
 import { sendMatchingRequest } from "../../services/matching";
 
-const ProfileHaveDataComponent = ({ userId }) => {
+const ProfileHaveDataComponent = () => {
   const { t } = useTranslation();
   const LIMIT = 20;
   const [profileSkill, setProfileSkill] = useState([]);
@@ -25,6 +26,8 @@ const ProfileHaveDataComponent = ({ userId }) => {
   const [isRefresh, setIsRefresh] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showModalMatching, setModalMatching] = React.useState(false);
+  const router = useRouter();
+  const { userId } = router.query;
 
   const fetchProfileSkill = async () => {
     setIsLoading(true);
