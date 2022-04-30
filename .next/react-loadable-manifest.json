@@ -1,0 +1,52 @@
+{
+  "chat\\personal\\index.tsx -> src/components/chat/Personal/PersonalChatComponent": {
+    "id": 7676,
+    "files": [
+      "static/chunks/75fc9c18-00183f6ec277c0ab.js",
+      "static/chunks/29107295-27bafc7c860c12ad.js",
+      "static/chunks/3962-6f0e302ee474edd3.js",
+      "static/chunks/5739-8a6fc560cc1e9292.js",
+      "static/chunks/4530-158c3548db07625e.js",
+      "static/chunks/312-b5e728d10a0a7352.js",
+      "static/chunks/2633-4297bbae6f5ea7aa.js",
+      "static/chunks/4893-61a09cabcf976726.js",
+      "static/chunks/9814-765c466cdf65656a.js",
+      "static/chunks/6039-9ce179e5a729d21e.js",
+      "static/css/6d0186cffa6a4205.css"
+    ]
+  },
+  "login.tsx -> src/components/authen/login/LoginComponent": {
+    "id": 1210,
+    "files": [
+      "static/chunks/3962-6f0e302ee474edd3.js",
+      "static/chunks/3245.98b03f4469c7d846.js",
+      "static/chunks/2633-4297bbae6f5ea7aa.js",
+      "static/css/e2b51e6eb0ec46bd.css",
+      "static/chunks/6027.e5d67250a94ba091.js"
+    ]
+  },
+  "register\\form.tsx -> src/components/authen/register/form/FormComponent": {
+    "id": 9559,
+    "files": [
+      "static/chunks/3962-6f0e302ee474edd3.js",
+      "static/chunks/5739-8a6fc560cc1e9292.js",
+      "static/chunks/1973-e33c947f6f373e75.js",
+      "static/chunks/9038-ff59a0119b89178f.js",
+      "static/chunks/9737-5d1307cd4a5b8579.js",
+      "static/chunks/9021.78723fd50e77f7b7.js",
+      "static/chunks/2633-4297bbae6f5ea7aa.js",
+      "static/css/e2b51e6eb0ec46bd.css",
+      "static/chunks/2085.11c7e7f0976f9bb5.js"
+    ]
+  },
+  "register\\index.tsx -> src/components/authen/register/RegisterComponent": {
+    "id": 6964,
+    "files": [
+      "static/chunks/3962-6f0e302ee474edd3.js",
+      "static/chunks/3245.98b03f4469c7d846.js",
+      "static/chunks/2633-4297bbae6f5ea7aa.js",
+      "static/css/e2b51e6eb0ec46bd.css",
+      "static/chunks/4559.8b65a5db5ecb704d.js"
+    ]
+  }
+}
