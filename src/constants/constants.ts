@@ -116,6 +116,17 @@ export const JAPAN_PROVINCE_OPTIONS = [
   })),
 ];
 
+export const PROFILE_JAPAN_PROVINCE_OPTIONS = [
+  {
+    label: "選択してください",
+    value: 0,
+  },
+  ...JAPAN_PROVINCES.map((item) => ({
+    label: item,
+    value: item,
+  })),
+];
+
 export const MATCHING_PURPOSE_OPTIONS = [
   {
     label: "選択してください",
@@ -182,5 +193,150 @@ export const REACT_QUERY_KEYS = {
   },
 };
 
-export class USER_SEARCH_STATUS {
-}
+export const STATUS_OPTIONS = [
+  {
+    label: "選択してください",
+    value: 0,
+  },
+  {
+    label: "今すぐ話せます",
+    value: "can-talk",
+  },
+  {
+    label: "友達募集しています",
+    value: "looking-for-friend",
+  },
+  {
+    label: "相談に乗って欲しいです",
+    value: "need-consult",
+  },
+];
+
+export const JOBS = [
+  {
+    label: "職種",
+    value: 0,
+  },
+  {
+    label: "フロントエンドエンジニア",
+    value: "frontend",
+  },
+  {
+    label: "バックエンドエンジニア",
+    value: "backend",
+  },
+  {
+    label: "データサイエンティスト",
+    value: "data-scientist",
+  },
+  {
+    label: "プロジェクトマネージャー",
+    value: "project-manager",
+  },
+  {
+    label: " プロジェクトリーダー",
+    value: "project-leader",
+  },
+  {
+    label: "テストエンジニア",
+    value: "test-engineer",
+  },
+  {
+    label: "データベースエンジニア",
+    value: "database-engineer",
+  },
+  {
+    label: "セキュリティエンジニア",
+    value: "security-engineer",
+  },
+  {
+    label: "インフラエンジニア",
+    value: "infrastructure-engineer",
+  },
+  {
+    label: "ネットワークエンジニア",
+    value: "network-engineer",
+  },
+  {
+    label: "サーバーエンジニア",
+    value: "server-engineer",
+  },
+  {
+    label: "サポートエンジニア",
+    value: "support-engineer",
+  },
+  {
+    label: "ヘルプデスク",
+    value: "help-desk",
+  },
+  {
+    label: "マークアップエンジニア",
+    value: "markup-engineer",
+  },
+];
+
+export const EMPLOYEE_STATUS = [
+  {
+    label: "雇用状態",
+    value: 0,
+  },
+  {
+    label: "正社員",
+    value: "fulltime",
+  },
+  {
+    label: "契約社員",
+    value: "contract",
+  },
+  {
+    label: "派遣社員",
+    value: "temporary",
+  },
+  {
+    label: "フリーランス",
+    value: "freelance",
+  },
+  {
+    label: "社長",
+    value: "president",
+  },
+  {
+    label: "役員",
+    value: "officer",
+  },
+  {
+    label: " 転職活動中",
+    value: "part-time",
+  },
+  {
+    label: "アルバイト",
+    value: "intern",
+  },
+  {
+    label: "インターン",
+    value: "during-job-change",
+  },
+];
+
+export const LEVELS = [
+  {
+    label: "触れた程度",
+    value: 1,
+  },
+  {
+    label: "独学で経験あり",
+    value: 2,
+  },
+  {
+    label: "他者に補助を受けながらコーディングが可能",
+    value: 3,
+  },
+  {
+    label: "独力でコーディング可能",
+    value: 4,
+  },
+  {
+    label: "他者のコードをレビュー可能",
+    value: 5,
+  },
+];

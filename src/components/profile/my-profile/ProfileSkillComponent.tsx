@@ -215,7 +215,7 @@ const ProfileSkillComponent: React.SFC<ProfileSkillComponentProps> = ({
                   <ContentTab>{profileEmploymentStatus}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
-                  <TitleContentTab>{t("profile:introduce-yourself")}</TitleContentTab>
+                  <TitleContentTab>{t("profile:discussion-topic")}</TitleContentTab>
                   <ContentTab>{profileIntroduceYourself}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>

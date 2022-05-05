@@ -255,3 +255,13 @@ export const getUserReviews = async (userId: string | string[]) => {
     return error;
   }
 };
+
+export const getUserProfile = async () => {
+  try {
+    const res = await api.get(`/user/profile`);
+    return res?.data;
+  } catch (error) {
+    return error;
+  }
+};
+
