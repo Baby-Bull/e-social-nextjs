@@ -1,5 +1,17 @@
-import { Avatar, Box, Button, Grid, InputBase, Link, Paper, Select, Typography } from "@mui/material";
-import React, { useState } from "react";
+import {
+  Avatar,
+  Backdrop,
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  InputBase,
+  Link,
+  Paper,
+  Select,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useState } from "react";
 /* eslint-disable */
 import TabsUnstyled from "@mui/base/TabsUnstyled";
 import TabsListUnstyled from "@mui/base/TabsListUnstyled";
@@ -24,7 +36,9 @@ import {
   PROFILE_JAPAN_PROVINCE_OPTIONS,
   MONTHS,
   LEVELS,
+  ENGLISH_LEVEL_OPTIONS,
 } from "src/constants/constants";
+import { getUserProfile } from "src/services/user";
 
 const BoxContentTab = styled(Box)`
   display: flex;
@@ -194,6 +208,13 @@ const SelectCustom = styled(Select)({
   },
 });
 
+const BoxTextValidate = styled(Box)({
+  color: "#FF9458",
+  lineHeight: "20px",
+  fontWeight: "400",
+  fontSize: "14px",
+});
+
 const ImgStarLevel = ({ countStar }) => {
   const rows = [];
   for (let i = 0; i < countStar; i++) {
@@ -213,32 +234,59 @@ const ImgStarLevel = ({ countStar }) => {
 const ProfileSkillComponent = () => {
   const { t } = useTranslation();
 
-  const [status, setStatus] = React.useState(STATUS_OPTIONS[0].value);
-  const [job, setJob] = React.useState(JOBS[0].value);
-  const [employee, setEmployee] = React.useState(EMPLOYEE_STATUS[0].value);
-  const [address, setAddress] = React.useState(PROFILE_JAPAN_PROVINCE_OPTIONS[0].value);
+  const [isLoading, setIsLoading] = useState(false);
+  const [username, setUsername] = useState(null);
+  const [hitokoto, setHitokoto] = useState(null);
+  const [selfDescription, setSelfDescription] = useState(null);
+  const fetchProfileSkill = async () => {
+    setIsLoading(true);
+    const data = await getUserProfile();
+    setUsername(data.username);
+    setHitokoto(data.hitokoto);
+    setSelfDescription(data.self_description);
+    setIsLoading(false);
+    return data;
+  };
+
+  useEffect(() => {
+    fetchProfileSkill();
+  }, []);
+
+  const [status, setStatus] = useState(STATUS_OPTIONS[0].value);
+  const [englishLevel, setEnglishLevel] = useState(ENGLISH_LEVEL_OPTIONS[0].value);
+  const [job, setJob] = useState(JOBS[0].value);
+  const [employee, setEmployee] = useState(EMPLOYEE_STATUS[0].value);
+  const [address, setAddress] = useState(PROFILE_JAPAN_PROVINCE_OPTIONS[0].value);
   const [inputTags, setInputTags] = useState([]);
   const [isSkillProfile, setIsSkillProfile] = useState(false);
-  const [skillLanguageData, setSkillLanguage] = React.useState([
+  const [skillLanguageData, setSkillLanguage] = useState([
     { key: 0, name: "Java", experience_year: 12, experience_month: 3, level: 1, category: "programLanguage" },
   ]);
-  // const [skillFrameworkData, setSkillFramework] = React.useState([{ key: 0, language: "Java", year: 12, month: 3 }]);
-  // const [skillInfrastructureData, setSkillInfrastructure] = React.useState([
-  //   { key: 0, language: "Java", year: 12, month: 3 },
-  // ]);
-  const [monthLanguage] = React.useState(MONTHS[3].value);
-  const [levelLanguage] = React.useState(LEVELS[4].value);
-  // const [monthFramework, setMonthFramework] = React.useState(MONTHS[3].value);
-  // const [levelFramework, setLevelFramework] = React.useState(LEVELS[4].value);
+  const [skillFrameworkData, setSkillFramework] = useState([
+    { key: 0, name: "Java", experience_year: 12, experience_month: 3, level: 1, category: "framework" },
+  ]);
+  const [skillInfrastructureData, setSkillInfrastructure] = useState([
+    { key: 0, name: "Java", experience_year: 12, experience_month: 3, level: 1, category: "infrastructure" },
+  ]);
+  const [monthLanguage] = useState(MONTHS[0].value);
+  const [levelLanguage] = useState(LEVELS[0].value);
+  // const [monthFramework, setMonthFramework] = useState(MONTHS[0].value);
+  // const [levelFramework, setLevelFramework] = useState(LEVELS[0].value);
   // const [monthInfrastructure, setMonthInfrastructure] = React.useState(MONTHS[3].value);
   // const [levelInfrastructure, setLevelInfrastructure] = React.useState(LEVELS[4].value);
-  const [profileRequest, setProfileRequest] = React.useState({
-    username: null,
+  const [statusErrNameLaguage, setStatusErrNameLaguage] = useState(false);
+  const [statusErrYearLaguage, setStatusErrYearLaguage] = useState(false);
+  const [statusErrNameFramrwork, setStatusErrNameFramrwork] = useState(false);
+  const [statusErrYearFramrwork, setStatusErrYearFramrwork] = useState(false);
+  const [statusErrNameInfrastructure, setStatusErrNameInfrastructure] = useState(false);
+  const [statusErrYearInfrastructure, setStatusErrYearInfrastructure] = useState(false);
+  const [profileRequest, setProfileRequest] = useState({
+    username,
     twitter_url: null,
     facebook_url: null,
     github_url: null,
-    hitokoto: null,
-    self_description: null,
+    hitokoto,
+    self_description: selfDescription,
     status: null,
     job: null,
     job_position: null,
@@ -246,6 +294,12 @@ const ProfileSkillComponent = () => {
     discussion_topic: null,
     address: null,
     tags: [],
+  });
+
+  const [skillRequest, setSkillRequest] = useState({
+    upstream_process: null,
+    english_level: null,
+    other_language_level: null,
   });
 
   const errorMessages = {
@@ -262,7 +316,9 @@ const ProfileSkillComponent = () => {
     discussion_topic: null,
     address: null,
     tags: null,
-    skillLanguage: [],
+    upstream_process: null,
+    english_level: null,
+    other_language_level: null,
   };
 
   const [errorValidates, setErrorValidates] = useState({
@@ -279,53 +335,33 @@ const ProfileSkillComponent = () => {
     discussion_topic: null,
     address: null,
     tags: null,
-    skillLanguage: [],
+    upstream_process: null,
+    english_level: null,
+    other_language_level: null,
   });
 
   const [messSkillLanguageErr, setMessSkillLanguageErr] = useState([{ key: null, mess: null, type: null }]);
+  const [messSkillFrameworkErr, setMessSkillFrameworkErr] = useState([{ key: null, mess: null, type: null }]);
+  const [messSkillInfrastructureErr, setMessSkillInfrastructureErr] = useState([{ key: null, mess: null, type: null }]);
 
-  /* event change select option */
-
-  // const handleChangeMonthLanguage = (event) => {
-  //   setMonthLanguage(event.target.value);
-  // };
-  //
-  // const handleChangeLevelLanguage = (event) => {
-  //   setLevelLanguage(event.target.value);
-  // };
-  //
-  // const handleChangeMonthFramework = (event) => {
-  //   setMonthFramework(event.target.value);
-  // };
-  //
-  // const handleChangeLevelFramework = (event) => {
-  //   setLevelFramework(event.target.value);
-  // };
-  //
-  // const handleChangeMonthInfrastructure = (event) => {
-  //   setMonthInfrastructure(event.target.value);
-  // };
-  //
-  // const handleChangeLevelInfrastructure = (event) => {
-  //   setLevelInfrastructure(event.target.value);
-  // };
-  //
   // /* Delete item */
   const handleDeleteSkillLanguage = (SkillLanguageToDelete) => () => {
     setSkillLanguage((languages) => languages.filter((language) => language.key !== SkillLanguageToDelete.key));
   };
-  //
-  // const handleDeleteSkillFramework = (SkillFrameworkToDelete) => () => {
-  //   setSkillFramework((frameworks) => frameworks.filter((framework) => framework.key !== SkillFrameworkToDelete.key));
-  // };
-  //
-  // const handleDeleteSkillInfrastructure = (SkillInfrastructureToDelete) => () => {
-  //   setSkillInfrastructure((infrastructures) =>
-  //     infrastructures.filter((infrastructure) => infrastructure.key !== SkillInfrastructureToDelete.key),
-  //   );
-  // };
 
-  const arrMessErrors = [];
+  const handleDeleteSkillFramework = (SkillFrameworkToDelete) => () => {
+    setSkillFramework((frameworks) => frameworks.filter((framework) => framework.key !== SkillFrameworkToDelete.key));
+  };
+
+  const handleDeleteSkillInfrastructure = (SkillInfrastructureToDelete) => () => {
+    setSkillInfrastructure((infrastructures) =>
+      infrastructures.filter((infrastructure) => infrastructure.key !== SkillInfrastructureToDelete.key),
+    );
+  };
+
+  const arrMessLanguageErrors = [];
+  const arrMessFrameworkErrors = [];
+  const arrMessInfrastructureErrors = [];
 
   const removeSearchTag = (indexRemove) => {
     setInputTags(inputTags.filter((_, index) => index !== indexRemove));
@@ -341,15 +377,21 @@ const ProfileSkillComponent = () => {
     ]);
   };
 
-  // const addSkillFrameworkClick = (key) => () => {
-  //   // @ts-ignore
-  //   setSkillFramework([...skillFrameworkData, { key: key + 1, language: "", year: "", month: "" }]);
-  // };
+  const addSkillFrameworkClick = (key) => () => {
+    // @ts-ignore
+    setSkillFramework([
+      ...skillFrameworkData,
+      { key: key + 1, name: "", experience_year: 1, experience_month: 1, level: 1, category: "framework" },
+    ]);
+  };
   //
-  // const addSkillInfrastructureClick = (key) => () => {
-  //   // @ts-ignore
-  //   setSkillInfrastructure([...skillInfrastructureData, { key: key + 1, language: "", year: "", month: "" }]);
-  // };
+  const addSkillInfrastructureClick = (key) => () => {
+    // @ts-ignore
+    setSkillInfrastructure([
+      ...skillInfrastructureData,
+      { key: key + 1, name: "", experience_year: 1, experience_month: 1, level: 1, category: "infrastructure" },
+    ]);
+  };
 
   const onKeyPress = (e) => {
     if (e.key === "Enter" && e.target.value) {
@@ -358,9 +400,8 @@ const ProfileSkillComponent = () => {
     }
   };
 
-  const onChangeProfileSkillRequest = (key: number, e: any) => {
+  const onChangeSkillLanguage = (key: number, e: any) => {
     const { name, value } = e.target;
-    // console.log(name)
     // eslint-disable-next-line no-shadow
     setSkillLanguage((skillLanguageData) =>
       skillLanguageData.map((el) =>
@@ -373,7 +414,47 @@ const ProfileSkillComponent = () => {
       ),
     );
   };
+
+  const onChangeSkillFramework = (key: number, e: any) => {
+    const { name, value } = e.target;
+    // eslint-disable-next-line no-shadow
+    setSkillFramework((skillFrameworkData) =>
+      skillFrameworkData.map((el) =>
+        Number(el.key) === Number(key)
+          ? {
+              ...el,
+              [name]: value,
+            }
+          : el,
+      ),
+    );
+  };
+
+  const onChangeSkillInfrastructure = (key: number, e: any) => {
+    const { name, value } = e.target;
+    // eslint-disable-next-line no-shadow
+    setSkillInfrastructure((skillInfrastructureData) =>
+      skillInfrastructureData.map((el) =>
+        Number(el.key) === Number(key)
+          ? {
+              ...el,
+              [name]: value,
+            }
+          : el,
+      ),
+    );
+  };
+
   const onChangeProfileRequest = (key: string, value: any) => {
+    if (key === "username") {
+      setUsername(value);
+    }
+    if (key === "hitokoto") {
+      setHitokoto(value);
+    }
+    if (key === "self_description") {
+      setSelfDescription(value);
+    }
     if (key === "status") {
       setStatus(value);
     }
@@ -392,6 +473,16 @@ const ProfileSkillComponent = () => {
 
     setProfileRequest({
       ...profileRequest,
+      [key]: typeof value === "string" ? value.trim() : value,
+    });
+  };
+
+  const onChangeProfileSkillRequest = (key: string, value: any) => {
+    if (key === "english_level") {
+      setEnglishLevel(value);
+    }
+    setSkillRequest({
+      ...skillRequest,
       [key]: typeof value === "string" ? value.trim() : value,
     });
   };
@@ -472,31 +563,153 @@ const ProfileSkillComponent = () => {
     }
 
     if (isSkillProfile) {
+      setStatusErrNameLaguage(false);
+      setStatusErrYearLaguage(false);
+      setStatusErrNameFramrwork(false);
+      setStatusErrYearFramrwork(false);
+      setStatusErrNameInfrastructure(false);
+      setStatusErrYearInfrastructure(false);
       for (let i = 0; i < skillLanguageData.length; i++) {
-        if (skillLanguageData[i]?.name.length > 1) {
-          arrMessErrors.push({ key: `name_${skillLanguageData[i]?.key}`, mess: "dai hơn 40", type: "max_length" });
+        if (skillLanguageData[i]?.name.length > 40) {
+          arrMessLanguageErrors.push({
+            key: `name_${skillLanguageData[i]?.key}`,
+            mess: "dai hơn 40",
+            type: "max_length",
+          });
+          setStatusErrNameLaguage(true);
         }
 
         if (!REGEX_RULES.text_input.test(skillLanguageData[i]?.name)) {
-          arrMessErrors.push({ key: `name_${skillLanguageData[i]?.key}`, mess: "sai format", type: "wrong_format" });
+          arrMessLanguageErrors.push({
+            key: `name_${skillLanguageData[i]?.key}`,
+            mess: "sai format",
+            type: "wrong_format",
+          });
+          setStatusErrNameLaguage(true);
         }
 
-        // eslint-disable-next-line no-loop-func,no-shadow
-        // setMessSkillLanguageErr((messSkillLanguageErr) =>
-        //   messSkillLanguageErr.map((el) =>
-        //     skillLanguageData[i]?.name.length > 1
-        //       ? {
-        //           ...el,
-        //           key: `name_${skillLanguageData[i]?.key}`,
-        //           mess: "dai hơn 40",
-        //           type: "max_length",
-        //         }
-        //       : el,
-        //   ),
-        // );
+        // @ts-ignore
+        if (skillLanguageData[i]?.experience_year.length > 2) {
+          arrMessLanguageErrors.push({
+            key: `experience_year_${skillLanguageData[i]?.key}`,
+            mess: "dai hơn 2",
+            type: "max_length",
+          });
+          setStatusErrYearLaguage(true);
+        }
+
+        if (skillLanguageData[i]?.experience_year < 0) {
+          arrMessLanguageErrors.push({
+            key: `experience_year_${skillLanguageData[i]?.key}`,
+            mess: "k đc nhỏ hơn 0",
+            type: "min",
+          });
+          setStatusErrYearLaguage(true);
+        }
+      }
+
+      for (let i = 0; i < skillFrameworkData.length; i++) {
+        if (skillFrameworkData[i]?.name.length > 40) {
+          arrMessFrameworkErrors.push({
+            key: `name_${skillFrameworkData[i]?.key}`,
+            mess: "dai hơn 40",
+            type: "max_length",
+          });
+          setStatusErrNameFramrwork(true);
+        }
+
+        if (!REGEX_RULES.text_input.test(skillFrameworkData[i]?.name)) {
+          arrMessFrameworkErrors.push({
+            key: `name_${skillFrameworkData[i]?.key}`,
+            mess: "sai format",
+            type: "wrong_format",
+          });
+          setStatusErrNameFramrwork(true);
+        }
+
+        // @ts-ignore
+        if (skillFrameworkData[i]?.experience_year.length > 2) {
+          arrMessFrameworkErrors.push({
+            key: `experience_year_${skillFrameworkData[i]?.key}`,
+            mess: "dai hơn 2",
+            type: "max_length",
+          });
+          setStatusErrYearFramrwork(true);
+        }
+
+        if (skillFrameworkData[i]?.experience_year < 0) {
+          arrMessFrameworkErrors.push({
+            key: `experience_year_${skillFrameworkData[i]?.key}`,
+            mess: "k đc nhỏ hơn 0",
+            type: "min",
+          });
+          setStatusErrYearFramrwork(true);
+        }
+      }
+
+      for (let i = 0; i < skillInfrastructureData.length; i++) {
+        if (skillInfrastructureData[i]?.name?.length > 40) {
+          arrMessInfrastructureErrors.push({
+            key: `name_${skillInfrastructureData[i]?.key}`,
+            mess: "dai hơn 40",
+            type: "max_length",
+          });
+          setStatusErrNameInfrastructure(true);
+        }
+
+        if (!REGEX_RULES.text_input.test(skillInfrastructureData[i]?.name)) {
+          arrMessInfrastructureErrors.push({
+            key: `name_${skillInfrastructureData[i]?.key}`,
+            mess: "sai format",
+            type: "wrong_format",
+          });
+          setStatusErrNameInfrastructure(true);
+        }
+
+        // @ts-ignore
+        if (skillInfrastructureData[i]?.experience_year?.length > 2) {
+          arrMessInfrastructureErrors.push({
+            key: `experience_year_${skillInfrastructureData[i]?.key}`,
+            mess: "dai hơn 2",
+            type: "max_length",
+          });
+          setStatusErrYearInfrastructure(true);
+        }
+
+        if (skillInfrastructureData[i]?.experience_year < 0) {
+          arrMessInfrastructureErrors.push({
+            key: `experience_year_${skillInfrastructureData[i]?.key}`,
+            mess: "k đc nhỏ hơn 0",
+            type: "min",
+          });
+          setStatusErrYearInfrastructure(true);
+        }
+      }
+
+      if (skillRequest?.upstream_process?.length > 1) {
+        errorMessages.upstream_process = "Dài quá 200";
+      }
+
+      if (!REGEX_RULES.text_input.test(skillRequest?.upstream_process)) {
+        errorMessages.upstream_process = "Sai định dạng";
+      }
+
+      // validate status
+      if (!skillRequest?.english_level) {
+        errorMessages.english_level = "Chọn english level";
+      }
+
+      if (skillRequest?.other_language_level?.length > 1) {
+        errorMessages.upstream_process = "Dài quá 200";
+      }
+
+      if (!REGEX_RULES.text_input.test(skillRequest?.other_language_level)) {
+        errorMessages.other_language_level = "Sai định dạng";
       }
     }
-    setMessSkillLanguageErr(arrMessErrors);
+    setMessSkillLanguageErr(arrMessLanguageErrors);
+    setMessSkillFrameworkErr(arrMessFrameworkErrors);
+    setMessSkillInfrastructureErr(arrMessInfrastructureErrors);
     setErrorValidates(errorMessages);
     return isValidForm;
   };
@@ -514,6 +727,11 @@ const ProfileSkillComponent = () => {
 
   return (
     <ContentComponent>
+      {isLoading && (
+        <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       <Box
         sx={{
           p: { xs: "80px 20px", lg: "80px 120px" },
@@ -600,6 +818,7 @@ const ProfileSkillComponent = () => {
                     placeholder="田中太郎"
                     onChangeValue={onChangeProfileRequest}
                     error={errorValidates.username}
+                    value={username}
                   />
                 </Box>
                 <TypoProfileMobile>Twitter</TypoProfileMobile>
@@ -708,6 +927,7 @@ const ProfileSkillComponent = () => {
                           placeholder={t("profile:form.placeholder.one-thing")}
                           onChangeValue={onChangeProfileRequest}
                           error={errorValidates.hitokoto}
+                          value={hitokoto}
                         />
                       </ContentTab>
                     </BoxContentTab>
@@ -720,6 +940,7 @@ const ProfileSkillComponent = () => {
                           minRows={5}
                           onChangeValue={onChangeProfileRequest}
                           error={errorValidates.self_description}
+                          value={selfDescription}
                         />
                       </ContentTab>
                     </BoxContentTab>
@@ -888,57 +1109,69 @@ const ProfileSkillComponent = () => {
                           <TypoxEstimatedStar>{t("profile:form.estimated-star")}</TypoxEstimatedStar>
                         </BoxEstimatedStar>
                       </TitleContentTab>
+                      {/* Languge */}
                       <ContentTab>
                         {skillLanguageData.map((option, key) => (
                           <Box key={key} sx={{ mb: "15px" }}>
                             <Box sx={{ display: { xs: "block", lg: "flex" } }}>
                               <Box>
                                 <InputCustom
-                                  onChange={(e) => onChangeProfileSkillRequest(option.key, e)}
+                                  onChange={(e) => onChangeSkillLanguage(option.key, e)}
                                   name="name"
                                   placeholder={t("profile:form.placeholder.language")}
+                                  sx={{ border: statusErrNameLaguage ? "solid 1px #FF9458" : "none" }}
                                 />
                                 {messSkillLanguageErr?.map((item, keyItem) =>
-                                  item.key === `name_${option.key}` ? <Box key={keyItem}>{item.mess}</Box> : null,
+                                  item.key === `name_${option.key}` ? (
+                                    <BoxTextValidate key={keyItem}>{item.mess}</BoxTextValidate>
+                                  ) : null,
                                 )}
                               </Box>
-                              <Box
-                                sx={{ display: "flex", alignItems: "center", m: { xs: "18px 0", lg: "0 0 0 15px" } }}
-                              >
-                                <Box sx={{ width: "80px" }}>
-                                  <InputCustom
-                                    onChange={(e) => onChangeProfileSkillRequest(option.key, e)}
-                                    name="experience_year"
-                                    placeholder={t("profile:form.placeholder.years-of-experience")}
-                                    type="number"
-                                  />
-                                </Box>
-                                <Typography fontSize={14} sx={{ m: "0 8px" }}>
-                                  {t("profile:year")}
-                                </Typography>
-                                <SelectCustom
-                                  id="outlined-select-month"
-                                  value={monthLanguage}
-                                  onChange={(e) => onChangeProfileSkillRequest(option.key, e)}
-                                  sx={{ width: { xs: "80px", lg: "80px" } }}
-                                  name="month"
+                              <Box>
+                                <Box
+                                  sx={{ display: "flex", alignItems: "center", m: { xs: "18px 0", lg: "0 0 0 15px" } }}
                                 >
-                                  {MONTHS.map((monthOption) => (
-                                    <MenuItem key={monthOption.value} value={monthOption.value}>
-                                      {monthOption.label}
-                                    </MenuItem>
-                                  ))}
-                                </SelectCustom>
-                                <Typography fontSize={14} sx={{ m: "0 8px" }}>
-                                  {t("profile:month")}
-                                </Typography>
+                                  <Box sx={{ width: "80px" }}>
+                                    <InputCustom
+                                      onChange={(e) => onChangeSkillLanguage(option.key, e)}
+                                      name="experience_year"
+                                      placeholder={t("profile:form.placeholder.years-of-experience")}
+                                      type="number"
+                                      sx={{ border: statusErrYearLaguage ? "solid 1px #FF9458" : "none" }}
+                                    />
+                                  </Box>
+                                  <Typography fontSize={14} sx={{ m: "0 8px" }}>
+                                    {t("profile:year")}
+                                  </Typography>
+                                  <SelectCustom
+                                    id="outlined-select-month"
+                                    value={monthLanguage}
+                                    onChange={(e) => onChangeSkillLanguage(option.key, e)}
+                                    sx={{ width: { xs: "80px", lg: "80px" } }}
+                                    name="month"
+                                  >
+                                    {MONTHS.map((monthOption) => (
+                                      <MenuItem key={monthOption.value} value={monthOption.value}>
+                                        {monthOption.label}
+                                      </MenuItem>
+                                    ))}
+                                  </SelectCustom>
+                                  <Typography fontSize={14} sx={{ m: "0 8px" }}>
+                                    {t("profile:month")}
+                                  </Typography>
+                                </Box>
+                                {messSkillLanguageErr?.map((item, keyItem) =>
+                                  item.key === `experience_year_${option.key}` ? (
+                                    <BoxTextValidate key={keyItem}>{item.mess}</BoxTextValidate>
+                                  ) : null,
+                                )}
                               </Box>
                               <Box sx={{ display: "flex" }}>
                                 <Box sx={{ width: { xs: "78%", lg: "241px" } }}>
                                   <SelectCustom
                                     id="outlined-select-level"
                                     value={levelLanguage}
-                                    onChange={(e) => onChangeProfileSkillRequest(option.key, e)}
+                                    onChange={(e) => onChangeSkillLanguage(option.key, e)}
                                     sx={{ width: "100%" }}
                                     name="level"
                                   >
@@ -1002,264 +1235,312 @@ const ProfileSkillComponent = () => {
                         </Box>
                       </ContentTab>
                     </BoxContentTab>
-                    {/* <BoxContentTab> */}
-                    {/*  <TitleContentTab> */}
-                    {/*    {t("profile:framework")} */}
-                    {/*    <BoxEstimatedStar> */}
-                    {/*      <ImgStar src="/assets/images/star.png" /> */}
-                    {/*      <TypoxEstimatedStar>{t("profile:form.estimated-star")}</TypoxEstimatedStar> */}
-                    {/*    </BoxEstimatedStar> */}
-                    {/*  </TitleContentTab> */}
-                    {/*  <ContentTab> */}
-                    {/*    {skillFrameworkData.map((option) => ( */}
-                    {/*      <Box key={option.key} sx={{ mb: "15px" }}> */}
-                    {/*        <Box sx={{ display: { xs: "block", lg: "flex" } }}> */}
-                    {/*          <Box> */}
-                    {/*            /!* <Field *!/ */}
-                    {/*            /!*  placeholder={t("profile:form.placeholder.language")} *!/ */}
-                    {/*            /!*  value={option.language} *!/ */}
-                    {/*            /!*  sx={{ width: { xs: "100%", lg: "160px" } }} *!/ */}
-                    {/*            /!* /> *!/ */}
-                    {/*          </Box> */}
-                    {/*          <Box */}
-                    {/*            sx={{ display: "flex", alignItems: "center", m: { xs: "18px 0", lg: "0 0 0 15px" } }} */}
-                    {/*          > */}
-                    {/*            /!* <Field *!/ */}
-                    {/*            /!*  placeholder={t("profile:form.placeholder.years-of-experience")} *!/ */}
-                    {/*            /!*  value={option.year} *!/ */}
-                    {/*            /!*  sx={{ width: "80px" }} *!/ */}
-                    {/*            /!* /> *!/ */}
-                    {/*            <Typography fontSize={14} sx={{ m: "0 8px" }}> */}
-                    {/*              {t("profile:year")} */}
-                    {/*            </Typography> */}
-                    {/*            <SelectCustom */}
-                    {/*              id="outlined-select-month" */}
-                    {/*              value={monthFramework} */}
-                    {/*              onChange={handleChangeMonthFramework} */}
-                    {/*              sx={{ width: { xs: "80px", lg: "80px" } }} */}
-                    {/*            > */}
-                    {/*              {MONTHS.map((monthOption) => ( */}
-                    {/*                <MenuItem key={monthOption.value} value={monthOption.value}> */}
-                    {/*                  {monthOption.label} */}
-                    {/*                </MenuItem> */}
-                    {/*              ))} */}
-                    {/*            </SelectCustom> */}
-                    {/*            <Typography fontSize={14} sx={{ m: "0 8px" }}> */}
-                    {/*              {t("profile:month")} */}
-                    {/*            </Typography> */}
-                    {/*          </Box> */}
-                    {/*          <Box sx={{ display: "flex" }}> */}
-                    {/*            <Box sx={{ width: { xs: "78%", lg: "241px" } }}> */}
-                    {/*              <SelectCustom */}
-                    {/*                id="outlined-select-level" */}
-                    {/*                value={levelFramework} */}
-                    {/*                onChange={handleChangeLevelFramework} */}
-                    {/*                sx={{ width: "100%" }} */}
-                    {/*              > */}
-                    {/*                {LEVELS.map((levelOption) => ( */}
-                    {/*                  <MenuItem key={levelOption.value} value={levelOption.value}> */}
-                    {/*                    <Box sx={{ display: "flex", alignItems: "center" }}> */}
-                    {/*                      {levelOption.stars.map((star) => ( */}
-                    {/*                        <Box> */}
-                    {/*                          <ImgStar src={star} /> */}
-                    {/*                        </Box> */}
-                    {/*                      ))} */}
-                    {/*                      <Box sx={{ ml: "7px" }}>{levelOption.label}</Box> */}
-                    {/*                    </Box> */}
-                    {/*                  </MenuItem> */}
-                    {/*                ))} */}
-                    {/*              </SelectCustom> */}
-                    {/*            </Box> */}
-                    {/*            <Box> */}
-                    {/*              <Button */}
-                    {/*                sx={{ */}
-                    {/*                  color: theme.gray, */}
-                    {/*                  fontSize: "14px", */}
-                    {/*                  fontWeight: 700, */}
-                    {/*                  lineHeight: "20.27px", */}
-                    {/*                  display: skillFrameworkData.length > 1 ? "block" : "none", */}
-                    {/*                  height: "32px", */}
-                    {/*                  p: 0, */}
-                    {/*                }} */}
-                    {/*                onClick={handleDeleteSkillFramework(option)} */}
-                    {/*              > */}
-                    {/*                <Box */}
-                    {/*                  sx={{ */}
-                    {/*                    height: "32px", */}
-                    {/*                    width: "54px", */}
-                    {/*                    borderRadius: "8px", */}
-                    {/*                    background: { xs: "#E4E6EB", lg: "unset" }, */}
-                    {/*                    display: "flex", */}
-                    {/*                    alignItems: "center", */}
-                    {/*                    ml: "20px", */}
-                    {/*                    p: "6px", */}
-                    {/*                  }} */}
-                    {/*                > */}
-                    {/*                  {t("profile:form.delete")} */}
-                    {/*                </Box> */}
-                    {/*              </Button> */}
-                    {/*            </Box> */}
-                    {/*          </Box> */}
-                    {/*        </Box> */}
-                    {/*      </Box> */}
-                    {/*    ))} */}
-                    {/*    <Box> */}
-                    {/*      <Button */}
-                    {/*        sx={{ */}
-                    {/*          color: theme.blue, */}
-                    {/*          fontSize: "14px", */}
-                    {/*          fontWeight: 700, */}
-                    {/*          lineHeight: "20.27px", */}
-                    {/*        }} */}
-                    {/*        onClick={addSkillFrameworkClick(skillFrameworkData[skillFrameworkData.length - 1].key)} */}
-                    {/*      > */}
-                    {/*        {t("profile:form.to-add")} */}
-                    {/*      </Button> */}
-                    {/*    </Box> */}
-                    {/*  </ContentTab> */}
-                    {/* </BoxContentTab> */}
-                    {/* <BoxContentTab> */}
-                    {/*  <TitleContentTab> */}
-                    {/*    {t("profile:infrastructure")} */}
-                    {/*    <BoxEstimatedStar> */}
-                    {/*      <ImgStar src="/assets/images/star.png" /> */}
-                    {/*      <TypoxEstimatedStar>{t("profile:form.estimated-star")}</TypoxEstimatedStar> */}
-                    {/*    </BoxEstimatedStar> */}
-                    {/*  </TitleContentTab> */}
-                    {/*  <ContentTab> */}
-                    {/*    {skillInfrastructureData.map((option) => ( */}
-                    {/*      <Box key={option.key} sx={{ mb: "15px" }}> */}
-                    {/*        <Box sx={{ display: { xs: "block", lg: "flex" } }}> */}
-                    {/*          <Box> */}
-                    {/*            <Field */}
-                    {/*              placeholder={t("profile:form.placeholder.language")} */}
-                    {/*              value={option.language} */}
-                    {/*              sx={{ width: { xs: "100%", lg: "160px" } }} */}
-                    {/*            /> */}
-                    {/*          </Box> */}
-                    {/*          <Box */}
-                    {/*            sx={{ display: "flex", alignItems: "center", m: { xs: "18px 0", lg: "0 0 0 15px" } }} */}
-                    {/*          > */}
-                    {/*            /!* <Field *!/ */}
-                    {/*            /!*  placeholder={t("profile:form.placeholder.years-of-experience")} *!/ */}
-                    {/*            /!*  value={option.year} *!/ */}
-                    {/*            /!*  sx={{ width: "80px" }} *!/ */}
-                    {/*            /!* /> *!/ */}
-                    {/*            <Typography fontSize={14} sx={{ m: "0 8px" }}> */}
-                    {/*              {t("profile:year")} */}
-                    {/*            </Typography> */}
-                    {/*            <SelectCustom */}
-                    {/*              id="outlined-select-month" */}
-                    {/*              value={monthInfrastructure} */}
-                    {/*              onChange={handleChangeMonthInfrastructure} */}
-                    {/*              sx={{ width: { xs: "80px", lg: "80px" } }} */}
-                    {/*            > */}
-                    {/*              {MONTHS.map((monthOption) => ( */}
-                    {/*                <MenuItem key={monthOption.value} value={monthOption.value}> */}
-                    {/*                  {monthOption.label} */}
-                    {/*                </MenuItem> */}
-                    {/*              ))} */}
-                    {/*            </SelectCustom> */}
-                    {/*            <Typography fontSize={14} sx={{ m: "0 8px" }}> */}
-                    {/*              {t("profile:month")} */}
-                    {/*            </Typography> */}
-                    {/*          </Box> */}
-                    {/*          <Box sx={{ display: "flex" }}> */}
-                    {/*            <Box sx={{ width: { xs: "78%", lg: "241px" } }}> */}
-                    {/*              <SelectCustom */}
-                    {/*                id="outlined-select-level" */}
-                    {/*                value={levelInfrastructure} */}
-                    {/*                onChange={handleChangeLevelInfrastructure} */}
-                    {/*                sx={{ width: "100%" }} */}
-                    {/*              > */}
-                    {/*                {LEVELS.map((levelOption) => ( */}
-                    {/*                  <MenuItem key={levelOption.value} value={levelOption.value}> */}
-                    {/*                    <Box sx={{ display: "flex", alignItems: "center" }}> */}
-                    {/*                      {levelOption.stars.map((star) => ( */}
-                    {/*                        <Box> */}
-                    {/*                          <ImgStar src={star} /> */}
-                    {/*                        </Box> */}
-                    {/*                      ))} */}
-                    {/*                      <Box sx={{ ml: "7px" }}>{levelOption.label}</Box> */}
-                    {/*                    </Box> */}
-                    {/*                  </MenuItem> */}
-                    {/*                ))} */}
-                    {/*              </SelectCustom> */}
-                    {/*            </Box> */}
-                    {/*            <Box> */}
-                    {/*              <Button */}
-                    {/*                sx={{ */}
-                    {/*                  color: theme.gray, */}
-                    {/*                  fontSize: "14px", */}
-                    {/*                  fontWeight: 700, */}
-                    {/*                  lineHeight: "20.27px", */}
-                    {/*                  display: skillInfrastructureData.length > 1 ? "block" : "none", */}
-                    {/*                  height: "32px", */}
-                    {/*                  p: 0, */}
-                    {/*                }} */}
-                    {/*                onClick={handleDeleteSkillInfrastructure(option)} */}
-                    {/*              > */}
-                    {/*                <Box */}
-                    {/*                  sx={{ */}
-                    {/*                    height: "32px", */}
-                    {/*                    width: "54px", */}
-                    {/*                    borderRadius: "8px", */}
-                    {/*                    background: { xs: "#E4E6EB", lg: "unset" }, */}
-                    {/*                    display: "flex", */}
-                    {/*                    alignItems: "center", */}
-                    {/*                    ml: "20px", */}
-                    {/*                    p: "6px", */}
-                    {/*                  }} */}
-                    {/*                > */}
-                    {/*                  {t("profile:form.delete")} */}
-                    {/*                </Box> */}
-                    {/*              </Button> */}
-                    {/*            </Box> */}
-                    {/*          </Box> */}
-                    {/*        </Box> */}
-                    {/*      </Box> */}
-                    {/*    ))} */}
-                    {/*    <Box> */}
-                    {/*      <Button */}
-                    {/*        sx={{ */}
-                    {/*          color: theme.blue, */}
-                    {/*          fontSize: "14px", */}
-                    {/*          fontWeight: 700, */}
-                    {/*          lineHeight: "20.27px", */}
-                    {/*        }} */}
-                    {/*        onClick={addSkillInfrastructureClick( */}
-                    {/*          skillInfrastructureData[skillInfrastructureData.length - 1].key, */}
-                    {/*        )} */}
-                    {/*      > */}
-                    {/*        {t("profile:form.to-add")} */}
-                    {/*      </Button> */}
-                    {/*    </Box> */}
-                    {/*  </ContentTab> */}
-                    {/* </BoxContentTab> */}
-                    {/* <BoxContentTab> */}
-                    {/*  <TitleContentTab>{t("profile:upstream-process")}</TitleContentTab> */}
-                    {/*  <ContentTab> */}
-                    {/*    /!* <Field placeholder={t("profile:form.placeholder.upstream-process")} /> *!/ */}
-                    {/*  </ContentTab> */}
-                    {/* </BoxContentTab> */}
-                    {/* <BoxContentTab> */}
-                    {/*  <TitleContentTab>{t("profile:english-experience")}</TitleContentTab> */}
-                    {/*  <ContentTab> */}
-                    {/*    <SelectCustom id="outlined-select-currency" value={currency} onChange={handleChange}> */}
-                    {/*      {currencies.map((option) => ( */}
-                    {/*        <MenuItem key={option.value} value={option.label}> */}
-                    {/*          {option.label} */}
-                    {/*        </MenuItem> */}
-                    {/*      ))} */}
-                    {/*    </SelectCustom> */}
-                    {/*  </ContentTab> */}
-                    {/* </BoxContentTab> */}
-                    {/* <BoxContentTab> */}
-                    {/*  <TitleContentTab>{t("profile:language-experience")}</TitleContentTab> */}
-                    {/*  <ContentTab> */}
-                    {/*    <FieldTextArea placeholder={t("profile:form.placeholder.language-experience")} minRows={5} /> */}
-                    {/*  </ContentTab> */}
-                    {/* </BoxContentTab> */}
+                    {/* end language */}
+
+                    {/* framwork */}
+                    <BoxContentTab>
+                      <TitleContentTab>
+                        {t("profile:framework")}
+                        <BoxEstimatedStar>
+                          <ImgStar src="/assets/images/star.png" />
+                          <TypoxEstimatedStar>{t("profile:form.estimated-star")}</TypoxEstimatedStar>
+                        </BoxEstimatedStar>
+                      </TitleContentTab>
+                      <ContentTab>
+                        {skillFrameworkData.map((option, key) => (
+                          <Box key={key} sx={{ mb: "15px" }}>
+                            <Box sx={{ display: { xs: "block", lg: "flex" } }}>
+                              <Box>
+                                <InputCustom
+                                  onChange={(e) => onChangeSkillFramework(option.key, e)}
+                                  name="name"
+                                  placeholder={t("profile:form.placeholder.language")}
+                                  sx={{ border: statusErrNameFramrwork ? "solid 1px #FF9458" : "none" }}
+                                />
+                                {messSkillFrameworkErr?.map((item, keyItem) =>
+                                  item.key === `name_${option.key}` ? (
+                                    <BoxTextValidate key={keyItem}>{item.mess}</BoxTextValidate>
+                                  ) : null,
+                                )}
+                              </Box>
+                              <Box>
+                                <Box
+                                  sx={{ display: "flex", alignItems: "center", m: { xs: "18px 0", lg: "0 0 0 15px" } }}
+                                >
+                                  <Box sx={{ width: "80px" }}>
+                                    <InputCustom
+                                      onChange={(e) => onChangeSkillFramework(option.key, e)}
+                                      name="experience_year"
+                                      placeholder={t("profile:form.placeholder.years-of-experience")}
+                                      type="number"
+                                      sx={{ border: statusErrYearFramrwork ? "solid 1px #FF9458" : "none" }}
+                                    />
+                                  </Box>
+                                  <Typography fontSize={14} sx={{ m: "0 8px" }}>
+                                    {t("profile:year")}
+                                  </Typography>
+                                  <SelectCustom
+                                    id="outlined-select-month"
+                                    value={monthLanguage}
+                                    onChange={(e) => onChangeSkillFramework(option.key, e)}
+                                    sx={{ width: { xs: "80px", lg: "80px" } }}
+                                    name="month"
+                                  >
+                                    {MONTHS.map((monthOption) => (
+                                      <MenuItem key={monthOption.value} value={monthOption.value}>
+                                        {monthOption.label}
+                                      </MenuItem>
+                                    ))}
+                                  </SelectCustom>
+                                  <Typography fontSize={14} sx={{ m: "0 8px" }}>
+                                    {t("profile:month")}
+                                  </Typography>
+                                </Box>
+                                {messSkillFrameworkErr?.map((item, keyItem) =>
+                                  item.key === `experience_year_${option.key}` ? (
+                                    <BoxTextValidate key={keyItem}>{item.mess}</BoxTextValidate>
+                                  ) : null,
+                                )}
+                              </Box>
+                              <Box sx={{ display: "flex" }}>
+                                <Box sx={{ width: { xs: "78%", lg: "241px" } }}>
+                                  <SelectCustom
+                                    id="outlined-select-level"
+                                    value={levelLanguage}
+                                    onChange={(e) => onChangeSkillFramework(option.key, e)}
+                                    sx={{ width: "100%" }}
+                                    name="level"
+                                  >
+                                    {LEVELS.map((levelOption) => (
+                                      <MenuItem key={levelOption.value} value={levelOption.value}>
+                                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                                          <ImgStarLevel countStar={levelOption.value} />
+                                          <Box sx={{ ml: "7px" }}>{levelOption.label}</Box>
+                                        </Box>
+                                      </MenuItem>
+                                    ))}
+                                  </SelectCustom>
+                                </Box>
+                              </Box>
+                              <Box>
+                                <Box>
+                                  <Button
+                                    sx={{
+                                      color: theme.gray,
+                                      fontSize: "14px",
+                                      fontWeight: 700,
+                                      lineHeight: "20.27px",
+                                      display: skillLanguageData.length > 1 ? "block" : "none",
+                                      height: "32px",
+                                      p: 0,
+                                    }}
+                                    onClick={handleDeleteSkillFramework(option)}
+                                  >
+                                    <Box
+                                      sx={{
+                                        height: "32px",
+                                        width: "54px",
+                                        borderRadius: "8px",
+                                        background: { xs: "#E4E6EB", lg: "unset" },
+                                        display: "flex",
+                                        alignItems: "center",
+                                        ml: "20px",
+                                        p: "6px",
+                                      }}
+                                    >
+                                      {t("profile:form.delete")}
+                                    </Box>
+                                  </Button>
+                                </Box>
+                              </Box>
+                            </Box>
+                          </Box>
+                        ))}
+                        <Box>
+                          <Button
+                            sx={{
+                              color: theme.blue,
+                              fontSize: "14px",
+                              fontWeight: 700,
+                              lineHeight: "20.27px",
+                            }}
+                            onClick={addSkillFrameworkClick(skillFrameworkData[skillFrameworkData.length - 1].key)}
+                          >
+                            {t("profile:form.to-add")}
+                          </Button>
+                        </Box>
+                      </ContentTab>
+                    </BoxContentTab>
+
+                    {/* end framwork */}
+                    <BoxContentTab>
+                      <TitleContentTab>
+                        {t("profile:infrastructure")}
+                        <BoxEstimatedStar>
+                          <ImgStar src="/assets/images/star.png" />
+                          <TypoxEstimatedStar>{t("profile:form.estimated-star")}</TypoxEstimatedStar>
+                        </BoxEstimatedStar>
+                      </TitleContentTab>
+                      <ContentTab>
+                        {skillInfrastructureData.map((option, key) => (
+                          <Box key={key} sx={{ mb: "15px" }}>
+                            <Box sx={{ display: { xs: "block", lg: "flex" } }}>
+                              <Box>
+                                <InputCustom
+                                  onChange={(e) => onChangeSkillInfrastructure(option.key, e)}
+                                  name="name"
+                                  placeholder={t("profile:form.placeholder.language")}
+                                  sx={{ border: statusErrNameInfrastructure ? "solid 1px #FF9458" : "none" }}
+                                />
+                                {messSkillInfrastructureErr?.map((item, keyItem) =>
+                                  item.key === `name_${option.key}` ? (
+                                    <BoxTextValidate key={keyItem}>{item.mess}</BoxTextValidate>
+                                  ) : null,
+                                )}
+                              </Box>
+                              <Box>
+                                <Box
+                                  sx={{ display: "flex", alignItems: "center", m: { xs: "18px 0", lg: "0 0 0 15px" } }}
+                                >
+                                  <Box sx={{ width: "80px" }}>
+                                    <InputCustom
+                                      onChange={(e) => onChangeSkillInfrastructure(option.key, e)}
+                                      name="experience_year"
+                                      placeholder={t("profile:form.placeholder.years-of-experience")}
+                                      type="number"
+                                      sx={{ border: statusErrYearInfrastructure ? "solid 1px #FF9458" : "none" }}
+                                    />
+                                  </Box>
+                                  <Typography fontSize={14} sx={{ m: "0 8px" }}>
+                                    {t("profile:year")}
+                                  </Typography>
+                                  <SelectCustom
+                                    id="outlined-select-month"
+                                    value={monthLanguage}
+                                    onChange={(e) => onChangeSkillInfrastructure(option.key, e)}
+                                    sx={{ width: { xs: "80px", lg: "80px" } }}
+                                    name="month"
+                                  >
+                                    {MONTHS.map((monthOption) => (
+                                      <MenuItem key={monthOption.value} value={monthOption.value}>
+                                        {monthOption.label}
+                                      </MenuItem>
+                                    ))}
+                                  </SelectCustom>
+                                  <Typography fontSize={14} sx={{ m: "0 8px" }}>
+                                    {t("profile:month")}
+                                  </Typography>
+                                </Box>
+                                {messSkillInfrastructureErr?.map((item, keyItem) =>
+                                  item.key === `experience_year_${option.key}` ? (
+                                    <BoxTextValidate key={keyItem}>{item.mess}</BoxTextValidate>
+                                  ) : null,
+                                )}
+                              </Box>
+                              <Box sx={{ display: "flex" }}>
+                                <Box sx={{ width: { xs: "78%", lg: "241px" } }}>
+                                  <SelectCustom
+                                    id="outlined-select-level"
+                                    value={levelLanguage}
+                                    onChange={(e) => onChangeSkillInfrastructure(option.key, e)}
+                                    sx={{ width: "100%" }}
+                                    name="level"
+                                  >
+                                    {LEVELS.map((levelOption) => (
+                                      <MenuItem key={levelOption.value} value={levelOption.value}>
+                                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                                          <ImgStarLevel countStar={levelOption.value} />
+                                          <Box sx={{ ml: "7px" }}>{levelOption.label}</Box>
+                                        </Box>
+                                      </MenuItem>
+                                    ))}
+                                  </SelectCustom>
+                                </Box>
+                              </Box>
+                              <Box>
+                                <Box>
+                                  <Button
+                                    sx={{
+                                      color: theme.gray,
+                                      fontSize: "14px",
+                                      fontWeight: 700,
+                                      lineHeight: "20.27px",
+                                      display: skillLanguageData.length > 1 ? "block" : "none",
+                                      height: "32px",
+                                      p: 0,
+                                    }}
+                                    onClick={handleDeleteSkillInfrastructure(option)}
+                                  >
+                                    <Box
+                                      sx={{
+                                        height: "32px",
+                                        width: "54px",
+                                        borderRadius: "8px",
+                                        background: { xs: "#E4E6EB", lg: "unset" },
+                                        display: "flex",
+                                        alignItems: "center",
+                                        ml: "20px",
+                                        p: "6px",
+                                      }}
+                                    >
+                                      {t("profile:form.delete")}
+                                    </Box>
+                                  </Button>
+                                </Box>
+                              </Box>
+                            </Box>
+                          </Box>
+                        ))}
+                        <Box>
+                          <Button
+                            sx={{
+                              color: theme.blue,
+                              fontSize: "14px",
+                              fontWeight: 700,
+                              lineHeight: "20.27px",
+                            }}
+                            onClick={addSkillInfrastructureClick(skillInfrastructureData[0].key)}
+                          >
+                            {t("profile:form.to-add")} - {skillInfrastructureData.length}
+                          </Button>
+                        </Box>
+                      </ContentTab>
+                    </BoxContentTab>
+                    <BoxContentTab>
+                      <TitleContentTab>{t("profile:upstream-process")}</TitleContentTab>
+                      <ContentTab>
+                        <Field
+                          id="upstream_process"
+                          placeholder={t("profile:form.placeholder.upstream-process")}
+                          onChangeValue={onChangeProfileSkillRequest}
+                          error={errorValidates.upstream_process}
+                        />
+                      </ContentTab>
+                    </BoxContentTab>
+                    <BoxContentTab>
+                      <TitleContentTab>{t("profile:english-experience")}</TitleContentTab>
+                      <ContentTab>
+                        <FieldSelect
+                          id="english_level"
+                          options={ENGLISH_LEVEL_OPTIONS}
+                          onChangeValue={onChangeProfileSkillRequest}
+                          error={errorValidates.english_level}
+                          value={englishLevel}
+                        />
+                      </ContentTab>
+                    </BoxContentTab>
+                    <BoxContentTab>
+                      <TitleContentTab>{t("profile:language-experience")}</TitleContentTab>
+                      <ContentTab>
+                        <FieldArea
+                          id="other_language_level"
+                          placeholder={t("profile:form.placeholder.language-experience")}
+                          onChangeValue={onChangeProfileSkillRequest}
+                          error={errorValidates.other_language_level}
+                          minRows={5}
+                        />
+                      </ContentTab>
+                    </BoxContentTab>
                   </TabPanel>
                 </Box>
               </TabsUnstyled>

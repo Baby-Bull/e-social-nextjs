@@ -54,7 +54,7 @@ export const Field: React.SFC<FieldProps> = ({ id, placeholder, value, error, on
     <InputCustom
       placeholder={placeholder}
       onChange={(e) => onChangeValue(id, e.target.value, event)}
-      defaultValue={value}
+      value={value}
       id={id}
       sx={{ border: error ? "solid 1px #FF9458" : "none" }}
       type={type}

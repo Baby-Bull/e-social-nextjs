@@ -1,9 +1,5 @@
 export const MONTHS = [
   {
-    label: 0,
-    value: 0,
-  },
-  {
     label: 1,
     value: 1,
   },
@@ -46,11 +42,7 @@ export const MONTHS = [
   {
     label: 11,
     value: 11,
-  },
-  {
-    label: 12,
-    value: 12,
-  },
+  }
 ];
 
 export const AUTH_PAGE_PATHS = ["/login", "/register", "/register/form", "/_error"];
@@ -338,5 +330,28 @@ export const LEVELS = [
   {
     label: "他者のコードをレビュー可能",
     value: 5,
+  },
+];
+
+export const ENGLISH_LEVEL_OPTIONS = [
+  {
+    label: "選択してください",
+    value: 0,
+  },
+  {
+    label: "ネイティブ ",
+    value: "native_speaker",
+  },
+  {
+    label: "ビジネス会話レベル",
+    value: "communicate_at_work",
+  },
+  {
+    label: "日常会話レベル",
+    value: "day_communication",
+  },
+  {
+    label: "話せない",
+    value: "can_not_use",
   },
 ];
