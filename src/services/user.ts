@@ -2,7 +2,14 @@ import { toast } from "react-toastify";
 import moment from "moment";
 
 import { api } from "src/helpers/api";
-import { USER_REPORT, USER_REVIEW, SETTING_EMAIL, SERVER_ERROR, SETTING_NOTIFICATION } from "src/messages/notification";
+import {
+  USER_REPORT,
+  USER_REVIEW,
+  SETTING_EMAIL,
+  SERVER_ERROR,
+  SETTING_NOTIFICATION,
+  UPDATE_PROFILE,
+} from "src/messages/notification";
 import { typeTimeLogin, typeReview } from "src/constants/searchUserConstants";
 
 export const getUserFavorite = async (limit: number, cursor: string) => {
@@ -252,6 +259,32 @@ export const getUserReviews = async (userId: string | string[]) => {
     const res = await api.get(`/user/${userId}/reviews`);
     return res?.data;
   } catch (error) {
+    return error;
+  }
+};
+
+export const getUserProfile = async () => {
+  try {
+    const res = await api.get(`/user/profile`);
+    return res?.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const updateProfile = async (body: any) => {
+  try {
+    const res = await api.patch(`/user/profile`, body);
+    if (!res.data) {
+      toast.error(SERVER_ERROR);
+    } else if (res.data.error_code) {
+      toast.error(SERVER_ERROR);
+    } else {
+      toast.success(UPDATE_PROFILE);
+    }
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
     return error;
   }
 };
