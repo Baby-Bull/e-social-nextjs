@@ -136,6 +136,7 @@ const ProfileHaveDataComponent = () => {
             mb: "40px",
             display: "flex",
             justifyContent: "center",
+            flexWrap: "wrap-reverse",
           }}
         >
           {t("profile:title-recommen-member")}
