@@ -25,7 +25,7 @@ import TextField from "@mui/material/TextField";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import theme from "src/theme";
-import { REGEX_RULES, VALIDATE_FORM_UPDATE_PROFILE } from "src/messages/validate";
+import { VALIDATE_FORM_UPDATE_PROFILE } from "src/messages/validate";
 import { Field } from "src/components/profile/form/InputProfileComponent";
 import { FieldArea } from "src/components/profile/form/TextAreaComponent";
 import { FieldSelect } from "src/components/profile/form/SelectComponent";
@@ -318,10 +318,6 @@ const ProfileSkillComponent = () => {
   });
 
   const [profileRequest, setProfileRequest] = useState({
-    username,
-    twitter_url: twitterUrl,
-    facebook_url: facebookUrl,
-    github_url: githubUrl,
     hitokoto,
     self_description: selfDescription,
     status,
@@ -331,6 +327,13 @@ const ProfileSkillComponent = () => {
     discussion_topic: discussionTopic,
     address,
     tags: inputTags,
+  });
+
+  const [profileSocialRequest, setProfileSocialRequest] = useState({
+    username,
+    twitter_url: twitterUrl,
+    facebook_url: facebookUrl,
+    github_url: githubUrl,
   });
 
   const fetchProfileSkill = async () => {
@@ -359,11 +362,13 @@ const ProfileSkillComponent = () => {
       english_level: data?.skills?.english_level,
       other_language_level: data?.skills?.other_language_level,
     });
-    setProfileRequest({
+    setProfileSocialRequest({
       username: data.username,
-      twitter_url: data.facebook_url,
-      facebook_url: data.twitter_url,
+      twitter_url: data.twitter_url,
+      facebook_url: data.facebook_url,
       github_url: data.github_url,
+    });
+    setProfileRequest({
       hitokoto: data.hitokoto,
       self_description: data.self_description,
       status: data.status ? data.status : STATUS_OPTIONS[0].value,
@@ -387,7 +392,7 @@ const ProfileSkillComponent = () => {
           experience_month: codeSkills[i]?.experience_month,
           experience_year: codeSkills[i]?.experience_year,
           level: codeSkills[i]?.level,
-          caterory: "programLanguage",
+          category: "programLanguage",
         });
       }
       if (codeSkills[i]?.category === "framework") {
@@ -397,7 +402,7 @@ const ProfileSkillComponent = () => {
           experience_month: codeSkills[i]?.experience_month,
           experience_year: codeSkills[i]?.experience_year,
           level: codeSkills[i]?.level,
-          caterory: "framework",
+          category: "framework",
         });
       }
 
@@ -408,7 +413,7 @@ const ProfileSkillComponent = () => {
           experience_month: codeSkills[i]?.experience_month,
           experience_year: codeSkills[i]?.experience_year,
           level: codeSkills[i]?.level,
-          caterory: "infrastructure",
+          category: "infrastructure",
         });
       }
     }
@@ -532,8 +537,7 @@ const ProfileSkillComponent = () => {
       ),
     );
   };
-
-  const onChangeProfileRequest = (key: string, value: any) => {
+  const onChangeProfileSocialRequest = (key: string, value: any) => {
     if (key === "username") {
       setUsername(value);
     }
@@ -546,6 +550,14 @@ const ProfileSkillComponent = () => {
     if (key === "github_url") {
       setGithubUrl(value);
     }
+
+    setProfileSocialRequest({
+      ...profileSocialRequest,
+      [key]: typeof value === "string" ? value.trim() : value,
+    });
+  };
+
+  const onChangeProfileRequest = (key: string, value: any) => {
     if (key === "hitokoto") {
       setHitokoto(value);
     }
@@ -598,6 +610,21 @@ const ProfileSkillComponent = () => {
     });
   };
 
+  const handleValidateFormSocial = () => {
+    let isValidForm = true;
+    // validate user name
+    if (profileSocialRequest?.username?.length > 50) {
+      isValidForm = false;
+      errorMessages.username = VALIDATE_FORM_UPDATE_PROFILE.username.max_length;
+    }
+    if (!profileSocialRequest?.username?.length) {
+      isValidForm = false;
+      errorMessages.username = VALIDATE_FORM_UPDATE_PROFILE.username.required;
+    }
+    setErrorValidates(errorMessages);
+    return isValidForm;
+  };
+
   const handleValidateForm = () => {
     let isValidForm = true;
     if (isSkillProfile) {
@@ -614,16 +641,6 @@ const ProfileSkillComponent = () => {
             key: `name_${skillLanguageData[i]?.key}`,
             mess: VALIDATE_FORM_UPDATE_PROFILE.max_length_name_skill,
             type: "max_length",
-          });
-          setStatusErrNameLaguage(true);
-        }
-
-        if (!REGEX_RULES.text_input.test(skillLanguageData[i]?.name)) {
-          isValidForm = false;
-          arrMessLanguageErrors.push({
-            key: `name_${skillLanguageData[i]?.key}`,
-            mess: VALIDATE_FORM_UPDATE_PROFILE.format,
-            type: "wrong_format",
           });
           setStatusErrNameLaguage(true);
         }
@@ -661,16 +678,6 @@ const ProfileSkillComponent = () => {
           setStatusErrNameFramework(true);
         }
 
-        if (!REGEX_RULES.text_input.test(skillFrameworkData[i]?.name)) {
-          isValidForm = false;
-          arrMessFrameworkErrors.push({
-            key: `name_${skillFrameworkData[i]?.key}`,
-            mess: VALIDATE_FORM_UPDATE_PROFILE.format,
-            type: "wrong_format",
-          });
-          setStatusErrNameFramework(true);
-        }
-
         // @ts-ignore
         if (skillFrameworkData[i]?.experience_year.length > 2) {
           isValidForm = false;
@@ -704,16 +711,6 @@ const ProfileSkillComponent = () => {
           setStatusErrNameInfrastructure(true);
         }
 
-        if (!REGEX_RULES.text_input.test(skillInfrastructureData[i]?.name)) {
-          isValidForm = false;
-          arrMessInfrastructureErrors.push({
-            key: `name_${skillInfrastructureData[i]?.key}`,
-            mess: VALIDATE_FORM_UPDATE_PROFILE.format,
-            type: "wrong_format",
-          });
-          setStatusErrNameInfrastructure(true);
-        }
-
         // @ts-ignore
         if (skillInfrastructureData[i]?.experience_year?.length > 2) {
           isValidForm = false;
@@ -741,11 +738,6 @@ const ProfileSkillComponent = () => {
         errorMessages.upstream_process = VALIDATE_FORM_UPDATE_PROFILE.upstream_process.max_length;
       }
 
-      if (!REGEX_RULES.text_input.test(skillRequest?.upstream_process)) {
-        isValidForm = false;
-        errorMessages.upstream_process = VALIDATE_FORM_UPDATE_PROFILE.format;
-      }
-
       if (!skillRequest?.english_level) {
         isValidForm = false;
         errorMessages.english_level = VALIDATE_FORM_UPDATE_PROFILE.english_level.select;
@@ -756,49 +748,20 @@ const ProfileSkillComponent = () => {
         errorMessages.other_language_level = VALIDATE_FORM_UPDATE_PROFILE.other_language_level.max_length;
       }
 
-      if (!REGEX_RULES.text_input.test(skillRequest?.other_language_level)) {
-        errorMessages.other_language_level = VALIDATE_FORM_UPDATE_PROFILE.format;
-      }
       setMessSkillLanguageErr(arrMessLanguageErrors);
       setMessSkillFrameworkErr(arrMessFrameworkErrors);
       setMessSkillInfrastructureErr(arrMessInfrastructureErrors);
     } else {
-      // validate user name
-      if (profileRequest?.username?.length > 50) {
-        isValidForm = false;
-        errorMessages.username = VALIDATE_FORM_UPDATE_PROFILE.username.max_length;
-      }
-
-      if (!REGEX_RULES.username_profile.test(profileRequest?.username)) {
-        isValidForm = false;
-        errorMessages.username = VALIDATE_FORM_UPDATE_PROFILE.format;
-      }
-
-      if (!profileRequest?.username?.length) {
-        isValidForm = false;
-        errorMessages.username = VALIDATE_FORM_UPDATE_PROFILE.username.required;
-      }
-
       // validate hitokoto
       if (profileRequest?.hitokoto?.length > 40) {
         isValidForm = false;
         errorMessages.hitokoto = VALIDATE_FORM_UPDATE_PROFILE.hitokoto.max_length;
       }
 
-      if (!REGEX_RULES.text_input.test(profileRequest?.hitokoto)) {
-        isValidForm = false;
-        errorMessages.hitokoto = VALIDATE_FORM_UPDATE_PROFILE.format;
-      }
-
       // validate self_description
       if (profileRequest?.self_description?.length > 1000) {
         isValidForm = false;
         errorMessages.self_description = VALIDATE_FORM_UPDATE_PROFILE.self_description.max_length;
-      }
-
-      if (!REGEX_RULES.text_input.test(profileRequest?.self_description)) {
-        isValidForm = false;
-        errorMessages.self_description = VALIDATE_FORM_UPDATE_PROFILE.format;
       }
 
       // validate status
@@ -819,11 +782,6 @@ const ProfileSkillComponent = () => {
         errorMessages.job_position = VALIDATE_FORM_UPDATE_PROFILE.job_position.max_length;
       }
 
-      if (!REGEX_RULES.text_input.test(profileRequest?.job_position)) {
-        isValidForm = false;
-        errorMessages.job_position = VALIDATE_FORM_UPDATE_PROFILE.format;
-      }
-
       // validate employment_status
       if (!profileRequest?.employment_status) {
         isValidForm = false;
@@ -834,11 +792,6 @@ const ProfileSkillComponent = () => {
       if (profileRequest?.discussion_topic?.length > 100) {
         isValidForm = false;
         errorMessages.discussion_topic = VALIDATE_FORM_UPDATE_PROFILE.discussion_topic.max_length;
-      }
-
-      if (!REGEX_RULES.text_input.test(profileRequest?.discussion_topic)) {
-        isValidForm = false;
-        errorMessages.discussion_topic = VALIDATE_FORM_UPDATE_PROFILE.format;
       }
 
       // validate address
@@ -856,7 +809,14 @@ const ProfileSkillComponent = () => {
     return isValidForm;
   };
 
-  const submitUserReportRequest = async () => {
+  const submitUserProfileSocial = async () => {
+    if (handleValidateFormSocial()) {
+      const res = await updateProfile(profileSocialRequest);
+      setIsFresh(!isFresh);
+      return res;
+    }
+  };
+  const submitUserProfileRequest = async () => {
     if (handleValidateForm()) {
       if (isSkillProfile) {
         const dataUpdate = {
@@ -865,10 +825,9 @@ const ProfileSkillComponent = () => {
           english_level: skillRequest.english_level,
           other_language_level: skillRequest.other_language_level,
         };
-        console.log(dataUpdate);
-        // const res = await updateProfile({ skills: dataUpdate });
-        // setIsFresh(!isFresh);
-        return 1;
+        const res = await updateProfile({ skills: dataUpdate });
+        setIsFresh(!isFresh);
+        return res;
       }
       setProfileRequest({
         ...profileRequest,
@@ -878,6 +837,16 @@ const ProfileSkillComponent = () => {
       setIsFresh(!isFresh);
       return res.data;
     }
+  };
+
+  const submitUploadProfileImage = async (e) => {
+    const formData = new FormData();
+    formData.append("profile_image", e.currentTarget.files[0]);
+    const res = await updateProfile(formData);
+    setIsFresh(!isFresh);
+    // @ts-ignore
+    document.getElementById("avatar").value = null;
+    return res.data;
   };
 
   return (
@@ -917,47 +886,58 @@ const ProfileSkillComponent = () => {
                   justifyContent: "center",
                 }}
               >
-                <Avatar
-                  alt="Remy Sharp"
-                  src={profileImage || "/assets/images/profile/avatar_2.png"}
-                  sx={{
-                    width: { xs: "80px", lg: "160px" },
-                    height: { xs: "80px", lg: "160px" },
-                    mt: { xs: "-40px", lg: "0" },
-                    position: { xs: "relative", lg: "unset" },
-                  }}
-                />
-                <Avatar
-                  alt="Remy Sharp"
-                  src="/assets/images/icon/ic_camera.png"
-                  sx={{
-                    width: "23.33px",
-                    height: "21px",
-                    opacity: 0.6,
-                    position: "absolute",
-                    display: { xs: "block", lg: "none" },
-                    mt: "10px",
-                  }}
-                />
-                <Avatar
-                  sx={{
-                    bgcolor: { xs: "transparent", lg: theme.navy },
-                    position: "absolute",
-                    bottom: 50,
-                    right: 10,
-                    display: { xs: "none", lg: "flex" },
-                  }}
-                >
+                <label htmlFor="avatar">
+                  <Avatar
+                    alt="Remy Sharp"
+                    src={profileImage || "/assets/images/profile/avatar_2.png"}
+                    sx={{
+                      width: { xs: "80px", lg: "160px" },
+                      height: { xs: "80px", lg: "160px" },
+                      mt: { xs: "-40px", lg: "0" },
+                      position: { xs: "relative", lg: "unset" },
+                      cursor: "pointer",
+                    }}
+                  />
                   <Avatar
                     alt="Remy Sharp"
                     src="/assets/images/icon/ic_camera.png"
                     sx={{
-                      width: "20px",
-                      height: "18px",
-                      m: "0 auto",
+                      width: "23.33px",
+                      height: "21px",
+                      opacity: 0.6,
+                      position: "absolute",
+                      display: { xs: "block", lg: "none" },
+                      mt: "10px",
                     }}
                   />
-                </Avatar>
+                  <Avatar
+                    sx={{
+                      bgcolor: { xs: "transparent", lg: theme.navy },
+                      position: "absolute",
+                      bottom: 50,
+                      right: 10,
+                      display: { xs: "none", lg: "flex" },
+                    }}
+                  >
+                    <Avatar
+                      alt="Remy Sharp"
+                      src="/assets/images/icon/ic_camera.png"
+                      sx={{
+                        width: "20px",
+                        height: "18px",
+                        m: "0 auto",
+                      }}
+                    />
+                  </Avatar>
+                  <input
+                    id="avatar"
+                    name="profile_image"
+                    type="file"
+                    accept="image/png,image/jpeg,image/gif"
+                    hidden
+                    onChange={submitUploadProfileImage}
+                  />
+                </label>
               </Box>
               <Box sx={{ ml: "27px", mb: "9px", display: { xs: "none", lg: "block" } }}>
                 <TypoProfile>{t("profile:name")}</TypoProfile>
@@ -971,7 +951,7 @@ const ProfileSkillComponent = () => {
                   <Field
                     id="username"
                     placeholder="田中太郎"
-                    onChangeValue={onChangeProfileRequest}
+                    onChangeValue={onChangeProfileSocialRequest}
                     error={errorValidates.username}
                     value={username}
                   />
@@ -981,7 +961,7 @@ const ProfileSkillComponent = () => {
                   <Field
                     id="twitter_url"
                     placeholder={t("profile:form.placeholder.twitter")}
-                    onChangeValue={onChangeProfileRequest}
+                    onChangeValue={onChangeProfileSocialRequest}
                     value={twitterUrl}
                   />
                 </Box>
@@ -990,7 +970,7 @@ const ProfileSkillComponent = () => {
                   <Field
                     id="facebook_url"
                     placeholder={t("profile:form.placeholder.facebook")}
-                    onChangeValue={onChangeProfileRequest}
+                    onChangeValue={onChangeProfileSocialRequest}
                     value={facebookUrl}
                   />
                 </Box>
@@ -1012,26 +992,25 @@ const ProfileSkillComponent = () => {
                   width: { xs: "100%", lg: "96px" },
                 }}
               >
-                <Link href="/my-profile/edit" sx={{ textDecoration: "none" }}>
-                  <Button
-                    sx={{
+                <Button
+                  sx={{
+                    background: theme.blue,
+                    color: "#fff",
+                    fontWeight: 700,
+                    lineHeight: "23.17",
+                    width: { xs: "100%", lg: "96px" },
+                    height: { xs: "48px", lg: "40px" },
+                    dispaly: "flex",
+                    alignItems: "center",
+                    borderRadius: { xs: "12px", lg: "4px" },
+                    "&:hover": {
                       background: theme.blue,
-                      color: "#fff",
-                      fontWeight: 700,
-                      lineHeight: "23.17",
-                      width: { xs: "100%", lg: "96px" },
-                      height: { xs: "48px", lg: "40px" },
-                      dispaly: "flex",
-                      alignItems: "center",
-                      borderRadius: { xs: "12px", lg: "4px" },
-                      "&:hover": {
-                        background: theme.blue,
-                      },
-                    }}
-                  >
-                    {t("profile:form.save")}
-                  </Button>
-                </Link>
+                    },
+                  }}
+                  onClick={submitUserProfileSocial}
+                >
+                  {t("profile:form.save")}
+                </Button>
               </Box>
             </Box>
             <Box sx={{ width: "100%" }}>
@@ -1723,7 +1702,7 @@ const ProfileSkillComponent = () => {
                     background: theme.blue,
                   },
                 }}
-                onClick={() => submitUserReportRequest()}
+                onClick={() => submitUserProfileRequest()}
               >
                 <Typography
                   sx={{

@@ -42,7 +42,7 @@ export const MONTHS = [
   {
     label: 11,
     value: 11,
-  }
+  },
 ];
 
 export const AUTH_PAGE_PATHS = ["/login", "/register", "/register/form", "/_error"];
