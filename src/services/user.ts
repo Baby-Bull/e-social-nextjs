@@ -265,3 +265,21 @@ export const getUserProfile = async () => {
   }
 };
 
+export const updateProfile = async (body: any) => {
+  try {
+    const res = await api.patch(`/user/profile`, body);
+    if (!res.data) {
+      toast.error(SERVER_ERROR);
+    } else {
+      if (res.data.error_code) {
+        toast.error("422");
+      } else {
+        toast.success("OK");
+      }
+    }
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};

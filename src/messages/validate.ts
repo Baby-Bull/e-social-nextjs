@@ -64,3 +64,52 @@ export const VALIDATE_FORM_USER_REVIEW = {
     max_length: "1タグにつき1000文字以内で入力してください",
   },
 };
+
+export const VALIDATE_FORM_UPDATE_PROFILE = {
+  username: {
+    required: "お名前を入力してください。",
+    max_length: "50文字以内で入力してください。",
+  },
+  hitokoto: {
+    max_length: "40文字以内で入力してください。",
+  },
+  self_description: {
+    max_length: "1000文字以内で記入してください。",
+  },
+  discussion_topic: {
+    max_length: "1000文字以内で記入してください。",
+  },
+  job_position: {
+    max_length: "1000文字以内で記入してください。",
+  },
+  upstream_process: {
+    max_length: "200文字以内で記入してください。",
+  },
+  other_language_level: {
+    max_length: "200文字以内で記入してください。",
+  },
+  tags: {
+    min_tag: "2種類以上設定してください。",
+  },
+  job: {
+    select: "選択してください。",
+  },
+  status: {
+    select: "選択してください。",
+  },
+  employment_status: {
+    select: "選択してください。",
+  },
+  address: {
+    select: "選択してください。",
+  },
+  english_level: {
+    select: "選択してください。",
+  },
+  experience_year: {
+    min: "年数は1以上の数字で入力してください。",
+  },
+  max_length_name_skill: "40文字以内で記入してください。",
+  max_length_year_skill: "2文字以内で記入してください。",
+  format: "ユーザ名は無効です。ひらがな、カタカナ、漢字、a-zのアルファベット、0-9の文字を入力してください。",
+};

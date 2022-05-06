@@ -40,7 +40,7 @@ export const FieldArea: React.SFC<FieldProps> = ({ id, placeholder, value, error
     <FieldTextArea
       placeholder={placeholder}
       onChange={(e) => onChangeValue(id, e.target.value)}
-      defaultValue={value}
+      value={value}
       id={id}
       sx={{ border: error ? "solid 1px #FF9458" : "none" }}
       minRows={minRows}
