@@ -25,7 +25,7 @@ import TextField from "@mui/material/TextField";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import theme from "src/theme";
-import { VALIDATE_FORM_UPDATE_PROFILE } from "src/messages/validate";
+import { VALIDATE_FORM_UPDATE_PROFILE, REGEX_RULES } from "src/messages/validate";
 import { Field } from "src/components/profile/form/InputProfileComponent";
 import { FieldArea } from "src/components/profile/form/TextAreaComponent";
 import { FieldSelect } from "src/components/profile/form/SelectComponent";
@@ -296,6 +296,7 @@ const ProfileSkillComponent = () => {
     upstream_process: null,
     english_level: null,
     other_language_level: null,
+    image_profile: null,
   };
 
   const [errorValidates, setErrorValidates] = useState({
@@ -315,6 +316,7 @@ const ProfileSkillComponent = () => {
     upstream_process: null,
     english_level: null,
     other_language_level: null,
+    image_profile: null,
   });
 
   const [profileRequest, setProfileRequest] = useState({
@@ -336,7 +338,27 @@ const ProfileSkillComponent = () => {
     github_url: githubUrl,
   });
 
+  // fetch api profile
   const fetchProfileSkill = async () => {
+    setErrorValidates({
+      username: null,
+      twitter_url: null,
+      facebook_url: null,
+      github_url: null,
+      hitokoto: null,
+      self_description: null,
+      status: null,
+      job: null,
+      job_position: null,
+      employment_status: null,
+      discussion_topic: null,
+      address: null,
+      tags: null,
+      upstream_process: null,
+      english_level: null,
+      other_language_level: null,
+      image_profile: null,
+    });
     setIsLoading(true);
     const data = await getUserProfile();
     setUsername(data.username);
@@ -537,6 +559,8 @@ const ProfileSkillComponent = () => {
       ),
     );
   };
+
+  // form profile url social
   const onChangeProfileSocialRequest = (key: string, value: any) => {
     if (key === "username") {
       setUsername(value);
@@ -557,6 +581,7 @@ const ProfileSkillComponent = () => {
     });
   };
 
+  // form profile
   const onChangeProfileRequest = (key: string, value: any) => {
     if (key === "hitokoto") {
       setHitokoto(value);
@@ -594,6 +619,7 @@ const ProfileSkillComponent = () => {
     });
   };
 
+  // form profile skill
   const onChangeProfileSkillRequest = (key: string, value: any) => {
     if (key === "english_level") {
       setEnglishLevel(value);
@@ -610,6 +636,7 @@ const ProfileSkillComponent = () => {
     });
   };
 
+  // Validate profile url social form
   const handleValidateFormSocial = () => {
     let isValidForm = true;
     // validate user name
@@ -621,10 +648,25 @@ const ProfileSkillComponent = () => {
       isValidForm = false;
       errorMessages.username = VALIDATE_FORM_UPDATE_PROFILE.username.required;
     }
+    if (profileSocialRequest?.facebook_url?.length > 0 && !REGEX_RULES.url.test(profileSocialRequest?.facebook_url)) {
+      isValidForm = false;
+      errorMessages.facebook_url = VALIDATE_FORM_UPDATE_PROFILE.facebook_url.format;
+    }
+
+    if (profileSocialRequest?.twitter_url?.length > 0 && !REGEX_RULES.url.test(profileSocialRequest?.twitter_url)) {
+      isValidForm = false;
+      errorMessages.twitter_url = VALIDATE_FORM_UPDATE_PROFILE.twitter_url.format;
+    }
+
+    if (profileSocialRequest?.github_url?.length > 0 && !REGEX_RULES.url.test(profileSocialRequest?.github_url)) {
+      isValidForm = false;
+      errorMessages.github_url = VALIDATE_FORM_UPDATE_PROFILE.github_url.format;
+    }
     setErrorValidates(errorMessages);
     return isValidForm;
   };
 
+  // Validate profile form
   const handleValidateForm = () => {
     let isValidForm = true;
     if (isSkillProfile) {
@@ -646,7 +688,7 @@ const ProfileSkillComponent = () => {
         }
 
         // @ts-ignore
-        if (skillLanguageData[i]?.experience_year.length > 2) {
+        if (skillLanguageData[i]?.experience_year?.length > 2) {
           isValidForm = false;
           arrMessLanguageErrors.push({
             key: `experience_year_${skillLanguageData[i]?.key}`,
@@ -668,7 +710,7 @@ const ProfileSkillComponent = () => {
       }
 
       for (let i = 0; i < skillFrameworkData.length; i++) {
-        if (skillFrameworkData[i]?.name.length > 40) {
+        if (skillFrameworkData[i]?.name?.length > 40) {
           isValidForm = false;
           arrMessFrameworkErrors.push({
             key: `name_${skillFrameworkData[i]?.key}`,
@@ -679,7 +721,7 @@ const ProfileSkillComponent = () => {
         }
 
         // @ts-ignore
-        if (skillFrameworkData[i]?.experience_year.length > 2) {
+        if (skillFrameworkData[i]?.experience_year?.length > 2) {
           isValidForm = false;
           arrMessFrameworkErrors.push({
             key: `experience_year_${skillFrameworkData[i]?.key}`,
@@ -809,6 +851,7 @@ const ProfileSkillComponent = () => {
     return isValidForm;
   };
 
+  // submit profile social form
   const submitUserProfileSocial = async () => {
     if (handleValidateFormSocial()) {
       const res = await updateProfile(profileSocialRequest);
@@ -816,6 +859,7 @@ const ProfileSkillComponent = () => {
       return res;
     }
   };
+  // submit profile form
   const submitUserProfileRequest = async () => {
     if (handleValidateForm()) {
       if (isSkillProfile) {
@@ -839,7 +883,25 @@ const ProfileSkillComponent = () => {
     }
   };
 
+  // submit profile image
   const submitUploadProfileImage = async (e) => {
+    if (e.currentTarget.files[0].size > 2048) {
+      errorMessages.image_profile = VALIDATE_FORM_UPDATE_PROFILE.image_profile.max_size;
+      setErrorValidates(errorMessages);
+    }
+    if (e.currentTarget.files[0].type === "image/jpg") {
+      errorMessages.image_profile = VALIDATE_FORM_UPDATE_PROFILE.image_profile.format;
+      setErrorValidates(errorMessages);
+    }
+
+    if (e.currentTarget.files[0].type === "image/png") {
+      errorMessages.image_profile = VALIDATE_FORM_UPDATE_PROFILE.image_profile.format;
+      setErrorValidates(errorMessages);
+    }
+    // if (e.currentTarget.files[0].type === "image/jpg" || e.currentTarget.files[0].type === "image/png") {
+    //
+    // }
+
     const formData = new FormData();
     formData.append("profile_image", e.currentTarget.files[0]);
     const res = await updateProfile(formData);
@@ -938,6 +1000,9 @@ const ProfileSkillComponent = () => {
                     onChange={submitUploadProfileImage}
                   />
                 </label>
+                <BoxTextValidate sx={{ position: "absolute", bottom: 0 }}>
+                  {errorValidates.image_profile}
+                </BoxTextValidate>
               </Box>
               <Box sx={{ ml: "27px", mb: "9px", display: { xs: "none", lg: "block" } }}>
                 <TypoProfile>{t("profile:name")}</TypoProfile>
@@ -963,6 +1028,7 @@ const ProfileSkillComponent = () => {
                     placeholder={t("profile:form.placeholder.twitter")}
                     onChangeValue={onChangeProfileSocialRequest}
                     value={twitterUrl}
+                    error={errorValidates.twitter_url}
                   />
                 </Box>
                 <TypoProfileMobile>Facebook</TypoProfileMobile>
@@ -972,6 +1038,7 @@ const ProfileSkillComponent = () => {
                     placeholder={t("profile:form.placeholder.facebook")}
                     onChangeValue={onChangeProfileSocialRequest}
                     value={facebookUrl}
+                    error={errorValidates.facebook_url}
                   />
                 </Box>
                 <TypoProfileMobile>GitHub</TypoProfileMobile>
@@ -979,8 +1046,9 @@ const ProfileSkillComponent = () => {
                   <Field
                     id="github_url"
                     placeholder={t("profile:form.placeholder.github")}
-                    onChangeValue={onChangeProfileRequest}
+                    onChangeValue={onChangeProfileSocialRequest}
                     value={githubUrl}
+                    error={errorValidates.github_url}
                   />
                 </Box>
               </Box>

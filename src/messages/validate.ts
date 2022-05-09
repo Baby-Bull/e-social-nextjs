@@ -4,7 +4,7 @@ export const REGEX_RULES = {
   email: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
   username_profile: /^[一-龯ぁ-んァ-ンa-zA-Z\w]+$/,
   text_input: /^[一-龯ぁ-んァ-ンa-zA-Z\w]+$/,
-  url: /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/,
+  url: /^(ftp|http|https):\/\/[^ "]+$/,
 };
 
 export const VALIDATE_MESSAGE_FORM_REGISTER = {
@@ -107,7 +107,20 @@ export const VALIDATE_FORM_UPDATE_PROFILE = {
     select: "選択してください。",
   },
   experience_year: {
-    min: "年数は1以上の数字で入力してください。",
+    min: "負の値は入力できません。",
+  },
+  facebook_url: {
+    format: "https://www.facebook.com/user_idの形式のFacebookリンクを入力してください。",
+  },
+  twitter_url: {
+    format: "https://twitter.com/user_idの形式のTwitterリンクを入力してください。",
+  },
+  github_url: {
+    format: "https://github.com/user_idの形式のGithubリンクを入力してください。",
+  },
+  image_profile: {
+    format: "png, jpg形式の画像を選択してください。",
+    max_size: "2MB以下のファイルを選択してください。",
   },
   max_length_name_skill: "40文字以内で記入してください。",
   max_length_year_skill: "2文字以内で記入してください。",
