@@ -50,6 +50,7 @@ const ProfileHaveDataComponent = () => {
   const fetchUserReviews = async () => {
     setIsLoading(true);
     const data = await getUserReviews(userId);
+    console.log(data?.items);
     setReviews(data?.items);
     setIsLoading(false);
     return data;
@@ -135,7 +136,7 @@ const ProfileHaveDataComponent = () => {
           {t("profile:title-review")}（{reviews?.length ?? 0}）
           {reviews?.length > 0 ? (
             reviews?.map((item, key) => (
-              <ReviewComponent user={item.user} rating={item.rating} comment={item.comment} key={key} />
+              <ReviewComponent user={item?.user} rating={item?.rating} comment={item?.comment} key={key} />
             ))
           ) : (
             <BoxNoDataComponent content="まだレビューがありません" />
