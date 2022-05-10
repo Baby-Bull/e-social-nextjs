@@ -6,6 +6,7 @@ import moment from "moment";
 import { toast } from "react-toastify";
 
 import { COPY_SUCCESSFUL } from "src/messages/notification";
+import PopupChartProfileComponent from "src/components/profile/PopupChartProfileComponent";
 import theme from "src/theme";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 
@@ -38,6 +39,11 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
   const { t } = useTranslation();
   const [liked, setLiked] = useState(user?.is_favorite);
   const { auth, dispatch } = useContext(AuthContext);
+  const [showPopupAnalysis, setShowPopupAnalysis] = useState(false);
+
+  const handleShowPopupAnalysis = () => {
+    setShowPopupAnalysis(true);
+  };
 
   const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
     if (isFavorite) deleteUserFavorite(tempData);
@@ -325,30 +331,30 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                       </Link>
                     </Box>
                   </Box>
-                  {/* <Box */}
-                  {/*  sx={{ */}
-                  {/*    mt: "13px", */}
-                  {/*    display: myProfile ? "flex" : "none", */}
-                  {/*    position: "relative", */}
-                  {/*  }} */}
-                  {/* > */}
-                  {/*  <Button */}
-                  {/*    sx={{ */}
-                  {/*      boxShadow: "unset", */}
-                  {/*      width: "280px", */}
-                  {/*      height: "48px", */}
-                  {/*      background: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)", */}
-                  {/*      borderRadius: "12px", */}
-                  {/*      color: "#ffffff", */}
-                  {/*      mr: "9.3px", */}
-                  {/*    }} */}
-                  {/*  > */}
-                  {/*    <Box>佐藤太郎さんのキャラクター</Box> */}
-                  {/*    <Box sx={{ position: "absolute", top: 1, right: 7 }}> */}
-                  {/*      <img src="/assets/images/icon/ic_question_2.png" alt="ic_question_mark" /> */}
-                  {/*    </Box> */}
-                  {/*  </Button> */}
-                  {/* </Box> */}
+                  <Box
+                    sx={{
+                      mt: "13px",
+                      display: "flex",
+                    }}
+                  >
+                    <Button
+                      sx={{
+                        boxShadow: "unset",
+                        width: "280px",
+                        height: "48px",
+                        background: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)",
+                        borderRadius: "12px",
+                        color: "#ffffff",
+                        mr: "9.3px",
+                      }}
+                      onClick={handleShowPopupAnalysis}
+                    >
+                      <Box>{t("profile:character-analysis")}</Box>
+                    </Button>
+                    <Box>
+                      <img src="/assets/images/icon/ic_question_mark.png" alt="ic_question_mark" />
+                    </Box>
+                  </Box>
                   <Box
                     sx={{
                       display: "flex",
@@ -673,7 +679,34 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
             </Box>
             <Box
               sx={{
-                display: myProfile ? "none" : "flex",
+                mt: "20px",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <Button
+                sx={{
+                  boxShadow: "unset",
+                  width: "252px",
+                  height: "36px",
+                  background: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)",
+                  borderRadius: "12px",
+                  color: "#ffffff",
+                  mr: "7.67px",
+                  fontWeight: 700,
+                  fontSize: "14px",
+                }}
+                onClick={handleShowPopupAnalysis}
+              >
+                <Box>{t("profile:character-analysis")}</Box>
+              </Button>
+              <Box>
+                <img src="/assets/images/icon/ic_question_mark.png" alt="ic_question_mark" width="16.7" />
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
                 justifyContent: "center",
                 mt: "40px",
               }}
@@ -810,6 +843,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
           </Box>
         </Grid>
       </Grid>
+      <PopupChartProfileComponent showPopup={showPopupAnalysis} setShowPopup={setShowPopupAnalysis} />
     </Box>
   );
 };

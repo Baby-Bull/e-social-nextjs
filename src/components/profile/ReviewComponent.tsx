@@ -33,7 +33,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, rating, comment }) => {
               borderRadius: "50%",
             }}
             alt="avatar"
-            src={user?.profile_image}
+            src={user?.profile_image ?? "/assets/images/svg/goodhub.svg"}
           />
           {rating ? (
             <Box
@@ -102,7 +102,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, rating, comment }) => {
                 justifyContent: { xs: "left" },
               }}
             >
-              {rating ? (
+              {user?.username ? (
                 <Box
                   sx={{
                     color: "#1A2944",
