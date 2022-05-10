@@ -12,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 /* eslint-disable */
 import TabsUnstyled from "@mui/base/TabsUnstyled";
 import TabsListUnstyled from "@mui/base/TabsListUnstyled";
@@ -234,9 +235,8 @@ const ImgStarLevel = ({ countStar }) => {
 
 const ProfileSkillComponent = () => {
   const { t } = useTranslation();
-
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [isFresh, setIsFresh] = useState(false);
   const [username, setUsername] = useState(null);
   const [hitokoto, setHitokoto] = useState(null);
   const [discussionTopic, setDiscussionTopic] = useState(null);
@@ -256,13 +256,13 @@ const ProfileSkillComponent = () => {
   const [upstreamProcess, setUpstreamProcess] = useState(null);
   const [otherLanguageLevel, setOtherLanguageLevel] = useState(null);
   const [skillLanguageData, setSkillLanguage] = useState([
-    { key: 0, name: null, experience_year: null, experience_month: 1, level: 1, category: "programLanguage" },
+    { key: 0, name: null, experience_year: 0, experience_month: 1, level: 1, category: "programLanguage" },
   ]);
   const [skillFrameworkData, setSkillFramework] = useState([
-    { key: 0, name: null, experience_year: null, experience_month: 1, level: 1, category: "framework" },
+    { key: 0, name: null, experience_year: 0, experience_month: 1, level: 1, category: "framework" },
   ]);
   const [skillInfrastructureData, setSkillInfrastructure] = useState([
-    { key: 0, name: null, experience_year: null, experience_month: 1, level: 1, category: "infrastructure" },
+    { key: 0, name: null, experience_year: 0, experience_month: 1, level: 1, category: "infrastructure" },
   ]);
   const [monthLanguage] = useState(MONTHS[0].value);
   const [levelLanguage] = useState(LEVELS[2].value);
@@ -453,7 +453,7 @@ const ProfileSkillComponent = () => {
 
   useEffect(() => {
     fetchProfileSkill();
-  }, [isFresh]);
+  }, []);
 
   const [messSkillLanguageErr, setMessSkillLanguageErr] = useState([{ key: null, mess: null, type: null }]);
   const [messSkillFrameworkErr, setMessSkillFrameworkErr] = useState([{ key: null, mess: null, type: null }]);
@@ -488,7 +488,7 @@ const ProfileSkillComponent = () => {
     // @ts-ignore
     setSkillLanguage([
       ...skillLanguageData,
-      { key: key + 1, name: null, experience_year: null, experience_month: 1, level: 1, category: "programLanguage" },
+      { key: key + 1, name: null, experience_year: 0, experience_month: 1, level: 1, category: "programLanguage" },
     ]);
   };
 
@@ -496,7 +496,7 @@ const ProfileSkillComponent = () => {
     // @ts-ignore
     setSkillFramework([
       ...skillFrameworkData,
-      { key: key + 1, name: null, experience_year: null, experience_month: 1, level: 1, category: "framework" },
+      { key: key + 1, name: null, experience_year: 0, experience_month: 1, level: 1, category: "framework" },
     ]);
   };
   //
@@ -504,7 +504,7 @@ const ProfileSkillComponent = () => {
     // @ts-ignore
     setSkillInfrastructure([
       ...skillInfrastructureData,
-      { key: key + 1, name: null, experience_year: null, experience_month: 1, level: 1, category: "infrastructure" },
+      { key: key + 1, name: null, experience_year: 0, experience_month: 1, level: 1, category: "infrastructure" },
     ]);
   };
 
@@ -890,7 +890,7 @@ const ProfileSkillComponent = () => {
       const res = await updateProfile(profileSocialRequest);
       if (res) {
         const auth = JSON.parse(sessionStorage.getItem("auth"));
-        setIsFresh(!isFresh);
+        router.push("/my-profile");
         auth.user.profile.username = profileSocialRequest.username;
         sessionStorage.setItem("auth", JSON.stringify(auth));
         return res;
@@ -908,7 +908,7 @@ const ProfileSkillComponent = () => {
           other_language_level: skillRequest.other_language_level,
         };
         const res = await updateProfile({ skills: dataUpdate });
-        setIsFresh(!isFresh);
+        router.push("/my-profile");
         return res;
       }
       setProfileRequest({
@@ -916,7 +916,7 @@ const ProfileSkillComponent = () => {
       });
       const tags = { tags: inputTags };
       const res = await updateProfile({ ...profileRequest, ...tags });
-      setIsFresh(!isFresh);
+      router.push("/my-profile");
       return res.data;
     }
   };
@@ -937,12 +937,12 @@ const ProfileSkillComponent = () => {
       formData.append("profile_image", e.currentTarget.files[0]);
       const res = await updateProfile(formData);
       if (res) {
-        setIsFresh(!isFresh);
         // @ts-ignore
         document.getElementById("avatar").value = null;
         const auth = JSON.parse(sessionStorage.getItem("auth"));
         auth.user.profile.profile_image = res.profile_image;
         sessionStorage.setItem("auth", JSON.stringify(auth));
+        router.push("/my-profile");
         return res.data;
       }
     }
