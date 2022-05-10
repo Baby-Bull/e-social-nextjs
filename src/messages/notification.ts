@@ -7,3 +7,4 @@ export const REJECT_MATCHING = "マッチングリクエストを拒否しまし
 export const CANCEL_MATCHING = "マッチングリクエストをキャンセルしました。";
 export const SERVER_ERROR = "server error";
 export const UPDATE_PROFILE = "保存されました。";
+export const COPY_SUCCESSFUL = "コピー成功";

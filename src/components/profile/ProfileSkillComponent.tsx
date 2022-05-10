@@ -202,7 +202,7 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:tag")}</TitleContentTab>
                   <ContentTab>
-                    <Box sx={{ display: "flex", flexWrap: "wrap-reverse" }}>
+                    <Box sx={{ display: "flex", flexWrap: "wrap" }}>
                       {data?.tags?.map((item, key) => (
                         <Box
                           key={key}
@@ -211,6 +211,7 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                             fontSize: "12px",
                             mr: 1,
                             px: 1,
+                            mt: 1,
                           }}
                         >
                           {item}

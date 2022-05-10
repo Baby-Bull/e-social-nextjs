@@ -233,7 +233,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   mt: "9px",
                 }}
               >
-                {data?.activity_status === isOnline ? moment(data?.last_login_at).utc().fromNow() : "ログイン中"}
+                {data?.activity_status === isOnline ? "ログイン中" : moment(data?.last_login_at).utc().fromNow()}
               </Typography>
               {/* End Title bottom Avatar tab favorite */}
             </Box>
@@ -474,9 +474,12 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 color: theme.gray,
                 fontSize: [10, 14],
                 fontWeight: 500,
+                mt: "9px",
               }}
             >
-              {data?.activity_status === isOnline ? moment(data?.last_login_at).utc().fromNow() : "ログイン中"}
+              {data?.user?.activity_status === isOnline
+                ? "ログイン中"
+                : moment(data?.user?.last_login_at).utc().fromNow()}
             </Typography>
 
             <Box
