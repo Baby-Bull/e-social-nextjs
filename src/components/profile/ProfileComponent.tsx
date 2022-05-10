@@ -104,7 +104,7 @@ const ProfileHaveDataComponent = () => {
           {communities?.length > 0 ? (
             <ParticipatingCommunityComponent communities={communities} />
           ) : (
-            <BoxNoDataComponent content="まだレビューがありません" />
+            <BoxNoDataComponent content="まだ参加中のコミュニティがありません" />
           )}
         </Box>
         <Box
