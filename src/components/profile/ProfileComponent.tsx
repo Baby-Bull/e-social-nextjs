@@ -136,7 +136,7 @@ const ProfileHaveDataComponent = () => {
           {t("profile:title-review")}（{reviews?.length ?? 0}）
           {reviews?.length > 0 ? (
             reviews?.map((item, key) => (
-              <ReviewComponent user={item.user} rating={item.rating} comment={item.comment} key={key} />
+              <ReviewComponent user={item?.user} rating={item?.rating} comment={item?.comment} key={key} />
             ))
           ) : (
             <BoxNoDataComponent content="まだレビューがありません" />
