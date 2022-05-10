@@ -496,7 +496,7 @@ const ProfileSkillComponent = () => {
     // @ts-ignore
     setSkillFramework([
       ...skillFrameworkData,
-      { key: key + 1, name: "", experience_year: 1, experience_month: 1, level: 1, category: "framework" },
+      { key: key + 1, name: null, experience_year: null, experience_month: 1, level: 1, category: "framework" },
     ]);
   };
   //
@@ -504,7 +504,7 @@ const ProfileSkillComponent = () => {
     // @ts-ignore
     setSkillInfrastructure([
       ...skillInfrastructureData,
-      { key: key + 1, name: "", experience_year: 1, experience_month: 1, level: 1, category: "infrastructure" },
+      { key: key + 1, name: null, experience_year: null, experience_month: 1, level: 1, category: "infrastructure" },
     ]);
   };
 
@@ -687,6 +687,16 @@ const ProfileSkillComponent = () => {
           setStatusErrNameLaguage(true);
         }
 
+        if (skillLanguageData[i + 1]?.name === skillLanguageData[i].name && skillLanguageData.length > 1) {
+          isValidForm = false;
+          arrMessLanguageErrors.push({
+            key: `name_${skillLanguageData[i + 1]?.key}`,
+            mess: VALIDATE_FORM_UPDATE_PROFILE.required_name_skill,
+            type: "required",
+          });
+          setStatusErrNameLaguage(true);
+        }
+
         // @ts-ignore
         if (skillLanguageData[i]?.experience_year?.length > 2) {
           isValidForm = false;
@@ -720,6 +730,16 @@ const ProfileSkillComponent = () => {
           setStatusErrNameFramework(true);
         }
 
+        if (skillFrameworkData[i + 1]?.name === skillFrameworkData[i].name && skillFrameworkData.length > 1) {
+          isValidForm = false;
+          arrMessFrameworkErrors.push({
+            key: `name_${skillFrameworkData[i + 1]?.key}`,
+            mess: VALIDATE_FORM_UPDATE_PROFILE.required_name_skill,
+            type: "required",
+          });
+          setStatusErrNameFramework(true);
+        }
+
         // @ts-ignore
         if (skillFrameworkData[i]?.experience_year?.length > 2) {
           isValidForm = false;
@@ -749,6 +769,19 @@ const ProfileSkillComponent = () => {
             key: `name_${skillInfrastructureData[i]?.key}`,
             mess: VALIDATE_FORM_UPDATE_PROFILE.max_length_name_skill,
             type: "max_length",
+          });
+          setStatusErrNameInfrastructure(true);
+        }
+
+        if (
+          skillInfrastructureData[i + 1]?.name === skillInfrastructureData[i].name &&
+          skillInfrastructureData.length > 1
+        ) {
+          isValidForm = false;
+          arrMessInfrastructureErrors.push({
+            key: `name_${skillInfrastructureData[i + 1]?.key}`,
+            mess: VALIDATE_FORM_UPDATE_PROFILE.required_name_skill,
+            type: "required",
           });
           setStatusErrNameInfrastructure(true);
         }
@@ -855,8 +888,13 @@ const ProfileSkillComponent = () => {
   const submitUserProfileSocial = async () => {
     if (handleValidateFormSocial()) {
       const res = await updateProfile(profileSocialRequest);
-      setIsFresh(!isFresh);
-      return res;
+      if (res) {
+        const auth = JSON.parse(sessionStorage.getItem("auth"));
+        setIsFresh(!isFresh);
+        auth.user.profile.username = profileSocialRequest.username;
+        sessionStorage.setItem("auth", JSON.stringify(auth));
+        return res;
+      }
     }
   };
   // submit profile form
@@ -875,9 +913,9 @@ const ProfileSkillComponent = () => {
       }
       setProfileRequest({
         ...profileRequest,
-        tags: inputTags,
       });
-      const res = await updateProfile(profileRequest);
+      const tags = { tags: inputTags };
+      const res = await updateProfile({ ...profileRequest, ...tags });
       setIsFresh(!isFresh);
       return res.data;
     }
@@ -885,30 +923,32 @@ const ProfileSkillComponent = () => {
 
   // submit profile image
   const submitUploadProfileImage = async (e) => {
-    if (e.currentTarget.files[0].size > 2048) {
+    if (e.currentTarget.files[0].size > 2097152) {
       errorMessages.image_profile = VALIDATE_FORM_UPDATE_PROFILE.image_profile.max_size;
       setErrorValidates(errorMessages);
+      return errorMessages;
     }
-    if (e.currentTarget.files[0].type === "image/jpg") {
-      errorMessages.image_profile = VALIDATE_FORM_UPDATE_PROFILE.image_profile.format;
-      setErrorValidates(errorMessages);
+    if (
+      e.currentTarget.files[0].type === "image/jpg" ||
+      e.currentTarget.files[0].type === "image/png" ||
+      e.currentTarget.files[0].type === "image/jpeg"
+    ) {
+      const formData = new FormData();
+      formData.append("profile_image", e.currentTarget.files[0]);
+      const res = await updateProfile(formData);
+      if (res) {
+        setIsFresh(!isFresh);
+        // @ts-ignore
+        document.getElementById("avatar").value = null;
+        const auth = JSON.parse(sessionStorage.getItem("auth"));
+        auth.user.profile.profile_image = res.profile_image;
+        sessionStorage.setItem("auth", JSON.stringify(auth));
+        return res.data;
+      }
     }
-
-    if (e.currentTarget.files[0].type === "image/png") {
-      errorMessages.image_profile = VALIDATE_FORM_UPDATE_PROFILE.image_profile.format;
-      setErrorValidates(errorMessages);
-    }
-    // if (e.currentTarget.files[0].type === "image/jpg" || e.currentTarget.files[0].type === "image/png") {
-    //
-    // }
-
-    const formData = new FormData();
-    formData.append("profile_image", e.currentTarget.files[0]);
-    const res = await updateProfile(formData);
-    setIsFresh(!isFresh);
-    // @ts-ignore
-    document.getElementById("avatar").value = null;
-    return res.data;
+    errorMessages.image_profile = VALIDATE_FORM_UPDATE_PROFILE.image_profile.format;
+    setErrorValidates(errorMessages);
+    return errorMessages;
   };
 
   return (
@@ -1541,7 +1581,7 @@ const ProfileSkillComponent = () => {
                                       fontSize: "14px",
                                       fontWeight: 700,
                                       lineHeight: "20.27px",
-                                      display: skillLanguageData.length > 1 ? "block" : "none",
+                                      display: skillFrameworkData.length > 1 ? "block" : "none",
                                       height: "32px",
                                       p: 0,
                                     }}
@@ -1678,7 +1718,7 @@ const ProfileSkillComponent = () => {
                                       fontSize: "14px",
                                       fontWeight: 700,
                                       lineHeight: "20.27px",
-                                      display: skillLanguageData.length > 1 ? "block" : "none",
+                                      display: skillInfrastructureData.length > 1 ? "block" : "none",
                                       height: "32px",
                                       p: 0,
                                     }}
