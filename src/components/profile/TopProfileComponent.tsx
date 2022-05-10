@@ -421,7 +421,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   width: "240px",
                   height: "32px",
                   borderRadius: "40px",
-                  display: myProfile ? "flex" : "none",
+                  display: myProfile ? "none" : "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   margin: "0 auto",

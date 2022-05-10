@@ -355,3 +355,10 @@ export const ENGLISH_LEVEL_OPTIONS = [
     value: "can_not_use",
   },
 ];
+
+export const TEXT_ENGLISH_LEVEL_OPTIONS = {
+  native_speaker: { label: "ネイティブ" },
+  communicate_at_work: { label: "ビジネス会話レベル" },
+  day_communication: { label: "日常会話レベル" },
+  can_not_use: { label: "話せない" },
+};

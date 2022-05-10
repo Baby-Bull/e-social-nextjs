@@ -13,7 +13,8 @@ import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 
 import theme from "src/theme";
-import { USER_STATUS } from "src/components/constants/constants";
+import { USER_STATUS, JOBS } from "src/components/constants/constants";
+import { TEXT_ENGLISH_LEVEL_OPTIONS } from "src/constants/constants";
 
 interface IProfileDataProps {
   data: any;
@@ -181,7 +182,7 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:occupation")}</TitleContentTab>
-                  <ContentTab>{data?.job}</ContentTab>
+                  <ContentTab>{JOBS[data?.job]?.label}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:position")}</TitleContentTab>
@@ -311,7 +312,7 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:english-experience")}</TitleContentTab>
-                  <ContentTab>{data?.skills?.english_level}</ContentTab>
+                  <ContentTab>{TEXT_ENGLISH_LEVEL_OPTIONS[data?.skills?.english_level]?.label}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:language-experience")}</TitleContentTab>

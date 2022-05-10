@@ -1,4 +1,4 @@
-import { Backdrop, Box, Button, CircularProgress, Grid } from "@mui/material";
+import { Backdrop, Box, CircularProgress, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 
@@ -103,7 +103,7 @@ const ProfileHaveDataComponent = () => {
           {communities?.length > 0 ? (
             <ParticipatingCommunityComponent communities={communities} />
           ) : (
-            <BoxNoDataComponent content="まだレビューがありません" />
+            <BoxNoDataComponent content="まだ参加中のコミュニティがありません" />
           )}
         </Box>
         <Box
@@ -159,36 +159,6 @@ const ProfileHaveDataComponent = () => {
             </Grid>
           ))}
         </Box>
-      </Box>
-      <Box
-        sx={{
-          background: "#F5F5F5",
-          display: "flex",
-          justifyContent: "center",
-          position: "fixed",
-          top: "91.5%",
-          opacity: 0.8,
-          width: "100%",
-        }}
-      >
-        <Button
-          sx={{
-            width: "280px",
-            height: "56px",
-            fontSize: "16px",
-            fontWeight: 700,
-            color: "#ffffff",
-            display: "flex",
-            alignItems: "center",
-            textAlign: "center",
-            lineHeight: "24px",
-            background: "#1BD0B0",
-            borderRadius: "40px",
-          }}
-          onClick={() => setModalMatching(true)}
-        >
-          {t("profile:send-request")}
-        </Button>
       </Box>
       <ModalMatchingComponent
         userRequestMatching={profileSkill}
