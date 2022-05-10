@@ -2,6 +2,9 @@ export const REGEX_RULES = {
   username_register: /^[一-龯ぁ-んァ-ンa-zA-Z0-9\w]+$/,
   only_japanese: /^[一-龯ぁ-んァ-ン]+$/,
   email: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
+  username_profile: /^[一-龯ぁ-んァ-ンa-zA-Z\w]+$/,
+  text_input: /^[一-龯ぁ-んァ-ンa-zA-Z\w]+$/,
+  url: /^(ftp|http|https):\/\/[^ "]+$/,
 };
 
 export const VALIDATE_MESSAGE_FORM_REGISTER = {
@@ -60,4 +63,67 @@ export const VALIDATE_FORM_USER_REVIEW = {
   comment: {
     max_length: "1タグにつき1000文字以内で入力してください",
   },
+};
+
+export const VALIDATE_FORM_UPDATE_PROFILE = {
+  username: {
+    required: "お名前を入力してください。",
+    max_length: "50文字以内で入力してください。",
+  },
+  hitokoto: {
+    max_length: "40文字以内で入力してください。",
+  },
+  self_description: {
+    max_length: "1000文字以内で記入してください。",
+  },
+  discussion_topic: {
+    max_length: "1000文字以内で記入してください。",
+  },
+  job_position: {
+    max_length: "1000文字以内で記入してください。",
+  },
+  upstream_process: {
+    max_length: "200文字以内で記入してください。",
+  },
+  other_language_level: {
+    max_length: "200文字以内で記入してください。",
+  },
+  tags: {
+    min_tag: "2種類以上設定してください。",
+  },
+  job: {
+    select: "選択してください。",
+  },
+  status: {
+    select: "選択してください。",
+  },
+  employment_status: {
+    select: "選択してください。",
+  },
+  address: {
+    select: "選択してください。",
+  },
+  english_level: {
+    select: "選択してください。",
+  },
+  experience_year: {
+    min: "負の値は入力できません。",
+  },
+  facebook_url: {
+    format: "https://www.facebook.com/user_idの形式のFacebookリンクを入力してください。",
+  },
+  twitter_url: {
+    format: "https://twitter.com/user_idの形式のTwitterリンクを入力してください。",
+  },
+  github_url: {
+    format: "https://github.com/user_idの形式のGithubリンクを入力してください。",
+  },
+  image_profile: {
+    format: "png, jpg形式の画像を選択してください。",
+    max_size: "2MB以下のファイルを選択してください。",
+  },
+  max_length_name_skill: "40文字以内で記入してください。",
+  max_length_year_skill: "2文字以内で記入してください。",
+  required_name_skill: "この名前は既に存在します。",
+  format: "ユーザ名は無効です。ひらがな、カタカナ、漢字、a-zのアルファベット、0-9の文字を入力してください。",
 };
