@@ -54,7 +54,7 @@ const ProfileHaveDataComponent = () => {
   const fetchRecommended = async () => {
     setIsLoading(true);
     const data = await getUserRecommended(LIMIT);
-    setRecommended(data?.items);
+    setRecommended(data?.items?.filter((item) => !item?.match_status));
     setIsLoading(false);
     return data;
   };
@@ -149,7 +149,7 @@ const ProfileHaveDataComponent = () => {
             overflowX: { xs: "scroll", lg: "unset" },
           }}
         >
-          {recommended?.map((item, key) => (
+          {recommended?.slice(0, 4)?.map((item, key) => (
             <Grid item key={key} sx={{ margin: "0 13.5px" }}>
               <BoxItemUserComponent
                 data={item}

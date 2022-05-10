@@ -1,4 +1,4 @@
-import { Backdrop, Box, Button, CircularProgress, Grid } from "@mui/material";
+import { Backdrop, Box, CircularProgress, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -11,6 +11,8 @@ import { getUserCommunites, getOrtherUserProfile, getUserReviews, getUserRecomme
 import BoxItemUserComponent from "src/components/profile/BoxItemUserComponent";
 import BoxNoDataComponent from "src/components/profile/BoxNoDataComponent";
 import TopProfileComponent from "src/components/profile/TopProfileComponent";
+import { HOMEPAGE_RECOMMEND_MEMBER_STATUS } from "src/components/constants/constants";
+import ButtonComponent from "src/components/common/elements/ButtonComponent";
 
 import theme from "../../theme";
 import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
@@ -19,7 +21,7 @@ import { sendMatchingRequest } from "../../services/matching";
 const ProfileHaveDataComponent = () => {
   const { t } = useTranslation();
   const LIMIT = 20;
-  const [profileSkill, setProfileSkill] = useState([]);
+  const [profileSkill, setProfileSkill] = useState<any>([]);
   const [communities, setCommunities] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [recommended, setRecommended] = useState([]);
@@ -55,7 +57,7 @@ const ProfileHaveDataComponent = () => {
   const fetchRecommended = async () => {
     setIsLoading(true);
     const data = await getUserRecommended(LIMIT);
-    setRecommended(data?.items);
+    setRecommended(data?.items?.filter((item) => !item?.match_status));
     setIsLoading(false);
     return data;
   };
@@ -71,12 +73,25 @@ const ProfileHaveDataComponent = () => {
     return res;
   };
 
+  const handleMapMatchingStatus = (statusMatchingTemp: string) => {
+    switch (statusMatchingTemp) {
+      case "pending":
+        return 1;
+      case "confirmed":
+        return 2;
+      case "rejected":
+        return 3;
+      default:
+        return 4;
+    }
+  };
+
   useEffect(() => {
     fetchProfileSkill();
     fetchUserReviews();
     fetchCommunities();
     fetchRecommended();
-  }, [isRefresh]);
+  }, [isRefresh, userId]);
   return (
     <ContentComponent>
       {isLoading && (
@@ -86,6 +101,7 @@ const ProfileHaveDataComponent = () => {
       )}
       <Box
         sx={{
+          mt: "70px",
           p: { xs: "0 20px", lg: "140px 120px 120px 120px" },
         }}
       >
@@ -151,7 +167,7 @@ const ProfileHaveDataComponent = () => {
             overflowX: { xs: "scroll", lg: "unset" },
           }}
         >
-          {recommended?.map((item, key) => (
+          {recommended?.slice(0, 4)?.map((item, key) => (
             <Grid item key={key} sx={{ margin: "0 13.5px" }}>
               <BoxItemUserComponent
                 data={item}
@@ -173,7 +189,27 @@ const ProfileHaveDataComponent = () => {
           width: "100%",
         }}
       >
-        <Button
+        <ButtonComponent
+          sx={{
+            width: "280px",
+            height: "56px",
+            fontSize: "16px",
+            fontWeight: 700,
+            color: "#ffffff",
+            alignItems: "center",
+            textAlign: "center",
+            lineHeight: "24px",
+            background: "#1BD0B0",
+            borderRadius: "40px",
+            display: profileSkill?.match_status === "confirmed" ? "none" : "flex",
+          }}
+          onClick={() => setModalMatching(true)}
+          mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(profileSkill?.match_status)]?.mode}
+          disabled={profileSkill?.match_status === "pending"}
+        >
+          {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(profileSkill?.match_status)]?.label}
+        </ButtonComponent>
+        {/* <Button
           sx={{
             width: "280px",
             height: "56px",
@@ -190,7 +226,7 @@ const ProfileHaveDataComponent = () => {
           onClick={() => setModalMatching(true)}
         >
           {t("profile:send-request")}
-        </Button>
+        </Button> */}
       </Box>
       <ModalMatchingComponent
         userRequestMatching={profileSkill}

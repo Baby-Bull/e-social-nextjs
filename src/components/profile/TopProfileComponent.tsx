@@ -3,7 +3,9 @@ import React, { useContext, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 import moment from "moment";
+import { toast } from "react-toastify";
 
+import { COPY_SUCCESSFUL } from "src/messages/notification";
 import theme from "src/theme";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 
@@ -94,6 +96,10 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   width: "240px",
                   height: "40px",
                   fontSize: "14px",
+                }}
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  toast(COPY_SUCCESSFUL);
                 }}
               >
                 <Box
@@ -187,6 +193,10 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   border: "1px solid #989EA8",
                   width: "240px",
                   height: "40px",
+                }}
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  toast(COPY_SUCCESSFUL);
                 }}
               >
                 <Box
@@ -677,6 +687,10 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   width: "240px",
                   height: "40px",
                 }}
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  toast(COPY_SUCCESSFUL);
+                }}
               >
                 <Box
                   sx={{
@@ -768,6 +782,10 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   width: "28.57%",
                   height: "40px",
                   fontSize: "14px",
+                }}
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  toast(COPY_SUCCESSFUL);
                 }}
               >
                 <Box

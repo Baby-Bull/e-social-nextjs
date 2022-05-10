@@ -33,7 +33,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, rating, comment }) => {
               borderRadius: "50%",
             }}
             alt="avatar"
-            src={user.profile_image}
+            src={user?.profile_image}
           />
           {rating ? (
             <Box
@@ -112,7 +112,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, rating, comment }) => {
                     display: { xs: "none", lg: "block" },
                   }}
                 >
-                  {user.username}
+                  {user?.username}
                 </Box>
               ) : (
                 <Box
