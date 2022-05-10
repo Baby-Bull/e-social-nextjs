@@ -143,6 +143,7 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
               sx={{
                 border: "2px solid #03BCDB",
                 p: "37px 42px",
+                background: "#fff",
               }}
             >
               <TabPanel value={0}>
@@ -191,7 +192,7 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                   <ContentTab>{data?.employment_status}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
-                  <TitleContentTab>{t("profile:introduce-yourself")}</TitleContentTab>
+                  <TitleContentTab>{t("profile:discussion-topic")}</TitleContentTab>
                   <ContentTab>{data?.discussion_topic}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
@@ -201,7 +202,7 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:tag")}</TitleContentTab>
                   <ContentTab>
-                    <Box sx={{ display: "flex" }}>
+                    <Box sx={{ display: "flex", flexWrap: "wrap-reverse" }}>
                       {data?.tags?.map((item, key) => (
                         <Box
                           key={key}

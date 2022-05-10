@@ -49,6 +49,10 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
     setLiked(!liked);
   };
 
+  const redirect = (page: string) => {
+    window.location.href = page;
+  };
+
   return (
     <Box>
       <Grid container>
@@ -265,17 +269,19 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                         display: "flex",
                       }}
                     >
-                      <Box>
+                      <Box onClick={() => redirect(user?.twitter_url)} sx={{ cursor: "pointer" }}>
                         <img src="/assets/images/icon/ic_twitter.png" alt="ic_twitter" />
                       </Box>
                       <Box
                         sx={{
                           mx: "20px",
+                          cursor: "pointer",
                         }}
+                        onClick={() => redirect(user?.facebook_url)}
                       >
                         <img src="/assets/images/icon/ic_facebook.png" alt="ic_facebook" />
                       </Box>
-                      <Box>
+                      <Box sx={{ cursor: "pointer" }} onClick={() => redirect(user?.github_url)}>
                         <img src="/assets/images/icon/ic_github.png" alt="ic_git" />
                       </Box>
                     </Box>
@@ -309,30 +315,30 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                       </Link>
                     </Box>
                   </Box>
-                  <Box
-                    sx={{
-                      mt: "13px",
-                      display: myProfile ? "flex" : "none",
-                      position: "relative",
-                    }}
-                  >
-                    <Button
-                      sx={{
-                        boxShadow: "unset",
-                        width: "280px",
-                        height: "48px",
-                        background: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)",
-                        borderRadius: "12px",
-                        color: "#ffffff",
-                        mr: "9.3px",
-                      }}
-                    >
-                      <Box>佐藤太郎さんのキャラクター</Box>
-                      <Box sx={{ position: "absolute", top: 1, right: 7 }}>
-                        <img src="/assets/images/icon/ic_question_2.png" alt="ic_question_mark" />
-                      </Box>
-                    </Button>
-                  </Box>
+                  {/* <Box */}
+                  {/*  sx={{ */}
+                  {/*    mt: "13px", */}
+                  {/*    display: myProfile ? "flex" : "none", */}
+                  {/*    position: "relative", */}
+                  {/*  }} */}
+                  {/* > */}
+                  {/*  <Button */}
+                  {/*    sx={{ */}
+                  {/*      boxShadow: "unset", */}
+                  {/*      width: "280px", */}
+                  {/*      height: "48px", */}
+                  {/*      background: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)", */}
+                  {/*      borderRadius: "12px", */}
+                  {/*      color: "#ffffff", */}
+                  {/*      mr: "9.3px", */}
+                  {/*    }} */}
+                  {/*  > */}
+                  {/*    <Box>佐藤太郎さんのキャラクター</Box> */}
+                  {/*    <Box sx={{ position: "absolute", top: 1, right: 7 }}> */}
+                  {/*      <img src="/assets/images/icon/ic_question_2.png" alt="ic_question_mark" /> */}
+                  {/*    </Box> */}
+                  {/*  </Button> */}
+                  {/* </Box> */}
                   <Box
                     sx={{
                       display: "flex",
@@ -415,7 +421,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   width: "240px",
                   height: "32px",
                   borderRadius: "40px",
-                  display: "flex",
+                  display: myProfile ? "flex" : "none",
                   alignItems: "center",
                   justifyContent: "center",
                   margin: "0 auto",
@@ -625,6 +631,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     justifyContent: "center",
                     alignItems: "center",
                   }}
+                  onClick={() => redirect(user?.twitter_url)}
                 >
                   <img src="/assets/images/icon/ic_twitter.png" alt="ic_twitter" width="17.5" />
                 </Box>
@@ -637,6 +644,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     borderLeft: "1px solid rgba(196, 196, 196, 0.4)",
                     borderRight: "1px solid rgba(196, 196, 196, 0.4)",
                   }}
+                  onClick={() => redirect(user?.facebook_url)}
                 >
                   <img src="/assets/images/icon/ic_facebook.png" alt="ic_facebook" width="17.5" />
                 </Box>
@@ -647,6 +655,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     justifyContent: "center",
                     alignItems: "center",
                   }}
+                  onClick={() => redirect(user?.github_url)}
                 >
                   <img src="/assets/images/icon/ic_github.png" alt="ic_git" width="17.5" />
                 </Box>
