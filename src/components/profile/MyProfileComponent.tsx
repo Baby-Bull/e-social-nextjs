@@ -1,5 +1,5 @@
 import { Backdrop, Box, CircularProgress, Grid } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
@@ -11,6 +11,7 @@ import BoxItemUserComponent from "src/components/profile/BoxItemUserComponent";
 import BoxNoDataComponent from "src/components/profile/BoxNoDataComponent";
 import TopProfileComponent from "src/components/profile/TopProfileComponent";
 import theme from "src/theme";
+import { AuthContext } from "context/AuthContext";
 
 import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
 import { sendMatchingRequest } from "../../services/matching";
@@ -18,6 +19,7 @@ import { sendMatchingRequest } from "../../services/matching";
 const ProfileHaveDataComponent = () => {
   const { t } = useTranslation();
   const LIMIT = 20;
+  const { auth } = useContext(AuthContext);
   const [profileSkill, setProfileSkill] = useState([]);
   const [communities, setCommunities] = useState([]);
   const [reviews, setReviews] = useState([]);
@@ -25,13 +27,12 @@ const ProfileHaveDataComponent = () => {
   const [isRefresh, setIsRefresh] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showModalMatching, setModalMatching] = React.useState(false);
-  const [userId, setUserId] = useState(null);
+  const [userId] = useState(auth?.user?.id);
 
   const fetchProfileSkill = async () => {
     setIsLoading(true);
     const data = await getUserProfile();
     setProfileSkill(data);
-    setUserId(data?.id);
     setIsLoading(false);
     return data;
   };
@@ -118,7 +119,7 @@ const ProfileHaveDataComponent = () => {
           {t("profile:title-review")}（{reviews?.length ?? 0}）
           {reviews?.length > 0 ? (
             reviews?.map((item, key) => (
-              <ReviewComponent user={item.user} rating={item.rating} comment={item.comment} key={key} />
+              <ReviewComponent user={item?.user} rating={item?.rating} comment={item?.comment} key={key} />
             ))
           ) : (
             <BoxNoDataComponent content="まだレビューがありません" />
