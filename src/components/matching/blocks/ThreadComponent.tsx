@@ -53,7 +53,7 @@ const handlePurposeMatchingTab12 = (tempValue: string) => {
 const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyRefetchData, dataType }) => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { auth } = useContext(AuthContext);
+  const { auth, dispatch } = useContext(AuthContext);
   const isOnline = "online";
 
   const isShowThread = type === "unConfirm" || type === "reject";
@@ -95,6 +95,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
         type: dataType,
       });
     }
+    dispatch({ type: "REMOVW_MATCH_REQUEST_COUNT", payload: auth });
     return res;
   };
 
@@ -454,7 +455,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
             display: [type !== "favorite" && "none", "none"],
           }}
         >
-          {data.message}
+          {data?.message}
         </Box>
 
         {/* Thread */}
@@ -693,8 +694,12 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
         {/* End Button SP */}
       </Box>
 
-      <PopupReportUser showPopup={showPopupReport} setShowPopup={setShowPopupReport} user={data.user} />
-      <PopupReviewComponent showPopup={showPopupReview} setShowPopup={setShowPopupReview} user={data.user} />
+      <PopupReportUser showPopup={showPopupReport} setShowPopup={setShowPopupReport} user={data?.user} />
+      <PopupReviewComponent
+        showPopup={showPopupReview}
+        setShowPopup={setShowPopupReview}
+        user={type === "matched" ? data : data?.user}
+      />
       <ModalMatchingComponent
         open={showModalMatching}
         setOpen={setModalMatching}
