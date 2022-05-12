@@ -50,7 +50,6 @@ const ProfileHaveDataComponent = () => {
   const fetchUserReviews = async () => {
     setIsLoading(true);
     const data = await getUserReviews(userId);
-    console.log(data?.items);
     setReviews(data?.items);
     setIsLoading(false);
     return data;

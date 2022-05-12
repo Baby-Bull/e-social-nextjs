@@ -190,7 +190,7 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
   };
 
   const submitUserReviewRequest = async () => {
-    const res = await userReview(user.id, userReviewRequest);
+    const res = await userReview(user?.id, userReviewRequest);
     setIsPost(true);
     return res.data;
   };

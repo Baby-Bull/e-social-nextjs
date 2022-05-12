@@ -36,6 +36,32 @@ const Reducer = (state, action) => {
                     }
                 }
             };
+        case "ADD_MATCH_REQUEST_COUNT":
+            return {
+                auth: {
+                    ...state?.auth,
+                    user: {
+                        ...state?.auth?.user,
+                        profile: {
+                            ...state?.auth?.user?.profile,
+                            match_request_count: state?.auth?.user?.profile?.match_request_count + 1,
+                        }
+                    }
+                }
+            };
+        case "REMOVE_MATCH_REQUEST_COUNT":
+            return {
+                auth: {
+                    ...state?.auth,
+                    user: {
+                        ...state?.auth?.user,
+                        profile: {
+                            ...state?.auth?.user?.profile,
+                            match_request_count: state?.auth?.user?.profile?.match_request_count - 1,
+                        }
+                    }
+                }
+            };
         case "UPDATE_SUCCESS":
             return {
                 auth: action.payload,

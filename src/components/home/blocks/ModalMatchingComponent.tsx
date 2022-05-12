@@ -1,13 +1,14 @@
 import { Avatar, Box, Button, Grid, Modal } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import { Field } from "src/components/common/Form/_Field";
 import styles from "src/components/home/home.module.scss";
 import { MATCHING_PURPOSE_OPTIONS } from "src/constants/constants";
 import { VALIDATE_FORM_MATCHING_REQUEST } from "src/messages/validate";
+import { AuthContext } from "context/AuthContext";
 
 interface IModalMatchingComponentProps {
   open: boolean;
@@ -39,6 +40,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
   handleSendMatchingRequest,
 }) => {
   const { t } = useTranslation();
+  const { auth, dispatch } = useContext(AuthContext);
 
   const [matchingRequest, setMatchingRequest] = useState({
     desired_match_date: new Date()?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }),
@@ -72,7 +74,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
       errorMessages.purpose = VALIDATE_FORM_MATCHING_REQUEST.purpose.required;
     }
     // validate message
-    if (!matchingRequest?.message && matchingRequest?.message?.length > 1000) {
+    if (matchingRequest?.message?.length > 1000) {
       isValidForm = false;
       errorMessages.message = VALIDATE_FORM_MATCHING_REQUEST.message.max_length;
     }
@@ -101,6 +103,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
         purpose: "",
         message: null,
       });
+      dispatch({ type: "ADD_MATCH_REQUEST_COUNT", payload: auth });
     }
   };
 

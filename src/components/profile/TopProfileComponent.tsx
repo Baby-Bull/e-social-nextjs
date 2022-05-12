@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 import moment from "moment";
 import { toast } from "react-toastify";
+import copy from "copy-to-clipboard";
 
 import { COPY_SUCCESSFUL } from "src/messages/notification";
 import PopupChartProfileComponent from "src/components/profile/PopupChartProfileComponent";
@@ -63,6 +64,14 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
     }
   };
 
+  const handleCopyUrl = () => {
+    const resUrl = window.location.href;
+    const myProfileUrl = window.location.href?.replace("my-profile", `profile/${user?.id}`);
+    if (myProfile) copy(myProfileUrl);
+    else copy(resUrl);
+    toast(COPY_SUCCESSFUL);
+  };
+
   return (
     <Box>
       <Grid container>
@@ -106,8 +115,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   fontSize: "14px",
                 }}
                 onClick={() => {
-                  navigator.clipboard.writeText(window.location.href);
-                  toast(COPY_SUCCESSFUL);
+                  handleCopyUrl();
                 }}
               >
                 <Box
@@ -203,8 +211,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   height: "40px",
                 }}
                 onClick={() => {
-                  navigator.clipboard.writeText(window.location.href);
-                  toast(COPY_SUCCESSFUL);
+                  handleCopyUrl();
                 }}
               >
                 <Box
@@ -766,8 +773,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   height: "40px",
                 }}
                 onClick={() => {
-                  navigator.clipboard.writeText(window.location.href);
-                  toast(COPY_SUCCESSFUL);
+                  handleCopyUrl();
                 }}
               >
                 <Box
@@ -862,8 +868,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   fontSize: "14px",
                 }}
                 onClick={() => {
-                  navigator.clipboard.writeText(window.location.href);
-                  toast(COPY_SUCCESSFUL);
+                  handleCopyUrl();
                 }}
               >
                 <Box

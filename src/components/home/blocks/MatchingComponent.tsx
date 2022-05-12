@@ -78,6 +78,35 @@ const MatchingComponent = () => {
     },
   });
 
+  useEffect(() => {
+    setDataMatching({
+      request: {
+        label: t("home:matching.request"),
+        data: auth?.user?.profile?.match_application_count ?? 0,
+        unit: t("home:matching.request-unit"),
+        link: "/matching?type=received",
+      },
+      application: {
+        label: t("home:matching.application"),
+        data: auth?.user?.profile?.match_request_count ?? 0,
+        unit: t("home:matching.application-unit"),
+        link: "/matching?type=sent",
+      },
+      people: {
+        label: t("home:matching.people"),
+        data: auth?.user?.profile?.favorite_count ?? 0,
+        unit: t("home:matching.people-unit"),
+        link: "/matching?type=favorite",
+      },
+      community: {
+        label: t("home:matching.community"),
+        data: auth?.user?.profile?.community_count ?? 0,
+        unit: t("home:matching.community-unit"),
+        link: "/matching?type=community",
+      },
+    });
+  }, [auth?.user?.profile]);
+
   const [dataMatchingMobile] = useState<any>({
     request: {
       label: t("home:matching.request"),
@@ -111,18 +140,18 @@ const MatchingComponent = () => {
     },
   });
 
-  useEffect(() => {
-    const data = Object.keys(dataMatching).reduce(
-      (prev, key) => ({
-        ...prev,
-        [key]: {
-          ...dataMatching[key],
-        },
-      }),
-      {},
-    );
-    setDataMatching(data);
-  }, []);
+  // useEffect(() => {
+  //   const datatemp = Object.keys(dataMatching).reduce(
+  //     (prev, key) => ({
+  //       ...prev,
+  //       [key]: {
+  //         ...dataMatching[key],
+  //       },
+  //     }),
+  //     {},
+  //   );
+  //   setDataMatching(datatemp);
+  // }, [auth?.user?.profile?.favorite_count]);
 
   return (
     <Grid container>
