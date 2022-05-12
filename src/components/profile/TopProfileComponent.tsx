@@ -58,7 +58,9 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
   };
 
   const redirect = (page: string) => {
-    window.location.href = page;
+    if (page) {
+      window.location.href = page;
+    }
   };
 
   return (
@@ -150,7 +152,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     alignItems: "center",
                   }}
                 >
-                  <img src="/assets/images/icon/ic_twitter.png" alt="" width="18" height="13.71" />
+                  <img src="/assets/images/icon/ic_twitter.svg" alt="" width="18" height="13.71" />
                   <Box
                     sx={{
                       ml: 1,
@@ -180,7 +182,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     alignItems: "center",
                   }}
                 >
-                  <img src="/assets/images/icon/ic_facebook.png" alt="" width="16" height="15.74" />
+                  <img src="/assets/images/icon/ic_facebook.svg" alt="" width="16" height="15.74" />
                   <Box
                     sx={{
                       ml: 1,
@@ -286,7 +288,14 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                       }}
                     >
                       <Box onClick={() => redirect(user?.twitter_url)} sx={{ cursor: "pointer" }}>
-                        <img src="/assets/images/icon/ic_twitter.png" alt="ic_twitter" />
+                        <img
+                          src={
+                            user?.twitter_url
+                              ? "/assets/images/icon/ic_twitter.svg"
+                              : "/assets/images/icon/ic_twitter_gray.svg"
+                          }
+                          alt="ic_twitter"
+                        />
                       </Box>
                       <Box
                         sx={{
@@ -295,10 +304,24 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                         }}
                         onClick={() => redirect(user?.facebook_url)}
                       >
-                        <img src="/assets/images/icon/ic_facebook.png" alt="ic_facebook" />
+                        <img
+                          src={
+                            user?.facebook_url
+                              ? "/assets/images/icon/ic_facebook.svg"
+                              : "/assets/images/icon/ic_facebook_gray.svg"
+                          }
+                          alt="ic_facebook"
+                        />
                       </Box>
                       <Box sx={{ cursor: "pointer" }} onClick={() => redirect(user?.github_url)}>
-                        <img src="/assets/images/icon/ic_github.png" alt="ic_git" />
+                        <img
+                          src={
+                            user?.github_url
+                              ? "/assets/images/icon/ic_github.svg"
+                              : "/assets/images/icon/ic_github_gray.svg"
+                          }
+                          alt="ic_git"
+                        />
                       </Box>
                     </Box>
                     <Box
@@ -649,7 +672,15 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   }}
                   onClick={() => redirect(user?.twitter_url)}
                 >
-                  <img src="/assets/images/icon/ic_twitter.png" alt="ic_twitter" width="17.5" />
+                  <img
+                    src={
+                      user?.twitter_url
+                        ? "/assets/images/icon/ic_twitter.svg"
+                        : "/assets/images/icon/ic_twitter_gray.svg"
+                    }
+                    alt="ic_twitter"
+                    width="17.5"
+                  />
                 </Box>
                 <Box
                   sx={{
@@ -662,7 +693,15 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   }}
                   onClick={() => redirect(user?.facebook_url)}
                 >
-                  <img src="/assets/images/icon/ic_facebook.png" alt="ic_facebook" width="17.5" />
+                  <img
+                    src={
+                      user?.facebook_url
+                        ? "/assets/images/icon/ic_facebook.svg"
+                        : "/assets/images/icon/ic_facebook_gray.svg"
+                    }
+                    alt="ic_facebook"
+                    width="17.5"
+                  />
                 </Box>
                 <Box
                   sx={{
@@ -673,7 +712,13 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   }}
                   onClick={() => redirect(user?.github_url)}
                 >
-                  <img src="/assets/images/icon/ic_github.png" alt="ic_git" width="17.5" />
+                  <img
+                    src={
+                      user?.github_url ? "/assets/images/icon/ic_github.svg" : "/assets/images/icon/ic_github_gray.svg"
+                    }
+                    alt="ic_git"
+                    width="17.5"
+                  />
                 </Box>
               </Box>
             </Box>
@@ -766,7 +811,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     alignItems: "center",
                   }}
                 >
-                  <img src="/assets/images/icon/ic_twitter.png" alt="" width="18" height="13.94" />
+                  <img src="/assets/images/icon/ic_twitter.svg" alt="" width="18" height="13.94" />
                   <Box
                     sx={{
                       ml: 1,
@@ -795,7 +840,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     alignItems: "center",
                   }}
                 >
-                  <img src="/assets/images/icon/ic_facebook.png" alt="" width="16" height="16" />
+                  <img src="/assets/images/icon/ic_facebook.svg" alt="" width="16" height="16" />
                   <Box
                     sx={{
                       ml: 1,
