@@ -46,7 +46,7 @@ export const VALIDATE_FORM_MATCHING_REQUEST = {
   },
   desired_match_date: {
     invalid_date: "日付値が無効です",
-    required_date:"時間の入力が必要です",
+    required_date: "時間の入力が必要です",
   },
 };
 
@@ -61,7 +61,8 @@ export const VALIDATE_FORM_USER_PORT = {
 
 export const VALIDATE_FORM_USER_REVIEW = {
   comment: {
-    max_length: "1タグにつき1000文字以内で入力してください",
+    max_length: "1タグにつき400文字以内で入力してください",
+    required: "レビューメッセージを入力してください",
   },
 };
 

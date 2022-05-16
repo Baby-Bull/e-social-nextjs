@@ -128,7 +128,7 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
   const [valueComment, setValueComment] = React.useState("");
   const [userReviewRequest, setUserReviewRequest] = useState({
     rating: selectedValueRating,
-    comment: "",
+    comment: valueComment,
     hide_reviewer: selectedHideReviewer,
     send_report_to_admin: selectedReportToAdmin,
   });
@@ -143,11 +143,13 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
 
   const handleValidateForm = () => {
     let isValidForm = true;
-    if (!userReviewRequest?.comment || userReviewRequest?.comment.length > 400) {
+    if (!userReviewRequest?.comment) {
+      isValidForm = false;
+      errorMessages.comment = VALIDATE_FORM_USER_REVIEW.comment.required;
+    } else if (userReviewRequest?.comment && userReviewRequest?.comment?.length > 400) {
       isValidForm = false;
       errorMessages.comment = VALIDATE_FORM_USER_REVIEW.comment.max_length;
     }
-
     setErrorValidates(errorMessages);
     return isValidForm;
   };
@@ -179,7 +181,7 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
     }
 
     if (key === "comment") {
-      setValueComment(value);
+      setValueComment(value?.trim());
     }
 
     // eslint-disable-next-line no-unreachable

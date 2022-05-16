@@ -114,9 +114,9 @@ const HomeIndexComponents = () => {
 
   useEffect(() => {
     const memberRecommendsTmp = [...memberRecommends];
-    memberRecommendsTmp[0].data = userProvinceData || [];
+    memberRecommendsTmp[0].data = userNewMember || [];
     setMemberRecommends(memberRecommendsTmp);
-  }, [userProvinceData]);
+  }, [userNewMember]);
 
   useEffect(() => {
     const memberRecommendsTmp = [...memberRecommends];
@@ -126,9 +126,9 @@ const HomeIndexComponents = () => {
 
   useEffect(() => {
     const memberRecommendsTmp = [...memberRecommends];
-    memberRecommendsTmp[2].data = userNewMember || [];
+    memberRecommendsTmp[2].data = userProvinceData || [];
     setMemberRecommends(memberRecommendsTmp);
-  }, [userNewMember]);
+  }, [userProvinceData]);
 
   useEffect(() => {
     const memberRecommendsTmp = [...memberRecommends];

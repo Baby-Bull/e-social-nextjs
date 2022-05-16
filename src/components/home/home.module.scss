@@ -419,13 +419,13 @@
     }
     .info-summary {
       display: flex;
-
       img {
         width: 56px;
         height: 56px;
         margin-right: 13px;
         object-fit: cover;
         border-radius: 74px;
+        border: 1px solid rgba(156, 172, 194, 0.3);
       }
 
       .member-info {
@@ -434,12 +434,12 @@
           font-weight: 700;
           color: #262a30;
           margin: 0;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          word-break: break-all;
           display: -webkit-box;
           -webkit-line-clamp: 1;
           -webkit-box-orient: vertical;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          word-break: break-all;
         }
 
         .career {

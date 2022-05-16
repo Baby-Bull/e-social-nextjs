@@ -153,8 +153,8 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
           </div>
 
           <ButtonComponent
+            className="button-matching"
             fullWidth
-            sx={{ width: "278px" }}
             onClick={() => handleShowModalMatching(data?.match_status)}
             mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.mode}
           >
