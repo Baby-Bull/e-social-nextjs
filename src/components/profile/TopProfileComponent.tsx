@@ -9,6 +9,7 @@ import copy from "copy-to-clipboard";
 import { COPY_SUCCESSFUL } from "src/messages/notification";
 import PopupChartProfileComponent from "src/components/profile/PopupChartProfileComponent";
 import theme from "src/theme";
+import styles from "src/components/profile/profile.module.scss";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 
 import { AuthContext } from "../../../context/AuthContext";
@@ -260,6 +261,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   }}
                 >
                   <Avatar
+                    className={styles.avatarUser}
                     alt="Remy Sharp"
                     src={user?.profile_image}
                     sx={{
