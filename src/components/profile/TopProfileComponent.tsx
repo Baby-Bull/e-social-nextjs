@@ -1,5 +1,5 @@
 import { Box, Button, Avatar, Grid, Link } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 import moment from "moment";
@@ -41,6 +41,10 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
   const [liked, setLiked] = useState(user?.is_favorite);
   const { auth, dispatch } = useContext(AuthContext);
   const [showPopupAnalysis, setShowPopupAnalysis] = useState(false);
+
+  useEffect(() => {
+    setLiked(user?.is_favorite);
+  }, [user?.is_favorite]);
 
   const handleShowPopupAnalysis = () => {
     setShowPopupAnalysis(true);

@@ -1,4 +1,4 @@
-import { Backdrop, Box, CircularProgress, Grid } from "@mui/material";
+import { Backdrop, Box, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -13,6 +13,7 @@ import BoxNoDataComponent from "src/components/profile/BoxNoDataComponent";
 import TopProfileComponent from "src/components/profile/TopProfileComponent";
 import { HOMEPAGE_RECOMMEND_MEMBER_STATUS } from "src/components/constants/constants";
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
+import SlickSliderRecommendComponent from "src/components/home/blocks/SlickSliderRecommendComponent";
 
 import theme from "../../theme";
 import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
@@ -57,7 +58,7 @@ const ProfileHaveDataComponent = () => {
   const fetchRecommended = async () => {
     setIsLoading(true);
     const data = await getUserRecommended(LIMIT);
-    setRecommended(data?.items?.filter((item) => !item?.match_status));
+    setRecommended(data?.items?.filter((item) => item?.match_status !== "confirmed"));
     setIsLoading(false);
     return data;
   };
@@ -92,6 +93,23 @@ const ProfileHaveDataComponent = () => {
     fetchCommunities();
     fetchRecommended();
   }, [isRefresh, userId]);
+
+  const [dataElements, setDataElements] = useState(
+    recommended?.map((item, index) => <BoxItemUserComponent data={item} key={index} />),
+  );
+  useEffect(() => {
+    setDataElements(
+      recommended?.map((item, index) => (
+        <BoxItemUserComponent
+          data={item}
+          key={index}
+          isRefresh={isRefresh}
+          callbackHandleIsRefresh={callbackHandleIsRefresh}
+        />
+      )),
+    );
+  }, [recommended]);
+
   return (
     <ContentComponent>
       {isLoading && (
@@ -142,7 +160,7 @@ const ProfileHaveDataComponent = () => {
           )}
         </Box>
       </Box>
-      <Box>
+      <Box sx={{ width: "98%" }}>
         <Box
           sx={{
             color: "#1A2944",
@@ -167,7 +185,8 @@ const ProfileHaveDataComponent = () => {
             overflowX: { xs: "scroll", lg: "unset" },
           }}
         >
-          {recommended?.slice(0, 4)?.map((item, key) => (
+          <SlickSliderRecommendComponent items={dataElements} />
+          {/* {recommended?.slice(0, 4)?.map((item, key) => (
             <Grid item key={key} sx={{ margin: "0 13.5px" }}>
               <BoxItemUserComponent
                 data={item}
@@ -175,7 +194,7 @@ const ProfileHaveDataComponent = () => {
                 callbackHandleIsRefresh={callbackHandleIsRefresh}
               />
             </Grid>
-          ))}
+          ))} */}
         </Box>
       </Box>
       <Box
@@ -209,24 +228,6 @@ const ProfileHaveDataComponent = () => {
         >
           {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(profileSkill?.match_status)]?.label}
         </ButtonComponent>
-        {/* <Button
-          sx={{
-            width: "280px",
-            height: "56px",
-            fontSize: "16px",
-            fontWeight: 700,
-            color: "#ffffff",
-            display: "flex",
-            alignItems: "center",
-            textAlign: "center",
-            lineHeight: "24px",
-            background: "#1BD0B0",
-            borderRadius: "40px",
-          }}
-          onClick={() => setModalMatching(true)}
-        >
-          {t("profile:send-request")}
-        </Button> */}
       </Box>
       <ModalMatchingComponent
         userRequestMatching={profileSkill}
