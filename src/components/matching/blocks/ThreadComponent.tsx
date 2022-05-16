@@ -95,7 +95,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
         type: dataType,
       });
     }
-    dispatch({ type: "REMOVW_MATCH_REQUEST_COUNT", payload: auth });
+    dispatch({ type: "REMOVE_MATCH_REQUEST_COUNT", payload: auth });
     return res;
   };
 
