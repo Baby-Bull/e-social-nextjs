@@ -9,6 +9,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { useTranslation } from "next-i18next";
+import { TwitterShareButton } from "react-share";
 
 import { userReview } from "src/services/user";
 import theme from "src/theme";
@@ -226,19 +227,27 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
             <Typography sx={{ fontSize: "20px", fontWeight: "700", lineHeight: "40px", color: theme.navy }}>
               {t("chat:popup.text-share-review")}
             </Typography>
-            <Button
-              sx={{
-                background: "#55ACEE",
-                color: "#fff",
-                width: "280px",
-                height: "48px",
-                mt: "37px",
-                borderRadius: "40px",
-              }}
-            >
-              <Avatar src="/assets/images/logo/logo_twitter.png" sx={{ width: "27px", height: "21.9px", mr: "13px" }} />
-              {t("chat:popup.twitter")}
-            </Button>
+            <TwitterShareButton url="https://twitter.com/">
+              <Button
+                sx={{
+                  background: "#55ACEE",
+                  color: "#fff",
+                  width: "280px",
+                  height: "48px",
+                  mt: "37px",
+                  borderRadius: "40px",
+                  "&:hover": {
+                    background: "#55ACEE",
+                  },
+                }}
+              >
+                <Avatar
+                  src="/assets/images/logo/logo_twitter.png"
+                  sx={{ width: "27px", height: "21.9px", mr: "13px" }}
+                />
+                {t("chat:popup.twitter")}
+              </Button>
+            </TwitterShareButton>
           </Box>
         </DialogContent>
       </DialogReview>
