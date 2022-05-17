@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 import moment from "moment";
 import { toast } from "react-toastify";
 import copy from "copy-to-clipboard";
+import { FacebookShareButton, TwitterShareButton } from "react-share";
 
 import { COPY_SUCCESSFUL } from "src/messages/notification";
 import PopupChartProfileComponent from "src/components/profile/PopupChartProfileComponent";
@@ -41,11 +42,11 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
   const [liked, setLiked] = useState(user?.is_favorite);
   const { auth, dispatch } = useContext(AuthContext);
   const [showPopupAnalysis, setShowPopupAnalysis] = useState(false);
+  const urlProfile = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${auth?.user?.id}`;
 
   useEffect(() => {
     setLiked(user?.is_favorite);
   }, [user?.is_favorite]);
-
   const handleShowPopupAnalysis = () => {
     setShowPopupAnalysis(true);
   };
@@ -73,7 +74,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
     const myProfileUrl = window.location.href?.replace("my-profile", `profile/${user?.id}`);
     if (myProfile) copy(myProfileUrl);
     else copy(resUrl);
-    toast(COPY_SUCCESSFUL);
+    toast.success(COPY_SUCCESSFUL);
   };
 
   return (
@@ -157,83 +158,90 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   fontSize: "14px",
                 }}
               >
-                <Box
-                  sx={{
-                    display: "flex",
-                    textAlign: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <img src="/assets/images/icon/ic_twitter.svg" alt="" width="18" height="13.71" />
+                <TwitterShareButton url={urlProfile}>
                   <Box
                     sx={{
-                      ml: 1,
+                      display: "flex",
+                      textAlign: "center",
+                      alignItems: "center",
                     }}
                   >
-                    {t("profile:twitter")}
+                    <img src="/assets/images/icon/ic_twitter.svg" alt="" width="18" height="13.71" />
+                    <Box
+                      sx={{
+                        ml: 1,
+                      }}
+                    >
+                      {t("profile:twitter")}
+                    </Box>
                   </Box>
-                </Box>
+                </TwitterShareButton>
               </Button>
+              <Box>
+                <Button
+                  sx={{
+                    background: "#ffffff",
+                    boxShadow: "unset",
+                    border: "1px solid #395185",
+                    color: "#395185",
+                    width: "240px",
+                    height: "40px",
+                    mx: "40px",
+                    fontSize: "14px",
+                  }}
+                >
+                  <FacebookShareButton url={urlProfile}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        textAlign: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <img src="/assets/images/icon/ic_facebook.svg" alt="" width="16" height="15.74" />
+                      <Box
+                        sx={{
+                          ml: 1,
+                        }}
+                      >
+                        {t("profile:facebook")}
+                      </Box>
+                    </Box>
+                  </FacebookShareButton>
+                </Button>
+              </Box>
 
-              <Button
-                sx={{
-                  background: "#ffffff",
-                  boxShadow: "unset",
-                  border: "1px solid #395185",
-                  color: "#395185",
-                  width: "240px",
-                  height: "40px",
-                  mx: "40px",
-                  fontSize: "14px",
-                }}
-              >
-                <Box
+              <Box>
+                <Button
                   sx={{
-                    display: "flex",
-                    textAlign: "center",
-                    alignItems: "center",
+                    background: "#ffffff",
+                    color: "#989EA8",
+                    boxShadow: "unset",
+                    border: "1px solid #989EA8",
+                    width: "240px",
+                    height: "40px",
+                  }}
+                  onClick={() => {
+                    handleCopyUrl();
                   }}
                 >
-                  <img src="/assets/images/icon/ic_facebook.svg" alt="" width="16" height="15.74" />
                   <Box
                     sx={{
-                      ml: 1,
+                      display: "flex",
+                      textAlign: "center",
                     }}
                   >
-                    {t("profile:facebook")}
+                    <img src="/assets/images/icon/ic_link.png" alt="" width="20" height="22" />
+                    <Box
+                      sx={{
+                        ml: 1,
+                      }}
+                    >
+                      {t("profile:url")}
+                    </Box>
                   </Box>
-                </Box>
-              </Button>
-
-              <Button
-                sx={{
-                  background: "#ffffff",
-                  color: "#989EA8",
-                  boxShadow: "unset",
-                  border: "1px solid #989EA8",
-                  width: "240px",
-                  height: "40px",
-                }}
-                onClick={() => {
-                  handleCopyUrl();
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    textAlign: "center",
-                  }}
-                >
-                  <img src="/assets/images/icon/ic_link.png" alt="" width="20" height="22" />
-                  <Box
-                    sx={{
-                      ml: 1,
-                    }}
-                  >
-                    {t("profile:url")}
-                  </Box>
-                </Box>
-              </Button>
+                </Button>
+              </Box>
             </Box>
             <Box
               sx={{
@@ -804,95 +812,104 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                 mt: "40px",
               }}
             >
-              <Button
-                sx={{
-                  background: "#ffffff",
-                  color: "#55ACEE",
-                  boxShadow: "unset",
-                  border: "1px solid #55ACEE",
-                  width: "28.57%",
-                  height: "40px",
-                }}
-              >
-                <Box
+              <Box sx={{ width: "28.57%" }}>
+                <Button
                   sx={{
-                    display: "flex",
-                    textAlign: "center",
-                    alignItems: "center",
+                    background: "#ffffff",
+                    color: "#55ACEE",
+                    boxShadow: "unset",
+                    border: "1px solid #55ACEE",
+                    width: "100%",
+                    height: "40px",
                   }}
                 >
-                  <img src="/assets/images/icon/ic_twitter.svg" alt="" width="18" height="13.94" />
-                  <Box
-                    sx={{
-                      ml: 1,
-                      fontSite: "14px",
-                    }}
-                  >
-                    {t("profile:share")}
-                  </Box>
-                </Box>
-              </Button>
-              <Button
-                sx={{
-                  background: "#ffffff",
-                  color: "#395185",
-                  boxShadow: "unset",
-                  border: "1px solid #395185",
-                  width: "28.57%",
-                  height: "40px",
-                  mx: "24px",
-                }}
-              >
-                <Box
+                  <TwitterShareButton url={urlProfile}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        textAlign: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <img src="/assets/images/icon/ic_twitter.svg" alt="" width="18" height="13.94" />
+                      <Box
+                        sx={{
+                          ml: 1,
+                          fontSite: "14px",
+                        }}
+                      >
+                        {t("profile:share")}
+                      </Box>
+                    </Box>
+                  </TwitterShareButton>
+                </Button>
+              </Box>
+              <Box sx={{ width: "28.57%", mx: "24px" }}>
+                <Button
                   sx={{
-                    display: "flex",
-                    textAlign: "center",
-                    alignItems: "center",
+                    background: "#ffffff",
+                    color: "#395185",
+                    boxShadow: "unset",
+                    border: "1px solid #395185",
+                    width: "100%",
+                    height: "40px",
                   }}
                 >
-                  <img src="/assets/images/icon/ic_facebook.svg" alt="" width="16" height="16" />
-                  <Box
-                    sx={{
-                      ml: 1,
-                      fontSize: "14px",
-                    }}
-                  >
-                    {t("profile:share")}
-                  </Box>
-                </Box>
-              </Button>
-              <Button
-                sx={{
-                  background: "#ffffff",
-                  color: "#989EA8",
-                  boxShadow: "unset",
-                  border: "1px solid #989EA8",
-                  width: "28.57%",
-                  height: "40px",
-                  fontSize: "14px",
-                }}
-                onClick={() => {
-                  handleCopyUrl();
-                }}
-              >
-                <Box
+                  <FacebookShareButton url={urlProfile}>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        textAlign: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <img src="/assets/images/icon/ic_facebook.svg" alt="" width="16" height="16" />
+                      <Box
+                        sx={{
+                          ml: 1,
+                          fontSize: "14px",
+                        }}
+                      >
+                        {t("profile:share")}
+                      </Box>
+                    </Box>
+                  </FacebookShareButton>
+                </Button>
+              </Box>
+              <Box sx={{ width: "28.57%" }}>
+                <Button
                   sx={{
-                    display: "flex",
-                    textAlign: "center",
-                    alignItems: "center",
+                    background: "#ffffff",
+                    color: "#989EA8",
+                    boxShadow: "unset",
+                    border: "1px solid #989EA8",
+                    width: "100%",
+                    height: "40px",
+                    fontSize: "14px",
+                  }}
+                  onClick={() => {
+                    handleCopyUrl();
                   }}
                 >
-                  <img src="/assets/images/icon/ic_link.png" alt="" width="20" height="22" />
                   <Box
                     sx={{
-                      ml: 1,
-                      fontSize: "14px",
+                      display: "flex",
+                      textAlign: "center",
+                      alignItems: "center",
                     }}
                   >
-                    {t("profile:copy")}
+                    <img src="/assets/images/icon/ic_link.png" alt="" width="20" height="22" />
+                    <Box
+                      sx={{
+                        ml: 1,
+                        fontSize: "14px",
+                      }}
+                    >
+                      {t("profile:copy")}
+                    </Box>
                   </Box>
-                </Box>
-              </Button>
+                </Button>
+              </Box>
             </Box>
           </Box>
         </Grid>
