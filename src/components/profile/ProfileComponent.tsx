@@ -32,6 +32,8 @@ const ProfileHaveDataComponent = () => {
   const router = useRouter();
   const { userId } = router.query;
 
+  console.log(userId);
+
   const fetchProfileSkill = async () => {
     setIsLoading(true);
     const data = await getOrtherUserProfile(userId);
