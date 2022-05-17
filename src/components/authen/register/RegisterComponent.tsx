@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import { Box, Grid, Typography, Link, CircularProgress, Backdrop } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -10,6 +10,7 @@ import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 import { authWithProvider, getAccessTokenTwitter } from "src/services/auth";
+import { AuthContext } from "context/AuthContext";
 
 const RegisterComponents = () => {
   const { t } = useTranslation();
@@ -28,7 +29,7 @@ const RegisterComponents = () => {
   const onLogoutFailure = () => {
     setIsLoading(true);
   };
-
+  const { dispatch } = useContext(AuthContext);
   useEffect(() => {
     const registerWithTwitter = async () => {
       const popupWindowURL = new URL(window.location.href);
@@ -53,6 +54,7 @@ const RegisterComponents = () => {
       const resAuth = await authWithProvider(providerAuth, accessToken);
       setIsLoading(false);
       if (resAuth?.data?.access_token) {
+        dispatch({ type: "LOGIN_SUCCESS", payload: resAuth?.data });
         if (resAuth?.data?.user?.is_profile_edited) {
           router.push("/");
         } else {
