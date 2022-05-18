@@ -1338,7 +1338,7 @@ const ProfileSkillComponent = () => {
                           placeholder={t("profile:form.placeholder.discussion-topic")}
                           minRows={5}
                           onChangeValue={onChangeProfileRequest}
-                          error={errorValidates.self_description}
+                          error={errorValidates.discussion_topic}
                           value={discussionTopic}
                         />
                       </ContentTab>

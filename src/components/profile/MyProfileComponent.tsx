@@ -1,4 +1,4 @@
-import { Backdrop, Box, CircularProgress, Grid } from "@mui/material";
+import { Backdrop, Box, CircularProgress } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 
@@ -10,6 +10,7 @@ import { getUserCommunites, getUserReviews, getUserRecommended, getUserProfile }
 import BoxItemUserComponent from "src/components/profile/BoxItemUserComponent";
 import BoxNoDataComponent from "src/components/profile/BoxNoDataComponent";
 import TopProfileComponent from "src/components/profile/TopProfileComponent";
+import SlickSliderRecommendComponent from "src/components/home/blocks/SlickSliderRecommendComponent";
 import theme from "src/theme";
 import { AuthContext } from "context/AuthContext";
 
@@ -76,7 +77,23 @@ const ProfileHaveDataComponent = () => {
     fetchUserReviews();
     fetchCommunities();
     fetchRecommended();
-  }, [isRefresh]);
+  }, [isRefresh, userId]);
+
+  const [dataElements, setDataElements] = useState(
+    recommended?.map((item, index) => <BoxItemUserComponent data={item} key={index} />),
+  );
+  useEffect(() => {
+    setDataElements(
+      recommended?.map((item, index) => (
+        <BoxItemUserComponent
+          data={item}
+          key={index}
+          isRefresh={isRefresh}
+          callbackHandleIsRefresh={callbackHandleIsRefresh}
+        />
+      )),
+    );
+  }, [recommended]);
   return (
     <ContentComponent>
       {isLoading && (
@@ -133,7 +150,7 @@ const ProfileHaveDataComponent = () => {
           )}
         </Box>
       </Box>
-      <Box>
+      <Box sx={{ width: "98%" }}>
         <Box
           sx={{
             color: "#1A2944",
@@ -157,15 +174,7 @@ const ProfileHaveDataComponent = () => {
             overflowX: { xs: "scroll", lg: "unset" },
           }}
         >
-          {recommended?.slice(0, 4)?.map((item, key) => (
-            <Grid item key={key} sx={{ margin: "0 13.5px" }}>
-              <BoxItemUserComponent
-                data={item}
-                isRefresh={isRefresh}
-                callbackHandleIsRefresh={callbackHandleIsRefresh}
-              />
-            </Grid>
-          ))}
+          <SlickSliderRecommendComponent items={dataElements} />
         </Box>
       </Box>
       <ModalMatchingComponent
