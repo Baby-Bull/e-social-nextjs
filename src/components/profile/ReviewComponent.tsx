@@ -1,16 +1,32 @@
 import { Box } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
+import moment from "moment";
+
+import { getOrtherUserProfile } from "src/services/user";
+
+import "moment/locale/ja";
 
 interface reviewProps {
-  user: any;
+  time: string;
+  hideReviewer: boolean;
+  otherUserId: string;
   rating: string;
   comment: string;
 }
 
-const ReviewComponent: React.SFC<reviewProps> = ({ user, rating, comment }) => {
+const ReviewComponent: React.SFC<reviewProps> = ({ time, hideReviewer, otherUserId, rating, comment }) => {
   const { t } = useTranslation();
   const GOOD = "good";
+
+  const [user, setUser] = useState<any>();
+  useEffect(() => {
+    const fetchOtherUser = async () => {
+      const res = await getOrtherUserProfile(otherUserId);
+      setUser(res);
+    };
+    fetchOtherUser();
+  }, []);
 
   return (
     <Box>
@@ -33,7 +49,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, rating, comment }) => {
               borderRadius: "50%",
             }}
             alt="avatar"
-            src={user?.profile_image ?? "/assets/images/svg/goodhub.svg"}
+            src={hideReviewer ? "/assets/images/svg/goodhub.svg" : user?.profile_image}
           />
           {rating ? (
             <Box
@@ -163,7 +179,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, rating, comment }) => {
                   fontWeight: 400,
                 }}
               >
-                2021年8月27日にレビュー
+                {moment(time).utc().fromNow()}
               </Box>
             </Box>
             <Box

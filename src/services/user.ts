@@ -9,6 +9,7 @@ import {
   SERVER_ERROR,
   SETTING_NOTIFICATION,
   UPDATE_PROFILE,
+  EMAIL_EXISTS,
 } from "src/messages/notification";
 import { typeTimeLogin, typeReview } from "src/constants/searchUserConstants";
 
@@ -173,29 +174,29 @@ export const UserSearch = async (
   query +=
     params?.lastLogin === typeTimeLogin.on_day_to_week
       ? `&last_login[]=${moment().subtract(1, "weeks").toISOString()}&last_login[]=${moment()
-          .subtract(1, "days")
-          .toISOString()}`
+        .subtract(1, "days")
+        .toISOString()}`
       : "";
 
   query +=
     params?.lastLogin === typeTimeLogin.week_to_two_week
       ? `&last_login[]=${moment().subtract(2, "weeks").toISOString()}&last_login[]=${moment()
-          .subtract(1, "weeks")
-          .toISOString()}`
+        .subtract(1, "weeks")
+        .toISOString()}`
       : "";
 
   query +=
     params?.lastLogin === typeTimeLogin.two_week_to_month
       ? `&last_login[]=${moment().subtract(1, "months").toISOString()}&last_login[]=${moment()
-          .subtract(1, "weeks")
-          .toISOString()}`
+        .subtract(1, "weeks")
+        .toISOString()}`
       : "";
 
   query +=
     params?.lastLogin === typeTimeLogin.two_week_to_month
       ? `&last_login[]=${moment().subtract(1, "months").toISOString()}&last_login[]=${moment()
-          .subtract(2, "weeks")
-          .toISOString()}`
+        .subtract(2, "weeks")
+        .toISOString()}`
       : "";
 
   query +=
@@ -278,8 +279,8 @@ export const updateProfile = async (body: any) => {
 
     if (!res.data) {
       toast.error(SERVER_ERROR);
-    } else if (res.data.error_code) {
-      toast.error(SERVER_ERROR);
+    } else if (res?.data?.message?.email[0]?.message === "email is not unique") {
+      toast.error(EMAIL_EXISTS);
     } else {
       toast.success(UPDATE_PROFILE);
     }

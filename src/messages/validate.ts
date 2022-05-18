@@ -78,7 +78,7 @@ export const VALIDATE_FORM_UPDATE_PROFILE = {
     max_length: "1000文字以内で記入してください。",
   },
   discussion_topic: {
-    max_length: "1000文字以内で記入してください。",
+    max_length: "100文字以内で記入してください。",
   },
   job_position: {
     max_length: "1000文字以内で記入してください。",

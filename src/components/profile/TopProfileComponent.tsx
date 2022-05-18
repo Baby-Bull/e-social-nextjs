@@ -1,5 +1,6 @@
-import { Box, Button, Avatar, Grid, Link } from "@mui/material";
+import { Box, Button, Avatar, Grid } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 import moment from "moment";
@@ -10,6 +11,7 @@ import { FacebookShareButton, TwitterShareButton } from "react-share";
 import { COPY_SUCCESSFUL } from "src/messages/notification";
 import PopupChartProfileComponent from "src/components/profile/PopupChartProfileComponent";
 import theme from "src/theme";
+import styles from "src/components/profile/profile.module.scss";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 
 import { AuthContext } from "../../../context/AuthContext";
@@ -39,7 +41,9 @@ const BoxInfoProfile = styled(Box)`
 
 const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProfile }) => {
   const { t } = useTranslation();
+  const router = useRouter();
   const [liked, setLiked] = useState(user?.is_favorite);
+  const [hint, setHint] = useState(false);
   const { auth, dispatch } = useContext(AuthContext);
   const [showPopupAnalysis, setShowPopupAnalysis] = useState(false);
   const urlProfile = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${auth?.user?.id}`;
@@ -268,6 +272,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   }}
                 >
                   <Avatar
+                    className={styles.avatarUser}
                     alt="Remy Sharp"
                     src={user?.profile_image}
                     sx={{
@@ -351,26 +356,25 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                         display: myProfile ? { xs: "none", lg: "block" } : "none",
                       }}
                     >
-                      <Link href="/my-profile/edit">
-                        <Button
-                          sx={{
+                      <Button
+                        onClick={() => router.push("/my-profile/edit")}
+                        sx={{
+                          background: theme.blue,
+                          color: "#fff",
+                          fontWeight: 700,
+                          lineHeight: "23.17",
+                          width: "96px",
+                          height: "40px",
+                          dispaly: "flex",
+                          alignItems: "center",
+                          "&:hover": {
                             background: theme.blue,
-                            color: "#fff",
-                            fontWeight: 700,
-                            lineHeight: "23.17",
-                            width: "96px",
-                            height: "40px",
-                            dispaly: "flex",
-                            alignItems: "center",
-                            "&:hover": {
-                              background: theme.blue,
-                            },
-                          }}
-                        >
-                          <img src="/assets/images/icon/ic_edit.png" alt="ic_edit" />
-                          {t("profile:edit")}
-                        </Button>
-                      </Link>
+                          },
+                        }}
+                      >
+                        <img src="/assets/images/icon/ic_edit.png" alt="ic_edit" />
+                        {t("profile:edit")}
+                      </Button>
                     </Box>
                   </Box>
                   <Box
@@ -393,8 +397,23 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     >
                       <Box>{t("profile:character-analysis")}</Box>
                     </Button>
-                    <Box>
+                    <Box sx={{ cursor: "pointer" }} onClick={() => setHint(!hint)}>
                       <img src="/assets/images/icon/ic_question_mark.png" alt="ic_question_mark" />
+                    </Box>
+                    <Box
+                      sx={{
+                        color: "#989EA8",
+                        width: "280px",
+                        borderRadius: "12px",
+                        border: "#03BCDB 1px solid",
+                        padding: "8px",
+                        height: "100%",
+                        marginLeft: "12px",
+                        fontWeight: "400",
+                        fontSize: "14px",
+                      }}
+                    >
+                      キャラクター診断とは説明テキスト説明テキスト説明テキスト
                     </Box>
                   </Box>
                   <Box
