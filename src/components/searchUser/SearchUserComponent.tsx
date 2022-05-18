@@ -71,13 +71,13 @@ const SearchUserComponent = () => {
   const isMobile = viewPort.width <= 992;
   const router = useRouter();
   // const query = useQuery();
-
-  const LIMIT = 15;
+  const LIMIT = 6;
   const [isLoading, setIsLoading] = useState(false);
   const [inputTags, setInputTags] = useState([]);
   const [resultSearch, setResultSearch] = useState([]);
   const [isRefresh, setIsRefresh] = useState(false);
   const [isSort, setIsSort] = useState("");
+  const [showMore, setShowMore] = useState({ cursor: "", hasMore: false });
   const [formSearch, setFormSearch] = useState({
     job: jobs[0]?.value,
     employeeStatus: employeeStatus[0]?.value,
@@ -87,19 +87,23 @@ const SearchUserComponent = () => {
     statusLookingForFriend: false,
     statusNeedConsult: false,
   });
-
   const fullText = router.query?.fulltext;
 
   const fetchData = async (typeSort: string = "") => {
     setIsLoading(true);
-    const res = await UserSearch(formSearch, inputTags, fullText, typeSort, LIMIT);
-    setResultSearch(res?.items);
+    const res = await UserSearch(formSearch, inputTags, fullText, typeSort, LIMIT, showMore.cursor);
+    setResultSearch(resultSearch.concat(res?.items));
+    setShowMore({ cursor: res?.cursor, hasMore: res?.hasMore });
     setIsLoading(false);
   };
 
   const handleSort = (typeSort) => {
     fetchData(typeSort);
     setIsSort(typeSort);
+  };
+
+  const handleShowMore = () => {
+    fetchData();
   };
 
   useEffect(() => {
@@ -311,6 +315,13 @@ const SearchUserComponent = () => {
               </Grid>
             ))}
           </Grid>
+          {showMore.hasMore ? (
+            <Box sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+              <Button onClick={handleShowMore} sx={{ color: "rgb(3, 188, 219)" }}>
+                {t("common:showMore")}
+              </Button>
+            </Box>
+          ) : null}
         </Box>
       </Grid>
     </ContentComponent>
