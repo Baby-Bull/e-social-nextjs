@@ -32,8 +32,6 @@ const ProfileHaveDataComponent = () => {
   const router = useRouter();
   const { userId } = router.query;
 
-  console.log(userId);
-
   const fetchProfileSkill = async () => {
     setIsLoading(true);
     const data = await getOrtherUserProfile(userId);
@@ -155,7 +153,14 @@ const ProfileHaveDataComponent = () => {
           {t("profile:title-review")}（{reviews?.length ?? 0}）
           {reviews?.length > 0 ? (
             reviews?.map((item, key) => (
-              <ReviewComponent user={item?.user} rating={item?.rating} comment={item?.comment} key={key} />
+              <ReviewComponent
+                time={item?.created_at}
+                hideReviewer={item?.hideReviewer}
+                otherUserId={item?.owner_id}
+                rating={item?.rating}
+                comment={item?.comment}
+                key={key}
+              />
             ))
           ) : (
             <BoxNoDataComponent content="まだレビューがありません" />

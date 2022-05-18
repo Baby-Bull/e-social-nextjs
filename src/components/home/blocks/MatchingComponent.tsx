@@ -1,7 +1,8 @@
-import { Grid, Box, Link } from "@mui/material";
+import { Grid, Box } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import React, { useEffect, useState, useContext } from "react";
+import { useRouter } from "next/router";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import styles from "src/components/home/home.module.scss";
@@ -21,9 +22,16 @@ interface IMatchingItemMobileProps {
   link: string;
 }
 
-const MatchingItem: React.SFC<IMatchingItemProps> = ({ label, data, unit, link }) => (
-  <Link sx={{ color: "black" }} underline="none" href={link}>
-    <Box className={styles.boxMatching}>
+const MatchingItem: React.SFC<IMatchingItemProps> = ({ label, data, unit, link }) => {
+  const router = useRouter();
+  const handleRedirectMatching = (type: string) => {
+    router.push({
+      pathname: "/matching",
+      query: { type },
+    });
+  };
+  return (
+    <Box className={styles.boxMatching} onClick={() => handleRedirectMatching(link)}>
       <div className="label">
         <span>{label}</span>
       </div>
@@ -33,18 +41,25 @@ const MatchingItem: React.SFC<IMatchingItemProps> = ({ label, data, unit, link }
         <span className="unit">{unit}</span>
       </div>
     </Box>
-  </Link>
-);
+  );
+};
 
-const MatchingItemMobile: React.SFC<IMatchingItemMobileProps> = ({ label, data, icon, link }) => (
-  <Link sx={{ color: "black" }} underline="none" href={link}>
-    <Box className={styles.boxMatchingMobile}>
+const MatchingItemMobile: React.SFC<IMatchingItemMobileProps> = ({ label, data, icon, link }) => {
+  const router = useRouter();
+  const handleRedirectMatching = (type: string) => {
+    router.push({
+      pathname: "/matching",
+      query: { type },
+    });
+  };
+  return (
+    <Box className={styles.boxMatchingMobile} onClick={() => handleRedirectMatching(link)}>
       <img src={icon} alt="icon" />
       <span className="label-type">{label}</span>
       {data ? <span className="span-has-data" /> : ""}
     </Box>
-  </Link>
-);
+  );
+};
 
 const MatchingComponent = () => {
   const { t } = useTranslation();
@@ -56,25 +71,25 @@ const MatchingComponent = () => {
       label: t("home:matching.request"),
       data: auth?.user?.profile?.match_application_count ?? 0,
       unit: t("home:matching.request-unit"),
-      link: "/matching?type=received",
+      link: "received",
     },
     application: {
       label: t("home:matching.application"),
       data: auth?.user?.profile?.match_request_count ?? 0,
       unit: t("home:matching.application-unit"),
-      link: "/matching?type=sent",
+      link: "sent",
     },
     people: {
       label: t("home:matching.people"),
       data: auth?.user?.profile?.favorite_count ?? 0,
       unit: t("home:matching.people-unit"),
-      link: "/matching?type=favorite",
+      link: "favorite",
     },
     community: {
       label: t("home:matching.community"),
       data: auth?.user?.profile?.community_count ?? 0,
       unit: t("home:matching.community-unit"),
-      link: "/matching?type=community",
+      link: "community",
     },
   });
 
@@ -84,25 +99,25 @@ const MatchingComponent = () => {
         label: t("home:matching.request"),
         data: auth?.user?.profile?.match_application_count ?? 0,
         unit: t("home:matching.request-unit"),
-        link: "/matching?type=received",
+        link: "received",
       },
       application: {
         label: t("home:matching.application"),
         data: auth?.user?.profile?.match_request_count ?? 0,
         unit: t("home:matching.application-unit"),
-        link: "/matching?type=sent",
+        link: "sent",
       },
       people: {
         label: t("home:matching.people"),
         data: auth?.user?.profile?.favorite_count ?? 0,
         unit: t("home:matching.people-unit"),
-        link: "/matching?type=favorite",
+        link: "favorite",
       },
       community: {
         label: t("home:matching.community"),
         data: auth?.user?.profile?.community_count ?? 0,
         unit: t("home:matching.community-unit"),
-        link: "/matching?type=community",
+        link: "community",
       },
     });
   }, [auth?.user?.profile]);
@@ -112,31 +127,31 @@ const MatchingComponent = () => {
       label: t("home:matching.request"),
       data: auth?.user?.profile?.match_application_count ?? 0,
       icon: "/assets/images/home_page/ic_user.svg",
-      link: "/matching?type=received",
+      link: "received",
     },
     application: {
       label: t("home:matching.application"),
       data: auth?.user?.profile?.match_request_count ?? 0,
       icon: "/assets/images/home_page/ic_hand.svg",
-      link: "/matching?type=sent",
+      link: "sent",
     },
     people: {
       label: t("home:matching.people"),
       data: auth?.user?.profile?.favorite_count ?? 0,
       icon: "/assets/images/home_page/ic_heart_blue.svg",
-      link: "/matching?type=favorite",
+      link: "favorite",
     },
     chat: {
       label: t("home:matching.chat"),
       data: 1,
       icon: "/assets/images/home_page/ic_chat.svg",
-      link: "/matching?type=matched",
+      link: "matched",
     },
     community: {
       label: t("home:matching.community"),
       data: auth?.user?.profile?.community_count ?? 0,
       icon: "/assets/images/home_page/ic_star_circle.svg",
-      link: "/matching?type=community",
+      link: "community",
     },
   });
 

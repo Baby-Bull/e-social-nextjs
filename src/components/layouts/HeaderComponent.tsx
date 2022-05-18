@@ -166,6 +166,11 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
       query: { type },
     });
   };
+  const handleRedirect = (type: string) => {
+    router.push({
+      pathname: `/${type}`,
+    });
+  };
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -249,20 +254,14 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
             border: "0.5px solid #989EA8",
             mt: "27px",
             padding: "6px 13px",
+            color: theme.navy,
+            fontSize: "12px",
+            fontWeight: 400,
+            lineHeight: "17.38px",
           }}
+          onClick={() => handleRedirect("my-profile")}
         >
-          <Link
-            underline="none"
-            href="/my-profile"
-            sx={{
-              color: theme.navy,
-              fontSize: "12px",
-              fontWeight: 400,
-              lineHeight: "17.38px",
-            }}
-          >
-            {t("header.profile-editing")}
-          </Link>
+          {t("header.profile-editing")}
         </Button>
       </Box>
       <Box sx={{ m: "20px 0 0px 12px" }} onClick={handleMenuClose}>
@@ -298,14 +297,12 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
           </IconButtonCustom>
           <TypoLabel>{t("header.participating-community")}</TypoLabel>
         </MenuItemCustom>
-        <Link href="/mail-setting" underline="none">
-          <MenuItemCustom>
-            <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
-              <img src="/assets/images/ic_nav_profile/ic_setting.svg" alt="ic_setting" />
-            </IconButtonCustom>
-            <TypoLabel>{t("header.setting")}</TypoLabel>
-          </MenuItemCustom>
-        </Link>
+        <MenuItemCustom onClick={() => handleRedirect("mail-setting")}>
+          <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
+            <img src="/assets/images/ic_nav_profile/ic_setting.svg" alt="ic_setting" />
+          </IconButtonCustom>
+          <TypoLabel>{t("header.setting")}</TypoLabel>
+        </MenuItemCustom>
         <MenuItemCustom onClick={handleLogout}>
           <TypoLabel>{t("header.logout")}</TypoLabel>
         </MenuItemCustom>
@@ -369,28 +366,36 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Link href="/">
-              <Box
-                component="img"
-                sx={{
-                  width: { xs: "70px", lg: "141px" },
-                  height: { xs: "20px", lg: "42px" },
-                }}
-                alt="avatar"
-                src="/assets/images/logo/logo.png"
-              />
-            </Link>
+            <Box
+              component="img"
+              sx={{
+                width: { xs: "70px", lg: "141px" },
+                height: { xs: "20px", lg: "42px" },
+                cursor: "pointer",
+              }}
+              alt="avatar"
+              src="/assets/images/logo/logo.png"
+              onClick={() => handleRedirect("")}
+            />
             <Box sx={{ display: { xs: "none", lg: authPage ? "none" : "block" } }}>
-              <Link underline="none" href="/search_user">
-                <StyledButtonList startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" />}>
-                  {t("header.list-engineers")}
-                </StyledButtonList>
-              </Link>
-              <Link underline="none" href="/search_community">
-                <StyledButtonList startIcon={<img alt="" src="/assets/images/svg/users.svg" />}>
-                  {t("header.list-community")}
-                </StyledButtonList>
-              </Link>
+              <StyledButtonList
+                startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" />}
+                sx={{
+                  cursor: "pointer",
+                }}
+                onClick={() => handleRedirect("search_user")}
+              >
+                {t("header.list-engineers")}
+              </StyledButtonList>
+              <StyledButtonList
+                startIcon={<img alt="" src="/assets/images/svg/users.svg" />}
+                sx={{
+                  cursor: "pointer",
+                }}
+                onClick={() => handleRedirect("search_community")}
+              >
+                {t("header.list-community")}
+              </StyledButtonList>
             </Box>
             <Search sx={{ display: authPage ? "none" : "inherit" }}>
               <SearchIconWrapper>
@@ -493,21 +498,19 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
         </Toolbar>
         {!authPage && (
           <Box sx={{ display: { xs: "flex", lg: "none" }, justifyContent: "center" }}>
-            <Link underline="none" href="/search_user">
-              <StyledButtonList
-                startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" width="16px" height="11.33px" />}
-                sx={{ mr: { xs: "40px", md: "0" } }}
-              >
-                {t("header.list-engineers")}
-              </StyledButtonList>
-            </Link>
-            <Link underline="none" href="/search_community">
-              <StyledButtonList
-                startIcon={<img alt="" src="/assets/images/svg/users.svg" width="15.36px" height="10.88px" />}
-              >
-                {t("header.list-community")}
-              </StyledButtonList>
-            </Link>
+            <StyledButtonList
+              onClick={() => handleRedirect("search_user")}
+              startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" width="16px" height="11.33px" />}
+              sx={{ mr: { xs: "40px", md: "0" } }}
+            >
+              {t("header.list-engineers")}
+            </StyledButtonList>
+            <StyledButtonList
+              onClick={() => handleRedirect("search_community")}
+              startIcon={<img alt="" src="/assets/images/svg/users.svg" width="15.36px" height="10.88px" />}
+            >
+              {t("header.list-community")}
+            </StyledButtonList>
           </Box>
         )}
       </AppBar>
