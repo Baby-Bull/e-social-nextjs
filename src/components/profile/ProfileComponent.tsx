@@ -1,7 +1,7 @@
 import { Backdrop, Box, CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ProfileSkillComponent from "src/components/profile/ProfileSkillComponent";
@@ -29,28 +29,29 @@ const ProfileHaveDataComponent = () => {
   const [isRefresh, setIsRefresh] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showModalMatching, setModalMatching] = React.useState(false);
-  const router = useRouter();
-  const { userId } = router.query;
+  const [userId, setUserId] = useState(null);
+  // const router = useRouter();
+  // const { userId } = router.query;
 
-  const fetchProfileSkill = async () => {
+  const fetchProfileSkill = async (userIdFromUrl: string) => {
     setIsLoading(true);
-    const data = await getOrtherUserProfile(userId);
+    const data = await getOrtherUserProfile(userIdFromUrl);
     setProfileSkill(data);
     setIsLoading(false);
     return data;
   };
 
-  const fetchCommunities = async () => {
+  const fetchCommunities = async (userIdFromUrl: string) => {
     setIsLoading(true);
-    const data = await getUserCommunites(userId);
+    const data = await getUserCommunites(userIdFromUrl);
     setCommunities(data?.items);
     setIsLoading(false);
     return data;
   };
 
-  const fetchUserReviews = async () => {
+  const fetchUserReviews = async (userIdFromUrl: string) => {
     setIsLoading(true);
-    const data = await getUserReviews(userId);
+    const data = await getUserReviews(userIdFromUrl);
     setReviews(data?.items);
     setIsLoading(false);
     return data;
@@ -67,8 +68,8 @@ const ProfileHaveDataComponent = () => {
     setIsRefresh(status);
   };
 
-  const handleSendMatchingRequest = async (matchingRequest) => {
-    const res = await sendMatchingRequest(userId, matchingRequest);
+  const handleSendMatchingRequest = async (profileId, matchingRequest) => {
+    const res = await sendMatchingRequest(profileId, matchingRequest);
     setModalMatching(false);
     setIsRefresh(!isRefresh);
     return res;
@@ -88,9 +89,11 @@ const ProfileHaveDataComponent = () => {
   };
 
   useEffect(() => {
-    fetchProfileSkill();
-    fetchUserReviews();
-    fetchCommunities();
+    const userIdFromUrl = window.location.pathname.split("/")[2];
+    setUserId(userIdFromUrl);
+    fetchProfileSkill(userIdFromUrl);
+    fetchUserReviews(userIdFromUrl);
+    fetchCommunities(userIdFromUrl);
     fetchRecommended();
   }, [isRefresh, userId]);
 
