@@ -95,9 +95,9 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
     return isValidForm;
   };
 
-  const submitMatchingRequest = () => {
+  const submitMatchingRequest = async () => {
     if (handleValidateForm()) {
-      handleSendMatchingRequest(userRequestMatching?.id, matchingRequest);
+      await handleSendMatchingRequest(matchingRequest);
       setMatchingRequest({
         desired_match_date: null,
         purpose: "",

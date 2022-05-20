@@ -150,7 +150,12 @@ const ProfileHaveDataComponent = () => {
           )}
         </Box>
       </Box>
-      <Box sx={{ width: "98%" }}>
+      <Box
+        sx={{
+          width: "100%",
+          paddingRight: "20px",
+        }}
+      >
         <Box
           sx={{
             color: "#1A2944",

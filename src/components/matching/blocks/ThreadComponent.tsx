@@ -8,6 +8,7 @@ import moment from "moment";
 import "moment/locale/ja";
 import { AuthContext } from "context/AuthContext";
 import theme from "src/theme";
+import styles from "src/components/profile/profile.module.scss";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
 import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupReviewComponent";
@@ -292,6 +293,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
 
               <Typography
                 component="span"
+                className={styles.discussionTopic}
                 sx={{
                   display: ["none", type === "favorite" && "inherit"],
                 }}

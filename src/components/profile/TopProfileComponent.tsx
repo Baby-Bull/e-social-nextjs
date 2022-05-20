@@ -397,24 +397,10 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     >
                       <Box>{t("profile:character-analysis")}</Box>
                     </Button>
-                    <Box sx={{ cursor: "pointer" }} onClick={() => setHint(!hint)}>
+                    <Box className={styles.hintIconQuestion} onClick={() => setHint(!hint)}>
                       <img src="/assets/images/icon/ic_question_mark.png" alt="ic_question_mark" />
                     </Box>
-                    <Box
-                      sx={{
-                        color: "#989EA8",
-                        width: "280px",
-                        borderRadius: "12px",
-                        border: "#03BCDB 1px solid",
-                        padding: "8px",
-                        height: "100%",
-                        marginLeft: "12px",
-                        fontWeight: "400",
-                        fontSize: "14px",
-                      }}
-                    >
-                      キャラクター診断とは説明テキスト説明テキスト説明テキスト
-                    </Box>
+                    <Box className={styles.hint}>キャラクター診断とは説明テキスト説明テキスト説明テキスト</Box>
                   </Box>
                   <Box
                     sx={{

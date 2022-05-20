@@ -117,7 +117,8 @@
       }
     ],
     "consistent-return": 0,
-    "no-inner-declarations": 0
+    "no-inner-declarations": 0,
+    "disallowArithmeticOperators": 0
   },
   "settings": {
     "react": {
