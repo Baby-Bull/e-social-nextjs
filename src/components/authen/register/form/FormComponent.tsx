@@ -28,7 +28,7 @@ import theme from "src/theme";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
-import { updateProfile } from "src/services/auth";
+import { updateProfile } from "src/services/user";
 import { REGEX_RULES, VALIDATE_MESSAGE_FORM_REGISTER } from "src/messages/validate";
 import { USER_STATUS_OPTIONS } from "src/components/constants/constants";
 import { JAPAN_PROVINCE_OPTIONS } from "src/constants/constants";
@@ -119,7 +119,6 @@ const FormRegisterComponents = () => {
     if (reason === "clickaway") {
       return;
     }
-
     setOpenError(false);
   };
 
@@ -200,11 +199,14 @@ const FormRegisterComponents = () => {
       userInfo.birthday = userInfo?.birthday?.dob_value || userInfo.birthday;
       setIsLoading(true);
       const resUpdate = await updateProfile(userInfo);
+      console.log(resUpdate);
       setIsLoading(false);
-      if (!resUpdate?.statusCode) {
+      if (!resUpdate && !resUpdate?.error_code) {
         handleClickOpen();
-      } else {
-        setOpenError(true);
+      } else if (resUpdate?.message?.email) {
+        if (resUpdate?.message?.email[0]?.message !== "email is not unique") {
+          setOpenError(true);
+        }
       }
     }
   };

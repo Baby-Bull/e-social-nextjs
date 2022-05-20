@@ -180,3 +180,38 @@
     }
   }
 }
+.avatarUser {
+  -webkit-backface-visibility: hidden;
+  -ms-transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+.hint {
+  display: none;
+  color: #989ea8;
+  width: 280px;
+  border-radius: 12px;
+  border: #03bcdb 1px solid;
+  padding: 8px;
+  height: max-content;
+  margin-bottom: 0;
+  font-weight: 400;
+  font-size: 14px;
+  position: absolute;
+  right: 7em;
+}
+.hintIconQuestion {
+  cursor: pointer;
+  &:hover + .hint {
+    display: block;
+  }
+}
+
+.discussionTopic {
+  line-height: 24px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

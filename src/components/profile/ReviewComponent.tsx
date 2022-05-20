@@ -1,17 +1,21 @@
-import { Box } from "@mui/material";
 import React from "react";
+import { Box } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import moment from "moment";
+
+import "moment/locale/ja";
 
 interface reviewProps {
   user: any;
+  hideReviewer: boolean;
   rating: string;
   comment: string;
+  createdAt?: string;
 }
 
-const ReviewComponent: React.SFC<reviewProps> = ({ user, rating, comment }) => {
+const ReviewComponent: React.SFC<reviewProps> = ({ user, hideReviewer, rating, comment, createdAt }) => {
   const { t } = useTranslation();
   const GOOD = "good";
-
   return (
     <Box>
       <Box
@@ -33,7 +37,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, rating, comment }) => {
               borderRadius: "50%",
             }}
             alt="avatar"
-            src={user?.profile_image ?? "/assets/images/svg/goodhub.svg"}
+            src={!user?.profile_image || hideReviewer ? "/assets/images/svg/goodhub.svg " : user?.profile_image}
           />
           {rating ? (
             <Box
@@ -163,7 +167,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, rating, comment }) => {
                   fontWeight: 400,
                 }}
               >
-                2021年8月27日にレビュー
+                {moment(createdAt).utc().format("LL")}にレビュー
               </Box>
             </Box>
             <Box
