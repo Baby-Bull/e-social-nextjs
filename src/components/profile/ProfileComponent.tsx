@@ -1,7 +1,7 @@
 import { Backdrop, Box, CircularProgress } from "@mui/material";
-import Pagination from "@mui/material/Pagination";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
+import Pagination from "@mui/material/Pagination";
 import { styled } from "@mui/material/styles";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
@@ -35,7 +35,7 @@ const PaginationCustom = styled(Pagination)({
   },
   "& .Mui-selected": {
     color: "white",
-    backgroundColor: `${theme.blue}`,
+    backgroundColor: `${theme.blue}!important`,
   },
 });
 
@@ -182,13 +182,14 @@ const ProfileHaveDataComponent = () => {
           <PaginationCustom
             hideNextButton
             hidePrevButton
-            count={allReviews && allReviews?.length > 0 ? allReviews.length / 10 + 1 : 0}
+            count={allReviews && allReviews?.length > 0 ? Math.floor(allReviews.length / 10) + 1 : 0}
             onChange={handlePagination}
           />
           {reviews?.length > 0 ? (
             reviews?.map((item, key) => (
               <ReviewComponent
                 user={item?.user}
+                hideReviewer={item?.hide_reviewer}
                 rating={item?.rating}
                 comment={item?.comment}
                 createdAt={item?.created_at}
