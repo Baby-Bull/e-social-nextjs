@@ -119,7 +119,6 @@ const FormRegisterComponents = () => {
     if (reason === "clickaway") {
       return;
     }
-
     setOpenError(false);
   };
 
@@ -200,11 +199,14 @@ const FormRegisterComponents = () => {
       userInfo.birthday = userInfo?.birthday?.dob_value || userInfo.birthday;
       setIsLoading(true);
       const resUpdate = await updateProfile(userInfo);
+      console.log(resUpdate);
       setIsLoading(false);
-      if (!resUpdate?.error_code) {
+      if (!resUpdate && !resUpdate?.error_code) {
         handleClickOpen();
-      } else {
-        setOpenError(true);
+      } else if (resUpdate?.message?.email) {
+        if (resUpdate?.message?.email[0]?.message !== "email is not unique") {
+          setOpenError(true);
+        }
       }
     }
   };

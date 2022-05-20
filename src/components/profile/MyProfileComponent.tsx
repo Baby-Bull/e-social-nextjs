@@ -1,6 +1,8 @@
 import { Backdrop, Box, CircularProgress } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
+import Pagination from "@mui/material/Pagination";
+import { styled } from "@mui/material/styles";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ProfileSkillComponent from "src/components/profile/ProfileSkillComponent";
@@ -17,12 +19,32 @@ import { AuthContext } from "context/AuthContext";
 import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
 import { sendMatchingRequest } from "../../services/matching";
 
+const PaginationCustom = styled(Pagination)({
+  "& .MuiPaginationItem-root": {
+    color: `${theme.blue}`,
+    fontFamily: "Noto Sans JP,sans-serif",
+    fontSize: "14px",
+    fontWeight: "700",
+  },
+  "& .MuiPagination-ul": {
+    width: "fit-content",
+    margin: "auto",
+    marginTop: "0.5em",
+    marginBottom: "0.5em",
+  },
+  "& .Mui-selected": {
+    color: "white",
+    backgroundColor: `${theme.blue}!important`,
+  },
+});
+
 const ProfileHaveDataComponent = () => {
   const { t } = useTranslation();
   const LIMIT = 20;
   const { auth } = useContext(AuthContext);
   const [profileSkill, setProfileSkill] = useState([]);
   const [communities, setCommunities] = useState([]);
+  const [allReviews, setAllReviews] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [recommended, setRecommended] = useState([]);
   const [isRefresh, setIsRefresh] = useState(false);
@@ -49,7 +71,8 @@ const ProfileHaveDataComponent = () => {
   const fetchUserReviews = async () => {
     setIsLoading(true);
     const data = await getUserReviews(userId);
-    setReviews(data?.items);
+    setAllReviews(data?.items);
+    setReviews(data?.items?.slice(0, 10));
     setIsLoading(false);
     return data;
   };
@@ -70,6 +93,11 @@ const ProfileHaveDataComponent = () => {
     setModalMatching(false);
     setIsRefresh(!isRefresh);
     return res;
+  };
+
+  const handlePagination = (e: any) => {
+    const tempPage = e.currentTarget.textContent;
+    setReviews(allReviews.slice((tempPage - 1) * 10, tempPage * 10));
   };
 
   useEffect(() => {
@@ -134,10 +162,17 @@ const ProfileHaveDataComponent = () => {
           }}
         >
           {t("profile:title-review")}（{reviews?.length ?? 0}）
+          <PaginationCustom
+            hideNextButton
+            hidePrevButton
+            count={allReviews && allReviews?.length > 0 ? Math.floor(allReviews.length / 10) + 1 : 0}
+            onChange={handlePagination}
+          />
           {reviews?.length > 0 ? (
             reviews?.map((item, key) => (
               <ReviewComponent
                 user={item?.user}
+                hideReviewer={item?.hide_reviewer}
                 rating={item?.rating}
                 comment={item?.comment}
                 createdAt={item?.created_at}
@@ -149,7 +184,12 @@ const ProfileHaveDataComponent = () => {
           )}
         </Box>
       </Box>
-      <Box sx={{ width: "98%" }}>
+      <Box
+        sx={{
+          width: "100%",
+          paddingRight: "20px",
+        }}
+      >
         <Box
           sx={{
             color: "#1A2944",

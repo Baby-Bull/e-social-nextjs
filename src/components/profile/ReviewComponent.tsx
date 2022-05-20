@@ -7,12 +7,13 @@ import "moment/locale/ja";
 
 interface reviewProps {
   user: any;
+  hideReviewer: boolean;
   rating: string;
   comment: string;
   createdAt?: string;
 }
 
-const ReviewComponent: React.SFC<reviewProps> = ({ user, rating, comment, createdAt }) => {
+const ReviewComponent: React.SFC<reviewProps> = ({ user, hideReviewer, rating, comment, createdAt }) => {
   const { t } = useTranslation();
   const GOOD = "good";
   return (
@@ -36,7 +37,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, rating, comment, create
               borderRadius: "50%",
             }}
             alt="avatar"
-            src={user?.profile_image ? user?.profile_image : "/assets/images/svg/goodhub.svg"}
+            src={!user?.profile_image || hideReviewer ? "/assets/images/svg/goodhub.svg " : user?.profile_image}
           />
           {rating ? (
             <Box
