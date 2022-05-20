@@ -1,33 +1,20 @@
+import React from "react";
 import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import moment from "moment";
-
-import { getOrtherUserProfile } from "src/services/user";
 
 import "moment/locale/ja";
 
 interface reviewProps {
-  time: string;
-  hideReviewer: boolean;
-  otherUserId: string;
+  user: any;
   rating: string;
   comment: string;
+  createdAt?: string;
 }
 
-const ReviewComponent: React.SFC<reviewProps> = ({ time, hideReviewer, otherUserId, rating, comment }) => {
+const ReviewComponent: React.SFC<reviewProps> = ({ user, rating, comment, createdAt }) => {
   const { t } = useTranslation();
   const GOOD = "good";
-
-  const [user, setUser] = useState<any>();
-  useEffect(() => {
-    const fetchOtherUser = async () => {
-      const res = await getOrtherUserProfile(otherUserId);
-      setUser(res);
-    };
-    fetchOtherUser();
-  }, []);
-
   return (
     <Box>
       <Box
@@ -49,7 +36,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ time, hideReviewer, otherUser
               borderRadius: "50%",
             }}
             alt="avatar"
-            src={hideReviewer ? "/assets/images/svg/goodhub.svg" : user?.profile_image}
+            src={user?.profile_image ? user?.profile_image : "/assets/images/svg/goodhub.svg"}
           />
           {rating ? (
             <Box
@@ -179,7 +166,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ time, hideReviewer, otherUser
                   fontWeight: 400,
                 }}
               >
-                {moment(time).utc().fromNow()}
+                {moment(createdAt).utc().format("LL")}にレビュー
               </Box>
             </Box>
             <Box

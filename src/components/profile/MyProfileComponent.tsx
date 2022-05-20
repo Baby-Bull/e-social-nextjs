@@ -137,11 +137,10 @@ const ProfileHaveDataComponent = () => {
           {reviews?.length > 0 ? (
             reviews?.map((item, key) => (
               <ReviewComponent
-                time={item?.created_at}
-                hideReviewer={item?.hideReviewer}
-                otherUserId={item?.owner_id}
+                user={item?.user}
                 rating={item?.rating}
                 comment={item?.comment}
+                createdAt={item?.created_at}
                 key={key}
               />
             ))
