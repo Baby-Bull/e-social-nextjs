@@ -1,12 +1,12 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import moment from "moment";
-
 import "moment/locale/ja";
-import { AuthContext } from "context/AuthContext";
+import { useDispatch, useSelector } from "react-redux";
+
 import theme from "src/theme";
 import styles from "src/components/profile/profile.module.scss";
 import ButtonComponent from "src/components/common/ButtonComponent";
@@ -20,6 +20,8 @@ import {
   cancelMatchingRequestSent,
 } from "src/services/matching";
 import { TYPE } from "src/constants/matching";
+import { IStoreState } from "src/constants/interface";
+import actionTypes from "src/store/actionTypes";
 
 const ThreadTitle = styled(Typography)({
   paddingLeft: "20px",
@@ -54,7 +56,8 @@ const handlePurposeMatchingTab12 = (tempValue: string) => {
 const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyRefetchData, dataType }) => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { auth, dispatch } = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const auth = useSelector((state: IStoreState) => state.user);
   const isOnline = "online";
 
   const isShowThread = type === "unConfirm" || type === "reject";
@@ -96,7 +99,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
         type: dataType,
       });
     }
-    dispatch({ type: "REMOVE_MATCH_REQUEST_COUNT", payload: auth });
+    dispatch({ type: actionTypes.REMOVE_MATCH_REQUEST_COUNT, payload: auth });
     return res;
   };
 

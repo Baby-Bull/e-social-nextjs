@@ -106,29 +106,39 @@ const BlockChatComponent = ({ hasData, setHasData }) => {
       setIsRenderRightSide(true);
     }
 
-    sk.current = new WebSocket(`${process.env.NEXT_PUBLIC_WS}${getToken()}`);
-
-    sk.current.addEventListener("open", () => {
-      console.log("WebSocket is connected");
-    });
-
-    sk.current.addEventListener("error", (e: any) => {
-      console.error("WebSocket is in error", e);
+    if (!sk.current) {
       sk.current = new WebSocket(`${process.env.NEXT_PUBLIC_WS}${getToken()}`);
-    });
 
-    sk.current.addEventListener("message", (e: any) => {
-      const messageReceived = JSON.parse(e.data);
-      console.log("WebSocket received a message", Object.keys(messageReceived));
-      if (messageReceived["get.chatRoom.message"]) {
-        const message = messageReceived["get.chatRoom.message"];
-        if (chatRoomIdRef.current === message.chat_room_id) {
-          setNewMessageOfRoom(message);
+      sk.current.addEventListener("open", () => {
+        console.log("WebSocket is connected");
+      });
+
+      sk.current.addEventListener("close", () => {
+        console.log("WebSocket is disconnected");
+        sk.current = null;
+      });
+
+      sk.current.addEventListener("error", (e: any) => {
+        console.error("WebSocket is in error", e);
+        sk.current = new WebSocket(`${process.env.NEXT_PUBLIC_WS}${getToken()}`);
+      });
+
+      sk.current.addEventListener("message", (e: any) => {
+        const messageReceived = JSON.parse(e.data);
+        console.log("WebSocket received a message", Object.keys(messageReceived));
+        if (messageReceived["get.chatRoom.message"]) {
+          const message = messageReceived["get.chatRoom.message"];
+          if (chatRoomIdRef.current === message.chat_room_id) {
+            setNewMessageOfRoom(message);
+          }
+
+          updateLastMessageOfListRooms(message);
         }
-
-        updateLastMessageOfListRooms(message);
-      }
-    });
+      });
+    }
+    return () => {
+      sk.current.close();
+    };
   }, []);
 
   const { data: listRoomResQuery } = useQuery(

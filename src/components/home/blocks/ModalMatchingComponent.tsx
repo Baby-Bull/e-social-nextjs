@@ -1,14 +1,16 @@
 import { Avatar, Box, Button, Grid, Modal } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import { Field } from "src/components/common/Form/_Field";
 import styles from "src/components/home/home.module.scss";
 import { MATCHING_PURPOSE_OPTIONS } from "src/constants/constants";
+import { IStoreState } from "src/constants/interface";
 import { VALIDATE_FORM_MATCHING_REQUEST } from "src/messages/validate";
-import { AuthContext } from "context/AuthContext";
+import actionTypes from "src/store/actionTypes";
 
 interface IModalMatchingComponentProps {
   open: boolean;
@@ -40,7 +42,8 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
   handleSendMatchingRequest,
 }) => {
   const { t } = useTranslation();
-  const { auth, dispatch } = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const auth = useSelector((state: IStoreState) => state.user);
 
   const [matchingRequest, setMatchingRequest] = useState({
     desired_match_date: new Date()?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }),
@@ -103,7 +106,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
         purpose: "",
         message: null,
       });
-      dispatch({ type: "ADD_MATCH_REQUEST_COUNT", payload: auth });
+      dispatch({ type: actionTypes.ADD_MATCH_REQUEST_COUNT, payload: auth });
     }
   };
 

@@ -1,27 +1,28 @@
-import React, { useRef, useState, useEffect, useContext } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Box, Grid, Typography, Link, Backdrop, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { LoginSocialGoogle, LoginSocialGithub, IResolveParams, TypeCrossFunction } from "reactjs-social-login";
+import { useDispatch } from "react-redux";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import theme from "src/theme";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 import { authWithProvider, getAccessTokenTwitter } from "src/services/auth";
-import { AuthContext } from "context/AuthContext";
+import { login } from "src/store/store";
 
 const LoginComponent = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const dispatch = useDispatch();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const [provider, setProvider] = useState("");
   const [profile, setProfile] = useState<any>();
   const githubRef = useRef<TypeCrossFunction>(null!);
   const googleRef = useRef<TypeCrossFunction>(null!);
-
-  const { dispatch } = useContext(AuthContext);
 
   const onLoginStart = () => {
     setIsLoading(true);
@@ -55,7 +56,7 @@ const LoginComponent = () => {
       const resAuth = await authWithProvider(providerAuth, accessToken);
       setIsLoading(false);
       if (resAuth?.data?.access_token) {
-        dispatch({ type: "LOGIN_SUCCESS", payload: resAuth?.data });
+        dispatch(login(resAuth?.data?.user));
         if (resAuth?.data?.user?.is_profile_edited) {
           router.push("/");
         } else {
@@ -113,8 +114,7 @@ const LoginComponent = () => {
                     setProvider(googleProvider);
                     setProfile(data);
                   }}
-                  onReject={(err) => {
-                    console.log(err);
+                  onReject={() => {
                     setIsLoading(false);
                   }}
                 >
@@ -132,8 +132,7 @@ const LoginComponent = () => {
                     setProfile(data);
                   }}
                   onLoginStart={onLoginStart}
-                  onReject={(err: any) => {
-                    console.log(err);
+                  onReject={() => {
                     setIsLoading(false);
                   }}
                 >
