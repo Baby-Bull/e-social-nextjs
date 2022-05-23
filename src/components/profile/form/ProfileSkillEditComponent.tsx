@@ -258,7 +258,7 @@ const ProfileSkillComponent = () => {
   const [address, setAddress] = useState(PROFILE_JAPAN_PROVINCE_OPTIONS[0].value);
   const [inputTags, setInputTags] = useState([]);
   const [isSkillProfile, setIsSkillProfile] = useState(false);
-  const [profileImage, setProfileImage] = useState(null);
+  const [profileImage, setProfileImage] = useState(auth?.profile_image);
   const [upstreamProcess, setUpstreamProcess] = useState(null);
   const [otherLanguageLevel, setOtherLanguageLevel] = useState(null);
   const [skillLanguageData, setSkillLanguage] = useState([
@@ -1109,7 +1109,7 @@ const ProfileSkillComponent = () => {
                 <label htmlFor="avatar">
                   <Avatar
                     alt="Remy Sharp"
-                    src={profileImage || "/assets/images/profile/avatar_2.png"}
+                    src={profileImage || "/assets/images/avatar.png"}
                     sx={{
                       width: { xs: "80px", lg: "160px" },
                       height: { xs: "80px", lg: "160px" },

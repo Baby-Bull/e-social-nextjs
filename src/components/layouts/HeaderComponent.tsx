@@ -460,7 +460,10 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                     alt="avatar"
                     width="40"
                     height="40"
-                    style={{ borderRadius: "50%" }}
+                    style={{
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
                   />
                 </IconButton>
               </Box>
