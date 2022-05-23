@@ -81,8 +81,9 @@ const handleMapMatchingStatus = (statusMatchingTemp: string) => {
 const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchingModal, indexKey }) => {
   const { t } = useTranslation();
   const router = useRouter();
-  const [liked, setLiked] = useState(data?.is_favorite);
   const { auth, dispatch } = useContext(AuthContext);
+  const [liked, setLiked] = useState(data?.is_favorite);
+
   const isOnline = "online";
 
   const handleClickButtonModal = (tempValue: any) => {

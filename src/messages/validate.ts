@@ -91,6 +91,7 @@ export const VALIDATE_FORM_UPDATE_PROFILE = {
   },
   tags: {
     min_tag: "2種類以上設定してください。",
+    max_size: "1つのタグは20文字以内で記入してください。",
   },
   job: {
     select: "選択してください。",

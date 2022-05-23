@@ -544,8 +544,16 @@ const ProfileSkillComponent = () => {
 
   const onKeyPress = (e) => {
     if (e.key === "Enter" && e.target.value) {
-      setInputTags([...inputTags, e.target.value]);
-      (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
+      if (e.target.value?.length > 20) {
+        // isValidForm = false;
+        errorMessages.tags = VALIDATE_FORM_UPDATE_PROFILE.tags.max_size;
+        setErrorValidates(errorMessages);
+      } else {
+        errorMessages.tags = null;
+        setErrorValidates(errorMessages);
+        setInputTags([...inputTags, e.target.value]);
+        (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
+      }
     }
   };
 
@@ -980,6 +988,7 @@ const ProfileSkillComponent = () => {
         errorMessages.address = VALIDATE_FORM_UPDATE_PROFILE.address.select;
       }
 
+      // validate tag
       if (inputTags?.length < 2) {
         isValidForm = false;
         errorMessages.tags = VALIDATE_FORM_UPDATE_PROFILE.tags.min_tag;

@@ -16,7 +16,7 @@ const MatchingComponent = () => {
 
   const [tabs, setTabs] = useState([
     {
-      text: "マッチングリクエスト",
+      text: "マッチング\nリクエスト",
       icon: <img src="/assets/images/svg/person.svg" alt="person" />,
       type: TYPE.RECEIVED,
       tabValue: TAB_VALUE_BY_KEY.received,
@@ -43,7 +43,7 @@ const MatchingComponent = () => {
       ],
     },
     {
-      text: "申請中のマッチング",
+      text: "申請中の\nマッチング",
       icon: <img src="/assets/images/svg/pan_tool.svg" alt="pan_tool" />,
       type: TYPE.SENT,
       tabValue: TAB_VALUE_BY_KEY.sent,
@@ -138,7 +138,7 @@ const MatchingComponent = () => {
       ],
     },
     {
-      text: "参加中のコミュニティ",
+      text: "参加中の\nコミュニティ",
       icon: <img src="/assets/images/svg/stars.svg" alt="stars" />,
       type: TYPE.COMMUNITY,
       tabValue: TAB_VALUE_BY_KEY.community,
