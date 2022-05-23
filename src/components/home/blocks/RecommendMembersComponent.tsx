@@ -1,10 +1,12 @@
-import { Box, Grid, Link } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import moment from "moment";
 import "moment/locale/ja";
+import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import {
@@ -14,7 +16,8 @@ import {
 import styles from "src/components/home/home.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
-import { AuthContext } from "context/AuthContext";
+import { IStoreState } from "src/constants/interface";
+import actionTypes from "src/store/actionTypes";
 
 import SlickSliderRecommendComponent from "./SlickSliderRecommendComponent";
 
@@ -82,7 +85,8 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
   const { t } = useTranslation();
   const router = useRouter();
   const [liked, setLiked] = useState(data?.is_favorite);
-  const { auth, dispatch } = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const auth = useSelector((state: IStoreState) => state.user);
   const isOnline = "online";
 
   const handleClickButtonModal = (tempValue: any) => {
@@ -93,8 +97,8 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
 
   const handleClickFavoriteButton = () => {
     handleFavoriteAnUser(liked, data?.id);
-    if (liked) dispatch({ type: "REMOVE_FAVORITE", payload: auth });
-    else dispatch({ type: "ADD_FAVORITE", payload: auth });
+    if (liked) dispatch({ type: actionTypes.REMOVE_FAVORITE, payload: auth });
+    else dispatch({ type: actionTypes.ADD_FAVORITE, payload: auth });
     setLiked(!liked);
   };
 
@@ -205,16 +209,16 @@ const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
     <Grid container className={styles.recommendList} sx={{ display: dataRecommends.length > 0 ? "block" : "none" }}>
       <div className="div-title">
         <span className="title">{title}</span>
-        <Link className="link-see-more content-pc" href="/search_user" underline="none">
-          {t("home:see-more")}
+        <Link href="/search_user">
+          <a className="link-see-more content-pc">{t("home:see-more")}</a>
         </Link>
       </div>
       <div className="content">
         <SlickSliderRecommendComponent items={dataElements} />
       </div>
       <div style={{ textAlign: "center" }}>
-        <Link className="link-see-more content-mobile" href="/search_user" underline="none">
-          {t("home:see-more")}
+        <Link href="/search_user">
+          <a className="link-see-more content-mobile">{t("home:see-more")}</a>
         </Link>
       </div>
     </Grid>

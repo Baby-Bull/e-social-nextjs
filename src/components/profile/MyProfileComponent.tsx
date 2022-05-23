@@ -1,8 +1,9 @@
+import React, { useEffect, useState } from "react";
 import { Backdrop, Box, CircularProgress } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import Pagination from "@mui/material/Pagination";
 import { styled } from "@mui/material/styles";
+import { useSelector } from "react-redux";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ProfileSkillComponent from "src/components/profile/ProfileSkillComponent";
@@ -14,7 +15,7 @@ import BoxNoDataComponent from "src/components/profile/BoxNoDataComponent";
 import TopProfileComponent from "src/components/profile/TopProfileComponent";
 import SlickSliderRecommendComponent from "src/components/home/blocks/SlickSliderRecommendComponent";
 import theme from "src/theme";
-import { AuthContext } from "context/AuthContext";
+import { IStoreState } from "src/constants/interface";
 
 import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
 import { sendMatchingRequest } from "../../services/matching";
@@ -41,7 +42,7 @@ const PaginationCustom = styled(Pagination)({
 const ProfileHaveDataComponent = () => {
   const { t } = useTranslation();
   const LIMIT = 20;
-  const { auth } = useContext(AuthContext);
+  const auth = useSelector((state: IStoreState) => state.user);
   const [profileSkill, setProfileSkill] = useState([]);
   const [communities, setCommunities] = useState([]);
   const [allReviews, setAllReviews] = useState([]);

@@ -9,6 +9,7 @@ import Checkbox from "@mui/material/Checkbox";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useTranslation } from "next-i18next";
+import { useDispatch, useSelector } from "react-redux";
 
 import ButtonComponent from "src/components/common/ButtonComponent";
 import ContentComponent from "src/components/layouts/ContentComponent";
@@ -19,6 +20,8 @@ import "typeface-roboto";
 
 import { REGEX_RULES, VALIDATE_MESSAGE_FORM_REGISTER } from "src/messages/validate";
 import { userSettingEmail, userSettingNotification } from "src/services/user";
+import { IStoreState } from "src/constants/interface";
+import actionTypes from "src/store/actionTypes";
 
 import { notifyMess, notifyRecommend } from "./mockData";
 
@@ -122,6 +125,9 @@ const BtnSave = styled(Button)({
 
 const MailSettingComponent = () => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const auth = useSelector((state: IStoreState) => state.user);
+
   const [value, setValue] = React.useState(0);
   const [isNotifyMess, setIsNotifyMess] = React.useState(true);
   const [valueOnchange, setValueOnchange] = React.useState(false);
@@ -135,10 +141,9 @@ const MailSettingComponent = () => {
   });
 
   useEffect(() => {
-    const auth = JSON.parse(sessionStorage.getItem("auth"));
-    setNewMessage(auth?.user?.profile?.setting?.new_message_email_notify);
-    setNewRecommended(auth?.user?.profile?.setting?.new_recommended_user_email_notify);
-    setEmail(auth?.user?.profile?.email);
+    setNewMessage(auth?.setting?.new_message_email_notify);
+    setNewRecommended(auth?.setting?.new_recommended_user_email_notify);
+    setEmail(auth?.email);
   }, []);
 
   const [showPopup, setShowPopup] = useState(false);
@@ -187,9 +192,8 @@ const MailSettingComponent = () => {
   const handleSaveSettingNotification = async () => {
     const res = await userSettingNotification(settingNotificationRequest);
     if (res) {
-      const auth = JSON.parse(sessionStorage.getItem("auth"));
-      auth.user.profile.setting = settingNotificationRequest;
-      sessionStorage.setItem("auth", JSON.stringify(auth));
+      auth.setting = settingNotificationRequest;
+      dispatch({ type: actionTypes.UPDATE_PROFILE, payload: auth });
       return res.data;
     }
   };
@@ -225,9 +229,8 @@ const MailSettingComponent = () => {
       setMailOnChange(false);
       const res = await userSettingEmail(settingMailRequest);
       if (res) {
-        const auth = JSON.parse(sessionStorage.getItem("auth"));
-        auth.user.profile.email = settingMailRequest.email;
-        sessionStorage.setItem("auth", JSON.stringify(auth));
+        auth.email = settingMailRequest.email;
+        dispatch({ type: actionTypes.UPDATE_PROFILE, payload: auth });
         return res.data;
       }
     }

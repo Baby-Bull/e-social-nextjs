@@ -1,12 +1,13 @@
 import { Box, Grid } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 // eslint-disable-next-line import/order
 import moment from "moment";
 
 import "moment/locale/ja";
 import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
 
 import styles from "src/components/profile/profile.module.scss";
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
@@ -15,8 +16,8 @@ import { replaceLabelByTranslate } from "src/utils/utils";
 import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
 import { sendMatchingRequest } from "src/services/matching";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
-
-import { AuthContext } from "../../../context/AuthContext";
+import actionTypes from "src/store/actionTypes";
+import { IStoreState } from "src/constants/interface";
 
 interface IUserItemProps {
   id: string;
@@ -45,7 +46,8 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
   const router = useRouter();
   const [showModalMatching, setModalMatching] = React.useState(false);
   const [liked, setLiked] = useState(data?.is_favorite);
-  const { auth, dispatch } = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const auth = useSelector((state: IStoreState) => state.user);
   const handleShowModalMatching = (matchStatus) => {
     // handleShowModalMatching
     if (!matchStatus) {
@@ -83,8 +85,8 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
 
   const handleClickFavoriteButton = () => {
     handleFavoriteAnUser(liked, data?.id);
-    if (liked) dispatch({ type: "REMOVE_FAVORITE", payload: auth });
-    else dispatch({ type: "ADD_FAVORITE", payload: auth });
+    if (liked) dispatch({ type: actionTypes.REMOVE_FAVORITE, payload: auth });
+    else dispatch({ type: actionTypes.ADD_FAVORITE, payload: auth });
     setLiked(!liked);
   };
 

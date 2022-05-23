@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -9,17 +9,21 @@ import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { useRouter } from "next/router";
-import { Button, Select, Avatar, Typography, Link } from "@mui/material";
+import { Button, Select, Avatar, Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { ToastContainer } from "react-toastify";
+import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
 
 import { logout } from "src/services/auth";
-import { AuthContext } from "context/AuthContext";
 import { menuNotificationsData } from "src/components/home/mockData/mockData";
 import styles from "src/components/home/home.module.scss";
 import theme from "src/theme";
+// eslint-disable-next-line import/order
+import { logout as logoutDispatch } from "src/store/store";
 
 import "react-toastify/dist/ReactToastify.css";
+import { IStoreState } from "src/constants/interface";
 
 interface IHeaderComponentProps {
   authPage?: boolean;
@@ -116,12 +120,8 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   const { t } = useTranslation();
   const router = useRouter();
   const fullText = router.query?.fulltext;
-  const { dispatch } = useContext(AuthContext);
-  const [auth, setAuth] = useState<any>();
-  React.useEffect(() => {
-    const tempAuth = JSON.parse(sessionStorage.getItem("auth"));
-    setAuth(tempAuth);
-  }, []);
+  const dispatch = useDispatch();
+  const auth = useSelector((state: IStoreState) => state.user);
 
   const typeSearchs = [
     {
@@ -166,11 +166,6 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
       query: { type },
     });
   };
-  const handleRedirect = (type: string) => {
-    router.push({
-      pathname: `/${type}`,
-    });
-  };
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -183,9 +178,9 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   };
 
   const handleLogout = async () => {
-    await logout();
-    dispatch({ type: "LOGOUT" });
     router.push("/login");
+    logout();
+    dispatch(logoutDispatch());
   };
 
   const onKeyPress = (e) => {
@@ -238,10 +233,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     >
       <Box sx={{ p: "22px 0 22px 12px", borderBottom: "1px solid #D8D8D8" }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Avatar
-            src={auth?.user?.profile?.profile_image}
-            sx={{ width: "20px", height: "20px", mr: "4px", borderRadius: "50%" }}
-          />
+          <Avatar src={auth?.profile_image} sx={{ width: "20px", height: "20px", mr: "4px", borderRadius: "50%" }} />
           <Typography fontWeight={500} fontSize={12} lineHeight="17.38px">
             マイプロフィール
           </Typography>
@@ -254,18 +246,25 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
             border: "0.5px solid #989EA8",
             mt: "27px",
             padding: "6px 13px",
-            color: theme.navy,
-            fontSize: "12px",
-            fontWeight: 400,
-            lineHeight: "17.38px",
           }}
-          onClick={() => handleRedirect("my-profile")}
         >
-          {t("header.profile-editing")}
+          <Link href="/my-profile">
+            <a
+              style={{
+                color: theme.navy,
+                fontSize: "12px",
+                fontWeight: 400,
+                lineHeight: "17.38px",
+                textDecoration: "none",
+              }}
+            >
+              {t("header.profile-editing")}
+            </a>
+          </Link>
         </Button>
       </Box>
       <Box sx={{ m: "20px 0 0px 12px" }} onClick={handleMenuClose}>
-        <Link href="/chat/personal" underline="none">
+        <Link href="/chat/personal">
           <MenuItemCustom>
             <IconButtonCustom size="large" aria-label="show 4 new mails" color="inherit">
               <img src="/assets/images/ic_nav_profile/ic_mess.svg" alt="ic_mess" />
@@ -297,12 +296,14 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
           </IconButtonCustom>
           <TypoLabel>{t("header.participating-community")}</TypoLabel>
         </MenuItemCustom>
-        <MenuItemCustom onClick={() => handleRedirect("mail-setting")}>
-          <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
-            <img src="/assets/images/ic_nav_profile/ic_setting.svg" alt="ic_setting" />
-          </IconButtonCustom>
-          <TypoLabel>{t("header.setting")}</TypoLabel>
-        </MenuItemCustom>
+        <Link href="/mail-setting">
+          <MenuItemCustom>
+            <IconButtonCustom size="large" aria-label="show 17 new notifications" color="inherit">
+              <img src="/assets/images/ic_nav_profile/ic_setting.svg" alt="ic_setting" />
+            </IconButtonCustom>
+            <TypoLabel>{t("header.setting")}</TypoLabel>
+          </MenuItemCustom>
+        </Link>
         <MenuItemCustom onClick={handleLogout}>
           <TypoLabel>{t("header.logout")}</TypoLabel>
         </MenuItemCustom>
@@ -366,36 +367,34 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
       >
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Box
-              component="img"
-              sx={{
-                width: { xs: "70px", lg: "141px" },
-                height: { xs: "20px", lg: "42px" },
-                cursor: "pointer",
-              }}
-              alt="avatar"
-              src="/assets/images/logo/logo.png"
-              onClick={() => handleRedirect("")}
-            />
+            <Link href="/">
+              <a>
+                <Box
+                  component="img"
+                  sx={{
+                    width: { xs: "70px", lg: "141px" },
+                    height: { xs: "20px", lg: "42px" },
+                  }}
+                  alt="avatar"
+                  src="/assets/images/logo/logo.png"
+                />
+              </a>
+            </Link>
             <Box sx={{ display: { xs: "none", lg: authPage ? "none" : "block" } }}>
-              <StyledButtonList
-                startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" />}
-                sx={{
-                  cursor: "pointer",
-                }}
-                onClick={() => handleRedirect("search_user")}
-              >
-                {t("header.list-engineers")}
-              </StyledButtonList>
-              <StyledButtonList
-                startIcon={<img alt="" src="/assets/images/svg/users.svg" />}
-                sx={{
-                  cursor: "pointer",
-                }}
-                onClick={() => handleRedirect("search_community")}
-              >
-                {t("header.list-community")}
-              </StyledButtonList>
+              <Link href="/search_user">
+                <a style={{ textDecoration: "none" }}>
+                  <StyledButtonList startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" />}>
+                    {t("header.list-engineers")}
+                  </StyledButtonList>
+                </a>
+              </Link>
+              <Link href="/search_community">
+                <a style={{ textDecoration: "none" }}>
+                  <StyledButtonList startIcon={<img alt="" src="/assets/images/svg/users.svg" />}>
+                    {t("header.list-community")}
+                  </StyledButtonList>
+                </a>
+              </Link>
             </Box>
             <Search sx={{ display: authPage ? "none" : "inherit" }}>
               <SearchIconWrapper>
@@ -457,7 +456,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                   }}
                 >
                   <img
-                    src={auth?.user?.profile?.profile_image || "/assets/images/svg/avatar.svg"}
+                    src={auth?.profile_image || "/assets/images/svg/avatar.svg"}
                     alt="avatar"
                     width="40"
                     height="40"
@@ -486,7 +485,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 sx={{ p: 0, ml: "33px" }}
               >
                 <img
-                  src={auth?.user?.profile?.profile_image || "/assets/images/svg/avatar.svg"}
+                  src={auth?.profile_image || "/assets/images/svg/avatar.svg"}
                   alt="avatar"
                   width="28"
                   height="28"
@@ -498,19 +497,25 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
         </Toolbar>
         {!authPage && (
           <Box sx={{ display: { xs: "flex", lg: "none" }, justifyContent: "center" }}>
-            <StyledButtonList
-              onClick={() => handleRedirect("search_user")}
-              startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" width="16px" height="11.33px" />}
-              sx={{ mr: { xs: "40px", md: "0" } }}
-            >
-              {t("header.list-engineers")}
-            </StyledButtonList>
-            <StyledButtonList
-              onClick={() => handleRedirect("search_community")}
-              startIcon={<img alt="" src="/assets/images/svg/users.svg" width="15.36px" height="10.88px" />}
-            >
-              {t("header.list-community")}
-            </StyledButtonList>
+            <Link href="/search_user">
+              <a style={{ textDecoration: "none" }}>
+                <StyledButtonList
+                  startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" width="16px" height="11.33px" />}
+                  sx={{ mr: { xs: "40px", md: "0" } }}
+                >
+                  {t("header.list-engineers")}
+                </StyledButtonList>
+              </a>
+            </Link>
+            <Link href="/search_community">
+              <a style={{ textDecoration: "none" }}>
+                <StyledButtonList
+                  startIcon={<img alt="" src="/assets/images/svg/users.svg" width="15.36px" height="10.88px" />}
+                >
+                  {t("header.list-community")}
+                </StyledButtonList>
+              </a>
+            </Link>
           </Box>
         )}
       </AppBar>
