@@ -102,66 +102,64 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
     setLiked(!liked);
   };
 
-  const handleClickToProfile = () => {
-    router.push(`/profile/${data.id}`);
-  };
-
   return (
     <Grid item xs={12} className={classNames(styles.boxRecommend)}>
       <Box className={styles.boxRecommendMember}>
-        <Box sx={{ cursor: "pointer" }} onClick={handleClickToProfile}>
-          <div className="status-summary">
-            <ButtonComponent
-              mode={HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.mode}
-              size="small"
-              style={{ borderRadius: "4px", width: "130px" }}
-            >
-              {HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.label}
-            </ButtonComponent>
-            <span className="label-login-status">
-              {data?.activity_status !== isOnline
-                ? replaceLabelByTranslate(
-                    t("home:box-member-recommend.last-login"),
-                    moment(data?.last_login_at).utc().fromNow(),
-                  )
-                : t("home:box-member-recommend.no-login")}
-            </span>
-          </div>
+        <Link href={`/profile/${data.id}`}>
+          <Box sx={{ cursor: "pointer" }}>
+            <div className="status-summary">
+              <ButtonComponent
+                mode={HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.mode}
+                size="small"
+                style={{ borderRadius: "4px", width: "130px" }}
+              >
+                {HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.label}
+              </ButtonComponent>
+              <span className="label-login-status">
+                {data?.activity_status !== isOnline
+                  ? replaceLabelByTranslate(
+                      t("home:box-member-recommend.last-login"),
+                      moment(data?.last_login_at).utc().fromNow(),
+                    )
+                  : t("home:box-member-recommend.no-login")}
+              </span>
+            </div>
 
-          <div className="info-summary">
-            <img
-              src={
-                data?.profile_image ??
-                "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
-              }
-              alt="img-member"
-            />
-            <div className="member-info">
-              <div className="name">{data?.username}</div>
-              <div className="career">{data?.job_position ?? "情報なし"}</div>
-              <div className="review">
-                {t("home:box-member-recommend.review")}: {data?.review_count ?? 0}
+            <div className="info-summary">
+              <img
+                src={
+                  data?.profile_image ??
+                  "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
+                }
+                alt="img-member"
+              />
+              <div className="member-info">
+                <div className="name">{data?.username}</div>
+                <div className="career">{data?.job_position ?? "情報なし"}</div>
+                <div className="review">
+                  {t("home:box-member-recommend.review")}: {data?.review_count ?? 0}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="introduce">{data?.self_description ?? "情報なし"}</div>
+            <div className="introduce">{data?.self_description ?? "情報なし"}</div>
 
-          <div className="tags">
-            <ul>
-              {data?.tags?.map((tag, index) => (
-                <li key={index}>{tag}</li>
-              ))}
-            </ul>
-          </div>
+            <div className="tags">
+              <ul>
+                {data?.tags?.map((tag, index) => (
+                  <li key={index}>{tag}</li>
+                ))}
+              </ul>
+            </div>
 
-          <div className="label-description">
-            <img alt="" src="/assets/images/home_page/ic_chat.svg" />
-            {t("home:box-member-recommend.label-description")}
-          </div>
+            <div className="label-description">
+              <img alt="" src="/assets/images/home_page/ic_chat.svg" />
+              {t("home:box-member-recommend.label-description")}
+            </div>
 
-          <div className="description">{data?.discussion_topic ?? "情報なし"}</div>
-        </Box>
+            <div className="description">{data?.discussion_topic ?? "情報なし"}</div>
+          </Box>
+        </Link>
         <div className="div-review" onClick={handleClickFavoriteButton}>
           <img
             alt="ic-like"

@@ -160,7 +160,7 @@ const HomeIndexComponents = () => {
     }
   };
 
-  const handleSendMatchingRequest = async (matchingRequest) => {
+  const handleSendMatchingRequest = async (matchingRequest: any) => {
     const res = await sendMatchingRequest(userRequestMatching?.id, matchingRequest);
     setOpenModal(false);
     handleRefetchData();

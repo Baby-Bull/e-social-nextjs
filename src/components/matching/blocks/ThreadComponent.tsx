@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import moment from "moment";
 import "moment/locale/ja";
 import { useDispatch, useSelector } from "react-redux";
+import Link from "next/link";
 
 import theme from "src/theme";
 import styles from "src/components/profile/profile.module.scss";
@@ -59,6 +60,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
   const isOnline = "online";
+
+  console.log(data);
 
   const isShowThread = type === "unConfirm" || type === "reject";
   const isConfirmOrFavoriteOrMatched = type === "confirm" || type === "favorite" || type === "matched";
@@ -184,50 +187,61 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 justifyContent: "space-between",
               }}
             >
-              <Box
-                sx={{
-                  position: "relative",
-                  mr: type === "matched" && data?.matchRequest?.match_direction === "sent" && "18px",
-                }}
+              <Link
+                href={type === "favorite" || type === "matched" ? `/profile/${data?.id}` : `/profile/${data?.user?.id}`}
               >
-                <Avatar
-                  variant="square"
-                  sx={{
-                    borderRadius: "50%",
-                    width: ["32px", isConfirmOrFavoriteOrMatched ? "54px" : "80px"],
-                    height: "100%",
+                <a
+                  style={{
+                    textDecoration: "none",
+                    cursor: "pointer",
+                    color: "black",
                   }}
-                  src={type === "favorite" || type === "matched" ? data?.profile_image : data?.user?.profile_image}
-                />
+                >
+                  <Box
+                    sx={{
+                      position: "relative",
+                      mr: type === "matched" && data?.matchRequest?.match_direction === "sent" && "18px",
+                    }}
+                  >
+                    <Avatar
+                      variant="square"
+                      sx={{
+                        borderRadius: "50%",
+                        width: ["32px", isConfirmOrFavoriteOrMatched ? "54px" : "80px"],
+                        height: "100%",
+                      }}
+                      src={type === "favorite" || type === "matched" ? data?.profile_image : data?.user?.profile_image}
+                    />
 
-                <Avatar
-                  variant="square"
-                  sx={{
-                    borderRadius: "50%",
-                    display: type !== "matched" && "none",
-                    position: "absolute",
-                    top: data?.matchRequest?.match_direction === "sent" ? "-15px" : ["30px", "42px"],
-                    left: data?.matchRequest?.match_direction === "sent" ? ["-10px", "-20px"] : ["30px", "52px"],
-                    width: ["15px", "24px"],
-                    height: ["15px", "24px"],
-                  }}
-                  src={auth?.user?.profile?.profile_image}
-                />
-
-                <Box
-                  sx={{
-                    display: type !== "matched" && "none",
-                    backgroundImage: `url("/assets/images/svg/send.svg")`,
-                    backgroundSize: "contain",
-                    backgroundRepeat: "no-repeat",
-                    position: "absolute",
-                    top: data?.matchRequest?.match_direction === "sent" ? "-5px" : ["24px", "34px"],
-                    left: data?.matchRequest?.match_direction === "sent" ? "0" : ["23px", "43px"],
-                    width: ["15px", "20px"],
-                    height: ["100%"],
-                  }}
-                />
-              </Box>
+                    <Avatar
+                      variant="square"
+                      sx={{
+                        borderRadius: "50%",
+                        display: type !== "matched" && "none",
+                        position: "absolute",
+                        top: data?.matchRequest?.match_direction === "sent" ? "-15px" : ["30px", "42px"],
+                        left: data?.matchRequest?.match_direction === "sent" ? ["-10px", "-20px"] : ["30px", "52px"],
+                        width: ["15px", "24px"],
+                        height: ["15px", "24px"],
+                      }}
+                      src={auth?.user?.profile?.profile_image}
+                    />
+                    <Box
+                      sx={{
+                        display: type !== "matched" && "none",
+                        backgroundImage: `url("/assets/images/svg/send.svg")`,
+                        backgroundSize: "contain",
+                        backgroundRepeat: "no-repeat",
+                        position: "absolute",
+                        top: data?.matchRequest?.match_direction === "sent" ? "-5px" : ["24px", "34px"],
+                        left: data?.matchRequest?.match_direction === "sent" ? "0" : ["23px", "43px"],
+                        width: ["15px", "20px"],
+                        height: ["100%"],
+                      }}
+                    />
+                  </Box>
+                </a>
+              </Link>
               {/* Title bottom Avatar tab favorite */}
               <Typography
                 sx={{
@@ -271,7 +285,21 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   alignItems: ["flex-start", "center"],
                 }}
               >
-                {(type === "favorite" || type === "matched" ? data?.username : data?.user?.username) ?? "情報なし"}
+                <Link
+                  href={
+                    type === "favorite" || type === "matched" ? `/profile/${data?.id}` : `/profile/${data?.user?.id}`
+                  }
+                >
+                  <a
+                    style={{
+                      textDecoration: "none",
+                      cursor: "pointer",
+                      color: "black",
+                    }}
+                  >
+                    {(type === "favorite" || type === "matched" ? data?.username : data?.user?.username) ?? "情報なし"}
+                  </a>
+                </Link>
                 <Typography
                   sx={{
                     pl: { sm: "7px" },

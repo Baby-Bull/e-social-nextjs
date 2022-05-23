@@ -102,7 +102,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
     if (handleValidateForm()) {
       await handleSendMatchingRequest(matchingRequest);
       setMatchingRequest({
-        desired_match_date: null,
+        desired_match_date: new Date()?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }),
         purpose: "",
         message: null,
       });
@@ -112,7 +112,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
 
   const handleClose = () => {
     setMatchingRequest({
-      desired_match_date: null,
+      desired_match_date: new Date()?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }),
       purpose: "",
       message: null,
     });

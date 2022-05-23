@@ -258,7 +258,7 @@ const ProfileSkillComponent = () => {
   const [address, setAddress] = useState(PROFILE_JAPAN_PROVINCE_OPTIONS[0].value);
   const [inputTags, setInputTags] = useState([]);
   const [isSkillProfile, setIsSkillProfile] = useState(false);
-  const [profileImage, setProfileImage] = useState(null);
+  const [profileImage, setProfileImage] = useState(auth?.profile_image);
   const [upstreamProcess, setUpstreamProcess] = useState(null);
   const [otherLanguageLevel, setOtherLanguageLevel] = useState(null);
   const [skillLanguageData, setSkillLanguage] = useState([
@@ -550,8 +550,16 @@ const ProfileSkillComponent = () => {
 
   const onKeyPress = (e) => {
     if (e.key === "Enter" && e.target.value) {
-      setInputTags([...inputTags, e.target.value]);
-      (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
+      if (e.target.value?.length > 20) {
+        // isValidForm = false;
+        errorMessages.tags = VALIDATE_FORM_UPDATE_PROFILE.tags.max_size;
+        setErrorValidates(errorMessages);
+      } else {
+        errorMessages.tags = null;
+        setErrorValidates(errorMessages);
+        setInputTags([...inputTags, e.target.value]);
+        (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
+      }
     }
   };
 
@@ -986,6 +994,7 @@ const ProfileSkillComponent = () => {
         errorMessages.address = VALIDATE_FORM_UPDATE_PROFILE.address.select;
       }
 
+      // validate tag
       if (inputTags?.length < 2) {
         isValidForm = false;
         errorMessages.tags = VALIDATE_FORM_UPDATE_PROFILE.tags.min_tag;
@@ -1100,7 +1109,7 @@ const ProfileSkillComponent = () => {
                 <label htmlFor="avatar">
                   <Avatar
                     alt="Remy Sharp"
-                    src={profileImage || "/assets/images/profile/avatar_2.png"}
+                    src={profileImage || "/assets/images/avatar.png"}
                     sx={{
                       width: { xs: "80px", lg: "160px" },
                       height: { xs: "80px", lg: "160px" },
