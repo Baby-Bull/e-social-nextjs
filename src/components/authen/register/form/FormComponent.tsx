@@ -199,7 +199,6 @@ const FormRegisterComponents = () => {
       userInfo.birthday = userInfo?.birthday?.dob_value || userInfo.birthday;
       setIsLoading(true);
       const resUpdate = await updateProfile(userInfo);
-      console.log(resUpdate);
       setIsLoading(false);
       if (!resUpdate && !resUpdate?.error_code) {
         handleClickOpen();

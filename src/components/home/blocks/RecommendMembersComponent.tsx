@@ -1,10 +1,12 @@
-import { Box, Grid, Link } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import moment from "moment";
 import "moment/locale/ja";
+import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import {
@@ -14,7 +16,8 @@ import {
 import styles from "src/components/home/home.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
-import { AuthContext } from "context/AuthContext";
+import { IStoreState } from "src/constants/interface";
+import actionTypes from "src/store/actionTypes";
 
 import SlickSliderRecommendComponent from "./SlickSliderRecommendComponent";
 
@@ -81,9 +84,9 @@ const handleMapMatchingStatus = (statusMatchingTemp: string) => {
 const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchingModal, indexKey }) => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { auth, dispatch } = useContext(AuthContext);
   const [liked, setLiked] = useState(data?.is_favorite);
-
+  const dispatch = useDispatch();
+  const auth = useSelector((state: IStoreState) => state.user);
   const isOnline = "online";
 
   const handleClickButtonModal = (tempValue: any) => {
@@ -94,71 +97,69 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
 
   const handleClickFavoriteButton = () => {
     handleFavoriteAnUser(liked, data?.id);
-    if (liked) dispatch({ type: "REMOVE_FAVORITE", payload: auth });
-    else dispatch({ type: "ADD_FAVORITE", payload: auth });
+    if (liked) dispatch({ type: actionTypes.REMOVE_FAVORITE, payload: auth });
+    else dispatch({ type: actionTypes.ADD_FAVORITE, payload: auth });
     setLiked(!liked);
-  };
-
-  const handleClickToProfile = () => {
-    router.push(`/profile/${data.id}`);
   };
 
   return (
     <Grid item xs={12} className={classNames(styles.boxRecommend)}>
       <Box className={styles.boxRecommendMember}>
-        <Box sx={{ cursor: "pointer" }} onClick={handleClickToProfile}>
-          <div className="status-summary">
-            <ButtonComponent
-              mode={HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.mode}
-              size="small"
-              style={{ borderRadius: "4px", width: "130px" }}
-            >
-              {HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.label}
-            </ButtonComponent>
-            <span className="label-login-status">
-              {data?.activity_status !== isOnline
-                ? replaceLabelByTranslate(
-                    t("home:box-member-recommend.last-login"),
-                    moment(data?.last_login_at).utc().fromNow(),
-                  )
-                : t("home:box-member-recommend.no-login")}
-            </span>
-          </div>
+        <Link href={`/profile/${data.id}`}>
+          <Box sx={{ cursor: "pointer" }}>
+            <div className="status-summary">
+              <ButtonComponent
+                mode={HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.mode}
+                size="small"
+                style={{ borderRadius: "4px", width: "130px" }}
+              >
+                {HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.label}
+              </ButtonComponent>
+              <span className="label-login-status">
+                {data?.activity_status !== isOnline
+                  ? replaceLabelByTranslate(
+                      t("home:box-member-recommend.last-login"),
+                      moment(data?.last_login_at).utc().fromNow(),
+                    )
+                  : t("home:box-member-recommend.no-login")}
+              </span>
+            </div>
 
-          <div className="info-summary">
-            <img
-              src={
-                data?.profile_image ??
-                "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
-              }
-              alt="img-member"
-            />
-            <div className="member-info">
-              <div className="name">{data?.username}</div>
-              <div className="career">{data?.job_position ?? "情報なし"}</div>
-              <div className="review">
-                {t("home:box-member-recommend.review")}: {data?.review_count ?? 0}
+            <div className="info-summary">
+              <img
+                src={
+                  data?.profile_image ??
+                  "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
+                }
+                alt="img-member"
+              />
+              <div className="member-info">
+                <div className="name">{data?.username}</div>
+                <div className="career">{data?.job_position ?? "情報なし"}</div>
+                <div className="review">
+                  {t("home:box-member-recommend.review")}: {data?.review_count ?? 0}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="introduce">{data?.self_description ?? "情報なし"}</div>
+            <div className="introduce">{data?.self_description ?? "情報なし"}</div>
 
-          <div className="tags">
-            <ul>
-              {data?.tags?.map((tag, index) => (
-                <li key={index}>{tag}</li>
-              ))}
-            </ul>
-          </div>
+            <div className="tags">
+              <ul>
+                {data?.tags?.map((tag, index) => (
+                  <li key={index}>{tag}</li>
+                ))}
+              </ul>
+            </div>
 
-          <div className="label-description">
-            <img alt="" src="/assets/images/home_page/ic_chat.svg" />
-            {t("home:box-member-recommend.label-description")}
-          </div>
+            <div className="label-description">
+              <img alt="" src="/assets/images/home_page/ic_chat.svg" />
+              {t("home:box-member-recommend.label-description")}
+            </div>
 
-          <div className="description">{data?.discussion_topic ?? "情報なし"}</div>
-        </Box>
+            <div className="description">{data?.discussion_topic ?? "情報なし"}</div>
+          </Box>
+        </Link>
         <div className="div-review" onClick={handleClickFavoriteButton}>
           <img
             alt="ic-like"
@@ -206,16 +207,16 @@ const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
     <Grid container className={styles.recommendList} sx={{ display: dataRecommends.length > 0 ? "block" : "none" }}>
       <div className="div-title">
         <span className="title">{title}</span>
-        <Link className="link-see-more content-pc" href="/search_user" underline="none">
-          {t("home:see-more")}
+        <Link href="/search_user">
+          <a className="link-see-more content-pc">{t("home:see-more")}</a>
         </Link>
       </div>
       <div className="content">
         <SlickSliderRecommendComponent items={dataElements} />
       </div>
       <div style={{ textAlign: "center" }}>
-        <Link className="link-see-more content-mobile" href="/search_user" underline="none">
-          {t("home:see-more")}
+        <Link href="/search_user">
+          <a className="link-see-more content-mobile">{t("home:see-more")}</a>
         </Link>
       </div>
     </Grid>

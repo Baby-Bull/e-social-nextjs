@@ -23,6 +23,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
+import { useDispatch, useSelector } from "react-redux";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import theme from "src/theme";
@@ -41,6 +42,8 @@ import {
 } from "src/constants/constants";
 // eslint-disable-next-line import/no-duplicates
 import { getUserProfile, updateProfile } from "src/services/user";
+import { IStoreState } from "src/constants/interface";
+import actionTypes from "src/store/actionTypes";
 
 const BoxContentTab = styled(Box)`
   display: flex;
@@ -236,6 +239,9 @@ const ImgStarLevel = ({ countStar }) => {
 const ProfileSkillComponent = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const dispatch = useDispatch();
+  const auth = useSelector((state: IStoreState) => state.user);
+
   const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState(null);
   const [hitokoto, setHitokoto] = useState(null);
@@ -1003,10 +1009,9 @@ const ProfileSkillComponent = () => {
     if (handleValidateFormSocial()) {
       const res = await updateProfile(profileSocialRequest);
       if (res) {
-        const auth = JSON.parse(sessionStorage.getItem("auth"));
         setTimeout(() => router.push("/my-profile"), 3000);
-        auth.user.profile.username = profileSocialRequest.username;
-        sessionStorage.setItem("auth", JSON.stringify(auth));
+        auth.username = profileSocialRequest.username;
+        dispatch({ type: actionTypes.UPDATE_PROFILE, payload: auth });
         return res;
       }
     }
@@ -1053,9 +1058,8 @@ const ProfileSkillComponent = () => {
       if (res) {
         // @ts-ignore
         document.getElementById("avatar").value = null;
-        const auth = JSON.parse(sessionStorage.getItem("auth"));
-        auth.user.profile.profile_image = res.profile_image;
-        sessionStorage.setItem("auth", JSON.stringify(auth));
+        auth.profile_image = res.profile_image;
+        dispatch({ type: actionTypes.UPDATE_PROFILE, payload: auth });
         setTimeout(() => router.push("/my-profile"), 3000);
         return res.data;
       }
