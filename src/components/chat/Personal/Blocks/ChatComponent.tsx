@@ -137,7 +137,9 @@ const BlockChatComponent = ({ hasData, setHasData }) => {
       });
     }
     return () => {
-      sk.current.close();
+      if (sk.current) {
+        sk.current.close();
+      }
     };
   }, []);
 
