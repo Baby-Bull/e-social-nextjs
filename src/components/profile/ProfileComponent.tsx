@@ -41,12 +41,12 @@ const PaginationCustom = styled(Pagination)({
 
 function usePagination(data: any, itemsPerPage: any) {
   const [currentPage, setCurrentPage] = useState(1);
-  const maxPage = Math.ceil(data.length / itemsPerPage);
+  const maxPage = data && data?.length > 0 ? Math.ceil(data.length / itemsPerPage) : 0;
 
   function currentData() {
     const begin = (currentPage - 1) * itemsPerPage;
     const end = begin + itemsPerPage;
-    return data.slice(begin, end);
+    return data?.slice(begin, end);
   }
 
   function next() {
@@ -71,6 +71,7 @@ const ProfileHaveDataComponent = () => {
   const [profileSkill, setProfileSkill] = useState<any>([]);
   const [communities, setCommunities] = useState([]);
   const [allReviews, setAllReviews] = useState([]);
+  const [countReviews, setCountReviews] = useState(0);
   const [recommended, setRecommended] = useState([]);
   const [isRefresh, setIsRefresh] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -95,15 +96,16 @@ const ProfileHaveDataComponent = () => {
 
   const fetchUserReviews = async (userIdFromUrl: string) => {
     setIsLoading(true);
-    const data = await getUserReviews(userIdFromUrl);
+    const data = await getUserReviews(userIdFromUrl, 40, "");
     setAllReviews(data?.items);
+    setCountReviews(data?.items_count ?? 0);
     setIsLoading(false);
     return data;
   };
   const fetchRecommended = async () => {
     setIsLoading(true);
     const data = await getUserRecommended(LIMIT);
-    setRecommended(data?.items?.filter((item) => item?.match_status !== "confirmed"));
+    setRecommended(data?.items?.filter((item: any) => item?.match_status !== "confirmed"));
     setIsLoading(false);
     return data;
   };
@@ -204,11 +206,11 @@ const ProfileHaveDataComponent = () => {
             fontWeight: 700,
           }}
         >
-          {t("profile:title-review")}（{allReviews?.length ?? 0}）
+          {t("profile:title-review")}（{countReviews}）
           <PaginationCustom
-            hideNextButton={page === Math.ceil(allReviews.length / 10)}
+            hideNextButton={page === Math.ceil(countReviews / 10)}
             hidePrevButton={page === 1}
-            count={allReviews && allReviews?.length > 0 ? Math.ceil(allReviews.length / 10) : 0}
+            count={Math.ceil(countReviews / 10)}
             onChange={handleChange}
           />
           {reviews.currentData()?.length > 0 ? (

@@ -86,20 +86,22 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
       <Grid container>
         <Grid item xs={12} sm={12} lg={12} xl={12}>
           <Box sx={{ display: myProfile ? { xs: "block", lg: "none" } : "none" }}>
-            <Button
-              sx={{
-                background: theme.blue,
-                width: "100%",
-                borderRadius: "12px",
-                mt: "28px",
-                color: "#fff",
-                fontSize: "16px",
-                fontWeight: 700,
-                lineHeight: "24px",
-              }}
-            >
-              {t("profile:profile-editing")}
-            </Button>
+            <Link href="/my-profile/edit">
+              <Button
+                sx={{
+                  background: theme.blue,
+                  width: "100%",
+                  borderRadius: "12px",
+                  mt: "28px",
+                  color: "#fff",
+                  fontSize: "16px",
+                  fontWeight: 700,
+                  lineHeight: "24px",
+                }}
+              >
+                {t("profile:profile-editing")}
+              </Button>
+            </Link>
           </Box>
           <Box
             sx={{

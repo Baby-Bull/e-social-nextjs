@@ -1106,30 +1106,46 @@ const ProfileSkillComponent = () => {
                   justifyContent: "center",
                 }}
               >
-                <label htmlFor="avatar">
+                <Avatar
+                  alt="Remy Sharp"
+                  src={profileImage || "/assets/images/avatar.png"}
+                  sx={{
+                    width: { xs: "80px", lg: "160px" },
+                    height: { xs: "80px", lg: "160px" },
+                    mt: { xs: "-40px", lg: "0" },
+                    position: { xs: "relative", lg: "unset" },
+                  }}
+                />
+                <label
+                  htmlFor="avatar"
+                  style={{
+                    cursor: "pointer",
+                  }}
+                >
                   <Avatar
-                    alt="Remy Sharp"
-                    src={profileImage || "/assets/images/avatar.png"}
                     sx={{
-                      width: { xs: "80px", lg: "160px" },
-                      height: { xs: "80px", lg: "160px" },
-                      mt: { xs: "-40px", lg: "0" },
-                      position: { xs: "relative", lg: "unset" },
-                      cursor: "pointer",
-                    }}
-                  />
-                  <Avatar
-                    alt="Remy Sharp"
-                    src="/assets/images/icon/ic_camera.png"
-                    sx={{
-                      width: "23.33px",
-                      height: "21px",
-                      opacity: 0.6,
+                      bgcolor: "black",
                       position: "absolute",
                       display: { xs: "block", lg: "none" },
-                      mt: "10px",
+                      bottom: 0,
+                      height: "25px",
+                      width: "25px",
+                      marginLeft: "-25px",
                     }}
-                  />
+                  >
+                    <Avatar
+                      alt="Remy Sharp"
+                      src="/assets/images/icon/ic_camera.png"
+                      sx={{
+                        width: "18px",
+                        height: "18px",
+                        position: "absolute",
+                        display: { xs: "block", lg: "none" },
+                        marginTop: "4px",
+                        marginLeft: "3px",
+                      }}
+                    />
+                  </Avatar>
                   <Avatar
                     sx={{
                       bgcolor: { xs: "transparent", lg: theme.navy },
@@ -1226,7 +1242,7 @@ const ProfileSkillComponent = () => {
                     lineHeight: "23.17",
                     width: { xs: "100%", lg: "96px" },
                     height: { xs: "48px", lg: "40px" },
-                    dispaly: "flex",
+                    display: { xs: "none", lg: "flex" },
                     alignItems: "center",
                     borderRadius: { xs: "12px", lg: "4px" },
                     "&:hover": {
@@ -1418,6 +1434,7 @@ const ProfileSkillComponent = () => {
                               <Box
                                 sx={{
                                   padding: "8px",
+                                  mt: 1,
                                   fontSize: 12,
                                   fontWeight: 500,
                                   color: "white",

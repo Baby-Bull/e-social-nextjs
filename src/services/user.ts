@@ -255,9 +255,9 @@ export const getUserRecommended = async (limit: number, cursor: string = "") => 
   }
 };
 
-export const getUserReviews = async (userId: string | string[]) => {
+export const getUserReviews = async (userId: string | string[], limit: number, cursor: string) => {
   try {
-    const res = await api.get(`/user/${userId}/reviews?limit=20`);
+    const res = await api.get(`/user/${userId}/reviews?limit=${limit}&cursor=${cursor}`);
     return res?.data;
   } catch (error) {
     return error;
