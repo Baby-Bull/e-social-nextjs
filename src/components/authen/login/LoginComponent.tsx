@@ -56,7 +56,7 @@ const LoginComponent = () => {
       const resAuth = await authWithProvider(providerAuth, accessToken);
       setIsLoading(false);
       if (resAuth?.data?.access_token) {
-        dispatch(login(resAuth?.data?.user));
+        await dispatch(login(resAuth?.data?.user));
         if (resAuth?.data?.user?.is_profile_edited) {
           router.push("/");
         } else {

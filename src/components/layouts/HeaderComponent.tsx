@@ -13,14 +13,13 @@ import { Button, Select, Avatar, Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { ToastContainer } from "react-toastify";
 import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import { logout } from "src/services/auth";
 import { menuNotificationsData } from "src/components/home/mockData/mockData";
 import styles from "src/components/home/home.module.scss";
-import theme from "src/theme";
 // eslint-disable-next-line import/order
-import { logout as logoutDispatch } from "src/store/store";
+import theme from "src/theme";
 
 import "react-toastify/dist/ReactToastify.css";
 import { IStoreState } from "src/constants/interface";
@@ -120,7 +119,6 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   const { t } = useTranslation();
   const router = useRouter();
   const fullText = router.query?.fulltext;
-  const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
 
   const typeSearchs = [
@@ -178,9 +176,8 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   };
 
   const handleLogout = async () => {
+    await logout();
     router.push("/login");
-    logout();
-    dispatch(logoutDispatch());
   };
 
   const onKeyPress = (e) => {
