@@ -175,9 +175,9 @@ const MatchingComponent = () => {
         link: "favorite",
       },
       chat: {
-        label: t("home:matching.chat"),
+        label: t("home:matching.matched"),
         data: 1,
-        icon: "/assets/images/home_page/ic_chat.svg",
+        icon: "/assets/images/svg/perm_contact_calendar.svg",
         link: "matched",
       },
       community: {

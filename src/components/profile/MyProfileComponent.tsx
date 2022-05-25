@@ -39,6 +39,32 @@ const PaginationCustom = styled(Pagination)({
   },
 });
 
+function usePagination(data: any, itemsPerPage: any) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const maxPage = data && data?.length > 0 ? Math.ceil(data.length / itemsPerPage) : 0;
+
+  function currentData() {
+    const begin = (currentPage - 1) * itemsPerPage;
+    const end = begin + itemsPerPage;
+    return data?.slice(begin, end);
+  }
+
+  function next() {
+    setCurrentPage(() => Math.min(currentPage + 1, maxPage));
+  }
+
+  function prev() {
+    setCurrentPage(() => Math.max(currentPage - 1, 1));
+  }
+
+  function jump(page: number) {
+    const pageNumber = Math.max(1, page);
+    setCurrentPage(() => Math.min(pageNumber, maxPage));
+  }
+
+  return { next, prev, jump, currentData, currentPage, maxPage };
+}
+
 const ProfileHaveDataComponent = () => {
   const { t } = useTranslation();
   const LIMIT = 20;
@@ -46,7 +72,7 @@ const ProfileHaveDataComponent = () => {
   const [profileSkill, setProfileSkill] = useState([]);
   const [communities, setCommunities] = useState([]);
   const [allReviews, setAllReviews] = useState([]);
-  const [reviews, setReviews] = useState([]);
+  const [countReviews, setCountReviews] = useState(0);
   const [recommended, setRecommended] = useState([]);
   const [isRefresh, setIsRefresh] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -71,9 +97,9 @@ const ProfileHaveDataComponent = () => {
 
   const fetchUserReviews = async () => {
     setIsLoading(true);
-    const data = await getUserReviews(userId);
+    const data = await getUserReviews(userId, 40, "");
     setAllReviews(data?.items);
-    setReviews(data?.items?.slice(0, 10));
+    setCountReviews(data?.items_count ?? 0);
     setIsLoading(false);
     return data;
   };
@@ -96,9 +122,11 @@ const ProfileHaveDataComponent = () => {
     return res;
   };
 
-  const handlePagination = (e: any) => {
-    const tempPage = e.currentTarget.textContent;
-    setReviews(allReviews.slice((tempPage - 1) * 10, tempPage * 10));
+  const [page, setPage] = useState(1);
+  const reviews = usePagination(allReviews, 10);
+  const handleChange = (e, p) => {
+    setPage(p);
+    reviews.jump(p);
   };
 
   useEffect(() => {
@@ -162,24 +190,26 @@ const ProfileHaveDataComponent = () => {
             fontWeight: 700,
           }}
         >
-          {t("profile:title-review")}（{reviews?.length ?? 0}）
+          {t("profile:title-review")}（{countReviews}）
           <PaginationCustom
-            hideNextButton
-            hidePrevButton
-            count={allReviews && allReviews?.length > 0 ? Math.floor(allReviews.length / 10) + 1 : 0}
-            onChange={handlePagination}
+            hideNextButton={page === Math.ceil(countReviews / 10)}
+            hidePrevButton={page === 1}
+            count={Math.ceil(countReviews / 10)}
+            onChange={handleChange}
           />
-          {reviews?.length > 0 ? (
-            reviews?.map((item, key) => (
-              <ReviewComponent
-                user={item?.user}
-                hideReviewer={item?.hide_reviewer}
-                rating={item?.rating}
-                comment={item?.comment}
-                createdAt={item?.created_at}
-                key={key}
-              />
-            ))
+          {reviews.currentData()?.length > 0 ? (
+            reviews
+              .currentData()
+              ?.map((item, key) => (
+                <ReviewComponent
+                  user={item?.user}
+                  hideReviewer={item?.hide_reviewer}
+                  rating={item?.rating}
+                  comment={item?.comment}
+                  createdAt={item?.created_at}
+                  key={key}
+                />
+              ))
           ) : (
             <BoxNoDataComponent content="まだレビューがありません" />
           )}
