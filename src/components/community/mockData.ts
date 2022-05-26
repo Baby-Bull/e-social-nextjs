@@ -743,6 +743,12 @@ export const infoCommunitySetting = {
   ],
 };
 
+export const textRolesCreatePost = {
+  member: "コミュニティ内の人が投稿可能",
+  admin: "管理者のみ投稿可能",
+  all: "誰でも投稿可能",
+};
+
 export const participations = [
   {
     avatar: "/assets/images/svg/account.svg",
@@ -777,3 +783,23 @@ export const participations = [
     is_reviewed: false,
   },
 ];
+
+export const dataCommunityDetail = {
+  name: "community name",
+  profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+  description:
+    "PHPの技術についてお話しできます。技術交換ができたら嬉しいです。また、新しい技術を習得したいと考えているので、他言語のエンジニアの方とお話しができたらと思っています。",
+  owner: {
+    id: "622aaf62bf651184a757675a",
+    name: "admin name",
+    profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+  },
+  admins: [],
+  tags: ["tag1", "tag2"],
+  is_public: true,
+  post_permission: "all",
+  community_role: "",
+  member_count: 10,
+  login_count: 10,
+  created_at: "2022-03-17T11:57:56.451Z",
+};
