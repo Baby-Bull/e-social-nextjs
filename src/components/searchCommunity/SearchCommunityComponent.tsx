@@ -185,7 +185,7 @@ const SearchCommunityComponent = () => {
               <Button
                 className="btn-user-search btn-create-community"
                 fullWidth
-                onClick={() => router.push("/community/setting")}
+                onClick={() => router.push("/community/create")}
               >
                 {t("community-search:btn-create-community")}
               </Button>

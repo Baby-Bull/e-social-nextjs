@@ -2,6 +2,7 @@
   "matching-members": "マッチング中のメンバー",
   "community-members": "コミュニティメンバー",
   "community-is-approved": "このコミュニティは承認制です。",
+  "if-community-is-approved": "参加申請をし、承認されると閲覧が可能になります。",
   "after-join": "参加申請をし、承認されると",
   "can-approve": "閲覧が可能になります。",
   "comment": "コメント",
@@ -154,5 +155,8 @@
       "title": "参加リクエスト 100件",
       "empty": "参加申請は届いていません。"
     }
+  },
+  "create": {
+    "title": "コミュニティ作成"
   }
 }

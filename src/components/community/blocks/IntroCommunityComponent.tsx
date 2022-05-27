@@ -2,13 +2,20 @@ import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import moment from "moment";
 
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 
-import { countMemberOnVirtualRoom, infoAdmin, status, canCreatePost } from "../mockData";
+import "moment/locale/ja";
 
-const IntroCommunityComponent = () => {
+import { countMemberOnVirtualRoom, status, canCreatePost, textRolesCreatePost } from "../mockData";
+
+interface ICommunityDataProps {
+  data?: any;
+}
+
+const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -35,7 +42,7 @@ const IntroCommunityComponent = () => {
         >
           {t("community:intro.title.detail")}
         </Typography>
-        <Typography component="span">{infoAdmin.description}</Typography>
+        <Typography component="span">{data?.description}</Typography>
 
         <Typography
           component="span"
@@ -56,9 +63,9 @@ const IntroCommunityComponent = () => {
               width: "32px",
               height: "32px",
             }}
-            src="/assets/images/svg/dog.svg"
+            src={data?.owner?.profile_image || "/assets/images/svg/dog.svg"}
           />
-          {infoAdmin.name}
+          {data?.owner?.name}
         </Box>
 
         <Typography
@@ -71,7 +78,7 @@ const IntroCommunityComponent = () => {
         >
           {t("community:intro.title.open-date")}
         </Typography>
-        <Typography component="span">{infoAdmin.open_date}</Typography>
+        <Typography component="span">{moment(data?.created_at).utc().format("LL")}</Typography>
 
         <Typography
           component="span"
@@ -83,7 +90,7 @@ const IntroCommunityComponent = () => {
         >
           {t("community:intro.title.role-create-post")}
         </Typography>
-        <Typography component="span">{infoAdmin.role}</Typography>
+        <Typography component="span">{textRolesCreatePost[data?.post_permission]}</Typography>
 
         {status === "withdraw" && (
           <ButtonComponent
