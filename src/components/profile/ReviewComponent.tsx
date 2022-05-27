@@ -106,7 +106,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, hideReviewer, rating, c
                 justifyContent: { xs: "left" },
               }}
             >
-              {user?.username ? (
+              {!hideReviewer ? (
                 <Box
                   sx={{
                     color: "#1A2944",
