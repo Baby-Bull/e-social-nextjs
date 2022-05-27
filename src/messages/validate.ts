@@ -129,3 +129,21 @@ export const VALIDATE_FORM_UPDATE_PROFILE = {
   required_name_skill: "この名前は既に存在します。",
   format: "ユーザ名は無効です。ひらがな、カタカナ、漢字、a-zのアルファベット、0-9の文字を入力してください。",
 };
+
+export const VALIDATE_FORM_COMMUNITY = {
+  name: {
+    max_length: "40文字以内で入力してください。",
+    required: "コミュニティ名を入力してください。",
+  },
+  description: {
+    max_length: "1000文字以内で入力してください。",
+    required: "コミュニティ詳細を入力してください。",
+  },
+  post_permission: {
+    required: "選択してください。",
+  },
+  profile_image: {
+    format: "png, jpg形式の画像を選択してください。",
+    max_size: "2MB以下のファイルを選択してください。",
+  },
+};

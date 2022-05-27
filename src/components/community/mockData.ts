@@ -585,6 +585,12 @@ export const tabsCommunity = [
   },
 ];
 
+export const tabsCreateCommunity = [
+  {
+    text: "基本設定",
+  },
+];
+
 export const tabsCommunitySetting = [
   {
     text: "基本設定",
@@ -727,13 +733,13 @@ export const infoCommunitySetting = {
   avatar: "/assets/images/svg/php.svg",
   admin: infoAdmin,
   rolesCreatePost: [
-    { value: 0, label: "する" },
-    { value: 1, label: "古い順" },
-    { value: 2, label: "名前順" },
+    { value: "member", label: "コミュニティ内の人が投稿可能" },
+    { value: "admin", label: "管理者のみ投稿可能" },
+    { value: "all", label: "誰でも投稿可能" },
   ],
   rolesJoin: [
-    { value: "0", label: "誰でも参加可能" },
-    { value: "1", label: "管理人の承認が必要" },
+    { value: true, label: "誰でも参加可能" },
+    { value: false, label: "管理人の承認が必要" },
   ],
   tags: [
     { key: 0, label: "デザイナー" },
