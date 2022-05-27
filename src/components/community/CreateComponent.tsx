@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Avatar,
   Box,
@@ -11,25 +11,28 @@ import {
   Radio,
   RadioGroup,
   Select,
-  SelectChangeEvent,
   Tabs,
   ThemeProvider,
   Typography,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
 import theme, { themeSelect } from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabVerticalComponent";
-import { InputCustom, TextareaAutosizeCustom } from "src/components/community/post/FormComponent";
+import { InputCustom } from "src/components/community/post/FormComponent";
+import { Field } from "src/components/community/blocks/Form/InputComponent";
+import { TextArea } from "src/components/community/blocks/Form/TextAreaComponent";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
-import ButtonExplainComponent from "src/components/community/setting/blocks/ButtonExplainComponent";
-import ParticipatedMemberComponent from "src/components/community/setting/blocks/ParticipatedMemberComponent";
-import MemberComponent from "src/components/community/setting/blocks/MemberComponent";
+import { VALIDATE_FORM_COMMUNITY } from "src/messages/validate";
+import { IStoreState } from "src/constants/interface";
+import { createCommunity } from "src/services/community";
 
-import { admins, tabsCommunitySetting, infoCommunitySetting } from "../mockData";
+import { tabsCreateCommunity, infoCommunitySetting } from "./mockData";
 
 const BoxTitle = styled(Box)({
   fontSize: 18,
@@ -72,50 +75,53 @@ const SelectCustom = styled(Select)({
     color: theme.gray,
   },
 });
-const CommunityCreateComponent = () => {
+
+const BoxTextValidate = styled(Box)({
+  color: "#FF9458",
+  lineHeight: "20px",
+  fontWeight: "400",
+  fontSize: "14px",
+});
+
+const CreateComponent = () => {
   const { t } = useTranslation();
+  const router = useRouter();
 
-  const [saveSuccess, setSaveSuccess] = React.useState(false);
-  const handleSaveSuccess = () => setSaveSuccess(true);
-
-  const [value, setValue] = React.useState(0);
+  const auth = useSelector((state: IStoreState) => state.user);
+  const [value, setValue] = useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setSaveSuccess(false);
     setValue(newValue);
   };
 
-  const [disableBtnSubmit, setDisableBtnSubmit] = React.useState(true);
-  const [showBtnRemoveAdmin, setBtnRemoveAdmin] = React.useState(false);
-  const [adminSelected, setAdmin] = React.useState("");
-  const handleChangeAdmin = (event: SelectChangeEvent) => {
-    setAdmin(event.target.value);
-    setBtnRemoveAdmin(true);
-    setDisableBtnSubmit(false);
+  const [disableBtnSubmit, setDisableBtnSubmit] = useState(true);
+
+  const [roleCreatePostSelected, setRoleCreatePost] = useState(infoCommunitySetting.rolesCreatePost[0].value);
+
+  const [roleJoinSelected, setRoleJoin] = useState(infoCommunitySetting.rolesJoin[0].value);
+  const [name, setName] = useState(null);
+  const [description, setDescription] = useState(null);
+  const [communityRequest, setCommunityRequest] = useState({
+    name,
+    description,
+    post_permission: roleCreatePostSelected,
+    is_public: roleJoinSelected,
+  });
+  const [tagData, setTagData] = useState([]);
+  const [profileImage, setProfileImage] = useState("");
+  const [srcProfileImage, setSrcProfileImage] = useState("");
+
+  const onKeyPress = (e) => {
+    if (e.key === "Enter" && e.target.value) {
+      setTagData([...tagData, e.target.value]);
+      (document.getElementById("input_tags") as HTMLInputElement).value = "";
+    }
   };
 
-  const handleRemoveAdmin = () => {
-    setAdmin("");
-    setBtnRemoveAdmin(false);
-    setDisableBtnSubmit(true);
+  const handleDeleteTag = (indexRemove) => () => {
+    setTagData(tagData.filter((_, index) => index !== indexRemove));
   };
 
-  const [roleCreatePostSelected, setRoleCreatePost] = React.useState("");
-  const handleChangeRoleCreatePost = (event: SelectChangeEvent) => {
-    setRoleCreatePost(event.target.value);
-  };
-
-  const [roleJoinSelected, setRoleJoin] = React.useState(infoCommunitySetting.rolesJoin[0].value);
-  const handleChangeRoleJoin = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // @ts-ignore
-    setRoleJoin((event.target as HTMLInputElement).value);
-  };
-
-  const [tagData, setTagData] = React.useState(infoCommunitySetting.tags);
-  const handleDeleteTag = (chipToDelete) => () => {
-    setTagData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
-  };
-
-  const [openDialog, setOpen] = React.useState(false);
+  const [openDialog, setOpen] = useState(false);
   const handleOpenDialog = () => setOpen(true);
   const handleCloseDialog = () => setOpen(false);
   const handleDialogCancel = () => {
@@ -123,35 +129,142 @@ const CommunityCreateComponent = () => {
     setOpen(false);
   };
   const handleDialogOK = () => {
-    handleCloseDialog();
-    setOpen(false);
+    router.push("/search_community");
+  };
+
+  const [errorValidates, setErrorValidates] = useState({
+    name: null,
+    description: null,
+    post_permission: null,
+    profile_image: null,
+  });
+
+  const errorMessages = {
+    name: null,
+    description: null,
+    post_permission: null,
+    profile_image: null,
+  };
+
+  const onChangeCommunityRequest = (key: string, valueInput: any) => {
+    if (key === "name") {
+      setName(valueInput);
+    }
+    if (key === "description") {
+      setDescription(valueInput);
+    }
+
+    if (key === "post_permission") {
+      setRoleCreatePost(valueInput);
+    }
+
+    if (key === "is_public") {
+      setRoleJoin(valueInput);
+    }
+
+    setDisableBtnSubmit(false);
+
+    setCommunityRequest({
+      ...communityRequest,
+      [key]: typeof valueInput === "string" ? valueInput.trim() : valueInput,
+    });
+  };
+
+  const uploadProfileImage = async (e) => {
+    const file = e.currentTarget.files[0];
+    if (file.size > 2097152) {
+      errorMessages.profile_image = VALIDATE_FORM_COMMUNITY.profile_image.max_size;
+      setErrorValidates(errorMessages);
+      return errorMessages;
+    }
+    if (
+      e.currentTarget.files[0].type === "image/jpg" ||
+      e.currentTarget.files[0].type === "image/png" ||
+      e.currentTarget.files[0].type === "image/jpeg"
+    ) {
+      setDisableBtnSubmit(false);
+      setProfileImage(file);
+      setSrcProfileImage(URL.createObjectURL(file));
+
+      // @ts-ignore
+      document.getElementById("avatar").value = null;
+      return true;
+    }
+
+    errorMessages.profile_image = VALIDATE_FORM_COMMUNITY.profile_image.format;
+    setErrorValidates(errorMessages);
+    return errorMessages;
+  };
+
+  const removeProfileImage = () => {
+    setProfileImage("");
+    setSrcProfileImage("");
+    errorMessages.profile_image = null;
+    setErrorValidates(errorMessages);
+  };
+
+  const handleValidateFormCommunity = () => {
+    let isValidForm = true;
+    if (!communityRequest?.name?.length || communityRequest?.name?.length > 40) {
+      isValidForm = false;
+      errorMessages.name = VALIDATE_FORM_COMMUNITY.name.max_length;
+    }
+
+    if (!communityRequest?.name?.length || communityRequest?.name?.length === 0) {
+      isValidForm = false;
+      errorMessages.name = VALIDATE_FORM_COMMUNITY.name.required;
+    }
+
+    if (!communityRequest?.description?.length || communityRequest?.description?.length > 1000) {
+      isValidForm = false;
+      errorMessages.description = VALIDATE_FORM_COMMUNITY.description.max_length;
+    }
+
+    if (!communityRequest?.description?.length || communityRequest?.description?.length === 0) {
+      isValidForm = false;
+      errorMessages.description = VALIDATE_FORM_COMMUNITY.description.required;
+    }
+
+    if (!communityRequest?.post_permission?.length) {
+      isValidForm = false;
+      errorMessages.post_permission = VALIDATE_FORM_COMMUNITY.post_permission.required;
+    }
+
+    setErrorValidates(errorMessages);
+    return isValidForm;
+  };
+
+  const handleSaveForm = async () => {
+    if (handleValidateFormCommunity() && !errorValidates.profile_image) {
+      const formData = new FormData();
+      // eslint-disable-next-line array-callback-return
+      Object.keys(communityRequest).filter((key) => {
+        formData.append(key, communityRequest[key]);
+      });
+
+      // eslint-disable-next-line array-callback-return
+      Object.keys(tagData).filter((key) => {
+        formData.append("tags[]", tagData[key]);
+      });
+
+      if (profileImage) {
+        formData.append("profile_image", profileImage);
+      }
+
+      const res = await createCommunity(formData);
+      if (res) {
+        setTimeout(() => router.push("/community"), 2000);
+        return res;
+      }
+    }
   };
 
   return (
     <ContentComponent>
       <Box
         sx={{
-          display: saveSuccess ? "flex" : "none",
-          justifyContent: "center",
-          alignItems: "center",
-          position: "absolute",
-          top: 0,
-          width: "100%",
-          height: ["40px", "80px"],
-          backgroundColor: theme.blue,
-          opacity: 0.8,
-          fontSize: [16, 20],
-          fontWeight: 700,
-          color: "white",
-          zIndex: 99999,
-        }}
-      >
-        {t("community:setting.form.save-success")}
-      </Box>
-
-      <Box
-        sx={{
           mt: ["20px", "38px"],
+          pt: "60px",
           ml: [0, "40px"],
           bgcolor: "white",
           display: "flex",
@@ -163,14 +276,15 @@ const CommunityCreateComponent = () => {
           <Typography
             sx={{
               pl: "26px",
-              mb: ["20px", "23px"],
+              mb: ["0", "23px"],
+              mt: ["20px", 0],
               display: ["flex", "inherit"],
               justifyContent: "center",
               fontSize: 20,
               fontWeight: 700,
             }}
           >
-            {t("community:setting.title")}
+            {t("community:create.title")}
           </Typography>
           <Tabs
             value={value}
@@ -182,12 +296,13 @@ const CommunityCreateComponent = () => {
               },
             }}
             sx={{
+              display: ["none", "block"],
               "& .MuiTabs-flexContainer": {
                 flexDirection: ["row", "column"],
               },
             }}
           >
-            {tabsCommunitySetting?.map((tab, index) => (
+            {tabsCreateCommunity?.map((tab, index) => (
               <TabCustom
                 props={{
                   xsWidth: "33.33%",
@@ -231,7 +346,7 @@ const CommunityCreateComponent = () => {
                     width: "160px",
                     height: "160px",
                   }}
-                  src={infoCommunitySetting.avatar}
+                  src={srcProfileImage || infoCommunitySetting.avatar}
                 />
               </Grid>
               <Grid
@@ -247,25 +362,43 @@ const CommunityCreateComponent = () => {
               >
                 <Typography>{t("community:setting.form.text-upload")}</Typography>
                 <Typography>{t("community:setting.form.max-upload")}</Typography>
+                <input
+                  id="avatar"
+                  name="profile_image"
+                  type="file"
+                  accept="image/png,image/jpeg,image/gif"
+                  hidden
+                  onChange={uploadProfileImage}
+                />
+                <label htmlFor="avatar">
+                  <Box
+                    sx={{
+                      mt: "12px",
+                      mb: "5px",
+                      height: "56px",
+                      width: "240px",
+                      backgroundColor: theme.gray,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      fontWeight: "700",
+                      lineHeight: "24.62",
+                      fontSize: "17px",
+                      color: "#fff",
+                      cursor: "pointer",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    {t("community:button.setting.upload")}
+                  </Box>
+                </label>
 
-                <ButtonComponent
-                  props={{
-                    square: true,
-                    dimension: "medium",
-                    bgColor: theme.gray,
-                  }}
-                  sx={{
-                    mt: "12px",
-                    mb: "20px",
-                    height: "56px",
-                  }}
-                >
-                  {t("community:button.setting.upload")}
-                </ButtonComponent>
+                <BoxTextValidate sx={{ mb: "20px" }}>{errorValidates.profile_image}</BoxTextValidate>
 
-                <TypographyButton mb={["28px", "33px"]}>{t("community:setting.form.delete-img")}</TypographyButton>
+                <TypographyButton mb={["28px", "33px"]} onClick={removeProfileImage}>
+                  {t("community:setting.form.delete-img")}
+                </TypographyButton>
               </Grid>
-
               <GridTitle item xs={12} sm={3}>
                 <BoxTitle>{t("community:setting.form.name")}</BoxTitle>
               </GridTitle>
@@ -277,10 +410,11 @@ const CommunityCreateComponent = () => {
                   mb: ["36px", "30px"],
                 }}
               >
-                <InputCustom
-                  sx={{ ml: 1, flex: 1 }}
+                <Field
+                  onChangeInput={onChangeCommunityRequest}
+                  id="name"
                   placeholder={t("community:setting.form.placeholder.name")}
-                  inputProps={{ "aria-label": t("community:setting.form.placeholder.name") }}
+                  error={errorValidates.name}
                 />
               </Grid>
 
@@ -294,25 +428,20 @@ const CommunityCreateComponent = () => {
                     borderRadius: "6px",
                     marginBottom: "4px",
                     "& div": {
-                      backgroundColor: theme.whiteBlue,
                       height: "100%",
-                      border: "2px solid transparent",
                       outline: "none",
                       borderRadius: "6px",
-                      pb: "8px",
-                      pr: { sm: "20%" },
                     },
                     "& div:focus-visible": {
                       border: `2px solid ${theme.blue}`,
                     },
                   }}
                 >
-                  <TextareaAutosizeCustom
-                    aria-label="write-comment"
+                  <TextArea
                     placeholder={t("community:place-holder")}
-                    sx={{
-                      minHeight: ["240px", "80px"],
-                    }}
+                    onChangeInput={onChangeCommunityRequest}
+                    id="description"
+                    error={errorValidates.description}
                   />
                 </Box>
               </GridContent>
@@ -334,7 +463,7 @@ const CommunityCreateComponent = () => {
                       width: "32px",
                       height: "32px",
                     }}
-                    src={infoCommunitySetting.admin.avatar}
+                    src={auth?.profile_image}
                   />
 
                   <Box
@@ -343,124 +472,33 @@ const CommunityCreateComponent = () => {
                       ml: "8px",
                     }}
                   >
-                    {infoCommunitySetting.admin.name}
+                    {auth?.username}
                   </Box>
                 </Box>
-              </GridContent>
-
-              <GridTitle item xs={12} sm={3}>
-                <BoxTitle
-                  sx={{
-                    display: "flex",
-                  }}
-                >
-                  <Box mr="6px">{t("community:setting.form.administrator")}</Box>
-                  <ButtonExplainComponent />
-                </BoxTitle>
-              </GridTitle>
-              <GridContent item xs={12} sm={9}>
-                <ThemeProvider theme={themeSelect}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    <SelectCustom
-                      value={adminSelected}
-                      onChange={handleChangeAdmin}
-                      displayEmpty
-                      inputProps={{ "aria-label": "Role create post" }}
-                    >
-                      <MenuItem disabled value="">
-                        <span>{t("community:setting.form.placeholder.administrator")}</span>
-                      </MenuItem>
-                      {admins &&
-                        admins.map((option, index) => (
-                          <MenuItem key={index.toString()} value={option.value}>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                              }}
-                            >
-                              <Avatar
-                                variant="square"
-                                sx={{
-                                  mb: 0,
-                                  width: "32px",
-                                  height: "32px",
-                                }}
-                                src={option.avatar}
-                              />
-
-                              <Box
-                                sx={{
-                                  ml: "8px",
-                                  color: theme.navy,
-                                  fontSize: 14,
-                                }}
-                              >
-                                {option.label}
-                              </Box>
-                            </Box>
-                          </MenuItem>
-                        ))}
-                    </SelectCustom>
-
-                    <ButtonComponent
-                      props={{
-                        bgColor: theme.lightGray,
-                        color: theme.navy,
-                        square: true,
-                      }}
-                      sx={{
-                        display: !showBtnRemoveAdmin && "none",
-                        ml: "20px",
-                        width: "54px",
-                        height: "32px",
-                        fontWeight: 400,
-                        fontSize: 14,
-                      }}
-                      onClick={handleRemoveAdmin}
-                    >
-                      {t("community:setting.form.remove")}
-                    </ButtonComponent>
-                  </Box>
-                </ThemeProvider>
-
-                <TypographyButton
-                  sx={{
-                    mt: "20px",
-                    fontSize: 14,
-                  }}
-                >
-                  {t("community:setting.form.add")}
-                </TypographyButton>
               </GridContent>
 
               <GridTitle item xs={12} sm={3}>
                 <BoxTitle>{t("community:setting.form.role-create-post")}</BoxTitle>
               </GridTitle>
               <GridContent item xs={12} sm={9}>
-                <ThemeProvider theme={themeSelect}>
-                  <SelectCustom
-                    value={roleCreatePostSelected}
-                    onChange={handleChangeRoleCreatePost}
-                    displayEmpty
-                    inputProps={{ "aria-label": "Role join" }}
-                  >
-                    <MenuItem disabled value="">
-                      <span>{t("community:setting.form.placeholder.role-create-post")}</span>
-                    </MenuItem>
-                    {infoCommunitySetting.rolesCreatePost &&
-                      infoCommunitySetting.rolesCreatePost.map((option, index) => (
-                        <MenuItem key={index.toString()} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                  </SelectCustom>
-                </ThemeProvider>
+                <Box>
+                  <ThemeProvider theme={themeSelect}>
+                    <SelectCustom
+                      value={roleCreatePostSelected}
+                      onChange={(e) => onChangeCommunityRequest("post_permission", e.target.value)}
+                      inputProps={{ "aria-label": "Role join" }}
+                      sx={{ border: errorValidates.post_permission ? "1px solid #FF9458" : "none" }}
+                    >
+                      {infoCommunitySetting.rolesCreatePost &&
+                        infoCommunitySetting.rolesCreatePost.map((option, index) => (
+                          <MenuItem key={index.toString()} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                    </SelectCustom>
+                  </ThemeProvider>
+                </Box>
+                <BoxTextValidate>{errorValidates.post_permission}</BoxTextValidate>
               </GridContent>
 
               <GridTitle item xs={12} sm={3}>
@@ -471,7 +509,7 @@ const CommunityCreateComponent = () => {
                   aria-label="gender"
                   name="controlled-radio-buttons-group"
                   value={roleJoinSelected}
-                  onChange={handleChangeRoleJoin}
+                  onChange={(e) => onChangeCommunityRequest("is_public", e.target.value)}
                   sx={{
                     flexDirection: "row",
                     justifyContent: ["space-between", "inherit"],
@@ -531,6 +569,8 @@ const CommunityCreateComponent = () => {
                   }}
                   placeholder={t("community:setting.form.placeholder.tag")}
                   inputProps={{ "aria-label": t("community:setting.form.placeholder.tag") }}
+                  id="input_tags"
+                  onKeyPress={onKeyPress}
                 />
 
                 <InputCustom
@@ -553,17 +593,17 @@ const CommunityCreateComponent = () => {
                       boxShadow: "none",
                     }}
                   >
-                    {tagData?.map((data) => (
+                    {tagData?.map((tag, index) => (
                       <ListItem
-                        key={data.key}
+                        key={index}
                         sx={{
                           px: "3px",
                           width: "auto",
                         }}
                       >
                         <Chip
-                          label={data.label}
-                          onDelete={handleDeleteTag(data)}
+                          label={tag}
+                          onDelete={handleDeleteTag(index)}
                           deleteIcon={
                             <Avatar
                               src="/assets/images/svg/delete.svg"
@@ -616,7 +656,7 @@ const CommunityCreateComponent = () => {
                     cursor: disableBtnSubmit && "not-allowed",
                   },
                 }}
-                onClick={!disableBtnSubmit ? handleSaveSuccess : null}
+                onClick={!disableBtnSubmit ? handleSaveForm : null}
               >
                 {t("community:button.setting.save")}
               </ButtonComponent>
@@ -631,13 +671,6 @@ const CommunityCreateComponent = () => {
               </TypographyButton>
             </Box>
           </Box>
-        </TabPanel>
-
-        <TabPanel value={value} index={1}>
-          <MemberComponent dataChild={tabsCommunitySetting[1]?.children} />
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <ParticipatedMemberComponent />
         </TabPanel>
       </Box>
 
@@ -654,4 +687,4 @@ const CommunityCreateComponent = () => {
     </ContentComponent>
   );
 };
-export default CommunityCreateComponent;
+export default CreateComponent;

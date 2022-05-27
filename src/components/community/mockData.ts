@@ -585,6 +585,12 @@ export const tabsCommunity = [
   },
 ];
 
+export const tabsCreateCommunity = [
+  {
+    text: "基本設定",
+  },
+];
+
 export const tabsCommunitySetting = [
   {
     text: "基本設定",
@@ -727,13 +733,13 @@ export const infoCommunitySetting = {
   avatar: "/assets/images/svg/php.svg",
   admin: infoAdmin,
   rolesCreatePost: [
-    { value: 0, label: "する" },
-    { value: 1, label: "古い順" },
-    { value: 2, label: "名前順" },
+    { value: "member", label: "コミュニティ内の人が投稿可能" },
+    { value: "admin", label: "管理者のみ投稿可能" },
+    { value: "all", label: "誰でも投稿可能" },
   ],
   rolesJoin: [
-    { value: "0", label: "誰でも参加可能" },
-    { value: "1", label: "管理人の承認が必要" },
+    { value: true, label: "誰でも参加可能" },
+    { value: false, label: "管理人の承認が必要" },
   ],
   tags: [
     { key: 0, label: "デザイナー" },
@@ -741,6 +747,12 @@ export const infoCommunitySetting = {
     { key: 2, label: "デザイナー" },
     { key: 3, label: "エンジニア" },
   ],
+};
+
+export const textRolesCreatePost = {
+  member: "コミュニティ内の人が投稿可能",
+  admin: "管理者のみ投稿可能",
+  all: "誰でも投稿可能",
 };
 
 export const participations = [
@@ -777,3 +789,23 @@ export const participations = [
     is_reviewed: false,
   },
 ];
+
+export const dataCommunityDetail = {
+  name: "community name",
+  profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+  description:
+    "PHPの技術についてお話しできます。技術交換ができたら嬉しいです。また、新しい技術を習得したいと考えているので、他言語のエンジニアの方とお話しができたらと思っています。",
+  owner: {
+    id: "622aaf62bf651184a757675a",
+    name: "admin name",
+    profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+  },
+  admins: [],
+  tags: ["tag1", "tag2"],
+  is_public: true,
+  post_permission: "all",
+  community_role: "",
+  member_count: 10,
+  login_count: 10,
+  created_at: "2022-03-17T11:57:56.451Z",
+};

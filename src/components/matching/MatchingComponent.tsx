@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import TabComponent from "src/components/matching/TabComponent";
@@ -13,10 +14,11 @@ const LIMIT = 20;
 
 const MatchingComponent = () => {
   const typeQuery = useRouter()?.query?.type as string;
+  const { t } = useTranslation();
 
   const [tabs, setTabs] = useState([
     {
-      text: "マッチングリクエスト",
+      text: t("home:matching.request"),
       icon: <img src="/assets/images/svg/person.svg" alt="person" />,
       type: TYPE.RECEIVED,
       tabValue: TAB_VALUE_BY_KEY.received,
@@ -43,7 +45,7 @@ const MatchingComponent = () => {
       ],
     },
     {
-      text: "申請中のマッチング",
+      text: t("home:matching.application"),
       icon: <img src="/assets/images/svg/pan_tool.svg" alt="pan_tool" />,
       type: TYPE.SENT,
       tabValue: TAB_VALUE_BY_KEY.sent,
@@ -70,7 +72,7 @@ const MatchingComponent = () => {
       ],
     },
     {
-      text: "話したい人リスト",
+      text: t("home:matching.people"),
       icon: <img src="/assets/images/svg/favorite.svg" alt="favorite" />,
       data: [],
       type: TYPE.FAVORITE,
@@ -78,7 +80,7 @@ const MatchingComponent = () => {
       isFetched: false,
     },
     {
-      text: "マッチング済",
+      text: t("home:matching.matched"),
       icon: <img src="/assets/images/svg/perm_contact_calendar.svg" alt="perm_contact_calendar" />,
       type: TYPE.MATCHED,
       tabValue: TAB_VALUE_BY_KEY.matched,
@@ -138,7 +140,7 @@ const MatchingComponent = () => {
       ],
     },
     {
-      text: "参加中のコミュニティ",
+      text: t("home:matching.community"),
       icon: <img src="/assets/images/svg/stars.svg" alt="stars" />,
       type: TYPE.COMMUNITY,
       tabValue: TAB_VALUE_BY_KEY.community,

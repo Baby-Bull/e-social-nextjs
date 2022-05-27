@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Backdrop, Box, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import React, { useEffect, useRef, useState } from "react";
@@ -45,7 +46,7 @@ const HomeIndexComponents = () => {
       data: [],
     },
   ]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const {
     data: userProvinceData,
@@ -109,7 +110,7 @@ const HomeIndexComponents = () => {
   );
 
   useEffect(() => {
-    setIsLoading(isLoading1 || isLoading2 || isLoading3 || isLoading4);
+    setIsLoading(false);
   }, [isLoading1, isLoading2, isLoading3, isLoading4]);
 
   useEffect(() => {
@@ -159,7 +160,7 @@ const HomeIndexComponents = () => {
     }
   };
 
-  const handleSendMatchingRequest = async (matchingRequest) => {
+  const handleSendMatchingRequest = async (matchingRequest: any) => {
     const res = await sendMatchingRequest(userRequestMatching?.id, matchingRequest);
     setOpenModal(false);
     handleRefetchData();

@@ -23,6 +23,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
+import { useDispatch, useSelector } from "react-redux";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import theme from "src/theme";
@@ -41,6 +42,8 @@ import {
 } from "src/constants/constants";
 // eslint-disable-next-line import/no-duplicates
 import { getUserProfile, updateProfile } from "src/services/user";
+import { IStoreState } from "src/constants/interface";
+import actionTypes from "src/store/actionTypes";
 
 const BoxContentTab = styled(Box)`
   display: flex;
@@ -236,6 +239,9 @@ const ImgStarLevel = ({ countStar }) => {
 const ProfileSkillComponent = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const dispatch = useDispatch();
+  const auth = useSelector((state: IStoreState) => state.user);
+
   const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState(null);
   const [hitokoto, setHitokoto] = useState(null);
@@ -252,7 +258,7 @@ const ProfileSkillComponent = () => {
   const [address, setAddress] = useState(PROFILE_JAPAN_PROVINCE_OPTIONS[0].value);
   const [inputTags, setInputTags] = useState([]);
   const [isSkillProfile, setIsSkillProfile] = useState(false);
-  const [profileImage, setProfileImage] = useState(null);
+  const [profileImage, setProfileImage] = useState(auth?.profile_image);
   const [upstreamProcess, setUpstreamProcess] = useState(null);
   const [otherLanguageLevel, setOtherLanguageLevel] = useState(null);
   const [skillLanguageData, setSkillLanguage] = useState([
@@ -544,8 +550,16 @@ const ProfileSkillComponent = () => {
 
   const onKeyPress = (e) => {
     if (e.key === "Enter" && e.target.value) {
-      setInputTags([...inputTags, e.target.value]);
-      (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
+      if (e.target.value?.length > 20) {
+        // isValidForm = false;
+        errorMessages.tags = VALIDATE_FORM_UPDATE_PROFILE.tags.max_size;
+        setErrorValidates(errorMessages);
+      } else {
+        errorMessages.tags = null;
+        setErrorValidates(errorMessages);
+        setInputTags([...inputTags, e.target.value]);
+        (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
+      }
     }
   };
 
@@ -980,6 +994,7 @@ const ProfileSkillComponent = () => {
         errorMessages.address = VALIDATE_FORM_UPDATE_PROFILE.address.select;
       }
 
+      // validate tag
       if (inputTags?.length < 2) {
         isValidForm = false;
         errorMessages.tags = VALIDATE_FORM_UPDATE_PROFILE.tags.min_tag;
@@ -994,10 +1009,9 @@ const ProfileSkillComponent = () => {
     if (handleValidateFormSocial()) {
       const res = await updateProfile(profileSocialRequest);
       if (res) {
-        const auth = JSON.parse(sessionStorage.getItem("auth"));
         setTimeout(() => router.push("/my-profile"), 3000);
-        auth.user.profile.username = profileSocialRequest.username;
-        sessionStorage.setItem("auth", JSON.stringify(auth));
+        auth.username = profileSocialRequest.username;
+        dispatch({ type: actionTypes.UPDATE_PROFILE, payload: auth });
         return res;
       }
     }
@@ -1044,9 +1058,8 @@ const ProfileSkillComponent = () => {
       if (res) {
         // @ts-ignore
         document.getElementById("avatar").value = null;
-        const auth = JSON.parse(sessionStorage.getItem("auth"));
-        auth.user.profile.profile_image = res.profile_image;
-        sessionStorage.setItem("auth", JSON.stringify(auth));
+        auth.profile_image = res.profile_image;
+        dispatch({ type: actionTypes.UPDATE_PROFILE, payload: auth });
         setTimeout(() => router.push("/my-profile"), 3000);
         return res.data;
       }
@@ -1093,30 +1106,46 @@ const ProfileSkillComponent = () => {
                   justifyContent: "center",
                 }}
               >
-                <label htmlFor="avatar">
+                <Avatar
+                  alt="Remy Sharp"
+                  src={profileImage || "/assets/images/avatar.png"}
+                  sx={{
+                    width: { xs: "80px", lg: "160px" },
+                    height: { xs: "80px", lg: "160px" },
+                    mt: { xs: "-40px", lg: "0" },
+                    position: { xs: "relative", lg: "unset" },
+                  }}
+                />
+                <label
+                  htmlFor="avatar"
+                  style={{
+                    cursor: "pointer",
+                  }}
+                >
                   <Avatar
-                    alt="Remy Sharp"
-                    src={profileImage || "/assets/images/profile/avatar_2.png"}
                     sx={{
-                      width: { xs: "80px", lg: "160px" },
-                      height: { xs: "80px", lg: "160px" },
-                      mt: { xs: "-40px", lg: "0" },
-                      position: { xs: "relative", lg: "unset" },
-                      cursor: "pointer",
-                    }}
-                  />
-                  <Avatar
-                    alt="Remy Sharp"
-                    src="/assets/images/icon/ic_camera.png"
-                    sx={{
-                      width: "23.33px",
-                      height: "21px",
-                      opacity: 0.6,
+                      bgcolor: "black",
                       position: "absolute",
                       display: { xs: "block", lg: "none" },
-                      mt: "10px",
+                      bottom: 0,
+                      height: "25px",
+                      width: "25px",
+                      marginLeft: "-25px",
                     }}
-                  />
+                  >
+                    <Avatar
+                      alt="Remy Sharp"
+                      src="/assets/images/icon/ic_camera.png"
+                      sx={{
+                        width: "18px",
+                        height: "18px",
+                        position: "absolute",
+                        display: { xs: "block", lg: "none" },
+                        marginTop: "4px",
+                        marginLeft: "3px",
+                      }}
+                    />
+                  </Avatar>
                   <Avatar
                     sx={{
                       bgcolor: { xs: "transparent", lg: theme.navy },
@@ -1213,7 +1242,7 @@ const ProfileSkillComponent = () => {
                     lineHeight: "23.17",
                     width: { xs: "100%", lg: "96px" },
                     height: { xs: "48px", lg: "40px" },
-                    dispaly: "flex",
+                    display: { xs: "none", lg: "flex" },
                     alignItems: "center",
                     borderRadius: { xs: "12px", lg: "4px" },
                     "&:hover": {
@@ -1405,6 +1434,7 @@ const ProfileSkillComponent = () => {
                               <Box
                                 sx={{
                                   padding: "8px",
+                                  mt: 1,
                                   fontSize: 12,
                                   fontWeight: 500,
                                   color: "white",

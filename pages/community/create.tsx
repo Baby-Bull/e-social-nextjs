@@ -3,10 +3,10 @@ import type { NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { parseCookies } from "nookies";
 
-import CharacterComponent from "src/components/character/CharacterComponent";
+import CreateComponent from "src/components/community/CreateComponent";
 import { USER_TOKEN } from "src/helpers/storage";
 
-const Character: NextPage = () => <CharacterComponent />;
+const Community: NextPage = () => <CreateComponent />;
 
 export const getServerSideProps = async (ctx) => {
   const { locale } = ctx;
@@ -22,9 +22,9 @@ export const getServerSideProps = async (ctx) => {
 
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["common", "character"])),
+      ...(await serverSideTranslations(locale, ["common", "community"])),
     },
   };
 };
 
-export default Character;
+export default Community;

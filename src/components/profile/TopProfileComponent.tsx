@@ -1,22 +1,22 @@
 import { Box, Button, Avatar, Grid } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 import moment from "moment";
 import { toast } from "react-toastify";
 import copy from "copy-to-clipboard";
 import { FacebookShareButton, TwitterShareButton } from "react-share";
+import { useDispatch, useSelector } from "react-redux";
+import Link from "next/link";
 
 import { COPY_SUCCESSFUL } from "src/messages/notification";
 import PopupChartProfileComponent from "src/components/profile/PopupChartProfileComponent";
 import theme from "src/theme";
 import styles from "src/components/profile/profile.module.scss";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
-
-import { AuthContext } from "../../../context/AuthContext";
-
 import "moment/locale/ja";
+import actionTypes from "src/store/actionTypes";
+import { IStoreState } from "src/constants/interface";
 
 interface TopProfileComponentProps {
   user: any;
@@ -41,10 +41,10 @@ const BoxInfoProfile = styled(Box)`
 
 const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProfile }) => {
   const { t } = useTranslation();
-  const router = useRouter();
   const [liked, setLiked] = useState(user?.is_favorite);
+  const dispatch = useDispatch();
+  const auth = useSelector((state: IStoreState) => state.user);
   const [hint, setHint] = useState(false);
-  const { auth, dispatch } = useContext(AuthContext);
   const [showPopupAnalysis, setShowPopupAnalysis] = useState(false);
   const urlProfile = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${auth?.user?.id}`;
 
@@ -62,8 +62,8 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
 
   const handleClickFavoriteButton = () => {
     handleFavoriteAnUser(liked, user?.id);
-    if (liked) dispatch({ type: "REMOVE_FAVORITE", payload: auth });
-    else dispatch({ type: "ADD_FAVORITE", payload: auth });
+    if (liked) dispatch({ type: actionTypes.REMOVE_FAVORITE, payload: auth });
+    else dispatch({ type: actionTypes.ADD_FAVORITE, payload: auth });
     setLiked(!liked);
   };
 
@@ -86,20 +86,22 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
       <Grid container>
         <Grid item xs={12} sm={12} lg={12} xl={12}>
           <Box sx={{ display: myProfile ? { xs: "block", lg: "none" } : "none" }}>
-            <Button
-              sx={{
-                background: theme.blue,
-                width: "100%",
-                borderRadius: "12px",
-                mt: "28px",
-                color: "#fff",
-                fontSize: "16px",
-                fontWeight: 700,
-                lineHeight: "24px",
-              }}
-            >
-              {t("profile:profile-editing")}
-            </Button>
+            <Link href="/my-profile/edit">
+              <Button
+                sx={{
+                  background: theme.blue,
+                  width: "100%",
+                  borderRadius: "12px",
+                  mt: "28px",
+                  color: "#fff",
+                  fontSize: "16px",
+                  fontWeight: 700,
+                  lineHeight: "24px",
+                }}
+              >
+                {t("profile:profile-editing")}
+              </Button>
+            </Link>
           </Box>
           <Box
             sx={{
@@ -356,25 +358,28 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                         display: myProfile ? { xs: "none", lg: "block" } : "none",
                       }}
                     >
-                      <Button
-                        onClick={() => router.push("/my-profile/edit")}
-                        sx={{
-                          background: theme.blue,
-                          color: "#fff",
-                          fontWeight: 700,
-                          lineHeight: "23.17",
-                          width: "96px",
-                          height: "40px",
-                          dispaly: "flex",
-                          alignItems: "center",
-                          "&:hover": {
-                            background: theme.blue,
-                          },
-                        }}
-                      >
-                        <img src="/assets/images/icon/ic_edit.png" alt="ic_edit" />
-                        {t("profile:edit")}
-                      </Button>
+                      <Link href="/my-profile/edit">
+                        <a style={{ textDecoration: "none" }}>
+                          <Button
+                            sx={{
+                              background: theme.blue,
+                              color: "#fff",
+                              fontWeight: 700,
+                              lineHeight: "23.17",
+                              width: "96px",
+                              height: "40px",
+                              dispaly: "flex",
+                              alignItems: "center",
+                              "&:hover": {
+                                background: theme.blue,
+                              },
+                            }}
+                          >
+                            <img src="/assets/images/icon/ic_edit.png" alt="ic_edit" />
+                            {t("profile:edit")}
+                          </Button>
+                        </a>
+                      </Link>
                     </Box>
                   </Box>
                   <Box

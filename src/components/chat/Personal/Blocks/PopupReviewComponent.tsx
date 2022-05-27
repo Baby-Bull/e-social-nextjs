@@ -227,7 +227,10 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
             <Typography sx={{ fontSize: "20px", fontWeight: "700", lineHeight: "40px", color: theme.navy }}>
               {t("chat:popup.text-share-review")}
             </Typography>
-            <TwitterShareButton url="https://twitter.com/">
+            <TwitterShareButton
+              title={`${user?.username} さんとお話ししてみました！ \n 気になる”あの人”と話してみよう！ \n`}
+              url={`${process?.env?.NEXT_PUBLIC_URL_PROFILE}/profile/${user?.id} リンク' #goodhub」`}
+            >
               <Button
                 sx={{
                   background: "#55ACEE",
