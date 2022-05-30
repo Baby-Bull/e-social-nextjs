@@ -28,6 +28,7 @@ import useViewport from "src/helpers/useViewport";
 import { UserSearch } from "src/services/user";
 
 import BoxItemUserComponent from "./BoxItemUserComponent";
+import PopupSearchUser from "./block/PopupSearchUser";
 
 const SelectCustom = styled(Select)({
   borderRadius: 6,
@@ -87,6 +88,7 @@ const SearchUserComponent = () => {
     statusLookingForFriend: false,
     statusNeedConsult: false,
   });
+  const [triggerClear, setTriggerClear] = useState(false);
   const fullText = router.query?.fulltext;
 
   const fetchData = async (typeSort: string = "") => {
@@ -114,21 +116,24 @@ const SearchUserComponent = () => {
     setInputTags(inputTags.filter((_, index) => index !== indexRemove));
   };
 
-  const onKeyPress = (e) => {
+  const onKeyPress = (e: any) => {
     if (e.key === "Enter" && e.target.value) {
+      setTriggerClear(false);
       setInputTags([...inputTags, e.target.value]);
       (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
     }
   };
 
   const handleChangeInputSearch = (e, key) => {
+    setTriggerClear(false);
     setFormSearch({
       ...formSearch,
       [key]: e.target.value,
     });
   };
 
-  const clearFormSearch = () => {
+  const clearFormSearch = async () => {
+    setTriggerClear(true);
     setFormSearch({
       job: jobs[0]?.value,
       employeeStatus: employeeStatus[0]?.value,
@@ -138,17 +143,42 @@ const SearchUserComponent = () => {
       statusLookingForFriend: false,
       statusNeedConsult: false,
     });
-
     setInputTags([]);
+    setIsLoading(true);
+    const res = await UserSearch(
+      {
+        job: jobs[0]?.value,
+        employeeStatus: employeeStatus[0]?.value,
+        lastLogin: lastLogins[0]?.value,
+        review: reviews[0]?.value,
+        statusCanTalk: false,
+        statusLookingForFriend: false,
+        statusNeedConsult: false,
+      },
+      [],
+      fullText,
+      "",
+      LIMIT,
+      "",
+    );
+    setResultSearch(res?.items);
+    setShowMore({ cursor: res?.cursor, hasMore: res?.hasMore });
+    setIsLoading(false);
   };
 
   const submitSearch = async () => {
-    fetchData();
+    setIsLoading(true);
+    const res = await UserSearch(formSearch, inputTags, fullText, "", LIMIT, "");
+    setResultSearch(res?.items);
+    setShowMore({ cursor: res?.cursor, hasMore: res?.hasMore });
+    setIsLoading(false);
   };
 
   const callbackHandleIsRefresh = (status: any) => {
     setIsRefresh(status);
   };
+
+  const [showPopupSearchUser, setShowPopupSearchUser] = useState(false);
 
   return (
     <ContentComponent>
@@ -157,173 +187,213 @@ const SearchUserComponent = () => {
           <CircularProgress color="inherit" />
         </Backdrop>
       )}
-      <Grid className={styles.boxContainer}>
-        <Box className={styles.boxSearchLeft}>
-          <div className={styles.blockInputTag}>
-            <Paper
-              className="paper-search-tag"
-              sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: { sm: "100%", md: 240 } }}
-            >
-              <IconButton sx={{ p: "10px" }} aria-label="menu">
-                <img src="/assets/images/svg/ic_user_search.svg" alt="ic_search" width="18px" height="22px" />
-              </IconButton>
-              <InputBase
-                className="input-search-tag"
-                id="input_search_tag"
-                onKeyPress={onKeyPress}
-                sx={{ flex: 1 }}
-                placeholder={t("user-search:input-tag-placeholder")}
-              />
-            </Paper>
-            <div className="tags">
-              <ul>
-                {inputTags?.map((tag, index) => (
-                  <li key={index}>
-                    {tag}{" "}
-                    <IconButton className="button-remove-icon" onClick={() => removeSearchTag(index)}>
-                      <img src="/assets/images/svg/delete-x-white.svg" alt="ic_delete" width="8px" height="8px" />
-                    </IconButton>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          {/* Career */}
-          <SelectCustom value={formSearch?.job} onChange={(e) => handleChangeInputSearch(e, "job")}>
-            {jobs.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </SelectCustom>
-
-          {/* Status */}
-          <SelectCustom
-            value={formSearch?.employeeStatus}
-            onChange={(e) => handleChangeInputSearch(e, "employeeStatus")}
-          >
-            {employeeStatus.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </SelectCustom>
-
-          {/* Last login */}
-          <SelectCustom value={formSearch?.lastLogin} onChange={(e) => handleChangeInputSearch(e, "lastLogin")}>
-            {lastLogins.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </SelectCustom>
-
-          {/* Review */}
-          <SelectCustom value={formSearch?.review} onChange={(e) => handleChangeInputSearch(e, "review")}>
-            {reviews.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </SelectCustom>
-
-          <FormControlLabelCustom
-            control={
-              <Checkbox
-                value="can-talk"
-                checked={formSearch?.statusCanTalk}
-                onChange={() => setFormSearch({ ...formSearch, statusCanTalk: !formSearch?.statusCanTalk })}
-              />
-            }
-            label={t("user-search:label-checkbox-1").toString()}
-          />
-          <FormControlLabelCustom
-            control={
-              <Checkbox
-                checked={formSearch?.statusLookingForFriend}
-                value="looking-for-friend"
-                onChange={() =>
-                  setFormSearch({ ...formSearch, statusLookingForFriend: !formSearch?.statusLookingForFriend })
-                }
-              />
-            }
-            label={t("user-search:label-checkbox-2").toString()}
-          />
-          <FormControlLabelCustom
-            control={
-              <Checkbox
-                checked={formSearch?.statusNeedConsult}
-                value="needConsult"
-                onChange={() => setFormSearch({ ...formSearch, statusNeedConsult: !formSearch?.statusNeedConsult })}
-              />
-            }
-            label={t("user-search:label-checkbox-3").toString()}
-          />
-
-          <Button className="btn-user-search btn-search" fullWidth onClick={submitSearch}>
-            {t("user-search:btn-search")}
-          </Button>
-          <Button className="btn-user-search btn-clear" fullWidth onClick={clearFormSearch}>
-            {t("user-search:btn-clear-condition")}
-          </Button>
-        </Box>
-        <Box className={styles.boxResultSearch}>
-          <Grid container className={styles.titleResultSearch}>
-            <Grid item md={6} xs={12}>
-              <Typography className="title-search">
-                {t("user-search:title")}
-                <span className="item-total-result">
-                  {isMobile && <br />} 全{resultSearch?.length ?? 0}件
-                </span>
-              </Typography>
-            </Grid>
+      <Box
+        sx={{
+          mt: { xs: "80px", lg: "0" },
+        }}
+      >
+        <Grid className={styles.boxContainer}>
+          <Box className={styles.boxSearchLeft}>
             {!isMobile && (
-              <Grid item xs={6} className="sort-by-block">
-                <Typography className="sort-by-label">{t("user-search:sort-by")}</Typography>
-                <Divider orientation="vertical" flexItem />
-                <Box
-                  onClick={() => handleSort("recommended")}
-                  className={isSort === "recommended" ? "sort-link active" : "sort-link"}
+              <React.Fragment>
+                <div className={styles.blockInputTag}>
+                  <Paper
+                    className="paper-search-tag"
+                    sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: { sm: "100%", md: 240 } }}
+                  >
+                    <IconButton sx={{ p: "10px" }} aria-label="menu">
+                      <img src="/assets/images/svg/ic_user_search.svg" alt="ic_search" width="18px" height="22px" />
+                    </IconButton>
+                    <InputBase
+                      className="input-search-tag"
+                      id="input_search_tag"
+                      onKeyPress={onKeyPress}
+                      sx={{ flex: 1 }}
+                      placeholder={t("user-search:input-tag-placeholder")}
+                    />
+                  </Paper>
+                  <div className="tags">
+                    <ul>
+                      {inputTags?.map((tag, index) => (
+                        <li key={index}>
+                          {tag}{" "}
+                          <IconButton className="button-remove-icon" onClick={() => removeSearchTag(index)}>
+                            <img src="/assets/images/svg/delete-x-white.svg" alt="ic_delete" width="8px" height="8px" />
+                          </IconButton>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Career */}
+                <SelectCustom value={formSearch?.job} onChange={(e) => handleChangeInputSearch(e, "job")}>
+                  {jobs.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </SelectCustom>
+
+                {/* Status */}
+                <SelectCustom
+                  value={formSearch?.employeeStatus}
+                  onChange={(e) => handleChangeInputSearch(e, "employeeStatus")}
                 >
-                  {t("user-search:recommend-order")}
-                </Box>
-                <Box
-                  onClick={() => handleSort("login_at")}
-                  className={isSort === "login_at" ? "sort-link active" : "sort-link"}
-                >
-                  {t("user-search:last-login-order")}
-                </Box>
-                <Divider orientation="vertical" flexItem />
-              </Grid>
+                  {employeeStatus.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </SelectCustom>
+
+                {/* Last login */}
+                <SelectCustom value={formSearch?.lastLogin} onChange={(e) => handleChangeInputSearch(e, "lastLogin")}>
+                  {lastLogins.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </SelectCustom>
+
+                {/* Review */}
+                <SelectCustom value={formSearch?.review} onChange={(e) => handleChangeInputSearch(e, "review")}>
+                  {reviews.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </SelectCustom>
+
+                <FormControlLabelCustom
+                  control={
+                    <Checkbox
+                      value="can-talk"
+                      checked={formSearch?.statusCanTalk}
+                      onChange={() => {
+                        setTriggerClear(false);
+                        setFormSearch({ ...formSearch, statusCanTalk: !formSearch?.statusCanTalk });
+                      }}
+                    />
+                  }
+                  label={t("user-search:label-checkbox-1").toString()}
+                />
+                <FormControlLabelCustom
+                  control={
+                    <Checkbox
+                      checked={formSearch?.statusLookingForFriend}
+                      value="looking-for-friend"
+                      onChange={() => {
+                        setTriggerClear(false);
+                        setFormSearch({ ...formSearch, statusLookingForFriend: !formSearch?.statusLookingForFriend });
+                      }}
+                    />
+                  }
+                  label={t("user-search:label-checkbox-2").toString()}
+                />
+                <FormControlLabelCustom
+                  control={
+                    <Checkbox
+                      checked={formSearch?.statusNeedConsult}
+                      value="needConsult"
+                      onChange={() => {
+                        setTriggerClear(false);
+                        setFormSearch({ ...formSearch, statusNeedConsult: !formSearch?.statusNeedConsult });
+                      }}
+                    />
+                  }
+                  label={t("user-search:label-checkbox-3").toString()}
+                />
+              </React.Fragment>
             )}
 
-            {isMobile && (
-              <Grid item xs={12} className="sort-by-block-sp">
-                <Link className="sort-link">{t("user-search:recommend-order")}</Link>
-                <Link className="sort-link active">{t("user-search:last-login-order")}</Link>
-              </Grid>
-            )}
-          </Grid>
-          <Grid container className={styles.resultSearch} spacing={{ md: "27px", xs: "20px" }}>
-            {resultSearch?.map((item, key) => (
-              <Grid item key={key} md={4} xs={12} sm={12}>
-                <BoxItemUserComponent
-                  data={item}
-                  isRefresh={isRefresh}
-                  callbackHandleIsRefresh={callbackHandleIsRefresh}
-                />
-              </Grid>
-            ))}
-          </Grid>
-          {showMore.hasMore ? (
-            <Box sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-              <Button onClick={handleShowMore} sx={{ color: "rgb(3, 188, 219)" }}>
-                {t("common:showMore")}
+            {isMobile ? (
+              <Button
+                sx={{
+                  mt: "0px!important",
+                }}
+                className="btn-user-search btn-search"
+                fullWidth
+                onClick={() => setShowPopupSearchUser(true)}
+              >
+                {t("user-search:btn-search-SP")}
               </Button>
-            </Box>
-          ) : null}
-        </Box>
-      </Grid>
+            ) : (
+              <Button className="btn-user-search btn-search" fullWidth onClick={submitSearch}>
+                {t("user-search:btn-search")}
+              </Button>
+            )}
+            <Button className="btn-user-search btn-clear" fullWidth onClick={clearFormSearch}>
+              {t("user-search:btn-clear-condition")}
+            </Button>
+          </Box>
+          <Box className={styles.boxResultSearch}>
+            <Grid container className={styles.titleResultSearch}>
+              <Grid item md={6} xs={12}>
+                <Typography className="title-search">
+                  {t("user-search:title")}
+                  <span className="item-total-result">
+                    {isMobile && <br />} 全{resultSearch?.length ?? 0}件
+                  </span>
+                </Typography>
+              </Grid>
+              {!isMobile && (
+                <Grid item xs={6} className="sort-by-block">
+                  <Typography className="sort-by-label">{t("user-search:sort-by")}</Typography>
+                  <Divider orientation="vertical" flexItem />
+                  <Box
+                    onClick={() => handleSort("recommended")}
+                    className={isSort === "recommended" ? "sort-link active" : "sort-link"}
+                  >
+                    {t("user-search:recommend-order")}
+                  </Box>
+                  <Box
+                    onClick={() => handleSort("login_at")}
+                    className={isSort === "login_at" ? "sort-link active" : "sort-link"}
+                  >
+                    {t("user-search:last-login-order")}
+                  </Box>
+                  <Divider orientation="vertical" flexItem />
+                </Grid>
+              )}
+
+              {isMobile && (
+                <Grid item xs={12} className="sort-by-block-sp">
+                  <Link className="sort-link">{t("user-search:recommend-order")}</Link>
+                  <Link className="sort-link active">{t("user-search:last-login-order")}</Link>
+                </Grid>
+              )}
+            </Grid>
+            <Grid container className={styles.resultSearch} spacing={{ md: "27px", xs: "20px" }}>
+              {resultSearch?.map((item, key) => (
+                <Grid item key={key} md={4} xs={12} sm={12}>
+                  <BoxItemUserComponent
+                    data={item}
+                    isRefresh={isRefresh}
+                    callbackHandleIsRefresh={callbackHandleIsRefresh}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+            {showMore.hasMore ? (
+              <Box sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+                <Button onClick={handleShowMore} sx={{ color: "rgb(3, 188, 219)" }}>
+                  {t("common:showMore")}
+                </Button>
+              </Box>
+            ) : null}
+          </Box>
+        </Grid>
+      </Box>
+      <PopupSearchUser
+        showPopup={showPopupSearchUser}
+        setShowPopup={setShowPopupSearchUser}
+        setResultSearch={setResultSearch}
+        setShowMore={setShowMore}
+        setIsLoading={setIsLoading}
+        setTriggerClear={setTriggerClear}
+        triggerClear={triggerClear}
+      />
     </ContentComponent>
   );
 };

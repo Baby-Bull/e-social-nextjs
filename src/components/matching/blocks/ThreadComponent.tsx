@@ -61,8 +61,6 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
   const auth = useSelector((state: IStoreState) => state.user);
   const isOnline = "online";
 
-  console.log(data);
-
   const isShowThread = type === "unConfirm" || type === "reject";
   const isConfirmOrFavoriteOrMatched = type === "confirm" || type === "favorite" || type === "matched";
 
@@ -122,7 +120,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
   };
   const handleFormatTime = (tempValue: string) => {
     if (tempValue === "favorite") return "";
-    if (tempValue === "matched") return moment(data?.matchRequest?.match_date).utc().fromNow() + t("thread:request");
+    if (tempValue === "matched")
+      return moment(data?.matchRequest?.match_date).utc().format("lll").toString() + t("thread:request");
     return moment(data?.created_at).utc().format("lll").toString() + t("thread:request");
   };
 
@@ -147,7 +146,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
             mb: "15px",
           }}
         >
-          {moment(data?.desired_match_date).utc().fromNow()}
+          {moment(data?.desired_match_date).utc().format("lll").toString()}
         </Typography>
 
         {/* Info user (avatar, ...) */}
@@ -201,6 +200,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                     sx={{
                       position: "relative",
                       mr: type === "matched" && data?.matchRequest?.match_direction === "sent" && "18px",
+                      width: ["32px", isConfirmOrFavoriteOrMatched ? "54px" : "80px"],
+                      height: ["32px", isConfirmOrFavoriteOrMatched ? "54px" : "80px"],
                     }}
                   >
                     <Avatar
@@ -547,7 +548,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
               >
                 <ThreadTitle>{t("thread:date-interview")}</ThreadTitle>
                 {/* <ThreadContent>{format(data?.desired_match_date)}</ThreadContent> */}
-                <ThreadContent>{moment(data?.desired_match_date).utc().format("LL")}</ThreadContent>
+                <ThreadContent>{moment(data?.desired_match_date).utc().format("lll").toString()}</ThreadContent>
               </Box>
               <Box
                 sx={{
