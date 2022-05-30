@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Box, Grid, IconButton, Paper, Typography, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import dayjs from "dayjs";
 import InfiniteScroll from "react-infinite-scroller";
 import { useQuery } from "react-query";
 
@@ -14,7 +13,7 @@ import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser
 import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupReviewComponent";
 import scrollEl from "src/helpers/scrollEl";
 import { getMessages } from "src/services/chat";
-import { formatChatDate } from "src/utils/utils";
+import { formatChatDate } from "src/helpers/helper";
 import { MESSAGE_CONTENT_TYPES, REACT_QUERY_KEYS } from "src/constants/constants";
 
 interface IBoxChatProps {
@@ -180,7 +179,7 @@ const ChatBoxRightComponent = ({
         {
           content: message,
           content_type: MESSAGE_CONTENT_TYPES.TEXT,
-          created_at: dayjs(new Date()).toISOString(),
+          created_at: new Date().toISOString(),
           sender_id: "123",
         },
       ]);
