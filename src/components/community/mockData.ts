@@ -185,7 +185,6 @@ export const communityMembers = [
     is_manager: false,
   },
 ];
-
 export const participatingMembers = [
   {
     avatar: "/assets/images/svg/account.svg",
@@ -790,22 +789,33 @@ export const participations = [
   },
 ];
 
-export const dataCommunityDetail = {
-  name: "community name",
-  profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
-  description:
-    "PHPの技術についてお話しできます。技術交換ができたら嬉しいです。また、新しい技術を習得したいと考えているので、他言語のエンジニアの方とお話しができたらと思っています。",
-  owner: {
-    id: "622aaf62bf651184a757675a",
-    name: "admin name",
-    profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+export const listCommunityMembers = [
+  {
+    id: "6243d0b5a7f11400099a87b6",
+    profile_image: "https://goodhub-filestorage-dev.s3.ap-northeast-1.amazonaws.com/628b0e7f9b3230000908e29c",
+    username: "TesterN",
+    role: "member",
+    last_login_at: "2022-05-28T16:52:18.094Z",
   },
-  admins: [],
-  tags: ["tag1", "tag2"],
-  is_public: true,
-  post_permission: "all",
-  community_role: "",
-  member_count: 10,
-  login_count: 10,
-  created_at: "2022-03-17T11:57:56.451Z",
-};
+  {
+    id: "624f310af01674000914a319",
+    profile_image: "https://lh3.googleusercontent.com/a/AATXAJwW5NqIK3s7NNdXHqmfBSaMA5mij1gQepbRBtWh=s96-c",
+    username: "Tester2",
+    role: "member",
+    last_login_at: "2022-05-28T01:53:45.906Z",
+  },
+  {
+    id: "62443637318024000a06945b",
+    profile_image: "https://goodhub-filestorage-dev.s3.ap-northeast-1.amazonaws.com/6279d39b4070ca0009c57fa7",
+    username: "string",
+    role: "member",
+    last_login_at: "2022-05-27T09:43:14.563Z",
+  },
+  {
+    id: "624599dcd8d60500094fdf2b",
+    profile_image: "https://pbs.twimg.com/profile_images/1503158892607418369/nc-3tfBX_normal.png",
+    username: "quynhnguyentwitter",
+    role: "member",
+    last_login_at: "2022-03-17T11:57:56.451Z",
+  },
+];
