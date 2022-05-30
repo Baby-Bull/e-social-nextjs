@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { Grid } from "@mui/material";
 import classNames from "classnames";
-import dayjs from "dayjs";
 import { useQuery } from "react-query";
 
 import styles from "src/components/chat/chat.module.scss";
@@ -57,7 +56,7 @@ const BlockChatComponent = ({ hasData, setHasData }) => {
             hasChatRoomExist = true;
             return {
               ...item,
-              last_chat_message_at: dayjs(new Date()).toISOString(),
+              last_chat_message_at: new Date().toISOString(),
               last_chat_message_received: message.content,
             };
           }
@@ -71,7 +70,7 @@ const BlockChatComponent = ({ hasData, setHasData }) => {
           {
             id: message.chat_room_id,
             user: message?.user || {},
-            last_chat_message_at: dayjs(new Date()).toISOString(),
+            last_chat_message_at: new Date().toISOString(),
             last_chat_message_received: message.content,
           },
           ...listRoomRef.current,
