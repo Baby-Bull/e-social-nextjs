@@ -144,13 +144,13 @@ const HomeIndexComponents = () => {
   const handleRefetchData = () => {
     switch (indexRefetch.current) {
       case 0:
-        refetchUserProvince();
+        refetchNewMember();
         break;
       case 1:
         refetchRecentlyLoginData();
         break;
       case 2:
-        refetchNewMember();
+        refetchUserProvince();
         break;
       case 3:
         refetchFavoriteTags();

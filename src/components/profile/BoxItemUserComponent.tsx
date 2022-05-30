@@ -24,9 +24,9 @@ interface IUserItemProps {
   profile_image: string;
   last_login_at: string;
   username: string;
-  job_position: string;
+  job: string;
   review_count: number;
-  self_description: string;
+  hitokoto: string;
   tags: Array<string>;
   discussion_topic: string;
   status: number;
@@ -123,14 +123,14 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
               <img src={data?.profile_image} alt="img-member" />
               <div className="member-info">
                 <p className="name">{data?.username}</p>
-                <p className="career">{JOBS[data?.job_position]?.label}</p>
+                <p className="career">{JOBS[data?.job]?.label}</p>
                 <p className="review">
                   {t("home:box-member-recommend.review")}: {data?.review_count}
                 </p>
               </div>
             </div>
 
-            <div className="introduce">{data?.self_description ? data?.self_description : "情報なし"}</div>
+            <div className="introduce">{data?.hitokoto ? data?.hitokoto : "情報なし"}</div>
 
             <div className="tags">
               <ul>

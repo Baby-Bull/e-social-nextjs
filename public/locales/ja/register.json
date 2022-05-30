@@ -16,7 +16,7 @@
     "required": "必須",
     "submit": "はじめる",
     "label": {
-      "name": "ログイン",
+      "name": "ユーザー名",
       "birthday": "生年月日",
       "status": "ステータス",
       "email": "メールアドレス",

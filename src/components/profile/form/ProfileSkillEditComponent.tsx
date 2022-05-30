@@ -270,7 +270,7 @@ const ProfileSkillComponent = () => {
   const [skillInfrastructureData, setSkillInfrastructure] = useState([
     { key: 0, name: null, experience_year: 0, experience_month: 1, level: 1, category: "infrastructure" },
   ]);
-  const [monthLanguage] = useState(MONTHS[0].value);
+  const monthLanguage = useState(MONTHS[0].value);
   const [levelLanguage] = useState(LEVELS[2].value);
   const [messSkillLanguageErr, setMessSkillLanguageErr] = useState([{ key: null, mess: null, type: null }]);
   const [messSkillFrameworkErr, setMessSkillFrameworkErr] = useState([{ key: null, mess: null, type: null }]);
@@ -576,6 +576,7 @@ const ProfileSkillComponent = () => {
           : el,
       ),
     );
+    console.log(skillLanguageData);
   };
 
   const onChangeSkillFramework = (key: number, e: any) => {
@@ -940,8 +941,9 @@ const ProfileSkillComponent = () => {
       }
 
       if (!skillRequest?.english_level) {
-        isValidForm = false;
-        errorMessages.english_level = VALIDATE_FORM_UPDATE_PROFILE.english_level.select;
+        skillRequest.english_level = null;
+        // isValidForm = false;
+        // errorMessages.english_level = VALIDATE_FORM_UPDATE_PROFILE.english_level.select;
       }
 
       if (skillRequest?.other_language_level?.length > 200) {
@@ -978,8 +980,9 @@ const ProfileSkillComponent = () => {
 
       // validate job
       if (!profileRequest?.job) {
-        isValidForm = false;
-        errorMessages.job = VALIDATE_FORM_UPDATE_PROFILE.job.select;
+        profileRequest.job = null;
+        // isValidForm = false;
+        // errorMessages.job = VALIDATE_FORM_UPDATE_PROFILE.job.select;
       }
 
       // validate job_position
@@ -990,8 +993,9 @@ const ProfileSkillComponent = () => {
 
       // validate employment_status
       if (!profileRequest?.employment_status) {
-        isValidForm = false;
-        errorMessages.employment_status = VALIDATE_FORM_UPDATE_PROFILE.employment_status.select;
+        profileRequest.employment_status = null;
+        // isValidForm = false;
+        // errorMessages.employment_status = VALIDATE_FORM_UPDATE_PROFILE.employment_status.select;
       }
 
       // validate discussion_topic
@@ -1032,13 +1036,14 @@ const ProfileSkillComponent = () => {
   const submitUserProfileRequest = async () => {
     if (handleValidateForm()) {
       if (isSkillProfile) {
-        const dataUpdate = {
-          code_skills: [...skillLanguageData, ...skillFrameworkData, ...skillInfrastructureData],
-          upstream_process: skillRequest.upstream_process,
-          english_level: skillRequest.english_level,
-          other_language_level: skillRequest.other_language_level,
-        };
-        const res = await updateProfile({ skills: dataUpdate });
+        const res = await updateProfile({
+          skills: {
+            code_skills: [...skillLanguageData, ...skillFrameworkData, ...skillInfrastructureData],
+            upstream_process: skillRequest.upstream_process,
+            english_level: skillRequest.english_level,
+            other_language_level: skillRequest.other_language_level,
+          },
+        });
         setTimeout(() => router.push("/my-profile"), 3000);
         return res;
       }
@@ -1090,7 +1095,7 @@ const ProfileSkillComponent = () => {
       )}
       <Box
         sx={{
-          p: { xs: "80px 20px", lg: "80px 120px" },
+          p: { xs: "90px 20px", lg: "80px 120px" },
           background: "#F4FDFF",
         }}
       >
@@ -1545,8 +1550,8 @@ const ProfileSkillComponent = () => {
                                     id="outlined-select-month"
                                     onChange={(e) => onChangeSkillLanguage(option?.key, e)}
                                     sx={{ width: { xs: "80px", lg: "80px" } }}
-                                    name="month"
-                                    value={option?.experience_month ?? monthLanguage}
+                                    name="experience_month"
+                                    value={option?.experience_month}
                                   >
                                     {MONTHS.map((monthOption) => (
                                       <MenuItem key={monthOption.value} value={monthOption.value}>
@@ -1686,7 +1691,7 @@ const ProfileSkillComponent = () => {
                                     value={option.experience_month ?? monthLanguage}
                                     onChange={(e) => onChangeSkillFramework(option.key, e)}
                                     sx={{ width: { xs: "80px", lg: "80px" } }}
-                                    name="month"
+                                    name="experience_month"
                                   >
                                     {MONTHS.map((monthOption) => (
                                       <MenuItem key={monthOption.value} value={monthOption.value}>
@@ -1827,7 +1832,7 @@ const ProfileSkillComponent = () => {
                                     value={option.experience_month ?? monthLanguage}
                                     onChange={(e) => onChangeSkillInfrastructure(option.key, e)}
                                     sx={{ width: { xs: "80px", lg: "80px" } }}
-                                    name="month"
+                                    name="experience_month"
                                   >
                                     {MONTHS.map((monthOption) => (
                                       <MenuItem key={monthOption.value} value={monthOption.value}>

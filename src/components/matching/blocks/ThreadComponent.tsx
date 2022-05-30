@@ -309,8 +309,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                     color: theme.gray,
                   }}
                 >
-                  {(type === "favorite" || type === "matched" ? data?.job_position : data?.user?.job_position) ??
-                    "情報なし"}
+                  {(type === "favorite" || type === "matched" ? data?.job : data?.user?.job) ?? "情報なし"}
                 </Typography>
 
                 <Typography
