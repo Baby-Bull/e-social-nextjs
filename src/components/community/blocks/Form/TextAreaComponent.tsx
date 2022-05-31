@@ -61,7 +61,7 @@ export const TextArea: React.SFC<ILayoutComponentProps> = ({ error, onChangeInpu
           <TextareaAutosizeCustom
             placeholder={placeholder}
             onChange={(e) => onChangeInput(id, e.target.value)}
-            value={value || ""}
+            value={value}
             sx={{ border: error ? "solid 1px #FF9458" : "none", minHeight: ["240px", "80px"] }}
           />
         </Grid>

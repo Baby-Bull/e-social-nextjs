@@ -60,7 +60,7 @@ export const Field: React.SFC<ILayoutComponentProps> = ({ error, onChangeInput, 
       <Grid item xs={12} sm={12}>
         <InputCustom
           placeholder={placeholder}
-          value={value || ""}
+          value={value}
           onChange={(e) => onChangeInput(id, e.target.value)}
           sx={{ ml: 1, flex: 1, border: error ? "solid 1px #FF9458" : "none" }}
         />

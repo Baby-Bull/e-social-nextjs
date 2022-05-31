@@ -253,7 +253,7 @@ const CreateComponent = () => {
 
       const res = await createCommunity(formData);
       if (res) {
-        setTimeout(() => router.push("/community"), 2000);
+        setTimeout(() => router.push(`/community/${res?.id}`), 2000);
         return res;
       }
     }
