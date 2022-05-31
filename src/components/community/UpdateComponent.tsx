@@ -31,7 +31,7 @@ import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
 import { VALIDATE_FORM_COMMUNITY } from "src/messages/validate";
-import { getCommunity, updateCommunity, CommunityMembers } from "src/services/community";
+import { getCommunity, updateCommunity, CommunityMembers, deleteCommunity } from "src/services/community";
 
 import { infoCommunitySetting, tabsCommunitySetting } from "./mockData";
 import MemberComponent from "./setting/blocks/MemberComponent";
@@ -201,8 +201,13 @@ const UpdateComponent = () => {
     handleCloseDialog();
     setOpen(false);
   };
-  const handleDialogOK = () => {
-    router.push("/search_community");
+  const handleDeleteCommunity = async () => {
+    const communityId = router.query;
+    const res = await deleteCommunity(communityId?.indexId);
+    if (!res?.error_code) {
+      setTimeout(() => router.push(`/search_community`), 2000);
+      return res;
+    }
   };
 
   const [errorValidates, setErrorValidates] = useState({
@@ -632,7 +637,7 @@ const UpdateComponent = () => {
                       <MenuItem disabled value="">
                         {t("community:setting.form.placeholder.administrator")}
                       </MenuItem>
-                      {communityMembers.map((nameOption) => (
+                      {communityMembers?.map((nameOption) => (
                         <MenuItem
                           key={nameOption?.id}
                           value={`${nameOption?.id},${nameOption?.username}`}
@@ -866,7 +871,7 @@ const UpdateComponent = () => {
         isShow={openDialog}
         handleClose={handleCloseDialog}
         handleCancel={handleDialogCancel}
-        handleOK={handleDialogOK}
+        handleOK={handleDeleteCommunity}
       />
     </ContentComponent>
   );
