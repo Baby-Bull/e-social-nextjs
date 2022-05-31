@@ -200,7 +200,7 @@ const FormRegisterComponents = () => {
       setIsLoading(true);
       const resUpdate = await updateProfile(userInfo);
       setIsLoading(false);
-      if (!resUpdate && !resUpdate?.error_code) {
+      if (resUpdate && !resUpdate?.error_code) {
         handleClickOpen();
       } else if (resUpdate?.message?.email) {
         if (resUpdate?.message?.email[0]?.message !== "email is not unique") {

@@ -1,60 +1,36 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Box, Grid, Typography, Link, Backdrop, CircularProgress } from "@mui/material";
+import { Box, Grid, Typography, Link } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import { LoginSocialGoogle, LoginSocialGithub, IResolveParams, TypeCrossFunction } from "reactjs-social-login";
+import { LoginSocialGoogle, IResolveParams, TypeCrossFunction } from "reactjs-social-login";
 import { useDispatch } from "react-redux";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import theme from "src/theme";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
-import { authWithProvider, getAccessTokenTwitter } from "src/services/auth";
+import { authWithProvider } from "src/services/auth";
 import { login } from "src/store/store";
+
+import { LoginSocialGithub, LoginSocialTwitter } from "../loginSocial";
 
 const LoginComponent = () => {
   const { t } = useTranslation();
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [isLoading, setIsLoading] = useState(false);
-
   const [provider, setProvider] = useState("");
   const [profile, setProfile] = useState<any>();
   const githubRef = useRef<TypeCrossFunction>(null!);
   const googleRef = useRef<TypeCrossFunction>(null!);
 
-  const onLoginStart = () => {
-    setIsLoading(true);
-  };
+  const onLoginStart = () => {};
 
-  const onLogoutFailure = () => {
-    setIsLoading(true);
-  };
-
-  useEffect(() => {
-    const registerWithTwitter = async () => {
-      const popupWindowURL = new URL(window.location.href);
-      const code = popupWindowURL.searchParams.get("code");
-      if (code) {
-        const res = await getAccessTokenTwitter(code, process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER);
-        if (res?.access_token) {
-          setProvider("twitter");
-          setProfile(res);
-        }
-      }
-    };
-    registerWithTwitter();
-  }, []);
-
-  // eslint-disable-next-line max-len
-  const urlRedirectTwitter = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_TWITTER_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER}&scope=tweet.read%20users.read%20follows.read%20follows.write&state=state&code_challenge=challenge&code_challenge_method=plain`;
+  const onLogoutFailure = () => {};
 
   useEffect(() => {
     const registerAccount = async (providerAuth: string, accessToken: string) => {
-      setIsLoading(true);
       const resAuth = await authWithProvider(providerAuth, accessToken);
-      setIsLoading(false);
       if (resAuth?.data?.access_token) {
         await dispatch(login(resAuth?.data?.user));
         if (resAuth?.data?.user?.is_profile_edited) {
@@ -72,11 +48,6 @@ const LoginComponent = () => {
 
   return (
     <ContentComponent authPage>
-      {isLoading && (
-        <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      )}
       <Box sx={{ marginTop: "55px" }}>
         <Grid container sx={{ flexDirection: { xs: "column-reverse", sm: "unset" } }}>
           <GridLeftComponent />
@@ -100,9 +71,20 @@ const LoginComponent = () => {
                 {t("login:right.title")}
               </Typography>
               <Box pt="68px">
-                <ButtonComponent props={{ mode: "twitter" }} href={urlRedirectTwitter}>
-                  {t("login:right.register-twitter")}
-                </ButtonComponent>
+                <LoginSocialTwitter
+                  ref={githubRef}
+                  client_id={process.env.NEXNEXT_PUBLIC_TWITTER_API_KEY || ""}
+                  client_secret={process.env.NEXT_PUBLIC_TWITTER_API_KEY_SECRET || ""}
+                  redirect_uri={process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER}
+                  onResolve={({ provider: twitterProvider, data }: IResolveParams) => {
+                    setProvider(twitterProvider);
+                    setProfile(data);
+                  }}
+                  onLoginStart={onLoginStart}
+                  onReject={() => {}}
+                >
+                  <ButtonComponent props={{ mode: "twitter" }}>{t("login:right.register-twitter")}</ButtonComponent>
+                </LoginSocialTwitter>
               </Box>
               <Box pt="48px">
                 <LoginSocialGoogle
@@ -114,9 +96,7 @@ const LoginComponent = () => {
                     setProvider(googleProvider);
                     setProfile(data);
                   }}
-                  onReject={() => {
-                    setIsLoading(false);
-                  }}
+                  onReject={() => {}}
                 >
                   <ButtonComponent props={{ mode: "google" }}>{t("login:right.register-google")}</ButtonComponent>
                 </LoginSocialGoogle>
@@ -132,9 +112,7 @@ const LoginComponent = () => {
                     setProfile(data);
                   }}
                   onLoginStart={onLoginStart}
-                  onReject={() => {
-                    setIsLoading(false);
-                  }}
+                  onReject={() => {}}
                 >
                   <ButtonComponent props={{ mode: "github" }}>{t("login:right.register-git")}</ButtonComponent>
                 </LoginSocialGithub>
