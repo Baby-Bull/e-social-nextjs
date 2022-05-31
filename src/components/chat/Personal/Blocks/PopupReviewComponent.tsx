@@ -117,10 +117,6 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
   const [isCheck, setIsCheck] = React.useState(false);
   const [isPost, setIsPost] = React.useState(false);
 
-  const handleUnCheck = () => {
-    setIsCheck(false);
-  };
-
   const isGood = "good";
   const isBad = "bad";
   const [selectedValueRating, setSelectedValueRating] = React.useState(isGood);
@@ -155,11 +151,23 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
     return isValidForm;
   };
 
+  const handleRefetchData = () => {
+    setSelectedValueRating(isGood);
+    setSelectedHideReviewer(false);
+    setSelectedReportToAdmin(false);
+    setValueComment("");
+    setUserReviewRequest({
+      rating: isGood,
+      comment: "",
+      hide_reviewer: false,
+      send_report_to_admin: false,
+    });
+  };
   const handleClose = () => {
     setShowPopup(false);
     setIsPost(false);
     setIsCheck(false);
-    setSelectedValueRating(isGood);
+    handleRefetchData();
   };
 
   const handleIsCheck = () => {
@@ -195,6 +203,7 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
   const submitUserReviewRequest = async () => {
     const res = await userReview(user?.id, userReviewRequest);
     setIsPost(true);
+    handleRefetchData();
     return res.data;
   };
 
@@ -456,7 +465,7 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
                 width: "200px",
                 height: "40px",
               }}
-              onClick={handleUnCheck}
+              onClick={() => setIsCheck(false)}
             >
               {t("chat:popup.to-fix")}
             </Button>

@@ -26,9 +26,9 @@ interface IRecommendDataItem {
   profile_image: string;
   last_login_at: string;
   username: string;
-  job_position: string;
+  job: string;
   review_count: number;
-  self_description: string;
+  hitokoto: string;
   tags: Array<string>;
   discussion_topic: string;
   status: string;
@@ -135,14 +135,14 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
               />
               <div className="member-info">
                 <div className="name">{data?.username}</div>
-                <div className="career">{data?.job_position ?? "情報なし"}</div>
+                <div className="career">{data?.job ?? "情報なし"}</div>
                 <div className="review">
                   {t("home:box-member-recommend.review")}: {data?.review_count ?? 0}
                 </div>
               </div>
             </div>
 
-            <div className="introduce">{data?.self_description ?? "情報なし"}</div>
+            <div className="introduce">{data?.hitokoto ?? "情報なし"}</div>
 
             <div className="tags">
               <ul>

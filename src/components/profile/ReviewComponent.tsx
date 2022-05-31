@@ -16,6 +16,7 @@ interface reviewProps {
 const ReviewComponent: React.SFC<reviewProps> = ({ user, hideReviewer, rating, comment, createdAt }) => {
   const { t } = useTranslation();
   const GOOD = "good";
+
   return (
     <Box>
       <Box
@@ -30,15 +31,39 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, hideReviewer, rating, c
             display: { xs: "flex", lg: "block" },
           }}
         >
-          <Box
-            component="img"
-            sx={{
-              width: { xs: "32px", lg: "56px" },
-              borderRadius: "50%",
-            }}
-            alt="avatar"
-            src={!user?.profile_image || hideReviewer ? "/assets/images/svg/goodhub.svg " : user?.profile_image}
-          />
+          {!user?.profile_image || hideReviewer ? (
+            <Box
+              component="img"
+              sx={{
+                width: { xs: "32px", lg: "56px" },
+                height: { xs: "32px", lg: "56px" },
+                objectFit: "cover",
+                borderRadius: "50%",
+              }}
+              alt="avatar"
+              src="/assets/images/svg/goodhub.svg "
+            />
+          ) : (
+            <a
+              href={`/profile/${user?.id}`}
+              style={{
+                textDecoration: "none",
+                color: "black",
+              }}
+            >
+              <Box
+                component="img"
+                sx={{
+                  width: { xs: "32px", lg: "56px" },
+                  height: { xs: "32px", lg: "56px" },
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                }}
+                alt="avatar"
+                src={user?.profile_image}
+              />
+            </a>
+          )}
           {rating ? (
             <Box
               sx={{
@@ -116,7 +141,15 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, hideReviewer, rating, c
                     display: { xs: "none", lg: "block" },
                   }}
                 >
-                  {user?.username}
+                  <a
+                    href={`/profile/${user?.id}`}
+                    style={{
+                      textDecoration: "none",
+                      color: "black",
+                    }}
+                  >
+                    {user?.username}
+                  </a>
                 </Box>
               ) : (
                 <Box
