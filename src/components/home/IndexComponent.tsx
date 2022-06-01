@@ -57,7 +57,7 @@ const HomeIndexComponents = () => {
     async () => {
       setIsLoading(false);
       const res = await getUserProvince(LIMIT);
-      return res?.items || [];
+      return res?.items?.filter((item: any) => item?.match_status !== "confirmed") || [];
     },
     {
       refetchOnWindowFocus: false,
@@ -72,7 +72,7 @@ const HomeIndexComponents = () => {
     async () => {
       setIsLoading(false);
       const res = await getUserRecentlyLogin(LIMIT);
-      return res?.items || [];
+      return res?.items?.filter((item: any) => item?.match_status !== "confirmed") || [];
     },
     {
       refetchOnWindowFocus: false,
@@ -87,7 +87,7 @@ const HomeIndexComponents = () => {
     async () => {
       setIsLoading(false);
       const res = await getUserNewMembers(LIMIT);
-      return res?.items || [];
+      return res?.items?.filter((item: any) => item?.match_status !== "confirmed") || [];
     },
     {
       refetchOnWindowFocus: false,
@@ -102,7 +102,7 @@ const HomeIndexComponents = () => {
     async () => {
       setIsLoading(false);
       const res = await getUserFavoriteTags(LIMIT);
-      return res?.items || [];
+      return res?.items?.filter((item: any) => item?.match_status !== "confirmed") || [];
     },
     {
       refetchOnWindowFocus: false,
@@ -144,13 +144,13 @@ const HomeIndexComponents = () => {
   const handleRefetchData = () => {
     switch (indexRefetch.current) {
       case 0:
-        refetchUserProvince();
+        refetchNewMember();
         break;
       case 1:
         refetchRecentlyLoginData();
         break;
       case 2:
-        refetchNewMember();
+        refetchUserProvince();
         break;
       case 3:
         refetchFavoriteTags();

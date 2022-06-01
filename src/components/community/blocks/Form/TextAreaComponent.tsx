@@ -41,9 +41,10 @@ interface ILayoutComponentProps {
   id?: string;
   placeholder?: string;
   onChangeInput: Function;
+  value?: string;
 }
 
-export const TextArea: React.SFC<ILayoutComponentProps> = ({ error, onChangeInput, id, placeholder }) => (
+export const TextArea: React.SFC<ILayoutComponentProps> = ({ error, onChangeInput, id, placeholder, value }) => (
   <Box>
     <Box
       sx={{
@@ -60,6 +61,7 @@ export const TextArea: React.SFC<ILayoutComponentProps> = ({ error, onChangeInpu
           <TextareaAutosizeCustom
             placeholder={placeholder}
             onChange={(e) => onChangeInput(id, e.target.value)}
+            value={value}
             sx={{ border: error ? "solid 1px #FF9458" : "none", minHeight: ["240px", "80px"] }}
           />
         </Grid>

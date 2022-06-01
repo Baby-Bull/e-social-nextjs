@@ -243,9 +243,11 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                         >
                           {item?.name}
                         </Box>
-
                         <Box>
-                          {item.experience_year} {t("profile:year")}
+                          {item?.experience_year} {t("profile:year")}
+                        </Box>
+                        <Box>
+                          {item?.experience_month} {t("profile:month")}
                         </Box>
                       </Box>
                     ))}
@@ -271,9 +273,11 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                         >
                           {item?.name}
                         </Box>
-
                         <Box>
-                          {item.experience_year} {t("profile:year")}
+                          {item?.experience_year} {t("profile:year")}
+                        </Box>
+                        <Box>
+                          {item?.experience_month} {t("profile:month")}
                         </Box>
                       </Box>
                     ))}
@@ -299,9 +303,11 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                         >
                           {item?.name}
                         </Box>
-
                         <Box>
-                          {item.experience_year} {t("profile:year")}
+                          {item?.experience_year} {t("profile:year")}
+                        </Box>
+                        <Box>
+                          {item?.experience_month} {t("profile:month")}
                         </Box>
                       </Box>
                     ))}

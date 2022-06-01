@@ -26,7 +26,7 @@ interface IUserItemProps {
   username: string;
   job_position: string;
   review_count: number;
-  self_description: string;
+  hitokoto: string;
   tags: Array<string>;
   discussion_topic: string;
   status: number;
@@ -128,7 +128,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
               </div>
             </div>
 
-            <div className="introduce">{data?.self_description ? data?.self_description : "情報なし"}</div>
+            <div className="introduce">{data?.hitokoto ? data?.hitokoto : "情報なし"}</div>
 
             <div className="tags">
               <ul>

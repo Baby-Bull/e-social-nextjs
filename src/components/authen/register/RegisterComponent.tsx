@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React, { useRef, useState, useEffect } from "react";
-import { Box, Grid, Typography, Link, CircularProgress, Backdrop } from "@mui/material";
+import { Box, Grid, Typography, Link } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { LoginSocialGoogle, LoginSocialGithub, IResolveParams, TypeCrossFunction } from "reactjs-social-login";
@@ -10,8 +10,10 @@ import theme from "src/theme";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
-import { authWithProvider, getAccessTokenTwitter } from "src/services/auth";
+import { authWithProvider } from "src/services/auth";
 import { login } from "src/store/store";
+
+import { LoginSocialTwitter } from "../loginSocial";
 
 const RegisterComponents = () => {
   const { t } = useTranslation();
@@ -26,28 +28,12 @@ const RegisterComponents = () => {
 
   const onLoginStart = () => {
     setIsLoading(true);
+    console.log(isLoading);
   };
 
   const onLogoutFailure = () => {
     setIsLoading(true);
   };
-  useEffect(() => {
-    const registerWithTwitter = async () => {
-      const popupWindowURL = new URL(window.location.href);
-      const code = popupWindowURL.searchParams.get("code");
-      if (code) {
-        const res = await getAccessTokenTwitter(code, process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER);
-        if (res?.access_token) {
-          setProvider("twitter");
-          setProfile(res);
-        }
-      }
-    };
-    registerWithTwitter();
-  }, []);
-
-  // eslint-disable-next-line max-len
-  const urlRedirectTwitter = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_TWITTER_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER}&scope=tweet.read%20users.read%20follows.read%20follows.write&state=state&code_challenge=challenge&code_challenge_method=plain`;
 
   useEffect(() => {
     const registerAccount = async (providerAuth: string, accessToken: string) => {
@@ -71,11 +57,6 @@ const RegisterComponents = () => {
 
   return (
     <ContentComponent authPage>
-      {isLoading && (
-        <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      )}
       <Box sx={{ marginTop: "55px" }}>
         <Grid container>
           <GridLeftComponent />
@@ -112,9 +93,23 @@ const RegisterComponents = () => {
               </Typography>
 
               <Box pt="63px">
-                <ButtonComponent props={{ mode: "twitter" }} href={urlRedirectTwitter}>
-                  {t("register:register-twitter")}
-                </ButtonComponent>
+                <LoginSocialTwitter
+                  ref={githubRef}
+                  client_id={process.env.NEXNEXT_PUBLIC_TWITTER_API_KEY || ""}
+                  client_secret={process.env.NEXT_PUBLIC_TWITTER_API_KEY_SECRET || ""}
+                  redirect_uri={process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER}
+                  onResolve={({ provider: twitterProvider, data }: IResolveParams) => {
+                    console.log(provider, data);
+                    setProvider(twitterProvider);
+                    setProfile(data);
+                  }}
+                  onLoginStart={onLoginStart}
+                  onReject={() => {
+                    setIsLoading(false);
+                  }}
+                >
+                  <ButtonComponent props={{ mode: "twitter" }}>{t("login:right.register-twitter")}</ButtonComponent>
+                </LoginSocialTwitter>
               </Box>
               <Box pt="48px">
                 <LoginSocialGoogle

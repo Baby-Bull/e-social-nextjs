@@ -10,3 +10,5 @@ export const UPDATE_PROFILE = "保存されました。";
 export const COPY_SUCCESSFUL = "コピー成功";
 export const EMAIL_EXISTS = "メールは一意ではありません";
 export const CREATE_COMMUNITY = "コミュニティが作成されました。";
+export const UPDATE_COMMUNITY = "コミュニティの情報を編集しました。";
+export const DELETE_COMMUNITY = "コミュニティを削除しました。";
