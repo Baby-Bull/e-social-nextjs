@@ -340,7 +340,6 @@ const CreateComponent = () => {
                 }}
               >
                 <Avatar
-                  variant="square"
                   sx={{
                     mb: 0,
                     width: "160px",

@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-import {CREATE_COMMUNITY, DELETE_COMMUNITY, SERVER_ERROR, UPDATE_COMMUNITY} from "src/messages/notification";
+import { CREATE_COMMUNITY, DELETE_COMMUNITY, SERVER_ERROR, UPDATE_COMMUNITY } from "src/messages/notification";
 import { api } from "src/helpers/api";
 
 // eslint-disable-next-line import/prefer-default-export
@@ -52,9 +52,9 @@ export const updateCommunity = async (communityId, body: any) => {
   }
 };
 
-export const CommunityMembers = async (communityId) => {
+export const CommunityMembers = async (communityId, limit: number = 10, cursor: string = "") => {
   try {
-    const res = await api.get(`community/${communityId}/members`);
+    const res = await api.get(`community/${communityId}/members?limit=${limit}&cursor=${cursor}`);
     return res.data;
   } catch (error) {
     toast.error(SERVER_ERROR);
