@@ -1,8 +1,11 @@
+import { refreshToken } from "src/services/auth";
+
 import actionTypes from "./actionTypes";
 
 // REDUCERS
 const reducer = (state, action: any) => {
-  switch (action.type) {
+  const { type } = action;
+  switch (type) {
     case actionTypes.LOGIN:
       return {
         ...state,
@@ -51,6 +54,9 @@ const reducer = (state, action: any) => {
           match_request_count: (state?.user?.match_request_count || 0) - 1,
         },
       };
+    case actionTypes.REFRESH_TOKEN:
+      refreshToken();
+      return state;
     default:
       return state;
   }
