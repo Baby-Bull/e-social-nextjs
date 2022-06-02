@@ -183,7 +183,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
             }}
           >
             <GridViewComponent data={communityMembers[page - 1]?.items} />
-            {totalCommunityMembers > 20 && (
+            {totalCommunityMembers > LIMIT && (
               <PaginationCustomComponent
                 handleCallbackChangePagination={handleCallbackChangePagination}
                 page={page}
