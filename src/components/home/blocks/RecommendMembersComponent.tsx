@@ -89,6 +89,10 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
   const auth = useSelector((state: IStoreState) => state.user);
   const isOnline = "online";
 
+  useEffect(() => {
+    setLiked(data?.is_favorite);
+  }, [data?.is_favorite]);
+
   const handleClickButtonModal = (tempValue: any) => {
     if (tempValue === "rejected" || !tempValue) {
       handleOpenMatchingModal(data, indexKey);

@@ -489,7 +489,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   </Box>
                 </Box>
               </Box>
-              <Box
+              <Button
                 sx={{
                   fontWeight: 700,
                   fontSize: "14px",
@@ -508,6 +508,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   marginTop: "24px",
                   cursor: "pointer",
                 }}
+                disabled={user?.match_status === "confirmed"}
                 onClick={handleClickFavoriteButton}
               >
                 <Avatar
@@ -516,7 +517,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   sx={{ width: "16.67px", height: "14.17px", marginRight: "5px" }}
                 />{" "}
                 話したい人リストに登録
-              </Box>
+              </Button>
             </Box>
           </Box>
         </Grid>

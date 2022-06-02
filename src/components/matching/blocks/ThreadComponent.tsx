@@ -20,6 +20,7 @@ import {
   acceptMatchingRequestReceived,
   cancelMatchingRequestSent,
 } from "src/services/matching";
+import { addUserFavorite } from "src/services/user";
 import { TYPE } from "src/constants/matching";
 import { IStoreState } from "src/constants/interface";
 import actionTypes from "src/store/actionTypes";
@@ -74,6 +75,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
   const [userRequestMatchingId, setUserRequestMatchingId] = React.useState(null);
   const handleSendMatchingRequest = async (matchingRequest) => {
     const res = await sendMatchingRequest(userRequestMatchingId, matchingRequest);
+    await addUserFavorite(userRequestMatchingId);
     if (setKeyRefetchData) {
       setKeyRefetchData({
         type: TYPE.FAVORITE,
