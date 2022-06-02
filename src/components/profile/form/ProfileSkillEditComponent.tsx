@@ -576,7 +576,6 @@ const ProfileSkillComponent = () => {
           : el,
       ),
     );
-    console.log(skillLanguageData);
   };
 
   const onChangeSkillFramework = (key: number, e: any) => {
@@ -1035,23 +1034,21 @@ const ProfileSkillComponent = () => {
   // submit profile form
   const submitUserProfileRequest = async () => {
     if (handleValidateForm()) {
-      if (isSkillProfile) {
-        const res = await updateProfile({
-          skills: {
-            code_skills: [...skillLanguageData, ...skillFrameworkData, ...skillInfrastructureData],
-            upstream_process: skillRequest.upstream_process,
-            english_level: skillRequest.english_level,
-            other_language_level: skillRequest.other_language_level,
-          },
-        });
-        setTimeout(() => router.push("/my-profile"), 3000);
-        return res;
-      }
+      const tags = { tags: inputTags };
       setProfileRequest({
         ...profileRequest,
+        ...tags,
       });
-      const tags = { tags: inputTags };
-      const res = await updateProfile({ ...profileRequest, ...tags });
+      const res = await updateProfile({
+        ...profileRequest,
+        ...tags,
+        skills: {
+          code_skills: [...skillLanguageData, ...skillFrameworkData, ...skillInfrastructureData],
+          upstream_process: skillRequest.upstream_process,
+          english_level: skillRequest.english_level,
+          other_language_level: skillRequest.other_language_level,
+        },
+      });
       setTimeout(() => router.push("/my-profile"), 3000);
       return res.data;
     }
