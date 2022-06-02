@@ -44,7 +44,8 @@ const CommunityComponent = () => {
   });
   const router = useRouter();
   const handleCopyUrl = () => {
-    const resUrl = `${process.env.NEXT_PUBLIC_URL_PROFILE}/community`;
+    const communityId = router.query;
+    const resUrl = `${process.env.NEXT_PUBLIC_URL_PROFILE}/community${communityId?.indexId}`;
     copy(resUrl);
     toast.success(COPY_SUCCESSFUL);
   };

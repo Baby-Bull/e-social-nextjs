@@ -859,7 +859,7 @@ const UpdateComponent = () => {
           </Box>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <MemberComponent dataChild={tabsCommunitySetting[1]?.children} />
+          <MemberComponent />
         </TabPanel>
         <TabPanel value={value} index={2}>
           <ParticipatedMemberComponent />

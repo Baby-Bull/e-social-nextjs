@@ -75,3 +75,41 @@ export const deleteCommunity = async (communityId) => {
     return error;
   }
 };
+
+export const CommunityMembersBlocked = async (communityId, limit: number = 10, cursor: string = "") => {
+  try {
+    const res = await api.get(`community/${communityId}/members/blocked?limit=${limit}&cursor=${cursor}`);
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const MemberBlocked = async (communityId, userId) => {
+  try {
+    const res = await api.post(`community/${communityId}/members/${userId}/block`);
+    if (!res.data.error_code) {
+      toast.success(DELETE_COMMUNITY);
+    } else {
+      toast.error(SERVER_ERROR);
+    }
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const MemberUnBlock = async (communityId, userId) => {
+  try {
+    const res = await api.post(`community/${communityId}/members/${userId}/unblock`);
+    if (!res.data.error_code) {
+      toast.success(DELETE_COMMUNITY);
+    } else {
+      toast.error(SERVER_ERROR);
+    }
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
