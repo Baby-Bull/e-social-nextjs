@@ -48,7 +48,7 @@ const PaginationCustomComponent: React.SFC<IPaginationProps> = ({
 }) => (
   <Stack spacing={2}>
     <PaginationCustom
-      count={perPage > totalPage + 1 ? totalPage + 1 : perPage}
+      count={perPage > totalPage ? totalPage : perPage}
       page={page}
       onChange={handleCallbackChangePagination}
     />

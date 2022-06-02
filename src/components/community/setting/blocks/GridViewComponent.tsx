@@ -1,17 +1,38 @@
 import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
+import moment from "moment";
 
+import "moment/locale/ja";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 
+import { MemberApprove, MemberReject } from "../../../../services/community";
+
 interface IGridViewComponentProps {
   data: any;
+  index: any;
+  callbackHandleRemoveElmMember: any;
 }
 
-const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data }) => {
+const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, callbackHandleRemoveElmMember }) => {
   const { t } = useTranslation();
+  const router = useRouter();
 
+  const callbackHandleApprove = async () => {
+    const communityId = router.query;
+    const resDataApprove = await MemberApprove(communityId?.indexId, data.id);
+    callbackHandleRemoveElmMember(index);
+    return resDataApprove;
+  };
+
+  const callbackHandleReject = async () => {
+    const communityId = router.query;
+    const resDataReject = await MemberReject(communityId?.indexId, data.id);
+    callbackHandleRemoveElmMember(index);
+    return resDataReject;
+  };
   return (
     <Box
       sx={{
@@ -52,12 +73,11 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data }) => {
           }}
         >
           <Avatar
-            variant="square"
             sx={{
               width: ["32px", "64px"],
               height: "100%",
             }}
-            src={data.avatar}
+            src={data?.user?.profile_image}
           />
 
           {/* Grid right Info */}
@@ -77,7 +97,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data }) => {
                 color: theme.gray,
               }}
             >
-              {data.date_request}
+              {moment(data?.created_at).utc().format("LLL")} {t("community:request")}
             </Typography>
 
             <Typography
@@ -85,7 +105,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data }) => {
                 fontWeight: 700,
               }}
             >
-              {data.name}
+              {data?.user?.username}
             </Typography>
           </Box>
           {/* End Grid right Info */}
@@ -107,6 +127,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data }) => {
                 mr: "20px",
                 height: "36px",
               }}
+              onClick={callbackHandleApprove}
             >
               {t("community:button.setting.participation.approve")}
             </ButtonComponent>
@@ -119,6 +140,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data }) => {
               sx={{
                 height: "36px",
               }}
+              onClick={callbackHandleReject}
             >
               {t("community:button.setting.participation.reject")}
             </ButtonComponent>
