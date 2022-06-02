@@ -12,3 +12,7 @@ export const EMAIL_EXISTS = "メールは一意ではありません";
 export const CREATE_COMMUNITY = "コミュニティが作成されました。";
 export const UPDATE_COMMUNITY = "コミュニティの情報を編集しました。";
 export const DELETE_COMMUNITY = "コミュニティを削除しました。";
+export const BLOCK_MEMBER = "ブロックしました。";
+export const BLOCKED_MEMBER = "ブロックを解除しました。";
+export const APPPROVE_MEMBER = "承認しました。";
+export const REJECT_MEMBER = "拒否しました。";

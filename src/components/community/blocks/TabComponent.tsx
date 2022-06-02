@@ -188,7 +188,11 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
                 handleCallbackChangePagination={handleCallbackChangePagination}
                 page={page}
                 perPage={perPage}
-                totalPage={Math.floor(totalCommunityMembers / LIMIT)}
+                totalPage={
+                  Math.floor(totalCommunityMembers / LIMIT) <= totalCommunityMembers / LIMIT
+                    ? Math.floor(totalCommunityMembers / LIMIT)
+                    : Math.floor(totalCommunityMembers / LIMIT) + 1
+                }
               />
             )}
           </Box>

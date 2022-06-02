@@ -1,16 +1,54 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import EmptyComponent from "src/components/community/setting/blocks/EmptyComponent";
 import GridViewComponent from "src/components/community/setting/blocks/GridViewComponent";
-import { PaginationCustom } from "src/components/community/blocks/ChildTabComponent";
-
-import { participations } from "../../mockData";
+import { getParticipates } from "src/services/community";
+import PaginationCustomComponent from "src/components/common/PaginationCustomComponent";
 
 const ParticipationComponent = () => {
   const { t } = useTranslation();
+  const LIMIT = 10;
+  const router = useRouter();
+
+  const [participates, setParticipates] = useState([]);
+  const [countParticipates, setCountParticipates] = useState(0);
+
+  // Pagination
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(2);
+  const [valueCursor, setCursor] = useState("");
+  // end pagination
+
+  const fetchDataParticipates = async (cursor: string = "") => {
+    const communityId = router.query;
+    const resData = await getParticipates(communityId?.indexId, LIMIT, cursor);
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    setParticipates([...participates, ...resData?.items]);
+    setCountParticipates(resData?.items_count);
+    setCursor(resData?.cursor);
+    return resData;
+  };
+
+  const handleCallbackChangePaginationParticipates = (event, value) => {
+    setPage(value);
+    if (perPage <= value) {
+      setPerPage(perPage + 1);
+      fetchDataParticipates(valueCursor ?? "");
+    }
+  };
+
+  useEffect(() => {
+    fetchDataParticipates();
+  }, []);
+
+  const callbackHandleRemoveMember = (indexMember) => {
+    setParticipates(participates.filter((_, index) => index !== indexMember));
+    setCountParticipates(countParticipates - 1);
+  };
 
   return (
     <Box
@@ -33,12 +71,18 @@ const ParticipationComponent = () => {
             textAlign: ["center", "left"],
           }}
         >
-          {t("community:setting.participation.title")}
+          {`${t("community:setting.participation.title")} ${countParticipates}${t(
+            "community:setting.participation.subject",
+          )}`}
         </Typography>
-        {participations?.length ? (
-          participations?.map((data, index) => (
+        {participates?.slice((page - 1) * LIMIT, page * LIMIT) ? (
+          participates?.slice((page - 1) * LIMIT, page * LIMIT).map((data, index) => (
             <React.Fragment key={index.toString()}>
-              <GridViewComponent data={data} />
+              <GridViewComponent
+                data={data}
+                index={index + (page - 1) * LIMIT}
+                callbackHandleRemoveElmMember={callbackHandleRemoveMember}
+              />
             </React.Fragment>
           ))
         ) : (
@@ -51,11 +95,22 @@ const ParticipationComponent = () => {
       <Box
         sx={{
           py: "40px",
-          display: participations?.length ? "flex" : "none",
+          display: "flex",
           justifyContent: "center",
         }}
       >
-        <PaginationCustom count={4} />
+        {countParticipates > LIMIT && (
+          <PaginationCustomComponent
+            handleCallbackChangePagination={handleCallbackChangePaginationParticipates}
+            page={page}
+            perPage={perPage}
+            totalPage={
+              Math.floor(countParticipates / LIMIT) <= countParticipates / LIMIT
+                ? Math.floor(countParticipates / LIMIT)
+                : Math.floor(countParticipates / LIMIT) + 1
+            }
+          />
+        )}
       </Box>
     </Box>
   );

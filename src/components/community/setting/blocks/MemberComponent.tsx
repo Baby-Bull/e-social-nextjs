@@ -178,7 +178,11 @@ const MemberComponent = () => {
               handleCallbackChangePagination={handleCallbackChangePaginationBlock}
               page={pageBlock}
               perPage={perPageBlock}
-              totalPage={Math.floor(countItemsBlock / LIMIT)}
+              totalPage={
+                Math.floor(countItemsBlock / LIMIT) <= countItemsBlock / LIMIT
+                  ? Math.floor(countItemsBlock / LIMIT)
+                  : Math.floor(countItemsBlock / LIMIT) + 1
+              }
             />
           )}
         </Box>
@@ -215,7 +219,11 @@ const MemberComponent = () => {
               handleCallbackChangePagination={handleCallbackChangePaginationBlocked}
               page={pageBlocked}
               perPage={perPageBlocked}
-              totalPage={Math.floor(countItemsBlocked / LIMIT)}
+              totalPage={
+                Math.floor(countItemsBlocked / LIMIT) <= countItemsBlocked / LIMIT
+                  ? Math.floor(countItemsBlocked / LIMIT)
+                  : Math.floor(countItemsBlocked / LIMIT) + 1
+              }
             />
           )}
         </Box>
