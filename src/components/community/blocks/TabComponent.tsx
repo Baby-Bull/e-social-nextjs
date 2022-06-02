@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Tabs, Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
@@ -7,8 +7,10 @@ import { useRouter } from "next/router";
 import theme from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabComponent";
 import EmptyComponent from "src/components/community/blocks/EmptyComponent";
-import ChildTabComponent, { PaginationCustom } from "src/components/community/blocks/ChildTabComponent";
+import ChildTabComponent from "src/components/community/blocks/ChildTabComponent";
 import GridViewComponent from "src/components/community/blocks/GridViewComponent";
+import { CommunityMembers } from "src/services/community";
+import PaginationCustomComponent from "src/components/common/PaginationCustomComponent";
 
 import { status, tabsCommunity } from "../mockData";
 
@@ -31,12 +33,43 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
 
+  const valueTabMenbers = 2;
+  const LIMIT = 20;
+
   const [valueParentTab, setValueParentTab] = React.useState(0);
+  const [communityMembers] = useState([]);
+  const [totalCommunityMembers, setTotalCommunityMembers] = useState(0);
+  const [page, setPage] = React.useState(1);
+  const [perPage, setperPage] = React.useState(2);
+  const [isCallApi, setIsCallApi] = React.useState(false);
+  const [valueCursor, setCursor] = React.useState("");
+
+  const fetchDataUsers = async (cursor: string = "") => {
+    const communityId = router.query;
+    const resData = await CommunityMembers(communityId?.indexId, LIMIT, cursor);
+    communityMembers.push(resData);
+    setTotalCommunityMembers(resData?.items_count);
+    setCursor(resData?.cursor);
+    setIsCallApi(true);
+    return resData;
+  };
 
   const onChangeParentTab = (event: React.SyntheticEvent, newValue: number) => {
     setValueParentTab(newValue);
+    if (valueTabMenbers === newValue && !isCallApi) {
+      fetchDataUsers();
+    }
   };
 
+  const handleCallbackChangePagination = (event, value) => {
+    setPage(value);
+    if (perPage <= value) {
+      setperPage(perPage + 1);
+      fetchDataUsers(valueCursor ?? "");
+    }
+  };
+
+  // @ts-ignore
   return (
     <React.Fragment>
       <Tabs
@@ -66,7 +99,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
               xsBorderColor: theme.blue,
               xsBorderRadius: "12px 12px 0px 0px",
               mdWidth: "152px",
-              lgWidth: "230px",
+              lgWidth: "33.33333%",
             }}
             key={index.toString()}
             iconPosition="top"
@@ -140,7 +173,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
       </TabPanel>
 
       <TabPanel value={valueParentTab} index={2}>
-        {tabsCommunity[2]?.data.length ? (
+        {communityMembers.length ? (
           <Box
             sx={{
               display: "flex",
@@ -149,9 +182,15 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
               pb: "40px",
             }}
           >
-            <GridViewComponent data={tabsCommunity[2]?.data} />
-
-            <PaginationCustom count={4} />
+            <GridViewComponent data={communityMembers[page - 1]?.items} />
+            {totalCommunityMembers > 20 && (
+              <PaginationCustomComponent
+                handleCallbackChangePagination={handleCallbackChangePagination}
+                page={page}
+                perPage={perPage}
+                totalPage={Math.floor(totalCommunityMembers / LIMIT)}
+              />
+            )}
           </Box>
         ) : (
           <EmptyComponent textButton={t("community:button.empty.create-post")}>

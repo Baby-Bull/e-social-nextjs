@@ -637,24 +637,27 @@ const UpdateComponent = () => {
                       <MenuItem disabled value="">
                         {t("community:setting.form.placeholder.administrator")}
                       </MenuItem>
-                      {communityMembers?.map((nameOption) => (
-                        <MenuItem
-                          key={nameOption?.id}
-                          value={`${nameOption?.id},${nameOption?.username}`}
-                          style={getStyles(`${nameOption?.id},${nameOption?.username}`, personName)}
-                          sx={{ background: "#fff !important" }}
-                        >
-                          <Avatar
-                            src={nameOption?.profile_image}
-                            sx={{
-                              width: "24px",
-                              height: "24px",
-                              marginRight: "8px",
-                            }}
-                          />
-                          {nameOption?.username}
-                        </MenuItem>
-                      ))}
+                      {communityMembers?.map(
+                        (nameOption) =>
+                          nameOption?.id !== owner?.id && (
+                            <MenuItem
+                              key={nameOption?.id}
+                              value={`${nameOption?.id},${nameOption?.username}`}
+                              style={getStyles(`${nameOption?.id},${nameOption?.username}`, personName)}
+                              sx={{ background: "#fff !important" }}
+                            >
+                              <Avatar
+                                src={nameOption?.profile_image}
+                                sx={{
+                                  width: "24px",
+                                  height: "24px",
+                                  marginRight: "8px",
+                                }}
+                              />
+                              {nameOption?.username}
+                            </MenuItem>
+                          ),
+                      )}
                     </SelectCustom>
                   </FormControl>
                 </Box>
