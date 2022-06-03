@@ -37,7 +37,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
   const LIMIT = 20;
 
   const [valueParentTab, setValueParentTab] = React.useState(0);
-  const [communityMembers] = useState([]);
+  const [communityMembers, setCommunityMembers] = useState([]);
   const [totalCommunityMembers, setTotalCommunityMembers] = useState(0);
   const [page, setPage] = React.useState(1);
   const [perPage, setperPage] = React.useState(2);
@@ -47,7 +47,8 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
   const fetchDataUsers = async (cursor: string = "") => {
     const communityId = router.query;
     const resData = await CommunityMembers(communityId?.indexId, LIMIT, cursor);
-    communityMembers.push(resData);
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    setCommunityMembers([...communityMembers, ...resData?.items]);
     setTotalCommunityMembers(resData?.items_count);
     setCursor(resData?.cursor);
     setIsCallApi(true);
@@ -182,16 +183,16 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
               pb: "40px",
             }}
           >
-            <GridViewComponent data={communityMembers[page - 1]?.items} />
+            <GridViewComponent data={communityMembers.slice((page - 1) * LIMIT, page * LIMIT)} />
             {totalCommunityMembers > LIMIT && (
               <PaginationCustomComponent
                 handleCallbackChangePagination={handleCallbackChangePagination}
                 page={page}
                 perPage={perPage}
                 totalPage={
-                  Math.floor(totalCommunityMembers / LIMIT) <= totalCommunityMembers / LIMIT
-                    ? Math.floor(totalCommunityMembers / LIMIT)
-                    : Math.floor(totalCommunityMembers / LIMIT) + 1
+                  Math.floor(totalCommunityMembers / LIMIT) < totalCommunityMembers / LIMIT
+                    ? Math.floor(totalCommunityMembers / LIMIT) + 1
+                    : Math.floor(totalCommunityMembers / LIMIT)
                 }
               />
             )}

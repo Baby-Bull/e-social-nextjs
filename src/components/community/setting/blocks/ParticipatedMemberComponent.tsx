@@ -105,9 +105,9 @@ const ParticipationComponent = () => {
             page={page}
             perPage={perPage}
             totalPage={
-              Math.floor(countParticipates / LIMIT) <= countParticipates / LIMIT
-                ? Math.floor(countParticipates / LIMIT)
-                : Math.floor(countParticipates / LIMIT) + 1
+              Math.floor(countParticipates / LIMIT) < countParticipates / LIMIT
+                ? Math.floor(countParticipates / LIMIT) + 1
+                : Math.floor(countParticipates / LIMIT)
             }
           />
         )}

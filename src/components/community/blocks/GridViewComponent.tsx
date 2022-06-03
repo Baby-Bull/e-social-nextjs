@@ -22,6 +22,7 @@ interface IGridViewComponentProps {
 
 const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) => {
   const IS_OWNER = "owner";
+  const IS_ADMIN = "admin";
   return (
     <React.Fragment>
       <Typography
@@ -67,11 +68,11 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) 
               />
 
               <Box sx={{ display: "flex", alignItems: "center", pt: "10px" }}>
-                {item.role === IS_OWNER && (
+                {item.role === IS_OWNER || item.role === IS_ADMIN ? (
                   <Box
                     sx={{
                       color: "#fff",
-                      backgroundColor: "#1BD0B0",
+                      backgroundColor: item.role === IS_OWNER ? "#1BD0B0" : theme.blue,
                       fontSize: "12px",
                       fontWeight: 600,
                       lineHeight: "16.34px",
@@ -80,9 +81,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) 
                       mr: "4px",
                     }}
                   >
-                    代表者
+                    {item.role === IS_OWNER ? "代表者" : "管理者"}
                   </Box>
-                )}
+                ) : null}
                 <Typography
                   component="span"
                   sx={{
