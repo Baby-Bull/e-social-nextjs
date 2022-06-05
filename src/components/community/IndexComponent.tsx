@@ -154,7 +154,7 @@ const CommunityComponent = () => {
                     flex: "0 0 24%",
                   }}
                 >
-                  <Avatar variant="square" sx={{ width: "72px", height: "72px" }} src={member.avatar} />
+                  <Avatar sx={{ width: "72px", height: "72px" }} src={member.avatar} />
 
                   <Typography
                     sx={{

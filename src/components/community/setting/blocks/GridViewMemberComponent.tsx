@@ -208,7 +208,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
       </Box>
 
       <DialogConfirmWithAvatarComponent
-        title={t("community:setting.member.dialog-block.title")}
+        title={`${data?.username}${t("community:setting.member.dialog-block.title")}`}
         content={t("community:setting.member.dialog-block.content")}
         btnLeft={t("community:button.dialog.cancel")}
         btnRight={t("community:button.dialog.block")}
@@ -221,7 +221,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
       />
 
       <DialogConfirmWithAvatarComponent
-        title={t("community:setting.member.dialog-unblock.title")}
+        title={`${data?.username}${t("community:setting.member.dialog-unblock.title")}`}
         content={t("community:setting.member.dialog-unblock.content")}
         btnLeft={t("community:button.dialog.cancel")}
         btnRight={t("community:button.dialog.unblock")}

@@ -23,9 +23,10 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [roleCommunity] = React.useState(data.community_role);
   const PENDING = "pending";
   const ADMIN = "admin";
+  const MEMBER = "member";
+  const OWNER = "owner";
 
   return (
     <React.Fragment>
@@ -192,7 +193,10 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
               <Box>
                 <ButtonComponent
                   sx={{
-                    display: { xs: roleCommunity === ADMIN && "none", md: "none" },
+                    display: {
+                      xs: data?.community_role !== ADMIN && data?.community_role !== OWNER ? "inherit" : "none",
+                      md: "none",
+                    },
                     width: "120px",
                     height: "36px",
                   }}
@@ -201,13 +205,16 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                   }}
                   onClick={handleClickOpen}
                 >
-                  {data.community_role ? t("community:banner.join-SP") : t("community:banner.withdraw-SP")}
+                  {data.community_role === MEMBER ? t("community:banner.withdraw-SP") : t("community:banner.join-SP")}
                 </ButtonComponent>
 
                 <ButtonComponent
                   variant="outlined"
                   sx={{
-                    display: { xs: roleCommunity !== ADMIN && "none", md: "none" },
+                    display: {
+                      xs: data?.community_role === ADMIN || data?.community_role === OWNER ? "inherit" : "none",
+                      md: "none",
+                    },
                     width: "120px",
                     height: "36px",
                     fontSize: 14,
@@ -218,7 +225,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                     color: theme.blue,
                     borderColor: theme.blue,
                   }}
-                  onClick={() => router.push(`/community/setting`)}
+                  onClick={() => router.push(`/community/setting/${data.id}`)}
                 >
                   {t("community:setting.title")}
                 </ButtonComponent>
@@ -244,27 +251,33 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
             <Box>
               <ButtonComponent
                 sx={{
-                  display: { xs: "none", md: roleCommunity !== ADMIN && "inherit" },
+                  display: {
+                    xs: "none",
+                    md: data?.community_role !== ADMIN && data?.community_role !== OWNER ? "inherit" : "none",
+                  },
                 }}
                 props={{
                   bgColor: data.community_role ? "red" : bgColorByStatus,
                 }}
                 onClick={handleClickOpen}
               >
-                {data.community_role ? t("community:banner.join") : t("community:banner.withdraw")}
+                {data.community_role === MEMBER ? t("community:banner.withdraw") : t("community:banner.join")}
               </ButtonComponent>
 
               <ButtonComponent
                 variant="outlined"
                 sx={{
-                  display: { xs: "none", md: roleCommunity === ADMIN && "inherit" },
+                  display: {
+                    xs: "none",
+                    md: data?.community_role === ADMIN || data?.community_role === OWNER ? "inherit" : "none",
+                  },
                 }}
                 props={{
                   bgColor: "white",
                   color: theme.blue,
                   borderColor: theme.blue,
                 }}
-                onClick={() => router.push(`/community/setting`)}
+                onClick={() => router.push(`/community/update/${data.id}`)}
               >
                 {t("community:setting.title")}
               </ButtonComponent>
