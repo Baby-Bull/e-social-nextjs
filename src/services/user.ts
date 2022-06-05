@@ -188,13 +188,6 @@ export const UserSearch = async (
   query +=
     params?.lastLogin === typeTimeLogin.two_week_to_month
       ? `&last_login[]=${moment().subtract(1, "months").toISOString()}&last_login[]=${moment()
-        .subtract(1, "weeks")
-        .toISOString()}`
-      : "";
-
-  query +=
-    params?.lastLogin === typeTimeLogin.two_week_to_month
-      ? `&last_login[]=${moment().subtract(1, "months").toISOString()}&last_login[]=${moment()
         .subtract(2, "weeks")
         .toISOString()}`
       : "";

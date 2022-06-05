@@ -2,6 +2,9 @@ import React from "react";
 import { Box } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import moment from "moment";
+import { useSelector } from "react-redux";
+
+import { IStoreState } from "src/constants/interface";
 
 import "moment/locale/ja";
 
@@ -16,6 +19,7 @@ interface reviewProps {
 const ReviewComponent: React.SFC<reviewProps> = ({ user, hideReviewer, rating, comment, createdAt }) => {
   const { t } = useTranslation();
   const GOOD = "good";
+  const auth = useSelector((state: IStoreState) => state.user);
 
   return (
     <Box>
@@ -45,7 +49,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, hideReviewer, rating, c
             />
           ) : (
             <a
-              href={`/profile/${user?.id}`}
+              href={auth.id === user?.id ? `/my-profile` : `/profile/${user?.id}`}
               style={{
                 textDecoration: "none",
                 color: "black",
@@ -142,7 +146,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, hideReviewer, rating, c
                   }}
                 >
                   <a
-                    href={`/profile/${user?.id}`}
+                    href={auth.id === user?.id ? `/my-profile` : `/profile/${user?.id}`}
                     style={{
                       textDecoration: "none",
                       color: "black",

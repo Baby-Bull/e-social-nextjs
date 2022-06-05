@@ -20,6 +20,7 @@ import {
   acceptMatchingRequestReceived,
   cancelMatchingRequestSent,
 } from "src/services/matching";
+import { addUserFavorite } from "src/services/user";
 import { TYPE } from "src/constants/matching";
 import { IStoreState } from "src/constants/interface";
 import actionTypes from "src/store/actionTypes";
@@ -74,6 +75,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
   const [userRequestMatchingId, setUserRequestMatchingId] = React.useState(null);
   const handleSendMatchingRequest = async (matchingRequest) => {
     const res = await sendMatchingRequest(userRequestMatchingId, matchingRequest);
+    await addUserFavorite(userRequestMatchingId);
     if (setKeyRefetchData) {
       setKeyRefetchData({
         type: TYPE.FAVORITE,
@@ -122,7 +124,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
     if (tempValue === "favorite") return "";
     if (tempValue === "matched")
       return moment(data?.matchRequest?.match_date).utc().format("lll").toString() + t("thread:request");
-    return moment(data?.created_at).utc().format("lll").toString() + t("thread:request");
+    return moment(data?.updated_at).utc().format("lll").toString() + t("thread:request");
   };
 
   return (
@@ -146,7 +148,9 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
             mb: "15px",
           }}
         >
-          {moment(data?.desired_match_date).utc().format("lll").toString()}
+          {type === "confirm" || type === "reject"
+            ? moment(data?.updated_at).utc().format("lll").toString()
+            : moment(data?.desired_match_date).utc().format("lll").toString()}
         </Typography>
 
         {/* Info user (avatar, ...) */}
@@ -546,8 +550,12 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 }}
               >
                 <ThreadTitle>{t("thread:date-interview")}</ThreadTitle>
-                {/* <ThreadContent>{format(data?.desired_match_date)}</ThreadContent> */}
-                <ThreadContent>{moment(data?.desired_match_date).utc().format("lll").toString()}</ThreadContent>
+                <ThreadContent>
+                  {type === "confirm" || type === "reject"
+                    ? moment(data?.updated_at).utc().format("lll").toString()
+                    : moment(data?.desired_match_date).utc().format("lll").toString()}
+                  {/* {moment(data?.desired_match_date).utc().format("lll").toString()} */}
+                </ThreadContent>
               </Box>
               <Box
                 sx={{
