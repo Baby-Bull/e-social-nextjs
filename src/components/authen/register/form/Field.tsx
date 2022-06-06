@@ -53,7 +53,7 @@ const InputCustom = styled(InputBase)({
     position: "relative",
     backgroundColor: "white",
     border: `1px solid ${theme.blue}`,
-    fontSize: 16,
+    fontSize: 14,
     height: "fit-content!important",
     padding: "10px 12px",
     borderRadius: 12,
@@ -77,6 +77,7 @@ const SelectCustom = styled(Select)({
   borderRadius: 12,
   borderColor: theme.blue,
   textAlign: "left",
+  fontSize: "14px!important",
   "&:hover": {
     borderRadius: 12,
     borderColor: theme.blue,
@@ -103,7 +104,7 @@ const SelectCustom = styled(Select)({
 });
 
 const ListItem = styled("li")({
-  margin: theme.spacing(0.5),
+  margin: "2px 2px",
   cursor: "pointer",
 });
 
@@ -215,7 +216,13 @@ export const Field: React.SFC<IFieldProps> = ({
                 color: "black",
               }}
             >
-              <Box display="flex">
+              <Box
+                sx={{
+                  fontFamily: "Noto Sans JP",
+                  fontSize: "16px",
+                }}
+                display="flex"
+              >
                 {label}
                 <Chip
                   label="必須"
@@ -247,6 +254,9 @@ export const Field: React.SFC<IFieldProps> = ({
               sx={{
                 mt: 2,
                 mb: "5px",
+                fontSize: "12px",
+                fontFamily: "Noto Sans JP",
+                color: "black",
                 textAlign: "left",
                 display: "flex",
                 alignItems: "flex-start",
@@ -284,57 +294,59 @@ export const Field: React.SFC<IFieldProps> = ({
               mt: ["25px", "20px"],
             }}
           >
-            <Box
+            <Paper
               sx={{
                 pl: "18px",
-                pt: "2px",
-                color: theme.blue,
-                fontSize: 12,
-                fontWeight: 400,
-                textAlign: "left",
+                mt: 1,
+                mb: 4,
+                pb: "15px",
+                maxWidth: "360px",
+                display: "flex",
+                flexWrap: "wrap",
+                listStyle: "none",
+                boxShadow: "none",
+                borderRadius: "12px",
               }}
+              component="ul"
             >
-              よく使用されているタグ
-              <Paper
+              <Box
                 sx={{
-                  pl: 0,
-                  mt: 1,
-                  mb: 4,
-                  maxWidth: "360px",
-                  display: "flex",
-                  flexWrap: "wrap",
-                  listStyle: "none",
-                  boxShadow: "none",
+                  width: "100%",
+                  pl: "4px",
+                  pt: "7px",
+                  color: theme.blue,
+                  fontSize: 12,
+                  fontWeight: 400,
+                  textAlign: "left",
                 }}
-                component="ul"
               >
-                {listChipData.map((data) => {
-                  let icon;
-
-                  return (
-                    <ListItem
-                      key={data.key}
-                      onClick={() => {
-                        onClickTagChip(data.label);
+                よく使用されているタグ
+              </Box>
+              {listChipData.map((data) => {
+                let icon;
+                return (
+                  <ListItem
+                    key={data.key}
+                    onClick={() => {
+                      onClickTagChip(data.label);
+                    }}
+                  >
+                    <Chip
+                      variant={checkTagSelected(data.label) ? "filled" : "outlined"}
+                      size="small"
+                      icon={icon}
+                      label={data.label}
+                      sx={{
+                        fontSize: 12,
+                        fontWeight: 400,
+                        color: theme.gray,
+                        borderRadius: "4px",
                       }}
-                    >
-                      <Chip
-                        variant={checkTagSelected(data.label) ? "filled" : "outlined"}
-                        size="small"
-                        icon={icon}
-                        label={data.label}
-                        sx={{
-                          fontSize: 12,
-                          fontWeight: 400,
-                          color: theme.gray,
-                          borderRadius: "4px",
-                        }}
-                      />
-                    </ListItem>
-                  );
-                })}
-              </Paper>
-            </Box>
+                    />
+                  </ListItem>
+                );
+              })}
+            </Paper>
 
             <InputLabel
               shrink
@@ -387,7 +399,7 @@ export const Field: React.SFC<IFieldProps> = ({
               </Typography>
             )}
             {value?.length > 0 && (
-              <Paper
+              <Box
                 sx={{
                   pl: 0,
                   mt: 1,
@@ -434,7 +446,7 @@ export const Field: React.SFC<IFieldProps> = ({
                     </ListItem>
                   );
                 })}
-              </Paper>
+              </Box>
             )}
           </FormControl>
         )}
@@ -452,7 +464,6 @@ export const Field: React.SFC<IFieldProps> = ({
               }}
               control={
                 <Checkbox
-                  defaultChecked
                   onChange={onChangeCheckbox}
                   size="small"
                   sx={{
@@ -497,7 +508,7 @@ export const Field: React.SFC<IFieldProps> = ({
               <DesktopDatePicker
                 maxDate={new Date()}
                 value={date}
-                inputFormat="dd/MM/yyyy"
+                inputFormat="yyyy/MM/dd"
                 onChange={(newValue) => {
                   onValidateDate(newValue);
                   setDate(newValue);
