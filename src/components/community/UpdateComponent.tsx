@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroller";
 import {
   Avatar,
   Box,
@@ -16,6 +17,7 @@ import {
   OutlinedInput,
   FormControl,
   ThemeProvider,
+  CircularProgress,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { styled, useTheme } from "@mui/material/styles";
@@ -90,6 +92,7 @@ const UpdateComponent = () => {
   const router = useRouter();
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
+  const LIMIT = 10;
   const MenuProps = {
     PaperProps: {
       style: {
@@ -101,6 +104,7 @@ const UpdateComponent = () => {
 
   const getStyles = (name, personName) => ({
     color: personName.indexOf(name) === -1 ? theme.navy : theme.blue,
+    background: personName.indexOf(name) === -1 ? "white" : theme.whiteBlue,
   });
   const themeSelect = useTheme();
   const [personName, setPersonName] = React.useState([]);
@@ -118,6 +122,7 @@ const UpdateComponent = () => {
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
   const [communityMembers, setCommunityMembers] = useState([]);
+  const [itemsCount, setItemsCount] = useState(0);
   const [communityRequest, setCommunityRequest] = useState({
     name,
     description,
@@ -135,6 +140,10 @@ const UpdateComponent = () => {
   const [srcProfileImage, setSrcProfileImage] = useState("");
   const [openDialog, setOpen] = useState(false);
   const [tagDataValidate, setTagDataValidate] = useState(false);
+  const [valueCursor, setValueCursor] = useState("");
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
   const fetchData = async () => {
     const admins = [];
     const communityId = router.query;
@@ -161,9 +170,17 @@ const UpdateComponent = () => {
 
   const fetchDataUsers = async () => {
     const communityId = router.query;
-    const data = await CommunityMembers(communityId?.indexId);
-    setCommunityMembers(data?.items);
-    return data;
+    if (hasMore) {
+      setIsLoading(true);
+      const data = await CommunityMembers(communityId?.indexId, LIMIT, valueCursor);
+      // eslint-disable-next-line no-unsafe-optional-chaining
+      setCommunityMembers([...communityMembers, ...data?.items]);
+      setItemsCount(data?.items_count);
+      setValueCursor(data?.cursor);
+      setHasMore(data?.hasMore);
+      setIsLoading(false);
+      return data;
+    }
   };
 
   useEffect(() => {
@@ -640,30 +657,52 @@ const UpdateComponent = () => {
                       )}
                       MenuProps={MenuProps}
                     >
-                      <MenuItem disabled value="">
-                        {t("community:setting.form.placeholder.administrator")}
-                      </MenuItem>
-                      {communityMembers?.map(
-                        (nameOption) =>
-                          nameOption?.id !== owner?.id && (
-                            <MenuItem
-                              key={nameOption?.id}
-                              value={`${nameOption?.id},${nameOption?.username}`}
-                              style={getStyles(`${nameOption?.id},${nameOption?.username}`, personName)}
-                              sx={{ background: "#fff !important" }}
-                            >
-                              <Avatar
-                                src={nameOption?.profile_image}
-                                sx={{
-                                  width: "24px",
-                                  height: "24px",
-                                  marginRight: "8px",
-                                }}
-                              />
-                              {nameOption?.username}
-                            </MenuItem>
-                          ),
-                      )}
+                      <Box sx={{ height: "208px", overflow: "auto" }}>
+                        <InfiniteScroll
+                          loadMore={fetchDataUsers}
+                          hasMore={communityMembers?.length < itemsCount}
+                          useWindow={false}
+                          initialLoad={false}
+                          loader={
+                            isLoading && (
+                              <Box sx={{ color: theme.blue, marginTop: "-115px", textAlign: "center" }}>
+                                <CircularProgress color="inherit" />
+                              </Box>
+                            )
+                          }
+                        >
+                          <MenuItem disabled value="">
+                            {t("community:setting.form.placeholder.administrator")}
+                          </MenuItem>
+                          {communityMembers?.map(
+                            (nameOption) =>
+                              nameOption?.id !== owner?.id && (
+                                <MenuItem
+                                  key={nameOption?.id}
+                                  value={`${nameOption?.id},${nameOption?.username}`}
+                                  style={getStyles(`${nameOption?.id},${nameOption?.username}`, personName)}
+                                  disabled={isLoading ?? true}
+                                  sx={{
+                                    "&:hover": {
+                                      background: `${theme.blue} !important`,
+                                      color: "white !important",
+                                    },
+                                  }}
+                                >
+                                  <Avatar
+                                    src={nameOption?.profile_image}
+                                    sx={{
+                                      width: "24px",
+                                      height: "24px",
+                                      marginRight: "8px",
+                                    }}
+                                  />
+                                  {nameOption?.username}
+                                </MenuItem>
+                              ),
+                          )}
+                        </InfiniteScroll>
+                      </Box>
                     </SelectCustom>
                   </FormControl>
                 </Box>
