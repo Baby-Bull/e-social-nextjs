@@ -59,32 +59,8 @@ export const LoginSocialGithub = forwardRef(
       const stateItem = popupWindowURL.searchParams.get("state");
       if (stateItem?.includes("_github") && code) {
         localStorage.setItem("github", code);
-        window.close();
       }
     }, []);
-
-    const getProfile = useCallback(
-      (data) => {
-        fetch(`${PREVENT_CORS_URL}/${GITHUB_API_URL}/user`, {
-          method: "GET",
-          headers: {
-            Authorization: `token ${data.access_token}`,
-            "x-cors-grida-api-key": "875c0462-6309-4ddf-9889-5227b1acc82c",
-          },
-        })
-          .then((res) => res.json())
-          .then((response: any) => {
-            setIsLogged(true);
-            setIsProcessing(false);
-            onResolve({ provider: "github", data: { ...response, ...data } });
-          })
-          .catch((err) => {
-            setIsProcessing(false);
-            onReject(err);
-          });
-      },
-      [onReject, onResolve],
-    );
 
     const getAccessToken = useCallback(
       (code: string) => {
@@ -108,20 +84,27 @@ export const LoginSocialGithub = forwardRef(
           .then((response) => response.text())
           .then((response) => {
             setIsProcessing(false);
+            window.close();
             const data: objectType = {};
             const searchParams: any = new URLSearchParams(response);
             for (const p of searchParams) {
               data[p[0]] = p[1];
             }
-            if (data.access_token) getProfile(data);
-            else onReject("no data");
+            if (data.access_token) {
+              setIsLogged(true);
+              setIsProcessing(false);
+              onResolve({ provider: "github", data });
+            } else {
+              setIsProcessing(false);
+              onReject("no data");
+            }
           })
           .catch((err) => {
             setIsProcessing(false);
             onReject(err);
           });
       },
-      [client_id, client_secret, getProfile, onReject, redirect_uri, state],
+      [client_id, client_secret, onReject, redirect_uri, state],
     );
 
     const handlePostMessage = useCallback(

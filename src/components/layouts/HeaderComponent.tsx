@@ -177,6 +177,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
 
   const handleLogout = async () => {
     await logout();
+    // window.location.href = "/login";
     router.push("/login");
   };
 
