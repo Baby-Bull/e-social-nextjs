@@ -476,12 +476,18 @@ const ProfileSkillComponent = () => {
     }
     if (arrLanguage.length > 0) {
       setSkillLanguage(arrLanguage);
+    } else {
+      setSkillLanguage(null);
     }
     if (arrFramework.length > 0) {
       setSkillFramework(arrFramework);
+    } else {
+      setSkillFramework(null);
     }
     if (arrInfrastructure.length > 0) {
       setSkillInfrastructure(arrInfrastructure);
+    } else {
+      setSkillInfrastructure(null);
     }
     return data;
   };

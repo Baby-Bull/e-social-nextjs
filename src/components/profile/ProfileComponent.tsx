@@ -277,9 +277,10 @@ const ProfileHaveDataComponent = () => {
           display: "flex",
           justifyContent: "center",
           position: "fixed",
-          top: "91.5%",
+          top: "88%",
           opacity: 0.8,
           width: "100%",
+          paddingY: "20px",
         }}
       >
         <ButtonComponent

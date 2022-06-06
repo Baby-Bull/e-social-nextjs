@@ -134,7 +134,7 @@ const MailSettingComponent = () => {
   const [mailOnChange, setMailOnChange] = React.useState(false);
   const [newMessage, setNewMessage] = React.useState(false);
   const [newRecommended, setNewRecommended] = React.useState(false);
-  const [email, setEmail] = React.useState(null);
+  const [email, setEmail] = React.useState("");
   const [settingNotificationRequest, setSettingNotificationRequest] = useState({
     new_message_email_notify: newMessage,
     new_recommended_user_email_notify: newRecommended,
@@ -143,7 +143,7 @@ const MailSettingComponent = () => {
   useEffect(() => {
     setNewMessage(auth?.setting?.new_message_email_notify);
     setNewRecommended(auth?.setting?.new_recommended_user_email_notify);
-    setEmail(auth?.email);
+    // setEmail(auth?.email);
   }, []);
 
   const [showPopup, setShowPopup] = useState(false);
