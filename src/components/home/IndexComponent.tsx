@@ -193,7 +193,7 @@ const HomeIndexComponents = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          marginTop: "80px",
+          marginTop: "65px",
         }}
       >
         <BannerComponent />
