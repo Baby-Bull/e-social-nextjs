@@ -11,6 +11,7 @@
     @media screen and (min-width: 993px) {
       margin-right: 45px;
       width: 240px;
+      position: fixed;
     }
 
     .blockInputTag {
@@ -96,6 +97,10 @@
 
   .boxResultSearch {
     flex-grow: 1;
+    padding-left: 285px;
+    @media screen and (max-width: 992px) {
+      padding-left: 0;
+    }
 
     .titleResultSearch {
       display: flex;

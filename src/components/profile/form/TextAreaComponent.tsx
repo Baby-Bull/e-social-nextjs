@@ -3,8 +3,6 @@ import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 
-import theme from "src/theme";
-
 export interface FieldProps {
   id?: string;
   placeholder?: string;
@@ -22,7 +20,9 @@ const FieldTextArea = styled(TextareaAutosize)({
   fontSize: 16,
   padding: "9px 16px",
   borderRadius: "6px",
-  "&:placeholder": { color: theme.gray },
+  "&::placeholder": {
+    color: "#bdbdbd",
+  },
   "@media (max-width: 1200px)": {
     fontSize: 14,
   },

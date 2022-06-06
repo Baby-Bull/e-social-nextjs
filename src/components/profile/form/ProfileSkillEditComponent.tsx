@@ -161,8 +161,8 @@ const InputCustom = styled(TextField)({
   "& fieldset": {
     border: "none",
   },
-  "&:placeholder": {
-    color: "red",
+  "&::placeholder": {
+    color: "#bdbdbd",
   },
   "& .MuiInputBase-input": {
     position: "relative",

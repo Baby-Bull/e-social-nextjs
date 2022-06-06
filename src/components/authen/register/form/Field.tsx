@@ -7,7 +7,7 @@ import {
   MenuItem,
   FormGroup,
   Checkbox,
-  FormControlLabel,
+  Link,
   Box,
   Typography,
   Chip,
@@ -452,27 +452,30 @@ export const Field: React.SFC<IFieldProps> = ({
         )}
 
         {editor!.toLowerCase() === "checkbox" && (
-          <FormGroup>
-            <FormControlLabel
-              label={label}
+          <FormGroup
+            sx={{
+              display: "-webkit-box!important",
+            }}
+          >
+            <Checkbox
+              onChange={onChangeCheckbox}
+              size="small"
               sx={{
-                mr: 0,
-                fontSize: "12px",
-                "& .MuiFormControlLabel-label": {
-                  fontSize: 12,
-                },
+                color: theme.blue,
+                "&.Mui-checked": { color: theme.blue },
               }}
-              control={
-                <Checkbox
-                  onChange={onChangeCheckbox}
-                  size="small"
-                  sx={{
-                    color: theme.blue,
-                    "&.Mui-checked": { color: theme.blue },
-                  }}
-                />
-              }
             />
+            <p
+              style={{
+                fontSize: "12px",
+                display: "flex",
+              }}
+            >
+              <Link href="#" color="secondary">
+                <Box color={theme.blue}>利用規約</Box>
+              </Link>
+              {label}
+            </p>
           </FormGroup>
         )}
 
