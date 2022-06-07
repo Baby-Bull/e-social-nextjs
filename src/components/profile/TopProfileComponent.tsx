@@ -507,6 +507,11 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   margin: "0 auto",
                   marginTop: "24px",
                   cursor: "pointer",
+
+                  "&:hover": {
+                    background: "#dcf9ff",
+                    cursor: "pointer",
+                  },
                 }}
                 disabled={user?.match_status === "confirmed"}
                 onClick={handleClickFavoriteButton}

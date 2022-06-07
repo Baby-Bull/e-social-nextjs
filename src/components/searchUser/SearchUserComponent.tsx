@@ -77,7 +77,7 @@ const SearchUserComponent = () => {
   const [inputTags, setInputTags] = useState([]);
   const [resultSearch, setResultSearch] = useState([]);
   const [isRefresh, setIsRefresh] = useState(false);
-  const [isSort, setIsSort] = useState("");
+  const [isSort, setIsSort] = useState("recommended");
   const [showMore, setShowMore] = useState({ cursor: "", hasMore: false });
   const [formSearch, setFormSearch] = useState({
     job: jobs[0]?.value,
@@ -332,13 +332,13 @@ const SearchUserComponent = () => {
                   <Divider orientation="vertical" flexItem />
                   <Box
                     onClick={() => handleSort("recommended")}
-                    className={isSort === "recommended" ? "sort-link active" : "sort-link"}
+                    className={isSort === "recommended" ? "sort-link" : "sort-link active"}
                   >
                     {t("user-search:recommend-order")}
                   </Box>
                   <Box
                     onClick={() => handleSort("login_at")}
-                    className={isSort === "login_at" ? "sort-link active" : "sort-link"}
+                    className={isSort === "login_at" ? "sort-link" : "sort-link active"}
                   >
                     {t("user-search:last-login-order")}
                   </Box>

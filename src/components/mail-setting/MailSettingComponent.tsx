@@ -134,7 +134,7 @@ const MailSettingComponent = () => {
   const [mailOnChange, setMailOnChange] = React.useState(false);
   const [newMessage, setNewMessage] = React.useState(false);
   const [newRecommended, setNewRecommended] = React.useState(false);
-  const [email, setEmail] = React.useState(null);
+  const [email, setEmail] = React.useState("");
   const [settingNotificationRequest, setSettingNotificationRequest] = useState({
     new_message_email_notify: newMessage,
     new_recommended_user_email_notify: newRecommended,
@@ -143,7 +143,7 @@ const MailSettingComponent = () => {
   useEffect(() => {
     setNewMessage(auth?.setting?.new_message_email_notify);
     setNewRecommended(auth?.setting?.new_recommended_user_email_notify);
-    setEmail(auth?.email);
+    // setEmail(auth?.email);
   }, []);
 
   const [showPopup, setShowPopup] = useState(false);
@@ -239,7 +239,13 @@ const MailSettingComponent = () => {
   // @ts-ignore
   return (
     <ContentComponent>
-      <Box sx={{ background: theme.whiteBlue, p: { xs: "0 0 0 0", lg: "40px 200px 129px 40px" } }}>
+      <Box
+        sx={{
+          background: theme.whiteBlue,
+          p: { xs: "0 0 0 0", lg: "40px 200px 129px 40px" },
+          mt: "65px",
+        }}
+      >
         <Box sx={{ mb: "200px" }}>
           <Box sx={{ display: "flex", alignItems: "center", justifyContent: { xs: "center", lg: "start" } }}>
             <Avatar src="/assets/images/icon/ic_setting_black.png" sx={{ width: "18px", height: "22px", mr: "8px" }} />
@@ -314,7 +320,7 @@ const MailSettingComponent = () => {
                   </Box>
                   <Box sx={{ display: "flex", alignItems: "center", mt: "18px" }}>
                     <Typography component="div" fontSize={14} fontWeight={400} lineHeight="18.75px" color={theme.navy}>
-                      tanakataro@rebase.co.jp
+                      {auth?.email}
                     </Typography>
                   </Box>
 
@@ -347,7 +353,7 @@ const MailSettingComponent = () => {
                   </Box>
                   <InputCustom
                     onChange={(e) => onChangeSettingMailRequest("email", e.target.value)}
-                    placeholder="tanakataro@rebase.co.jp"
+                    placeholder={auth?.email}
                     id="mail"
                     value={email}
                   />

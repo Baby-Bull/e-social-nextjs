@@ -62,6 +62,9 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
     }
   }, [optionSelected, tabValue]);
 
+  const handleDisplayReddot = (tabType: number, countUnconfirmed: number) =>
+    (tabType === 1 || tabType === 2) && countUnconfirmed > 0;
+
   return (
     <React.Fragment>
       <Tabs
@@ -86,18 +89,29 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
             {...a11yProps(index)}
             sx={{
               backgroundColor: "white",
-              "&.Mui-selected": {
-                "&:before": {
-                  content: `url("/assets/images/svg/red_dot.svg")`,
-                  position: "absolute",
-                  top: "-5px",
-                  right: "10px",
-                  "@media (max-width: 768px)": {
-                    top: "5px",
-                    right: "5px",
-                  },
+              "&:before": handleDisplayReddot(tab?.type, tab?.children?.[0]?.count) && {
+                content: `url("/assets/images/svg/red_dot.svg")`,
+                position: "absolute",
+                top: "-5px",
+                right: "10px",
+                "@media (max-width: 768px)": {
+                  top: "5px",
+                  right: "5px",
                 },
               },
+
+              // "&.Mui-selected": {
+              //   "&:before": {
+              //     content: `url("/assets/images/svg/red_dot.svg")`,
+              //     position: "absolute",
+              //     top: "-5px",
+              //     right: "10px",
+              //     "@media (max-width: 768px)": {
+              //       top: "5px",
+              //       right: "5px",
+              //     },
+              //   },
+              // },
             }}
           />
         ))}

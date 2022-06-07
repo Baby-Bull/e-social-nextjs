@@ -22,7 +22,7 @@
       "email": "メールアドレス",
       "place": "お住まいの地域",
       "tag": "タグ",
-      "checkbox": "利用規約に同意する"
+      "checkbox": "に同意する"
     },
     "placeholder": {
       "name": "田中太郎",
