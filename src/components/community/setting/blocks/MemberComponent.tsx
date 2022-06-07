@@ -124,7 +124,7 @@ const MemberComponent = () => {
           }}
           key={LIST_BLOCK.toString()}
           iconPosition="top"
-          label={`参加メンバー ${countItemsBlock}人`}
+          label={`参加メンバー ${countItemsBlock ?? 0}人`}
           {...a11yProps(LIST_BLOCK)}
         />
 
@@ -142,7 +142,7 @@ const MemberComponent = () => {
           }}
           key={LIST_BLOCKED.toString()}
           iconPosition="top"
-          label={`ブロックリスト${countItemsBlocked}人`}
+          label={`ブロックリスト${countItemsBlocked ?? 0}人`}
           {...a11yProps(LIST_BLOCKED)}
         />
       </Tabs>

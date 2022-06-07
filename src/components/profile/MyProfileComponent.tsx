@@ -83,7 +83,7 @@ const ProfileHaveDataComponent = () => {
   const [isRefresh, setIsRefresh] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showModalMatching, setModalMatching] = React.useState(false);
-  const [userId] = useState(auth?.user?.id);
+  const [userId] = useState(auth?.id);
 
   const fetchProfileSkill = async () => {
     setIsLoading(true);

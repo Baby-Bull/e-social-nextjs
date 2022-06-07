@@ -73,8 +73,8 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
           position: "relative",
         }}
       >
-        <Box display={type === "block" && "none"}>
-          <DropDownBlockUserComponent />
+        <Box display={data.role !== IS_OWNER && type !== "block" ? "block" : "none"}>
+          <DropDownBlockUserComponent handleOK={handleDialogApproveBlock} />
         </Box>
 
         {/* Info user (avatar, ...) */}
@@ -161,7 +161,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
                 dimension: "x-small",
               }}
               sx={{
-                display: ["none", data.role === IS_MEMBER && "flex"],
+                display: ["none", data.role !== IS_OWNER && "flex"],
                 height: "36px",
               }}
               onClick={handleOpenDialogBlock}

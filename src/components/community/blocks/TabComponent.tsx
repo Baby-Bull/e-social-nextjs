@@ -33,8 +33,8 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const valueTabMenbers = 2;
-  const LIMIT = 20;
+  const valueTabMembers = 2;
+  const LIMIT = 5;
 
   const [valueParentTab, setValueParentTab] = React.useState(0);
   const [communityMembers, setCommunityMembers] = useState([]);
@@ -57,7 +57,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
 
   const onChangeParentTab = (event: React.SyntheticEvent, newValue: number) => {
     setValueParentTab(newValue);
-    if (valueTabMenbers === newValue && !isCallApi) {
+    if (valueTabMembers === newValue && !isCallApi) {
       fetchDataUsers();
     }
   };
@@ -177,9 +177,6 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
         {communityMembers.length ? (
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
               pb: "40px",
             }}
           >

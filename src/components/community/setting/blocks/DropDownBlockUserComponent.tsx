@@ -5,7 +5,10 @@ import { useTranslation } from "next-i18next";
 import theme from "src/theme";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
 
-const DropDownBlockUserComponent = () => {
+interface IDialogConfirmProps {
+  handleOK?: () => void;
+}
+const DropDownBlockUserComponent: React.SFC<IDialogConfirmProps> = ({ handleOK }) => {
   const { t } = useTranslation();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -20,7 +23,10 @@ const DropDownBlockUserComponent = () => {
   const [openDialog, setOpen] = React.useState(false);
   const handleOpenDialog = () => setOpen(true);
   const handleCloseDialog = () => setOpen(false);
-
+  const handleApproveBlock = () => {
+    setOpen(false);
+    handleOK();
+  };
   return (
     <React.Fragment>
       <IconButton
@@ -89,7 +95,7 @@ const DropDownBlockUserComponent = () => {
         isShow={openDialog}
         handleClose={handleCloseDialog}
         handleCancel={handleCloseDialog}
-        handleOK={handleCloseDialog}
+        handleOK={handleApproveBlock}
       />
     </React.Fragment>
   );

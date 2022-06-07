@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Avatar, Box, Grid, Typography } from "@mui/material";
 import React from "react";
 import { useTranslation } from "next-i18next";
 
@@ -27,7 +27,9 @@ const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({ communitie
                 p: "20px 40px",
               }}
             >
-              <img src={item.profile_image} alt="rectangle" />
+              <Box sx={{ display: "flex", justifyContent: "center" }}>
+                <Avatar sx={{ width: "124px", height: "124px" }} src={item.profile_image} alt="rectangle" />
+              </Box>
               <Typography
                 sx={{
                   fontWeight: 700,

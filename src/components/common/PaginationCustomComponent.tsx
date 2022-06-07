@@ -6,6 +6,8 @@ import { styled } from "@mui/material/styles";
 import theme from "src/theme";
 
 export const PaginationCustom = styled(Pagination)({
+  display: "flex",
+  justifyContent: "center",
   "& .MuiButtonBase-root": {
     "&.MuiPaginationItem-previousNext.Mui-disabled": {
       display: "none",
