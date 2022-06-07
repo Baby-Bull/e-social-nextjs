@@ -199,7 +199,7 @@ export const Field: React.SFC<FieldProps> = ({
                   <DesktopDatePicker
                     minDate={new Date()}
                     value={date}
-                    inputFormat="dd/MM/yyyy"
+                    inputFormat="yyyy/MM/dd"
                     onChange={(newValue) => {
                       onChangeValue(id, newValue?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }));
                       setDate(newValue);

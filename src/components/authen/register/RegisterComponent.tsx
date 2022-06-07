@@ -95,7 +95,7 @@ const RegisterComponents = () => {
               <Box pt="63px">
                 <LoginSocialTwitter
                   ref={githubRef}
-                  client_id={process.env.NEXNEXT_PUBLIC_TWITTER_API_KEY || ""}
+                  client_id={process.env.NEXT_PUBLIC_TWITTER_API_KEY || ""}
                   client_secret={process.env.NEXT_PUBLIC_TWITTER_API_KEY_SECRET || ""}
                   redirect_uri={process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER}
                   onResolve={({ provider: twitterProvider, data }: IResolveParams) => {

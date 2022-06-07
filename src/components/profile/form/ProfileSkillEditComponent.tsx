@@ -161,8 +161,8 @@ const InputCustom = styled(TextField)({
   "& fieldset": {
     border: "none",
   },
-  "&:placeholder": {
-    color: "red",
+  "&::placeholder": {
+    color: "#bdbdbd",
   },
   "& .MuiInputBase-input": {
     position: "relative",
@@ -476,12 +476,18 @@ const ProfileSkillComponent = () => {
     }
     if (arrLanguage.length > 0) {
       setSkillLanguage(arrLanguage);
+    } else {
+      setSkillLanguage([]);
     }
     if (arrFramework.length > 0) {
       setSkillFramework(arrFramework);
+    } else {
+      setSkillFramework([]);
     }
     if (arrInfrastructure.length > 0) {
       setSkillInfrastructure(arrInfrastructure);
+    } else {
+      setSkillInfrastructure([]);
     }
     return data;
   };
@@ -576,7 +582,6 @@ const ProfileSkillComponent = () => {
           : el,
       ),
     );
-    console.log(skillLanguageData);
   };
 
   const onChangeSkillFramework = (key: number, e: any) => {
@@ -1035,23 +1040,21 @@ const ProfileSkillComponent = () => {
   // submit profile form
   const submitUserProfileRequest = async () => {
     if (handleValidateForm()) {
-      if (isSkillProfile) {
-        const res = await updateProfile({
-          skills: {
-            code_skills: [...skillLanguageData, ...skillFrameworkData, ...skillInfrastructureData],
-            upstream_process: skillRequest.upstream_process,
-            english_level: skillRequest.english_level,
-            other_language_level: skillRequest.other_language_level,
-          },
-        });
-        setTimeout(() => router.push("/my-profile"), 3000);
-        return res;
-      }
+      const tags = { tags: inputTags };
       setProfileRequest({
         ...profileRequest,
+        ...tags,
       });
-      const tags = { tags: inputTags };
-      const res = await updateProfile({ ...profileRequest, ...tags });
+      const res = await updateProfile({
+        ...profileRequest,
+        ...tags,
+        skills: {
+          code_skills: [...skillLanguageData, ...skillFrameworkData, ...skillInfrastructureData],
+          upstream_process: skillRequest.upstream_process,
+          english_level: skillRequest.english_level,
+          other_language_level: skillRequest.other_language_level,
+        },
+      });
       setTimeout(() => router.push("/my-profile"), 3000);
       return res.data;
     }
@@ -1510,7 +1513,7 @@ const ProfileSkillComponent = () => {
                       </TitleContentTab>
                       {/* Languge */}
                       <ContentTab>
-                        {skillLanguageData.map((option, key) => (
+                        {skillLanguageData?.map((option, key) => (
                           <Box key={key} sx={{ mb: "15px" }}>
                             <Box sx={{ display: { xs: "block", lg: "flex" } }}>
                               <Box>
@@ -1597,7 +1600,7 @@ const ProfileSkillComponent = () => {
                                       fontSize: "14px",
                                       fontWeight: 700,
                                       lineHeight: "20.27px",
-                                      display: skillLanguageData.length > 1 ? "block" : "none",
+                                      display: skillLanguageData?.length > 1 ? "block" : "none",
                                       height: "32px",
                                       p: 0,
                                     }}
@@ -1631,7 +1634,7 @@ const ProfileSkillComponent = () => {
                               fontWeight: 700,
                               lineHeight: "20.27px",
                             }}
-                            onClick={addSkillLanguageClick(skillLanguageData[skillLanguageData.length - 1]?.key)}
+                            onClick={addSkillLanguageClick(skillLanguageData?.[skillLanguageData?.length]?.key || 0)}
                           >
                             {t("profile:form.to-add")}
                           </Button>
@@ -1650,7 +1653,7 @@ const ProfileSkillComponent = () => {
                         </BoxEstimatedStar>
                       </TitleContentTab>
                       <ContentTab>
-                        {skillFrameworkData.map((option, key) => (
+                        {skillFrameworkData?.map((option, key) => (
                           <Box key={key} sx={{ mb: "15px" }}>
                             <Box sx={{ display: { xs: "block", lg: "flex" } }}>
                               <Box>
@@ -1737,7 +1740,7 @@ const ProfileSkillComponent = () => {
                                       fontSize: "14px",
                                       fontWeight: 700,
                                       lineHeight: "20.27px",
-                                      display: skillFrameworkData.length > 1 ? "block" : "none",
+                                      display: skillFrameworkData?.length > 1 ? "block" : "none",
                                       height: "32px",
                                       p: 0,
                                     }}
@@ -1771,7 +1774,7 @@ const ProfileSkillComponent = () => {
                               fontWeight: 700,
                               lineHeight: "20.27px",
                             }}
-                            onClick={addSkillFrameworkClick(skillFrameworkData[skillFrameworkData.length - 1]?.key)}
+                            onClick={addSkillFrameworkClick(skillFrameworkData?.[skillFrameworkData?.length]?.key || 0)}
                           >
                             {t("profile:form.to-add")}
                           </Button>
@@ -1789,7 +1792,7 @@ const ProfileSkillComponent = () => {
                         </BoxEstimatedStar>
                       </TitleContentTab>
                       <ContentTab>
-                        {skillInfrastructureData.map((option, key) => (
+                        {skillInfrastructureData?.map((option, key) => (
                           <Box key={key} sx={{ mb: "15px" }}>
                             <Box sx={{ display: { xs: "block", lg: "flex" } }}>
                               <Box>
@@ -1878,7 +1881,7 @@ const ProfileSkillComponent = () => {
                                       fontSize: "14px",
                                       fontWeight: 700,
                                       lineHeight: "20.27px",
-                                      display: skillInfrastructureData.length > 1 ? "block" : "none",
+                                      display: skillInfrastructureData?.length > 1 ? "block" : "none",
                                       height: "32px",
                                       p: 0,
                                     }}
@@ -1913,7 +1916,7 @@ const ProfileSkillComponent = () => {
                               lineHeight: "20.27px",
                             }}
                             onClick={addSkillInfrastructureClick(
-                              skillInfrastructureData[skillInfrastructureData.length - 1]?.key,
+                              skillInfrastructureData?.[skillInfrastructureData?.length]?.key || 0,
                             )}
                           >
                             {t("profile:form.to-add")}

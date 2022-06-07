@@ -109,9 +109,15 @@ const CreateComponent = () => {
   const [tagData, setTagData] = useState([]);
   const [profileImage, setProfileImage] = useState("");
   const [srcProfileImage, setSrcProfileImage] = useState("");
+  const [tagDataValidate, setTagDataValidate] = useState(false);
 
   const onKeyPress = (e) => {
+    if (e.target.value.length > 20) {
+      setTagDataValidate(true);
+      return false;
+    }
     if (e.key === "Enter" && e.target.value) {
+      setTagDataValidate(false);
       setTagData([...tagData, e.target.value]);
       (document.getElementById("input_tags") as HTMLInputElement).value = "";
     }
@@ -340,7 +346,6 @@ const CreateComponent = () => {
                 }}
               >
                 <Avatar
-                  variant="square"
                   sx={{
                     mb: 0,
                     width: "160px",
@@ -457,7 +462,6 @@ const CreateComponent = () => {
                   }}
                 >
                   <Avatar
-                    variant="square"
                     sx={{
                       mb: 0,
                       width: "32px",
@@ -563,25 +567,16 @@ const CreateComponent = () => {
               <Grid item xs={12} sm={9}>
                 <InputCustom
                   sx={{
-                    display: ["none", "inherit"],
                     ml: 1,
                     flex: 1,
+                    border: tagDataValidate ? "1px solid #FF9458" : "none",
                   }}
                   placeholder={t("community:setting.form.placeholder.tag")}
                   inputProps={{ "aria-label": t("community:setting.form.placeholder.tag") }}
                   id="input_tags"
                   onKeyPress={onKeyPress}
                 />
-
-                <InputCustom
-                  sx={{
-                    display: { sm: "none" },
-                    ml: 1,
-                    flex: 1,
-                  }}
-                  placeholder={t("community:setting.form.placeholder.tag-SP")}
-                  inputProps={{ "aria-label": t("community:setting.form.placeholder.tag-SP") }}
-                />
+                {tagDataValidate && <BoxTextValidate>{t("community:max_length_tag")}</BoxTextValidate>}
 
                 <Box>
                   <Paper

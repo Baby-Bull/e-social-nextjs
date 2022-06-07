@@ -6,7 +6,13 @@ import { useQuery } from "react-query";
 
 import { REACT_QUERY_KEYS } from "src/constants/constants";
 import ContentComponent from "src/components/layouts/ContentComponent";
-import { getUserFavoriteTags, getUserProvince, getUserRecentlyLogin, getUserNewMembers } from "src/services/user";
+import {
+  getUserFavoriteTags,
+  getUserProvince,
+  getUserRecentlyLogin,
+  getUserNewMembers,
+  addUserFavorite,
+} from "src/services/user";
 import { sendMatchingRequest } from "src/services/matching";
 import theme from "src/theme";
 
@@ -162,6 +168,7 @@ const HomeIndexComponents = () => {
 
   const handleSendMatchingRequest = async (matchingRequest: any) => {
     const res = await sendMatchingRequest(userRequestMatching?.id, matchingRequest);
+    await addUserFavorite(userRequestMatching?.id);
     setOpenModal(false);
     handleRefetchData();
     return res;
@@ -186,7 +193,7 @@ const HomeIndexComponents = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          marginTop: "80px",
+          marginTop: "65px",
         }}
       >
         <BannerComponent />

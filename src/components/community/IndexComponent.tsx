@@ -44,7 +44,8 @@ const CommunityComponent = () => {
   });
   const router = useRouter();
   const handleCopyUrl = () => {
-    const resUrl = `${process.env.NEXT_PUBLIC_URL_PROFILE}/community`;
+    const communityId = router.query;
+    const resUrl = `${process.env.NEXT_PUBLIC_URL_PROFILE}/community/${communityId?.indexId}`;
     copy(resUrl);
     toast.success(COPY_SUCCESSFUL);
   };
@@ -153,7 +154,7 @@ const CommunityComponent = () => {
                     flex: "0 0 24%",
                   }}
                 >
-                  <Avatar variant="square" sx={{ width: "72px", height: "72px" }} src={member.avatar} />
+                  <Avatar sx={{ width: "72px", height: "72px" }} src={member.avatar} />
 
                   <Typography
                     sx={{

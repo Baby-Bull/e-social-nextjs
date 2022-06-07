@@ -89,6 +89,10 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
   const auth = useSelector((state: IStoreState) => state.user);
   const isOnline = "online";
 
+  useEffect(() => {
+    setLiked(data?.is_favorite);
+  }, [data?.is_favorite]);
+
   const handleClickButtonModal = (tempValue: any) => {
     if (tempValue === "rejected" || !tempValue) {
       handleOpenMatchingModal(data, indexKey);
@@ -157,7 +161,9 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
               {t("home:box-member-recommend.label-description")}
             </div>
 
-            <div className="description">{data?.discussion_topic ?? "情報なし"}</div>
+            <div className="description">
+              {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
+            </div>
           </Box>
         </Link>
         <div className="div-review" onClick={handleClickFavoriteButton}>

@@ -15,6 +15,7 @@ interface IDialogConfirmWithAvatarProps {
   handleClose: () => void;
   handleCancel?: () => void;
   handleOK?: () => void;
+  avatar?: string;
 }
 
 const DialogConfirmWithAvatarComponent: React.SFC<IDialogConfirmWithAvatarProps> = ({
@@ -28,6 +29,7 @@ const DialogConfirmWithAvatarComponent: React.SFC<IDialogConfirmWithAvatarProps>
   handleClose,
   handleCancel,
   handleOK,
+  avatar,
 }) => {
   const [fullWidth] = React.useState(true);
 
@@ -99,12 +101,11 @@ const DialogConfirmWithAvatarComponent: React.SFC<IDialogConfirmWithAvatarProps>
           }}
         >
           <Avatar
-            variant="square"
             sx={{
               width: ["40px", "64px"],
               height: "100%",
             }}
-            src="/assets/images/svg/account.svg"
+            src={avatar || "/assets/images/svg/account.svg"}
           />
 
           <Box

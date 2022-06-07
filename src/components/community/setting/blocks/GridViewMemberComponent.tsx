@@ -1,10 +1,13 @@
 import React from "react";
 import { Box, Typography, Avatar, Chip } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmWithAvatarComponent from "src/components/common/dialog/DialogConfirmWithAvatarComponent";
+import { JOBS } from "src/components/constants/constants";
+import { MemberBlocked, MemberUnBlock } from "src/services/community";
 
 import DropDownBlockUserComponent from "./DropDownBlockUserComponent";
 
@@ -12,18 +15,51 @@ type Type = "participated" | "block";
 interface IGridViewComponentProps {
   data: any;
   type: Type;
+  index: any;
+  callbackHandleRemoveElmMember: any;
 }
 
-const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, type }) => {
+const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
+  data,
+  type,
+  index,
+  callbackHandleRemoveElmMember,
+}) => {
   const { t } = useTranslation();
+  const router = useRouter();
+  const IS_OWNER = "owner";
+  const IS_MEMBER = "member";
+
+  const MemberBlock = async () => {
+    const communityId = router.query;
+    const resData = await MemberBlocked(communityId?.indexId, data.id);
+    return resData;
+  };
+
+  const MemberUnBlocked = async () => {
+    const communityId = router.query;
+    const resData = await MemberUnBlock(communityId?.indexId, data.id);
+    return resData;
+  };
 
   const [openDialogBlock, setOpenDialogBlock] = React.useState(false);
   const handleOpenDialogBlock = () => setOpenDialogBlock(true);
   const handleCloseDialogBlock = () => setOpenDialogBlock(false);
 
+  const handleDialogApproveBlock = () => {
+    MemberBlock();
+    setOpenDialogBlock(false);
+    callbackHandleRemoveElmMember(index);
+  };
+
   const [openDialogUnBlock, setOpenDialogUnBlock] = React.useState(false);
   const handleOpenDialogUnBlock = () => setOpenDialogUnBlock(true);
   const handleCloseDialogUnBlock = () => setOpenDialogUnBlock(false);
+  const handleDialogUnBlock = () => {
+    MemberUnBlocked();
+    setOpenDialogUnBlock(false);
+    callbackHandleRemoveElmMember(index);
+  };
 
   return (
     <React.Fragment>
@@ -57,12 +93,11 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, type }) =
             }}
           >
             <Avatar
-              variant="square"
               sx={{
                 width: "64px",
                 height: "100%",
               }}
-              src={data.avatar}
+              src={data.profile_image}
             />
 
             {/* Grid right Info */}
@@ -86,13 +121,13 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, type }) =
                     fontWeight: 700,
                   }}
                 >
-                  {data.name}
+                  {data.username}
                 </Typography>
 
                 <Chip
-                  label={data.is_representative ? "代表者" : "管理者"}
+                  label={data.role === IS_OWNER ? "代表者" : "管理者"}
                   sx={{
-                    display: !data.is_representative && !data.is_manager && "none",
+                    display: data.role !== IS_MEMBER ? "block" : "none",
                     ml: [0, "12px"],
                     mt: ["10px", 0],
                     width: "60px",
@@ -100,7 +135,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, type }) =
                     fontSize: 12,
                     fontWeight: 600,
                     color: "white",
-                    backgroundColor: data.is_representative ? theme.green : theme.blue,
+                    backgroundColor: data.role === IS_OWNER ? theme.green : theme.blue,
                   }}
                 />
               </Box>
@@ -112,7 +147,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, type }) =
                   fontSize: 14,
                 }}
               >
-                {data.job}
+                {JOBS[data.job]?.label}
               </Typography>
             </Box>
             {/* End Grid right Info */}
@@ -126,7 +161,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, type }) =
                 dimension: "x-small",
               }}
               sx={{
-                display: ["none", !data.is_representative && "flex"],
+                display: ["none", data.role === IS_MEMBER && "flex"],
                 height: "36px",
               }}
               onClick={handleOpenDialogBlock}
@@ -141,7 +176,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, type }) =
                   dimension: "x-small",
                 }}
                 sx={{
-                  display: ["none", data.is_representative ? "none" : "inherit"],
+                  display: ["none", data.role !== IS_MEMBER ? "none" : "inherit"],
                   height: "36px",
                 }}
                 onClick={handleOpenDialogUnBlock}
@@ -173,7 +208,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, type }) =
       </Box>
 
       <DialogConfirmWithAvatarComponent
-        title={t("community:setting.member.dialog-block.title")}
+        title={`${data?.username}${t("community:setting.member.dialog-block.title")}`}
         content={t("community:setting.member.dialog-block.content")}
         btnLeft={t("community:button.dialog.cancel")}
         btnRight={t("community:button.dialog.block")}
@@ -181,18 +216,20 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, type }) =
         isShow={openDialogBlock}
         handleClose={handleCloseDialogBlock}
         handleCancel={handleCloseDialogBlock}
-        handleOK={handleCloseDialogBlock}
+        handleOK={handleDialogApproveBlock}
+        avatar={data.profile_image}
       />
 
       <DialogConfirmWithAvatarComponent
-        title={t("community:setting.member.dialog-unblock.title")}
+        title={`${data?.username}${t("community:setting.member.dialog-unblock.title")}`}
         content={t("community:setting.member.dialog-unblock.content")}
         btnLeft={t("community:button.dialog.cancel")}
         btnRight={t("community:button.dialog.unblock")}
         isShow={openDialogUnBlock}
         handleClose={handleCloseDialogUnBlock}
         handleCancel={handleCloseDialogUnBlock}
-        handleOK={handleCloseDialogUnBlock}
+        handleOK={handleDialogUnBlock}
+        avatar={data.profile_image}
       />
     </React.Fragment>
   );

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroller";
 import {
   Avatar,
   Box,
@@ -16,6 +17,7 @@ import {
   OutlinedInput,
   FormControl,
   ThemeProvider,
+  CircularProgress,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { styled, useTheme } from "@mui/material/styles";
@@ -90,6 +92,7 @@ const UpdateComponent = () => {
   const router = useRouter();
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
+  const LIMIT = 10;
   const MenuProps = {
     PaperProps: {
       style: {
@@ -101,6 +104,7 @@ const UpdateComponent = () => {
 
   const getStyles = (name, personName) => ({
     color: personName.indexOf(name) === -1 ? theme.navy : theme.blue,
+    background: personName.indexOf(name) === -1 ? "white" : theme.whiteBlue,
   });
   const themeSelect = useTheme();
   const [personName, setPersonName] = React.useState([]);
@@ -118,6 +122,7 @@ const UpdateComponent = () => {
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
   const [communityMembers, setCommunityMembers] = useState([]);
+  const [itemsCount, setItemsCount] = useState(0);
   const [communityRequest, setCommunityRequest] = useState({
     name,
     description,
@@ -134,6 +139,11 @@ const UpdateComponent = () => {
   const [isDeleteImage, setIsDeleteImage] = useState(false);
   const [srcProfileImage, setSrcProfileImage] = useState("");
   const [openDialog, setOpen] = useState(false);
+  const [tagDataValidate, setTagDataValidate] = useState(false);
+  const [valueCursor, setValueCursor] = useState("");
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
   const fetchData = async () => {
     const admins = [];
     const communityId = router.query;
@@ -160,9 +170,17 @@ const UpdateComponent = () => {
 
   const fetchDataUsers = async () => {
     const communityId = router.query;
-    const data = await CommunityMembers(communityId?.indexId);
-    setCommunityMembers(data?.items);
-    return data;
+    if (hasMore) {
+      setIsLoading(true);
+      const data = await CommunityMembers(communityId?.indexId, LIMIT, valueCursor);
+      // eslint-disable-next-line no-unsafe-optional-chaining
+      setCommunityMembers([...communityMembers, ...data?.items]);
+      setItemsCount(data?.items_count);
+      setValueCursor(data?.cursor);
+      setHasMore(data?.hasMore);
+      setIsLoading(false);
+      return data;
+    }
   };
 
   useEffect(() => {
@@ -171,7 +189,12 @@ const UpdateComponent = () => {
   }, []);
 
   const onKeyPress = (e) => {
+    if (e.target.value.length > 20) {
+      setTagDataValidate(true);
+      return false;
+    }
     if (e.key === "Enter" && e.target.value) {
+      setTagDataValidate(false);
       setDisableBtnSubmit(false);
       setTagData([...tagData, e.target.value]);
       (document.getElementById("input_tags") as HTMLInputElement).value = "";
@@ -634,27 +657,52 @@ const UpdateComponent = () => {
                       )}
                       MenuProps={MenuProps}
                     >
-                      <MenuItem disabled value="">
-                        {t("community:setting.form.placeholder.administrator")}
-                      </MenuItem>
-                      {communityMembers?.map((nameOption) => (
-                        <MenuItem
-                          key={nameOption?.id}
-                          value={`${nameOption?.id},${nameOption?.username}`}
-                          style={getStyles(`${nameOption?.id},${nameOption?.username}`, personName)}
-                          sx={{ background: "#fff !important" }}
+                      <Box sx={{ height: "208px", overflow: "auto" }}>
+                        <InfiniteScroll
+                          loadMore={fetchDataUsers}
+                          hasMore={communityMembers?.length < itemsCount}
+                          useWindow={false}
+                          initialLoad={false}
+                          loader={
+                            isLoading && (
+                              <Box sx={{ color: theme.blue, marginTop: "-115px", textAlign: "center" }}>
+                                <CircularProgress color="inherit" />
+                              </Box>
+                            )
+                          }
                         >
-                          <Avatar
-                            src={nameOption?.profile_image}
-                            sx={{
-                              width: "24px",
-                              height: "24px",
-                              marginRight: "8px",
-                            }}
-                          />
-                          {nameOption?.username}
-                        </MenuItem>
-                      ))}
+                          <MenuItem disabled value="">
+                            {t("community:setting.form.placeholder.administrator")}
+                          </MenuItem>
+                          {communityMembers?.map(
+                            (nameOption) =>
+                              nameOption?.id !== owner?.id && (
+                                <MenuItem
+                                  key={nameOption?.id}
+                                  value={`${nameOption?.id},${nameOption?.username}`}
+                                  style={getStyles(`${nameOption?.id},${nameOption?.username}`, personName)}
+                                  disabled={isLoading ?? true}
+                                  sx={{
+                                    "&:hover": {
+                                      background: `${theme.blue} !important`,
+                                      color: "white !important",
+                                    },
+                                  }}
+                                >
+                                  <Avatar
+                                    src={nameOption?.profile_image}
+                                    sx={{
+                                      width: "24px",
+                                      height: "24px",
+                                      marginRight: "8px",
+                                    }}
+                                  />
+                                  {nameOption?.username}
+                                </MenuItem>
+                              ),
+                          )}
+                        </InfiniteScroll>
+                      </Box>
                     </SelectCustom>
                   </FormControl>
                 </Box>
@@ -746,26 +794,17 @@ const UpdateComponent = () => {
               <Grid item xs={12} sm={9}>
                 <InputCustom
                   sx={{
-                    display: ["none", "inherit"],
+                    display: ["inherit", "inherit"],
                     ml: 1,
                     flex: 1,
+                    border: tagDataValidate ? "1px solid #FF9458" : "none",
                   }}
                   placeholder={t("community:setting.form.placeholder.tag")}
                   inputProps={{ "aria-label": t("community:setting.form.placeholder.tag") }}
                   id="input_tags"
                   onKeyPress={onKeyPress}
                 />
-
-                <InputCustom
-                  sx={{
-                    display: { sm: "none" },
-                    ml: 1,
-                    flex: 1,
-                  }}
-                  placeholder={t("community:setting.form.placeholder.tag-SP")}
-                  inputProps={{ "aria-label": t("community:setting.form.placeholder.tag-SP") }}
-                />
-
+                {tagDataValidate && <BoxTextValidate>{t("community:max_length_tag")}</BoxTextValidate>}
                 <Box>
                   <Paper
                     sx={{
@@ -856,7 +895,7 @@ const UpdateComponent = () => {
           </Box>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <MemberComponent dataChild={tabsCommunitySetting[1]?.children} />
+          <MemberComponent />
         </TabPanel>
         <TabPanel value={value} index={2}>
           <ParticipatedMemberComponent />

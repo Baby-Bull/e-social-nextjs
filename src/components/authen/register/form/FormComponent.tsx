@@ -47,7 +47,7 @@ const FormRegisterComponents = () => {
   const [open, setOpen] = React.useState(false);
   const [fullWidth] = React.useState(true);
   const [isTutorialDone, setStep] = React.useState(false);
-  const [hasAgree, setHasAgree] = useState(true);
+  const [hasAgree, setHasAgree] = useState(false);
 
   const [openError, setOpenError] = React.useState(false);
 

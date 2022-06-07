@@ -77,7 +77,7 @@ const SearchUserComponent = () => {
   const [inputTags, setInputTags] = useState([]);
   const [resultSearch, setResultSearch] = useState([]);
   const [isRefresh, setIsRefresh] = useState(false);
-  const [isSort, setIsSort] = useState("");
+  const [isSort, setIsSort] = useState("recommended");
   const [showMore, setShowMore] = useState({ cursor: "", hasMore: false });
   const [formSearch, setFormSearch] = useState({
     job: jobs[0]?.value,
@@ -91,21 +91,17 @@ const SearchUserComponent = () => {
   const [triggerClear, setTriggerClear] = useState(false);
   const fullText = router.query?.fulltext;
 
-  const fetchData = async (typeSort: string = "") => {
+  const fetchData = async (typeSort: string = "", arrayResult: Array<any> = [], cursor: string = "") => {
     setIsLoading(true);
-    const res = await UserSearch(formSearch, inputTags, fullText, typeSort, LIMIT, showMore.cursor);
-    setResultSearch(resultSearch.concat(res?.items));
+    const res = await UserSearch(formSearch, inputTags, fullText, typeSort, LIMIT, cursor);
+    setResultSearch(arrayResult.concat(res?.items));
     setShowMore({ cursor: res?.cursor, hasMore: res?.hasMore });
     setIsLoading(false);
   };
 
-  const handleSort = (typeSort) => {
-    fetchData(typeSort);
+  const handleSort = async (typeSort: string) => {
+    fetchData(typeSort, [], "");
     setIsSort(typeSort);
-  };
-
-  const handleShowMore = () => {
-    fetchData();
   };
 
   useEffect(() => {
@@ -163,14 +159,7 @@ const SearchUserComponent = () => {
     );
     setResultSearch(res?.items);
     setShowMore({ cursor: res?.cursor, hasMore: res?.hasMore });
-    setIsLoading(false);
-  };
-
-  const submitSearch = async () => {
-    setIsLoading(true);
-    const res = await UserSearch(formSearch, inputTags, fullText, "", LIMIT, "");
-    setResultSearch(res?.items);
-    setShowMore({ cursor: res?.cursor, hasMore: res?.hasMore });
+    setIsSort("");
     setIsLoading(false);
   };
 
@@ -319,7 +308,7 @@ const SearchUserComponent = () => {
                 {t("user-search:btn-search-SP")}
               </Button>
             ) : (
-              <Button className="btn-user-search btn-search" fullWidth onClick={submitSearch}>
+              <Button className="btn-user-search btn-search" fullWidth onClick={() => fetchData(isSort, [], "")}>
                 {t("user-search:btn-search")}
               </Button>
             )}
@@ -343,13 +332,13 @@ const SearchUserComponent = () => {
                   <Divider orientation="vertical" flexItem />
                   <Box
                     onClick={() => handleSort("recommended")}
-                    className={isSort === "recommended" ? "sort-link active" : "sort-link"}
+                    className={isSort === "recommended" ? "sort-link" : "sort-link active"}
                   >
                     {t("user-search:recommend-order")}
                   </Box>
                   <Box
                     onClick={() => handleSort("login_at")}
-                    className={isSort === "login_at" ? "sort-link active" : "sort-link"}
+                    className={isSort === "login_at" ? "sort-link" : "sort-link active"}
                   >
                     {t("user-search:last-login-order")}
                   </Box>
@@ -377,7 +366,10 @@ const SearchUserComponent = () => {
             </Grid>
             {showMore.hasMore ? (
               <Box sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-                <Button onClick={handleShowMore} sx={{ color: "rgb(3, 188, 219)" }}>
+                <Button
+                  onClick={() => fetchData(isSort, resultSearch, showMore.cursor)}
+                  sx={{ color: "rgb(3, 188, 219)" }}
+                >
                   {t("common:showMore")}
                 </Button>
               </Box>

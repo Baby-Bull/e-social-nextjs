@@ -8,7 +8,13 @@ import ContentComponent from "src/components/layouts/ContentComponent";
 import ProfileSkillComponent from "src/components/profile/ProfileSkillComponent";
 import ReviewComponent from "src/components/profile/ReviewComponent";
 import ParticipatingCommunityComponent from "src/components/profile/ParticipatingCommunityComponent";
-import { getUserCommunites, getOrtherUserProfile, getUserReviews, getUserRecommended } from "src/services/user";
+import {
+  getUserCommunites,
+  getOrtherUserProfile,
+  getUserReviews,
+  getUserRecommended,
+  addUserFavorite,
+} from "src/services/user";
 import BoxItemUserComponent from "src/components/profile/BoxItemUserComponent";
 import BoxNoDataComponent from "src/components/profile/BoxNoDataComponent";
 import TopProfileComponent from "src/components/profile/TopProfileComponent";
@@ -116,6 +122,7 @@ const ProfileHaveDataComponent = () => {
 
   const handleSendMatchingRequest = async (matchingRequest) => {
     const res = await sendMatchingRequest(userId, matchingRequest);
+    await addUserFavorite(userId);
     setModalMatching(false);
     setIsRefresh(!isRefresh);
     return res;
@@ -270,9 +277,10 @@ const ProfileHaveDataComponent = () => {
           display: "flex",
           justifyContent: "center",
           position: "fixed",
-          top: "91.5%",
+          top: "88%",
           opacity: 0.8,
           width: "100%",
+          paddingY: "20px",
         }}
       >
         <ButtonComponent
