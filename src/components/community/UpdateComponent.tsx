@@ -516,7 +516,7 @@ const UpdateComponent = () => {
                 </label>
 
                 <BoxTextValidate sx={{ mb: "20px" }}>{errorValidates.profile_image}</BoxTextValidate>
-                {srcProfileImage.length > 0 ? (
+                {srcProfileImage?.length > 0 ? (
                   <TypographyButton mb={["28px", "33px"]} onClick={removeProfileImage}>
                     {t("community:setting.form.delete-img")}
                   </TypographyButton>

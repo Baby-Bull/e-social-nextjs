@@ -277,7 +277,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                   color: theme.blue,
                   borderColor: theme.blue,
                 }}
-                onClick={() => router.push(`/community/update/${data.id}`)}
+                onClick={() => router.push(`/community/setting/${data.id}`)}
               >
                 {t("community:setting.title")}
               </ButtonComponent>

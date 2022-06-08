@@ -28,7 +28,7 @@ const ParticipationComponent = () => {
     const resData = await getParticipates(communityId?.indexId, LIMIT, cursor);
     // eslint-disable-next-line no-unsafe-optional-chaining
     setParticipates([...participates, ...resData?.items]);
-    setCountParticipates(resData?.items_count);
+    setCountParticipates(resData?.items_count ?? 0);
     setCursor(resData?.cursor);
     return resData;
   };

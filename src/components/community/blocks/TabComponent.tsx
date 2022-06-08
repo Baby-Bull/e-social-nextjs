@@ -34,7 +34,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
   const router = useRouter();
 
   const valueTabMembers = 2;
-  const LIMIT = 5;
+  const LIMIT = 20;
 
   const [valueParentTab, setValueParentTab] = React.useState(0);
   const [communityMembers, setCommunityMembers] = useState([]);

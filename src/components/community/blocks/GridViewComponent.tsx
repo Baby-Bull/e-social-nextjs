@@ -23,6 +23,7 @@ interface IGridViewComponentProps {
 const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) => {
   const IS_OWNER = "owner";
   const IS_ADMIN = "admin";
+  console.log(data);
   return (
     <React.Fragment>
       <Typography
