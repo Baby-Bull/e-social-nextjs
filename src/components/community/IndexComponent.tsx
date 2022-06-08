@@ -13,9 +13,9 @@ import TabComponent from "src/components/community/blocks/TabComponent";
 import BannerComponent from "src/components/community/blocks/BannerComponent";
 import EmptyComponent from "src/components/community/blocks/EmptyComponent";
 import { COPY_SUCCESSFUL } from "src/messages/notification";
-import { getCommunity } from "src/services/community";
+import { CommunityMembers, getCommunity } from "src/services/community";
 
-import { members, tabsCommunity, status, bgColorByStatus } from "./mockData";
+import { tabsCommunity, status, bgColorByStatus } from "./mockData";
 
 const TypographyCustom = styled(Typography)({
   fontSize: 20,
@@ -42,12 +42,21 @@ const CommunityComponent = () => {
     login_count: null,
     created_at: null,
   });
+  const [communityMembers, setCommunityMembers] = useState([]);
   const router = useRouter();
   const handleCopyUrl = () => {
     const communityId = router.query;
     const resUrl = `${process.env.NEXT_PUBLIC_URL_PROFILE}/community/${communityId?.indexId}`;
     copy(resUrl);
     toast.success(COPY_SUCCESSFUL);
+  };
+
+  const fetchDataUsers = async (cursor: string = "") => {
+    const communityId = router.query;
+    const resData = await CommunityMembers(communityId?.indexId, 4, cursor);
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    setCommunityMembers(resData?.items);
+    return resData;
   };
 
   const fetchData = async () => {
@@ -59,7 +68,13 @@ const CommunityComponent = () => {
 
   useEffect(() => {
     fetchData();
+    fetchDataUsers();
   }, []);
+
+  const redirectPageMembers = () => {
+    const communityId = router.query;
+    router.push(`/community/members/${communityId?.indexId}`);
+  };
 
   return (
     <LayoutComponent>
@@ -122,7 +137,7 @@ const CommunityComponent = () => {
             >
               {t("community:matching-members")}
             </Typography>
-            <Link href="/community/member" color="secondary">
+            <Link onClick={redirectPageMembers} color="secondary">
               <Typography
                 sx={{
                   mr: "10px",
@@ -144,7 +159,7 @@ const CommunityComponent = () => {
               flexWrap: "wrap",
             }}
           >
-            {members?.map((member, index) => (
+            {communityMembers?.map((member, index) => (
               <React.Fragment key={index.toString()}>
                 <Box
                   sx={{
@@ -154,7 +169,7 @@ const CommunityComponent = () => {
                     flex: "0 0 24%",
                   }}
                 >
-                  <Avatar sx={{ width: "72px", height: "72px" }} src={member.avatar} />
+                  <Avatar sx={{ width: "72px", height: "72px" }} src={member.profile_image} />
 
                   <Typography
                     sx={{
@@ -162,7 +177,7 @@ const CommunityComponent = () => {
                       fontWeight: 500,
                     }}
                   >
-                    {member.name}
+                    {member.username}
                   </Typography>
                 </Box>
               </React.Fragment>
