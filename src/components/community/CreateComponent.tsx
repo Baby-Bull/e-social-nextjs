@@ -259,7 +259,7 @@ const CreateComponent = () => {
 
       const res = await createCommunity(formData);
       if (res) {
-        setTimeout(() => router.push(`/community/${res?.id}`), 2000);
+        setTimeout(() => router.push(`/community/${res?.id}`), 1000);
         return res;
       }
     }
@@ -662,7 +662,7 @@ const CreateComponent = () => {
                 }}
                 onClick={handleOpenDialog}
               >
-                {t("community:setting.form.delete-community")}
+                {t("community:setting.form.stop-create-community")}
               </TypographyButton>
             </Box>
           </Box>
@@ -670,10 +670,10 @@ const CreateComponent = () => {
       </Box>
 
       <DialogConfirmComponent
-        title={t("community:setting.form.dialog.title")}
+        title={t("community:button.dialog.stop-create-community")}
         content={t("community:setting.form.dialog.content")}
         btnLeft={t("community:button.dialog.cancel-2")}
-        btnRight={t("community:button.dialog.delete-community")}
+        btnRight={t("community:button.dialog.stop-create-community")}
         isShow={openDialog}
         handleClose={handleCloseDialog}
         handleCancel={handleDialogCancel}

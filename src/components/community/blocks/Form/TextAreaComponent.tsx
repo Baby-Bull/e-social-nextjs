@@ -8,7 +8,7 @@ export const TextareaAutosizeCustom = styled(TextareaAutosize)({
   backgroundColor: theme.whiteBlue,
   paddingTop: "9px",
   width: "100%",
-  resize: "none",
+  // resize: "none",
   minHeight: "80px",
   border: `2px solid transparent`,
   borderRadius: "6px",
@@ -16,7 +16,7 @@ export const TextareaAutosizeCustom = styled(TextareaAutosize)({
   color: theme.navy,
   fontSize: 14,
   paddingLeft: "18px",
-  height: "100% !important",
+  // height: "100% !important",
   "&::-webkit-input-placeholder": {
     color: theme.gray,
   },

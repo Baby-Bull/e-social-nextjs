@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import InfiniteScroll from "react-infinite-scroller";
 import {
   Avatar,
   Box,
@@ -17,6 +16,7 @@ import {
   OutlinedInput,
   FormControl,
   ThemeProvider,
+  Button,
   CircularProgress,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
@@ -38,6 +38,7 @@ import { getCommunity, updateCommunity, CommunityMembers, deleteCommunity } from
 import { infoCommunitySetting, tabsCommunitySetting } from "./mockData";
 import MemberComponent from "./setting/blocks/MemberComponent";
 import ParticipatedMemberComponent from "./setting/blocks/ParticipatedMemberComponent";
+import styles from "./update.module.scss";
 
 const BoxTitle = styled(Box)({
   fontSize: 18,
@@ -101,7 +102,7 @@ const UpdateComponent = () => {
       },
     },
   };
-
+  const [hint, setHint] = useState(false);
   const getStyles = (name, personName) => ({
     color: personName.indexOf(name) === -1 ? theme.navy : theme.blue,
     background: personName.indexOf(name) === -1 ? "white" : theme.whiteBlue,
@@ -122,7 +123,6 @@ const UpdateComponent = () => {
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
   const [communityMembers, setCommunityMembers] = useState([]);
-  const [itemsCount, setItemsCount] = useState(0);
   const [communityRequest, setCommunityRequest] = useState({
     name,
     description,
@@ -175,7 +175,6 @@ const UpdateComponent = () => {
       const data = await CommunityMembers(communityId?.indexId, LIMIT, valueCursor);
       // eslint-disable-next-line no-unsafe-optional-chaining
       setCommunityMembers([...communityMembers, ...data?.items]);
-      setItemsCount(data?.items_count);
       setValueCursor(data?.cursor);
       setHasMore(data?.hasMore);
       setIsLoading(false);
@@ -212,10 +211,12 @@ const UpdateComponent = () => {
       // eslint-disable-next-line no-shadow
       target: { value },
     } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value,
-    );
+    if (value.length <= 10) {
+      setPersonName(
+        // On autofill we get a stringified value.
+        typeof value === "string" ? value.split(",") : value,
+      );
+    }
   };
 
   const handleOpenDialog = () => setOpen(true);
@@ -228,7 +229,7 @@ const UpdateComponent = () => {
     const communityId = router.query;
     const res = await deleteCommunity(communityId?.indexId);
     if (!res?.error_code) {
-      setTimeout(() => router.push(`/search_community`), 2000);
+      setTimeout(() => router.push(`/search_community`), 1000);
       return res;
     }
   };
@@ -289,7 +290,7 @@ const UpdateComponent = () => {
       setIsDeleteImage(false);
 
       // @ts-ignore
-      document.getElementById("avatar").value = null;
+      document.getElementById("avatar").value = "";
       return true;
     }
 
@@ -361,7 +362,9 @@ const UpdateComponent = () => {
         formData.append("admin_ids[]", "");
       } else {
         for (let i = 0; i < personName.length; i++) {
-          formData.append("admin_ids[]", personName[i]?.split(",")[0]);
+          if (personName[i]?.length !== undefined) {
+            formData.append("admin_ids[]", personName[i]?.split(",")[0]);
+          }
         }
       }
 
@@ -370,15 +373,12 @@ const UpdateComponent = () => {
       }
 
       if (isDeleteImage && !profileImage) {
-        formData.append("profile_image", null);
+        formData.append("profile_image", "");
       }
 
       const communityId = router.query;
       const res = await updateCommunity(communityId?.indexId, formData);
-      if (!res.error_code) {
-        setTimeout(() => router.push(`/community/${communityId?.indexId}`), 2000);
-        return res;
-      }
+      return res;
     }
   };
 
@@ -393,6 +393,7 @@ const UpdateComponent = () => {
           display: "flex",
           flexDirection: ["column", "row"],
           backgroundColor: theme.whiteBlue, // bg lg
+          minHeight: "74.6vh",
         }}
       >
         <Box sx={{ backgroundColor: theme.whiteBlue }}>
@@ -419,7 +420,6 @@ const UpdateComponent = () => {
               },
             }}
             sx={{
-              display: ["none", "block"],
               "& .MuiTabs-flexContainer": {
                 flexDirection: ["row", "column"],
               },
@@ -516,10 +516,11 @@ const UpdateComponent = () => {
                 </label>
 
                 <BoxTextValidate sx={{ mb: "20px" }}>{errorValidates.profile_image}</BoxTextValidate>
-
-                <TypographyButton mb={["28px", "33px"]} onClick={removeProfileImage}>
-                  {t("community:setting.form.delete-img")}
-                </TypographyButton>
+                {srcProfileImage.length > 0 ? (
+                  <TypographyButton mb={["28px", "33px"]} onClick={removeProfileImage}>
+                    {t("community:setting.form.delete-img")}
+                  </TypographyButton>
+                ) : null}
               </Grid>
               <GridTitle item xs={12} sm={3}>
                 <BoxTitle>{t("community:setting.form.name")}</BoxTitle>
@@ -599,7 +600,15 @@ const UpdateComponent = () => {
                 </Box>
               </GridContent>
               <GridTitle item xs={12} sm={3}>
-                <BoxTitle>{t("community:setting.form.administrator")}</BoxTitle>
+                <Box sx={{ display: "flex" }}>
+                  <BoxTitle>{t("community:setting.form.administrator")}</BoxTitle>
+                  <Box sx={{ ml: "4px" }}>
+                    <Box className={styles.hintIconQuestion} onClick={() => setHint(!hint)}>
+                      <img src="/assets/images/icon/ic_question_mark.png" alt="ic_question_mark" />
+                    </Box>
+                    <Box className={styles.hint}>{t("community:tooltip_update")}</Box>
+                  </Box>
+                </Box>
               </GridTitle>
               <GridContent item xs={12} sm={9}>
                 <Box>
@@ -616,33 +625,35 @@ const UpdateComponent = () => {
                       renderValue={(selected: any) => (
                         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                           {selected.length !== 0 ? (
-                            selected?.map((valueOption) => (
-                              <Chip
-                                key={valueOption}
-                                label={valueOption?.split(",")[1]}
-                                clickable
-                                deleteIcon={
-                                  <Avatar
-                                    onMouseDown={(event) => event.stopPropagation()}
-                                    src="/assets/images/svg/delete_white.svg"
-                                    sx={{
-                                      width: "16px",
-                                      height: "16px",
-                                      backgroundColor: theme.blue,
-                                      "& img": {
-                                        p: "4px",
-                                      },
-                                    }}
-                                  />
-                                }
-                                onDelete={(e) => handleDeleteChipAdmin(e, valueOption)}
-                                sx={{
-                                  background: theme.whiteBlue,
-                                  border: `1px solid ${theme.blue}`,
-                                  "& .MuiChip-label": { color: theme.blue },
-                                }}
-                              />
-                            ))
+                            selected?.map((valueOption) =>
+                              valueOption ? (
+                                <Chip
+                                  key={valueOption}
+                                  label={valueOption?.split(",")[1]}
+                                  clickable
+                                  deleteIcon={
+                                    <Avatar
+                                      onMouseDown={(event) => event.stopPropagation()}
+                                      src="/assets/images/svg/delete_white.svg"
+                                      sx={{
+                                        width: "16px",
+                                        height: "16px",
+                                        backgroundColor: theme.blue,
+                                        "& img": {
+                                          p: "4px",
+                                        },
+                                      }}
+                                    />
+                                  }
+                                  onDelete={(e) => handleDeleteChipAdmin(e, valueOption)}
+                                  sx={{
+                                    background: theme.whiteBlue,
+                                    border: `1px solid ${theme.blue}`,
+                                    "& .MuiChip-label": { color: theme.blue },
+                                  }}
+                                />
+                              ) : null,
+                            )
                           ) : (
                             <Box
                               sx={{
@@ -657,52 +668,50 @@ const UpdateComponent = () => {
                       )}
                       MenuProps={MenuProps}
                     >
-                      <Box sx={{ height: "208px", overflow: "auto" }}>
-                        <InfiniteScroll
-                          loadMore={fetchDataUsers}
-                          hasMore={communityMembers?.length < itemsCount}
-                          useWindow={false}
-                          initialLoad={false}
-                          loader={
-                            isLoading && (
-                              <Box sx={{ color: theme.blue, marginTop: "-115px", textAlign: "center" }}>
-                                <CircularProgress color="inherit" />
-                              </Box>
-                            )
-                          }
+                      <MenuItem disabled value="">
+                        {t("community:setting.form.placeholder.administrator")}
+                      </MenuItem>
+                      {communityMembers?.map(
+                        (nameOption) =>
+                          nameOption?.id !== owner?.id && (
+                            <MenuItem
+                              key={nameOption?.id}
+                              value={`${nameOption?.id},${nameOption?.username}`}
+                              style={getStyles(`${nameOption?.id},${nameOption?.username}`, personName)}
+                              disabled={isLoading ?? true}
+                              sx={{
+                                "&:hover": {
+                                  background: `${theme.blue} !important`,
+                                  color: "white !important",
+                                },
+                              }}
+                            >
+                              <Avatar
+                                src={nameOption?.profile_image}
+                                sx={{
+                                  width: "24px",
+                                  height: "24px",
+                                  marginRight: "8px",
+                                }}
+                              />
+                              {nameOption?.username}
+                            </MenuItem>
+                          ),
+                      )}
+                      {isLoading && (
+                        <Box sx={{ color: theme.blue, marginTop: "-120px", textAlign: "center" }}>
+                          <CircularProgress color="inherit" />
+                        </Box>
+                      )}
+                      {hasMore && !isLoading ? (
+                        <Button
+                          variant="text"
+                          onClick={fetchDataUsers}
+                          sx={{ color: theme.blue, ml: "16px", fontSize: "14px" }}
                         >
-                          <MenuItem disabled value="">
-                            {t("community:setting.form.placeholder.administrator")}
-                          </MenuItem>
-                          {communityMembers?.map(
-                            (nameOption) =>
-                              nameOption?.id !== owner?.id && (
-                                <MenuItem
-                                  key={nameOption?.id}
-                                  value={`${nameOption?.id},${nameOption?.username}`}
-                                  style={getStyles(`${nameOption?.id},${nameOption?.username}`, personName)}
-                                  disabled={isLoading ?? true}
-                                  sx={{
-                                    "&:hover": {
-                                      background: `${theme.blue} !important`,
-                                      color: "white !important",
-                                    },
-                                  }}
-                                >
-                                  <Avatar
-                                    src={nameOption?.profile_image}
-                                    sx={{
-                                      width: "24px",
-                                      height: "24px",
-                                      marginRight: "8px",
-                                    }}
-                                  />
-                                  {nameOption?.username}
-                                </MenuItem>
-                              ),
-                          )}
-                        </InfiniteScroll>
-                      </Box>
+                          {t("common:showMore")}
+                        </Button>
+                      ) : null}
                     </SelectCustom>
                   </FormControl>
                 </Box>
