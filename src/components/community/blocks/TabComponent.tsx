@@ -104,7 +104,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
             }}
             key={index.toString()}
             iconPosition="top"
-            label={`${tab.text}111`}
+            label={`${tab.text}`}
             {...a11yProps(index)}
           />
         ))}

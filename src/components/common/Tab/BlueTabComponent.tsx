@@ -88,22 +88,22 @@ export const TabCustom = styled(Tab)<ITabCustomProps>(({ props }) => ({
     border: `1px solid ${theme.blue}`,
     borderLeft: "none",
     borderRadius: "12px 12px 0px 0px;",
-    minWidth: props?.mdWidth || "33.3333333%",
-    maxWidth: props?.mdWidth || "33.3333333%",
     "&:first-of-type": {
       borderLeft: `1px solid ${theme.blue}`,
     },
     "& img": {
       display: "none",
     },
+    minWidth: props?.mdWidth || "20%",
+    maxWidth: props?.mdWidth || "20%",
   },
   "@media (min-width: 1024px)": {
-    minWidth: props?.mdWidth || "33.3333333%",
-    maxWidth: props?.mdWidth || "33.3333333%",
+    minWidth: props?.mdWidth || "20%",
+    maxWidth: props?.mdWidth || "20%",
   },
   "@media (min-width: 1440px)": {
     fontSize: "20px",
-    minWidth: props?.lgWidth || "33.3333333%",
-    maxWidth: props?.lgWidth || "33.3333333%",
+    minWidth: props?.lgWidth || "20%",
+    maxWidth: props?.lgWidth || "20%",
   },
 }));

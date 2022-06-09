@@ -12,6 +12,7 @@ interface IDialogConfirmProps {
   content2?: string;
   btnLeft: string;
   btnRight: string;
+  bgColorBtnRight?: string;
   handleClose: () => void;
   handleCancel?: () => void;
   handleOK?: () => void;
@@ -28,6 +29,7 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
   handleClose,
   handleCancel,
   handleOK,
+  bgColorBtnRight,
 }) => {
   const [fullWidth] = React.useState(true);
 
@@ -166,7 +168,7 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
         <ButtonComponent
           props={{
             dimension: "medium",
-            bgColor: theme.blue,
+            bgColor: bgColorBtnRight ?? theme.blue,
           }}
           sx={{
             height: "56px",
