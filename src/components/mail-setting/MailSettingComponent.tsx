@@ -247,13 +247,13 @@ const MailSettingComponent = () => {
         }}
       >
         <Box sx={{ mb: "200px" }}>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: { xs: "center", lg: "start" } }}>
-            <Avatar src="/assets/images/icon/ic_setting_black.png" sx={{ width: "18px", height: "22px", mr: "8px" }} />
-            <Typography fontWeight={700} fontSize={20} lineHeight="28.96px" color={theme.navy}>
-              {t("mail-setting:configuration")}
-            </Typography>
-          </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: "block", lg: "flex" }, height: { xs: "375px", lg: "475px" } }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: "block", lg: "flex" },
+              height: { xs: "375px", lg: "475px" },
+            }}
+          >
             <Tabs
               orientation="vertical"
               value={value}
@@ -272,6 +272,15 @@ const MailSettingComponent = () => {
                 },
               }}
             >
+              <Box sx={{ display: "flex", alignItems: "center", justifyContent: { xs: "center", lg: "start" } }}>
+                <Avatar
+                  src="/assets/images/icon/ic_setting_black.png"
+                  sx={{ width: "18px", height: "22px", mr: "8px" }}
+                />
+                <Typography fontWeight={700} fontSize={20} lineHeight="28.96px" color={theme.navy}>
+                  {t("mail-setting:configuration")}
+                </Typography>
+              </Box>
               <TitleTab
                 label={
                   <Typography component="span" sx={{ width: "100%", textAlign: { xs: "center", lg: "left" } }}>
@@ -292,14 +301,19 @@ const MailSettingComponent = () => {
             <Box
               sx={{
                 background: "#fff",
-                borderRadius: { xs: "12px", lg: "0" },
+                borderRadius: "12px",
                 m: { xs: "24px 20px 0px 20px", lg: "0" },
                 width: { xs: "unset", lg: "80%" },
               }}
             >
               <TabPanel value={value} index={0}>
                 <Box sx={{ p: { xs: "0", lg: "6px 0 0 59px" } }}>
-                  <Box sx={{ mb: "19px", display: { xs: "none", lg: "block" } }}>
+                  <Box
+                    sx={{
+                      mb: "19px",
+                      display: { xs: "none", lg: "block" },
+                    }}
+                  >
                     <Typography component="span" fontSize={20} fontWeight={700} lineHeight="28.96px" color={theme.navy}>
                       {t("mail-setting:email-address-setting")}
                     </Typography>

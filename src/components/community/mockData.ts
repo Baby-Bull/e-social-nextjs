@@ -638,7 +638,7 @@ export const admins = [
 ];
 
 export const infoCommunitySetting = {
-  avatar: "/assets/images/svg/php.svg",
+  avatar: "/assets/images/svg/goodhub.svg",
   admin: infoAdmin,
   rolesCreatePost: [
     { value: "member", label: "コミュニティ内の人が投稿可能" },
