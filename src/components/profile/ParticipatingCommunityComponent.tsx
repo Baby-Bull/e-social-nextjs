@@ -1,6 +1,7 @@
 import { Avatar, Box, Grid, Typography } from "@mui/material";
 import React from "react";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import theme from "src/theme";
 
@@ -10,6 +11,7 @@ interface BoxNodataProps {
 
 const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({ communities }) => {
   const { t } = useTranslation();
+  const router = useRouter();
   return (
     <Box
       sx={{
@@ -22,13 +24,15 @@ const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({ communitie
         {communities?.map((item, key) => (
           <Grid item xs={12} lg={3} key={key}>
             <Box
+              onClick={() => router.push(`/community/${item?.id}`)}
               sx={{
+                cursor: "pointer",
                 textAlign: "center",
                 p: "20px 40px",
               }}
             >
               <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <Avatar sx={{ width: "124px", height: "124px" }} src={item.profile_image} alt="rectangle" />
+                <Avatar sx={{ width: "124px", height: "124px" }} src={item.profile_image} alt="Image Community" />
               </Box>
               <Typography
                 sx={{

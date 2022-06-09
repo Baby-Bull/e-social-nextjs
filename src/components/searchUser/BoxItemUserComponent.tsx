@@ -144,7 +144,9 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
               {t("home:box-member-recommend.label-description")}
             </p>
 
-            <p className="description">{data?.discussion_topic}</p>
+            <p className="description">
+              {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
+            </p>
           </Box>
           <div className="div-review" onClick={handleClickFavoriteButton}>
             <img

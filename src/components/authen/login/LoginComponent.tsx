@@ -138,7 +138,7 @@ const LoginComponent = () => {
                       fontSize: 14,
                       fontWeight: 400,
                       color: theme.navy,
-                      display: { xs: "block", sm: "flex" },
+                      display: { xs: "block", sm: "-webkit-box" },
                     }}
                   >
                     <Box sx={{ display: "flex" }}>

@@ -107,8 +107,8 @@ const CreateComponent = () => {
     is_public: roleJoinSelected,
   });
   const [tagData, setTagData] = useState([]);
-  const [profileImage, setProfileImage] = useState("");
-  const [srcProfileImage, setSrcProfileImage] = useState("");
+  const [profileImage, setProfileImage] = useState(infoCommunitySetting.avatar);
+  const [srcProfileImage, setSrcProfileImage] = useState(infoCommunitySetting.avatar);
   const [tagDataValidate, setTagDataValidate] = useState(false);
 
   const onKeyPress = (e) => {

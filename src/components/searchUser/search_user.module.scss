@@ -354,6 +354,11 @@
         margin-bottom: 24px;
         width: 90%;
 
+        &:hover {
+          background: #dcf9ff;
+          cursor: pointer;
+        }
+
         img {
           margin-right: 10px;
         }

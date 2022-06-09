@@ -53,10 +53,10 @@ const InputCustom = styled(InputBase)({
     position: "relative",
     backgroundColor: "white",
     border: `1px solid ${theme.blue}`,
-    fontSize: 14,
+    fontSize: "14px",
     height: "fit-content!important",
     padding: "10px 12px",
-    borderRadius: 12,
+    borderRadius: "12px",
     fontFamily: "Noto Sans JP",
     "@media (max-width: 425px)": {
       width: 294,
@@ -69,15 +69,18 @@ const InputCustom = styled(InputBase)({
     "&:focus": {
       boxShadow: `${theme.blue} 0 0 0 0.1rem`,
       borderColor: theme.blue,
+      borderRadius: "12px",
     },
   },
 });
 
 const SelectCustom = styled(Select)({
-  borderRadius: 12,
+  marginTop: "0!important",
+  borderRadius: "12px",
   borderColor: theme.blue,
   textAlign: "left",
-  fontSize: "14px!important",
+  fontSize: "14px",
+  fontWeight: "400",
   "&:hover": {
     borderRadius: 12,
     borderColor: theme.blue,
@@ -86,7 +89,7 @@ const SelectCustom = styled(Select)({
     position: "relative",
     backgroundColor: "white",
     border: `1px solid ${theme.blue}`,
-    fontSize: 16,
+    fontSize: 14,
     padding: "10px 12px",
     borderRadius: 12,
     fontFamily: "Noto Sans JP",
@@ -99,6 +102,7 @@ const SelectCustom = styled(Select)({
     "&:focus": {
       boxShadow: `${theme.blue} 0 0 0 0.1rem`,
       borderColor: theme.blue,
+      borderRadius: "12px",
     },
   },
 });
@@ -219,7 +223,7 @@ export const Field: React.SFC<IFieldProps> = ({
               <Box
                 sx={{
                   fontFamily: "Noto Sans JP",
-                  fontSize: "16px",
+                  fontSize: "14px",
                 }}
                 display="flex"
               >
@@ -249,23 +253,41 @@ export const Field: React.SFC<IFieldProps> = ({
         )}
 
         {editor!.toLowerCase() === "dropdown" && (
-          <FormControl fullWidth>
-            <Typography
+          <FormControl sx={{ pt: "20px", mt: ["25px", "20px"], width: "100%" }} variant="standard">
+            <InputLabel
+              shrink
+              htmlFor={id}
               sx={{
-                mt: 2,
-                mb: "5px",
-                fontSize: "12px",
-                fontFamily: "Noto Sans JP",
-                color: "black",
-                textAlign: "left",
                 display: "flex",
-                alignItems: "flex-start",
+                alignItems: "center",
+                color: "black",
               }}
             >
-              {label}
-            </Typography>
-
+              <Box
+                sx={{
+                  fontFamily: "Noto Sans JP",
+                  fontSize: "14px",
+                  display: "flex",
+                }}
+              >
+                {label}
+                <Chip
+                  label="必須"
+                  sx={{
+                    display: required ? "" : "none",
+                    ml: 1,
+                    width: "54px",
+                    height: "22px",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "white",
+                    backgroundColor: theme.orange,
+                  }}
+                />
+              </Box>
+            </InputLabel>
             <SelectCustom
+              disableUnderline
               autoWidth={false}
               value={value}
               onChange={(e) => {
@@ -337,7 +359,7 @@ export const Field: React.SFC<IFieldProps> = ({
                       icon={icon}
                       label={data.label}
                       sx={{
-                        fontSize: 12,
+                        fontSize: "12px",
                         fontWeight: 400,
                         color: theme.gray,
                         borderRadius: "4px",
@@ -357,7 +379,13 @@ export const Field: React.SFC<IFieldProps> = ({
                 color: "black",
               }}
             >
-              <Box display="flex">
+              <Box
+                sx={{
+                  fontFamily: "Noto Sans JP",
+                  fontSize: "14px",
+                  display: "flex",
+                }}
+              >
                 {label}
                 <Chip
                   label="必須"
@@ -365,7 +393,7 @@ export const Field: React.SFC<IFieldProps> = ({
                     display: required ? "" : "none",
                     ml: 1,
                     width: "54px",
-                    height: "20px",
+                    height: "22px",
                     fontSize: 12,
                     fontWeight: 600,
                     color: "white",
@@ -468,7 +496,6 @@ export const Field: React.SFC<IFieldProps> = ({
             <p
               style={{
                 fontSize: "12px",
-                display: "flex",
               }}
             >
               <Link href="#" color="secondary">
@@ -490,7 +517,13 @@ export const Field: React.SFC<IFieldProps> = ({
                 color: "black",
               }}
             >
-              <Box display="flex">
+              <Box
+                sx={{
+                  fontFamily: "Noto Sans JP",
+                  fontSize: "14px",
+                  display: "flex",
+                }}
+              >
                 {label}
                 <Chip
                   label="必須"
@@ -512,6 +545,7 @@ export const Field: React.SFC<IFieldProps> = ({
                 maxDate={new Date()}
                 value={date}
                 inputFormat="yyyy/MM/dd"
+                mask="____/__/__"
                 onChange={(newValue) => {
                   onValidateDate(newValue);
                   setDate(newValue);
@@ -532,7 +566,7 @@ export const Field: React.SFC<IFieldProps> = ({
                       style={{
                         outlineStyle: "none",
                         borderStyle: "none",
-                        fontSize: "16px",
+                        fontSize: "14px",
                         width: "100%",
                       }}
                       placeholder="クリックして日付を選択"

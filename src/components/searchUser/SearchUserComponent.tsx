@@ -331,13 +331,13 @@ const SearchUserComponent = () => {
                   <Typography className="sort-by-label">{t("user-search:sort-by")}</Typography>
                   <Divider orientation="vertical" flexItem />
                   <Box
-                    onClick={() => handleSort("recommended")}
+                    onClick={() => isSort !== "recommended" && handleSort("recommended")}
                     className={isSort === "recommended" ? "sort-link" : "sort-link active"}
                   >
                     {t("user-search:recommend-order")}
                   </Box>
                   <Box
-                    onClick={() => handleSort("login_at")}
+                    onClick={() => isSort !== "login_at" && handleSort("login_at")}
                     className={isSort === "login_at" ? "sort-link" : "sort-link active"}
                   >
                     {t("user-search:last-login-order")}
