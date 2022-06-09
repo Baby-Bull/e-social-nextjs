@@ -215,8 +215,8 @@ const ProfileHaveDataComponent = () => {
         >
           {t("profile:title-review")}（{countReviews}）
           <PaginationCustom
-            hideNextButton={page === Math.ceil(countReviews / 10)}
-            hidePrevButton={page === 1}
+            hideNextButton={page === Math.ceil(countReviews / 10) || countReviews < 10}
+            hidePrevButton={page === 1 || countReviews < 10}
             count={Math.ceil(countReviews / 10)}
             onChange={handleChange}
           />

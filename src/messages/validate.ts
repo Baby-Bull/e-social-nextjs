@@ -56,6 +56,7 @@ export const VALIDATE_FORM_USER_PORT = {
   },
   detail: {
     max_length: "1タグにつき1000文字以内で入力してください",
+    required: "空白のままにしないでください",
   },
 };
 

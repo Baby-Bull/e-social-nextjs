@@ -1,12 +1,12 @@
 {
     "matching": {
-        "request": "マッチング\nリクエスト",
+        "request": "マッチング \n リクエスト",
         "request-unit": "件",
-        "application": "申請中の\nマッチング",
+        "application": "申請中の \n マッチング",
         "application-unit": "件",
-        "people": "話したい人\nリスト",
+        "people": "話したい人 \n リスト",
         "people-unit": "人",
-        "community": "参加中の\nコミュニティ",
+        "community": "参加中の \n コミュニティ",
         "community-unit": "つ",
         "chat": "メッセージ",
         "matched": "マッチング済"

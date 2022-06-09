@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { Box, Tabs, Typography, Avatar, Select, MenuItem, SelectChangeEvent } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
@@ -41,6 +42,7 @@ const OPTIONS = [
 
 const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, tabValue, setTabValue }) => {
   const { t } = useTranslation();
+  const router = useRouter();
 
   const onChangeParentTab = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -65,6 +67,9 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
   const handleDisplayReddot = (tabType: number, countUnconfirmed: number) =>
     (tabType === 1 || tabType === 2) && countUnconfirmed > 0;
 
+  const handleRedirectCommunity = (idComm: string) => {
+    router.push(`/community/${idComm}`);
+  };
   return (
     <React.Fragment>
       <Tabs
@@ -88,6 +93,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
             label={tab.text}
             {...a11yProps(index)}
             sx={{
+              whiteSpace: "pre-line",
               backgroundColor: "white",
               "&:before": handleDisplayReddot(tab?.type, tab?.children?.[0]?.count) && {
                 content: `url("/assets/images/svg/red_dot.svg")`,
@@ -99,19 +105,6 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
                   right: "5px",
                 },
               },
-
-              // "&.Mui-selected": {
-              //   "&:before": {
-              //     content: `url("/assets/images/svg/red_dot.svg")`,
-              //     position: "absolute",
-              //     top: "-5px",
-              //     right: "10px",
-              //     "@media (max-width: 768px)": {
-              //       top: "5px",
-              //       right: "5px",
-              //     },
-              //   },
-              // },
             }}
           />
         ))}
@@ -239,14 +232,16 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
               mt: ["40px", 0],
               mx: ["20px", "40px"],
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: "flex-start",
               flexWrap: "wrap",
             }}
           >
             {data[4]?.data?.map((tab, tabIndex) => (
               <React.Fragment key={tabIndex.toString()}>
                 <Box
+                  onClick={() => handleRedirectCommunity(tab?.id)}
                   sx={{
+                    cursor: "pointer",
                     mt: [0, "40px"],
                     mb: ["20px", 0],
                     mx: [0, "20px"],
@@ -257,7 +252,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
                   }}
                 >
                   <Avatar
-                    variant="square"
+                    variant="circular"
                     sx={{
                       width: ["149px", "124px"],
                       height: ["149px", "124px"],
@@ -284,7 +279,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
                       color: theme.gray,
                     }}
                   >
-                    {t("matching:count-member")} {tab?.member_count}
+                    {t("matching:count-member")} {tab?.member_count} 人
                   </Typography>
                 </Box>
               </React.Fragment>
