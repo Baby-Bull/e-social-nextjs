@@ -400,9 +400,11 @@ const CreateComponent = () => {
 
                 <BoxTextValidate sx={{ mb: "20px" }}>{errorValidates.profile_image}</BoxTextValidate>
 
-                <TypographyButton mb={["28px", "33px"]} onClick={removeProfileImage}>
-                  {t("community:setting.form.delete-img")}
-                </TypographyButton>
+                {profileImage && (
+                  <TypographyButton mb={["28px", "33px"]} onClick={removeProfileImage}>
+                    {t("community:setting.form.delete-img")}
+                  </TypographyButton>
+                )}
               </Grid>
               <GridTitle item xs={12} sm={3}>
                 <BoxTitle>{t("community:setting.form.name")}</BoxTitle>
