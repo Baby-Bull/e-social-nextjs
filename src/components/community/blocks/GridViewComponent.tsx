@@ -23,7 +23,6 @@ interface IGridViewComponentProps {
 const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) => {
   const IS_OWNER = "owner";
   const IS_ADMIN = "admin";
-  console.log(data);
   return (
     <React.Fragment>
       <Typography
@@ -44,7 +43,6 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) 
           mx: ["24px"],
           mb: "40px",
           display: "flex",
-          justifyContent: "space-between",
           flexWrap: "wrap",
         }}
       >
@@ -54,6 +52,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) 
               sx={{
                 mt: [0, "30px"],
                 mb: ["20px", 0],
+                mr: "2%",
                 flex: ["0 0 30%", "0 0 18%"],
                 display: "flex",
                 flexDirection: "column",

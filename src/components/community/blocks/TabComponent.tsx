@@ -99,12 +99,12 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
               xsHeight: "48px",
               xsBorderColor: theme.blue,
               xsBorderRadius: "12px 12px 0px 0px",
-              mdWidth: "152px",
+              mdWidth: "33.33333%",
               lgWidth: "33.33333%",
             }}
             key={index.toString()}
             iconPosition="top"
-            label={tab.text}
+            label={`${tab.text}111`}
             {...a11yProps(index)}
           />
         ))}
