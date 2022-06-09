@@ -197,6 +197,8 @@ const UpdateComponent = () => {
     const data = await checkMemberCommunity(communityId?.indexId, userId);
     if (data?.id && data?.role !== IS_MEMBER) {
       setCheckMember(true);
+      fetchDataUsers();
+      fetchData();
       return data;
     }
     toast.warning(t("common:not_have_access"));
@@ -205,8 +207,6 @@ const UpdateComponent = () => {
 
   useEffect(() => {
     checkRoleMemberCommunity();
-    fetchDataUsers();
-    fetchData();
   }, []);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
