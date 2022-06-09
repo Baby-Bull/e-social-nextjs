@@ -7,8 +7,9 @@ import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmCo
 
 interface IDialogConfirmProps {
   handleOK?: () => void;
+  title?: string;
 }
-const DropDownBlockUserComponent: React.SFC<IDialogConfirmProps> = ({ handleOK }) => {
+const DropDownBlockUserComponent: React.SFC<IDialogConfirmProps> = ({ handleOK, title }) => {
   const { t } = useTranslation();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -88,8 +89,9 @@ const DropDownBlockUserComponent: React.SFC<IDialogConfirmProps> = ({ handleOK }
       </Menu>
 
       <DialogConfirmComponent
-        title={t("community:dialog.confirm-delete-title")}
-        content={t("community:dialog.note-delete-title")}
+        title={title}
+        content1={t("community:dialog.note-delete-title1")}
+        content2={t("community:dialog.note-delete-title2")}
         btnLeft={t("community:button.dialog.cancel")}
         btnRight={t("community:button.dialog.withdraw")}
         isShow={openDialog}

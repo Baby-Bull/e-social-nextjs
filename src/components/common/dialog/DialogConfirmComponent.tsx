@@ -7,7 +7,9 @@ import ButtonComponent from "src/components/common/ButtonComponent";
 interface IDialogConfirmProps {
   isShow: boolean;
   title: string;
-  content: string;
+  content?: string;
+  content1?: string;
+  content2?: string;
   btnLeft: string;
   btnRight: string;
   handleClose: () => void;
@@ -19,6 +21,8 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
   isShow,
   title,
   content,
+  content1,
+  content2,
   btnLeft,
   btnRight,
   handleClose,
@@ -35,6 +39,7 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
           maxWidth: "640px",
         },
       }}
+      sx={{ "& .MuiPaper-root": { margin: "32px 20px", width: "100%" } }}
       open={isShow}
       onClose={handleClose}
       scroll="paper"
@@ -123,6 +128,8 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
               }}
             >
               {content}
+              <Box sx={{ fontSize: "12px", lineHeight: "17.38px", fontWeight: "400" }}>{content1}</Box>
+              <Box sx={{ fontSize: "12px", lineHeight: "17.38px", fontWeight: "400" }}>{content2}</Box>
             </Typography>
           </Box>
         </Box>

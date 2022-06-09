@@ -160,3 +160,13 @@ export const MemberReject = async (communityId, joinRequestId) => {
     return error;
   }
 };
+
+export const checkMemberCommunity = async (communityId, memberId) => {
+  try {
+    const res = await api.get(`community/${communityId}/member/${memberId}`);
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
