@@ -408,7 +408,7 @@ export const Field: React.SFC<IFieldProps> = ({
               <Typography
                 sx={{
                   fontSize: "10px",
-                  color: "red",
+                  color: "orange",
                   textAlign: editor === "checkbox" ? "center" : "left",
                   "&": {
                     "@media (max-width: 425px)": {
@@ -489,6 +489,7 @@ export const Field: React.SFC<IFieldProps> = ({
               onChange={onChangeCheckbox}
               size="small"
               sx={{
+                marginTop: "3px",
                 color: theme.blue,
                 "&.Mui-checked": { color: theme.blue },
               }}
@@ -496,6 +497,7 @@ export const Field: React.SFC<IFieldProps> = ({
             <p
               style={{
                 fontSize: "12px",
+                display: "flex",
               }}
             >
               <Link href="#" color="secondary">
@@ -585,7 +587,7 @@ export const Field: React.SFC<IFieldProps> = ({
         <Typography
           sx={{
             fontSize: "10px",
-            color: "red",
+            color: "orange",
             textAlign: editor === "checkbox" ? "center" : "left",
             "&": {
               "@media (max-width: 425px)": {

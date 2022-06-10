@@ -1,10 +1,14 @@
 import React from "react";
 import { Avatar, Box, Typography } from "@mui/material";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 import moment from "moment";
 
-import "moment/locale/ja";
 import { JOBS } from "src/components/constants/constants";
 import theme from "src/theme";
+import { IStoreState } from "src/constants/interface";
+
+import "moment/locale/ja";
 
 export interface IData {
   profile_image: string;
@@ -23,6 +27,13 @@ interface IGridViewComponentProps {
 const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) => {
   const IS_OWNER = "owner";
   const IS_ADMIN = "admin";
+  const router = useRouter();
+  const auth = useSelector((state: IStoreState) => state.user);
+
+  const handleRedirectToProfile = (stringId: string) => {
+    router.push(stringId === auth?.id ? `/my-profile` : `/profile/${stringId}`);
+  };
+
   return (
     <React.Fragment>
       <Typography
@@ -60,7 +71,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) 
               }}
             >
               <Avatar
+                onClick={() => handleRedirectToProfile(item?.id)}
                 sx={{
+                  cursor: "pointer",
                   width: "149px",
                   height: "149px",
                 }}
@@ -89,7 +102,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) 
                   sx={{
                     fontWeight: 700,
                     color: theme.navy,
+                    cursor: "pointer",
                   }}
+                  onClick={() => handleRedirectToProfile(item?.id)}
                 >
                   {item.username}
                 </Typography>

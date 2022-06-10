@@ -1,5 +1,5 @@
 export const REGEX_RULES = {
-  username_register: /^[一-龯ぁ-んァ-ンa-zA-Z0-9\w]+$/,
+  username_register: /^[一-龯ぁ-んァ-ンa-zA-Z0-9\w ]+$/,
   only_japanese: /^[一-龯ぁ-んァ-ン]+$/,
   email: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
   username_profile: /^[一-龯ぁ-んァ-ンa-zA-Z\w]+$/,
