@@ -9,7 +9,10 @@ import GridViewComponent from "src/components/community/setting/blocks/GridViewC
 import { getParticipates } from "src/services/community";
 import PaginationCustomComponent from "src/components/common/PaginationCustomComponent";
 
-const ParticipationComponent = () => {
+interface IParticipationComponentProps {
+  isPublic?: boolean;
+}
+const ParticipationComponent: React.SFC<IParticipationComponentProps> = ({ isPublic }) => {
   const { t } = useTranslation();
   const LIMIT = 10;
   const router = useRouter();
@@ -75,7 +78,7 @@ const ParticipationComponent = () => {
             "community:setting.participation.subject",
           )}`}
         </Typography>
-        {participates?.slice((page - 1) * LIMIT, page * LIMIT) ? (
+        {participates?.slice((page - 1) * LIMIT, page * LIMIT)?.length > 0 ? (
           participates?.slice((page - 1) * LIMIT, page * LIMIT).map((data, index) => (
             <React.Fragment key={index.toString()}>
               <GridViewComponent
@@ -87,7 +90,16 @@ const ParticipationComponent = () => {
           ))
         ) : (
           <Box>
-            <EmptyComponent text={t("community:setting.participation.empty")} />
+            {isPublic ? (
+              <EmptyComponent
+                text={t("community:setting.participation.empty-public1")}
+                text2={t("community:setting.participation.empty-public2")}
+                text3={t("community:setting.participation.empty-public3")}
+                text4={t("community:setting.participation.empty-public4")}
+              />
+            ) : (
+              <EmptyComponent text={t("community:setting.participation.empty-private")} />
+            )}
           </Box>
         )}
       </Box>
