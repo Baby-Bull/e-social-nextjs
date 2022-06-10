@@ -93,8 +93,10 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
             label={tab.text}
             {...a11yProps(index)}
             sx={{
-              whiteSpace: "pre-line",
               backgroundColor: "white",
+              "@media (max-width: 768px)": {
+                whiteSpace: "pre-line",
+              },
               "&:before": handleDisplayReddot(tab?.type, tab?.children?.[0]?.count) && {
                 content: `url("/assets/images/svg/red_dot.svg")`,
                 position: "absolute",
