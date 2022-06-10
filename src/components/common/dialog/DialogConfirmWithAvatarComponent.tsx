@@ -7,7 +7,9 @@ import ButtonComponent from "src/components/common/ButtonComponent";
 interface IDialogConfirmWithAvatarProps {
   isShow: boolean;
   title: string;
-  content: string;
+  content?: string;
+  content1?: string;
+  content2?: string;
   btnLeft: string;
   btnRight: string;
   bgColorBtnLeft?: string;
@@ -22,6 +24,8 @@ const DialogConfirmWithAvatarComponent: React.SFC<IDialogConfirmWithAvatarProps>
   isShow,
   title,
   content,
+  content1,
+  content2,
   btnLeft,
   btnRight,
   bgColorBtnLeft,
@@ -96,7 +100,7 @@ const DialogConfirmWithAvatarComponent: React.SFC<IDialogConfirmWithAvatarProps>
           sx={{
             display: "flex",
             pt: ["53px", "37px"],
-            pr: { sm: "60px" },
+            pr: { sm: "20px" },
             mb: ["22px", 0],
           }}
         >
@@ -137,6 +141,8 @@ const DialogConfirmWithAvatarComponent: React.SFC<IDialogConfirmWithAvatarProps>
             >
               {content}
             </Typography>
+            <Box>{content1}</Box>
+            <Box>{content2}</Box>
           </Box>
         </Box>
 

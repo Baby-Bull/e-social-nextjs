@@ -150,6 +150,7 @@ const UpdateComponent = () => {
   const [valueCursor, setValueCursor] = useState("");
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
   const [checkMember, setCheckMember] = useState(false);
   const auth = useSelector((state: IStoreState) => state.user);
   const [userId] = useState(auth?.id);
@@ -161,6 +162,7 @@ const UpdateComponent = () => {
     for (let i = 0; i < data?.admins?.length; i++) {
       admins.push(`${data?.admins[i].id},${data?.admins[i].username}`);
     }
+    setIsPublic(data?.is_public);
     setPersonName(admins);
     setName(data?.name);
     setDescription(data?.description);
@@ -196,8 +198,8 @@ const UpdateComponent = () => {
     const communityId = router.query;
     const data = await checkMemberCommunity(communityId?.indexId, userId);
     if (data?.id && data?.role !== IS_MEMBER) {
-      setCheckMember(true);
       fetchDataUsers();
+      setCheckMember(true);
       fetchData();
       return data;
     }
@@ -208,8 +210,10 @@ const UpdateComponent = () => {
   useEffect(() => {
     checkRoleMemberCommunity();
   }, []);
-
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setCommunityMembers([]);
+    setHasMore(true);
+    setValueCursor("");
     if (newValue === 0) {
       fetchData();
       fetchDataUsers();
@@ -940,7 +944,7 @@ const UpdateComponent = () => {
             <MemberComponent />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <ParticipatedMemberComponent />
+            <ParticipatedMemberComponent isPublic={isPublic} />
           </TabPanel>
         </Box>
       )}

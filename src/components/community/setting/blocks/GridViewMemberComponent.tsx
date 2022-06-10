@@ -77,6 +77,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
           <DropDownBlockUserComponent
             handleOK={handleDialogApproveBlock}
             title={`${data?.username}${t("community:setting.member.dialog-block.title")}`}
+            avatar={data.profile_image}
           />
         </Box>
 
@@ -212,7 +213,8 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
 
       <DialogConfirmWithAvatarComponent
         title={`${data?.username}${t("community:setting.member.dialog-block.title")}`}
-        content={t("community:setting.member.dialog-block.content")}
+        content1={t("community:setting.member.dialog-block.content1")}
+        content2={t("community:setting.member.dialog-block.content2")}
         btnLeft={t("community:button.dialog.cancel")}
         btnRight={t("community:button.dialog.block")}
         bgColorBtnRight={theme.red}

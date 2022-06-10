@@ -10,6 +10,7 @@ interface IDialogConfirmProps {
   content?: string;
   content1?: string;
   content2?: string;
+  avatar?: string;
   btnLeft: string;
   btnRight: string;
   bgColorBtnRight?: string;
@@ -29,6 +30,7 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
   handleClose,
   handleCancel,
   handleOK,
+  avatar,
   bgColorBtnRight,
 }) => {
   const [fullWidth] = React.useState(true);
@@ -115,8 +117,11 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
                 color: theme.navy,
                 fontSize: [16, 20],
                 fontWeight: 700,
+                display: "flex",
+                alignItems: "center",
               }}
             >
+              <Avatar src={avatar} sx={{ mr: "11px" }} />
               {title}
             </Typography>
 
@@ -124,7 +129,7 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
               component="span"
               sx={{
                 mt: ["35px"],
-                px: [0, "50px"],
+                px: ["24px", "50px"],
                 fontSize: [14, 16],
                 color: theme.navy,
               }}
