@@ -148,3 +148,20 @@ export const VALIDATE_FORM_COMMUNITY = {
     max_size: "2MB以下のファイルを選択してください。",
   },
 };
+
+export const VALIDATE_FORM_COMMUNITY_POST = {
+  title: {
+    max_length: "60文字以内で入力してください。",
+    required: "コミュニティタイトルを入力してください。",
+  },
+  content: {
+    max_length: "1000文字以内で入力してください。",
+    required: "コミュニティ詳細を入力してください。",
+  },
+  reference_url: {
+    format: "https://www.〇〇.jpの形式の URL を入力してください。",
+  },
+  address: {
+    max_length: "100文字以内で入力してください。",
+  },
+};

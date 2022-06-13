@@ -21,7 +21,8 @@ import { styled } from "@mui/material/styles";
 
 import theme, { themeSelect } from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabVerticalComponent";
-import { InputCustom, TextareaAutosizeCustom } from "src/components/community/post/FormComponent";
+import { TextArea } from "src/components/community/blocks/Form/TextAreaComponent";
+import { InputCustom } from "src/components/community/blocks/Form/InputComponent";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
@@ -307,13 +308,7 @@ const CommunityCreateComponent = () => {
                     },
                   }}
                 >
-                  <TextareaAutosizeCustom
-                    aria-label="write-comment"
-                    placeholder={t("community:place-holder")}
-                    sx={{
-                      minHeight: ["240px", "80px"],
-                    }}
-                  />
+                  <TextArea aria-label="write-comment" placeholder={t("community:place-holder")} />
                 </Box>
               </GridContent>
 

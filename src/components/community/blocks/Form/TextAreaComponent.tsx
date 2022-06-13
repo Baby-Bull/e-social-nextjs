@@ -40,7 +40,7 @@ interface ILayoutComponentProps {
   error?: string;
   id?: string;
   placeholder?: string;
-  onChangeInput: Function;
+  onChangeInput?: Function;
   value?: string;
 }
 

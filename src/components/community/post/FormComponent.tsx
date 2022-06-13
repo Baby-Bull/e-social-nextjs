@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
-import { Box, Grid, InputBase, TextareaAutosize, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import DOMPurify from "isomorphic-dompurify";
+import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
-
-import { postDetail } from "../mockData";
+import { Field } from "src/components/community/blocks/Form/InputComponent";
+import { TextArea } from "src/components/community/blocks/Form/TextAreaComponent";
+import { REGEX_RULES, VALIDATE_FORM_COMMUNITY_POST } from "src/messages/validate";
+import { createCommunityPost, detailCommunityPost, updateCommunityPost } from "src/services/community";
 
 const BoxTitle = styled(Box)({
   fontSize: 18,
@@ -17,64 +19,120 @@ const BoxTitle = styled(Box)({
   fontWeight: 700,
 });
 
-export const InputCustom = styled(InputBase)({
-  backgroundColor: theme.whiteBlue,
-  borderRadius: "6px",
-  width: "100%",
-  "&.MuiInputBase-root": {
-    marginLeft: "0px",
-    "& .MuiInputBase-input": {
-      "@media (max-width: 425px)": {
-        fontSize: 14,
-      },
-      "&::-webkit-input-placeholder": {
-        color: theme.gray,
-        opacity: 1,
-      },
-      height: 36,
-      paddingTop: 0,
-      paddingBottom: 0,
-      border: `2px solid transparent`,
-      paddingLeft: "18px",
-      "&:focus": {
-        border: `2px solid ${theme.blue}`,
-        borderRadius: "6px",
-      },
-    },
-  },
-});
-
-export const TextareaAutosizeCustom = styled(TextareaAutosize)({
-  backgroundColor: theme.whiteBlue,
-  paddingTop: "9px",
-  paddingLeft: "18px",
-  width: "100%",
-  resize: "none",
-  minHeight: "80px",
-  border: `2px solid transparent`,
-  borderRadius: "6px",
-  fontFamily: "Noto Sans JP",
-  color: theme.navy,
-  fontSize: 14,
-  "&::-webkit-input-placeholder": {
-    color: theme.gray,
-  },
-  "@media (min-width: 768px)": {
-    fontSize: 16,
-  },
-  "&:focus-visible": {
-    border: `2px solid ${theme.blue}`,
-    outline: "none",
-  },
-});
-
 interface ILayoutComponentProps {
   editable?: boolean;
 }
 
 const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
   const { t } = useTranslation();
+  const router = useRouter();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [referenceUrl, setReferenceUrl] = useState("");
+  const [address, setAddress] = useState("");
+  const [communityPostRequest, setCommunityPostRequest] = useState({
+    title,
+    content,
+    reference_url: referenceUrl,
+    address,
+  });
+  const [errorValidates, setErrorValidates] = useState({
+    title: null,
+    content: null,
+    reference_url: null,
+    address: null,
+  });
 
+  const errorMessages = {
+    title: null,
+    content: null,
+    reference_url: null,
+    address: null,
+  };
+
+  const onChangeCommunityPostRequest = (key: string, valueInput: any) => {
+    if (key === "title") {
+      setTitle(valueInput);
+    }
+    if (key === "content") {
+      setContent(valueInput);
+    }
+    if (key === "reference_url") {
+      setReferenceUrl(valueInput);
+    }
+    if (key === "address") {
+      setAddress(valueInput);
+    }
+    setCommunityPostRequest({
+      ...communityPostRequest,
+      [key]: typeof valueInput === "string" ? valueInput.trim() : valueInput,
+    });
+  };
+
+  const handleValidateFormCommunityPost = () => {
+    let isValidForm = true;
+    if (!communityPostRequest?.title?.length || communityPostRequest?.title?.length > 60) {
+      isValidForm = false;
+      errorMessages.title = VALIDATE_FORM_COMMUNITY_POST.title.max_length;
+    }
+
+    if (!communityPostRequest?.title?.length || communityPostRequest?.title?.length === 0) {
+      isValidForm = false;
+      errorMessages.title = VALIDATE_FORM_COMMUNITY_POST.title.required;
+    }
+
+    if (!communityPostRequest?.content?.length || communityPostRequest?.content?.length > 1000) {
+      isValidForm = false;
+      errorMessages.content = VALIDATE_FORM_COMMUNITY_POST.content.max_length;
+    }
+
+    if (!communityPostRequest?.content?.length || communityPostRequest?.content?.length === 0) {
+      isValidForm = false;
+      errorMessages.content = VALIDATE_FORM_COMMUNITY_POST.content.required;
+    }
+
+    if (communityPostRequest?.reference_url?.length > 0 && !REGEX_RULES.url.test(communityPostRequest?.reference_url)) {
+      isValidForm = false;
+      errorMessages.reference_url = VALIDATE_FORM_COMMUNITY_POST.reference_url.format;
+    }
+
+    if (communityPostRequest?.address?.length > 100) {
+      isValidForm = false;
+      errorMessages.address = VALIDATE_FORM_COMMUNITY_POST.address.max_length;
+    }
+    setErrorValidates(errorMessages);
+    return isValidForm;
+  };
+
+  const handleSaveForm = async () => {
+    if (handleValidateFormCommunityPost()) {
+      const communityId = router.query;
+      if (editable) {
+        const res = await updateCommunityPost(communityId?.id, communityId?.updateId, communityPostRequest);
+        return res;
+      }
+      const res = await createCommunityPost(communityId?.id, communityPostRequest);
+      if (res) {
+        setTimeout(() => router.push(`/community/${communityId?.id}`), 1000);
+        return res;
+      }
+    }
+  };
+
+  const getCommunityPost = async () => {
+    if (editable) {
+      const community = router.query;
+      const res = await detailCommunityPost(community?.id, community?.updateId);
+      setTitle(res?.title);
+      setAddress(res?.address);
+      setContent(res?.content);
+      setReferenceUrl(res?.reference_url);
+    }
+  };
+
+  useEffect(() => {
+    getCommunityPost();
+  }, []);
   return (
     <React.Fragment>
       <Typography
@@ -99,66 +157,81 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
       >
         <Grid container spacing={2}>
           <Grid item xs={12} sm={3}>
-            <BoxTitle>{t("community:form.title")}</BoxTitle>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <BoxTitle>{t("community:form.title")}</BoxTitle>
+              <Box
+                sx={{
+                  background: theme.orange,
+                  padding: "0px 14px",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  lineHeight: "16px",
+                  color: "#fff",
+                  borderRadius: "50px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "20px",
+                  ml: "8px",
+                }}
+              >
+                {t("common:required")}
+              </Box>
+            </Box>
           </Grid>
           <Grid item xs={12} sm={9}>
-            <InputCustom
-              sx={{ ml: 1, flex: 1 }}
+            <Field
+              id="title"
               placeholder={t("community:form.placeholder.title")}
-              inputProps={{ "aria-label": t("community:form.placeholder.title") }}
-              defaultValue={editable && t("community:form.title-value")}
+              onChangeInput={onChangeCommunityPostRequest}
+              error={errorValidates.title}
+              value={title}
             />
           </Grid>
 
           <Grid item xs={12} sm={3}>
-            <BoxTitle>{t("community:form.detail")}</BoxTitle>
-          </Grid>
-          <Grid item xs={12} sm={9}>
-            <Box
-              sx={{
-                height: "100%",
-                borderRadius: "6px",
-                "& div": {
-                  backgroundColor: theme.whiteBlue,
-                  height: "100%",
-                  border: "2px solid transparent",
-                  outline: "none",
-                  borderRadius: "6px",
-                  pb: "8px",
-                  pr: { sm: "20%" },
-                },
-                "& div:focus-visible": {
-                  border: `2px solid ${theme.blue}`,
-                },
-              }}
-            >
-              {editable ? (
-                <div
-                  contentEditable="true"
-                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(postDetail.content) }}
-                  style={{
-                    paddingLeft: "18px",
-                  }}
-                />
-              ) : (
-                <TextareaAutosizeCustom
-                  aria-label="write-comment"
-                  placeholder={t("community:place-holder")}
-                  style={{}}
-                />
-              )}
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <BoxTitle>{t("community:form.detail")}</BoxTitle>
+              <Box
+                sx={{
+                  background: theme.orange,
+                  padding: "0px 14px",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  lineHeight: "16px",
+                  color: "#fff",
+                  borderRadius: "50px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "20px",
+                  ml: "8px",
+                }}
+              >
+                {t("common:required")}
+              </Box>
             </Box>
+          </Grid>
+          <Grid item xs={12} sm={9} sx={{ padding: "0" }}>
+            <TextArea
+              id="content"
+              placeholder={t("community:place-holder")}
+              error={errorValidates.content}
+              onChangeInput={onChangeCommunityPostRequest}
+              value={content}
+            />
           </Grid>
 
           <Grid item xs={12} sm={3}>
             <BoxTitle>{t("community:form.url")}</BoxTitle>
           </Grid>
           <Grid item xs={12} sm={9}>
-            <InputCustom
-              sx={{ ml: 1, flex: 1 }}
+            <Field
+              id="reference_url"
               placeholder={t("community:form.placeholder.url")}
-              inputProps={{ "aria-label": t("community:form.placeholder.url") }}
-              defaultValue={editable && postDetail.url}
+              error={errorValidates.reference_url}
+              onChangeInput={onChangeCommunityPostRequest}
+              value={referenceUrl}
             />
           </Grid>
 
@@ -166,11 +239,12 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
             <BoxTitle>{t("community:form.address")}</BoxTitle>
           </Grid>
           <Grid item xs={12} sm={9}>
-            <InputCustom
-              sx={{ ml: 1, flex: 1 }}
+            <Field
+              id="address"
               placeholder={t("community:form.placeholder.address")}
-              inputProps={{ "aria-label": t("community:form.placeholder.address") }}
-              defaultValue={editable && postDetail.address}
+              error={errorValidates.address}
+              onChangeInput={onChangeCommunityPostRequest}
+              value={address}
             />
           </Grid>
         </Grid>
@@ -187,6 +261,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
               dimension: "medium",
               bgColor: theme.blue,
             }}
+            onClick={handleSaveForm}
           >
             {editable ? t("community:form.submit-edit") : t("community:form.submit-create")}
           </ButtonComponent>

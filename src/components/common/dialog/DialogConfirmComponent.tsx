@@ -121,7 +121,7 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
                 alignItems: "center",
               }}
             >
-              <Avatar src={avatar} sx={{ mr: "11px" }} />
+              <Avatar src={avatar} sx={{ mr: "11px", display: avatar ? "block" : "none" }} />
               {title}
             </Typography>
 

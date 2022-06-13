@@ -47,14 +47,14 @@ const CommunityComponent = () => {
   const router = useRouter();
   const handleCopyUrl = () => {
     const communityId = router.query;
-    const resUrl = `${process.env.NEXT_PUBLIC_URL_PROFILE}/community/${communityId?.indexId}`;
+    const resUrl = `${process.env.NEXT_PUBLIC_URL_PROFILE}/community/${communityId?.id}`;
     copy(resUrl);
     toast.success(COPY_SUCCESSFUL);
   };
 
   const fetchDataUsers = async (cursor: string = "") => {
     const communityId = router.query;
-    const resData = await CommunityMembers(communityId?.indexId, 4, cursor);
+    const resData = await CommunityMembers(communityId?.id, 4, cursor);
     // eslint-disable-next-line no-unsafe-optional-chaining
     setCommunityMembers(resData?.items);
     return resData;
@@ -62,7 +62,7 @@ const CommunityComponent = () => {
 
   const fetchData = async () => {
     const communityId = router.query;
-    const data = await getCommunity(communityId?.indexId);
+    const data = await getCommunity(communityId?.id);
     if (data?.error_code === "401") {
       toast.warning(t("common:not_have_access"));
       setTimeout(() => router.push("/"), 1000);
@@ -80,7 +80,7 @@ const CommunityComponent = () => {
 
   const redirectPageMembers = () => {
     const communityId = router.query;
-    router.push(`/community/members/${communityId?.indexId}`);
+    router.push(`/community/members/${communityId?.id}`);
   };
 
   return (
