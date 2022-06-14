@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 import {
   APPPROVE_MEMBER,
@@ -6,9 +7,13 @@ import {
   BLOCKED_MEMBER,
   CREATE_COMMUNITY,
   DELETE_COMMUNITY,
+  DELETE_POST,
+  NOTE_FOUNT_POST,
   REJECT_MEMBER,
   SERVER_ERROR,
   UPDATE_COMMUNITY,
+  UPDATE_POST,
+  CREATE_POST,
 } from "src/messages/notification";
 import { api } from "src/helpers/api";
 
@@ -164,6 +169,66 @@ export const MemberReject = async (communityId, joinRequestId) => {
 export const checkMemberCommunity = async (communityId, memberId) => {
   try {
     const res = await api.get(`community/${communityId}/member/${memberId}`);
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const createCommunityPost = async (communityId, body) => {
+  try {
+    const res = await api.post(`community/${communityId}/posts`, body);
+    if (!res.data.error_code) {
+      toast.success("Thêm comunity post thành công");
+      return res.data;
+    }
+    toast.error(SERVER_ERROR);
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const detailCommunityPost = async (communityId, postId) => {
+  try {
+    const res = await api.get(`community/${communityId}/posts/${postId}`);
+    if (res.data.error_code === "404") {
+      toast.error(CREATE_POST);
+      const router = useRouter();
+      setTimeout(() => router.push(`community/${communityId}`), 1000);
+      return false;
+    }
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const updateCommunityPost = async (communityId, postId, body) => {
+  try {
+    const res = await api.patch(`community/${communityId}/posts/${postId}`, body);
+    if (!res.data.error_code) {
+      toast.success(UPDATE_POST);
+      return res.data;
+    }
+    toast.error(SERVER_ERROR);
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const deleteCommunityPost = async (communityId, postId) => {
+  try {
+    const res = await api.delete(`community/${communityId}/posts/${postId}`);
+    if (res.data.error_code === "404") {
+      toast.error(NOTE_FOUNT_POST);
+      const router = useRouter();
+      setTimeout(() => router.push(`community/${communityId}`), 1000);
+      return false;
+    }
+    toast.success(DELETE_POST);
     return res.data;
   } catch (error) {
     toast.error(SERVER_ERROR);

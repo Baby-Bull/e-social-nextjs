@@ -31,5 +31,6 @@
     "is_login": "ログイン中"
   },
   "showMore": "もっと見る",
+  "required": "必須",
   "not_have_access": "アクセス権がありません。"
 }

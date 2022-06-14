@@ -1,9 +1,11 @@
 import React from "react";
-import { Avatar, IconButton, Menu, MenuItem, Divider, Typography, Link } from "@mui/material";
+import { Avatar, IconButton, Menu, MenuItem, Divider, Typography, Box } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
+import { deleteCommunityPost } from "src/services/community";
 
 interface IButtonDropDownComponentProps {
   top?: string[];
@@ -12,6 +14,7 @@ interface IButtonDropDownComponentProps {
 
 const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({ top, right }) => {
   const { t } = useTranslation();
+  const router = useRouter();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -20,6 +23,11 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({ top
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const redirectUpdatePost = () => {
+    const community = router.query;
+    router.push(`/community/${community?.id}/post/update/${community?.detailId}`);
   };
 
   const [openDialog, setOpen] = React.useState(false);
@@ -32,8 +40,13 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({ top
     setOpen(false);
   };
   const handleDialogOK = () => {
-    handleCloseDialog();
-    setOpen(false);
+    const community = router.query;
+    const res = deleteCommunityPost(community?.id, community?.detailId);
+    if (res) {
+      handleCloseDialog();
+      setOpen(false);
+      router.push(`/community/${community?.id}`);
+    }
   };
 
   return (
@@ -79,7 +92,7 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({ top
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem sx={{ py: "0px" }}>
-          <Link href="/community/post/edit">
+          <Box onClick={redirectUpdatePost}>
             <Typography
               sx={{
                 color: theme.gray,
@@ -88,7 +101,7 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({ top
             >
               {t("community:button.dropdown.edit")}
             </Typography>
-          </Link>
+          </Box>
         </MenuItem>
         <Divider />
         <MenuItem sx={{ py: "0px" }} onClick={handleOpenDialog}>
