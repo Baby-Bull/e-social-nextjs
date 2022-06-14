@@ -3,13 +3,30 @@ import { Box } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
-import { comments } from "src/components/community/mockData";
-import CommentComponent, { IItem } from "src/components/community/post/detail/blocks/CommentComponent";
-import { PaginationCustom } from "src/components/community/blocks/ChildTabComponent";
+import CommentComponent from "src/components/community/post/detail/blocks/CommentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
+import PaginationCustomComponent from "src/components/common/PaginationCustomComponent";
 
-const ListCommentComponent = () => {
+interface IListCommentProps {
+  comments?: any;
+  page?: number;
+  perPage?: number;
+  totalComment?: number;
+  handleCallBackPaginationIndex?: any;
+}
+
+const ListCommentComponent: React.SFC<IListCommentProps> = ({
+  comments,
+  page,
+  perPage,
+  totalComment,
+  handleCallBackPaginationIndex,
+}) => {
   const { t } = useTranslation();
+  const LIMIT = 10;
+  const handleCallbackChangePagination = (event, value) => {
+    handleCallBackPaginationIndex(value, perPage + 1);
+  };
 
   return (
     <Box
@@ -74,14 +91,25 @@ const ListCommentComponent = () => {
           mb: "38px",
         }}
       >
-        <PaginationCustom count={4} />
+        {totalComment > LIMIT && (
+          <PaginationCustomComponent
+            handleCallbackChangePagination={handleCallbackChangePagination}
+            page={page}
+            perPage={perPage}
+            totalPage={
+              Math.floor((comments?.length ?? 0) / LIMIT) < totalComment / LIMIT
+                ? Math.floor(totalComment / LIMIT) + 1
+                : Math.floor(totalComment / LIMIT)
+            }
+          />
+        )}
       </Box>
       <Box
         sx={{
           color: theme.navy,
         }}
       >
-        {comments?.map((item: IItem, index: number) => (
+        {comments?.map((item, index) => (
           <CommentComponent item={item} key={index.toString()} />
         ))}
       </Box>

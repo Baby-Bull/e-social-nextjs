@@ -29,6 +29,7 @@
     "jsx-a11y/click-events-have-key-events": 0,
     "jsx-a11y/no-static-element-interactions": 0,
     "eslint-disable-next-line no-use-before-define": 0,
+    "eslint-disable-next-line no-unsafe-optional-chaining": "off",
     "react/jsx-fragments": [
       "error",
       "element"

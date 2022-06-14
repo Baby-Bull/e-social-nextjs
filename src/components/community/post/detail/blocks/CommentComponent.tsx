@@ -1,7 +1,9 @@
 import React from "react";
 import { Avatar, Box, Typography } from "@mui/material";
 import DOMPurify from "isomorphic-dompurify";
+import moment from "moment";
 
+import "moment/locale/ja";
 import theme from "src/theme";
 import ButtonDropDownComponent from "src/components/community/post/detail/blocks/ButtonDropDownComponent";
 import { isContributorOrCommenter } from "src/components/community/mockData";
@@ -13,7 +15,7 @@ export interface IItem {
   last_login: string;
 }
 interface ICommentComponentProps {
-  item: IItem;
+  item: any;
 }
 
 const CommentComponent: React.SFC<ICommentComponentProps> = ({ item }) => (
@@ -38,7 +40,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item }) => (
           width: ["32px", "54px"],
           height: ["32px", "54px"],
         }}
-        src={item.avatar}
+        src={item?.user?.profile_image}
       />
 
       <Box
@@ -54,7 +56,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item }) => (
             fontSize: [10, 14],
           }}
         >
-          {item.last_login}
+          {moment(item?.created_at).utc().format("LLL")}
         </Typography>
         <Typography
           sx={{
@@ -63,7 +65,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item }) => (
             mr: ["16px", 0],
           }}
         >
-          {item.name}
+          {item?.user?.username}
         </Typography>
       </Box>
     </Box>
