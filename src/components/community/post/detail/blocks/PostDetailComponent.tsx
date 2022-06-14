@@ -2,16 +2,22 @@ import React from "react";
 import { Box, Typography, Avatar, Divider } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import DOMPurify from "isomorphic-dompurify";
+import moment from "moment";
 
 import theme from "src/theme";
-import { postDetail, status, isContributor } from "src/components/community/mockData";
 import ButtonDropDownComponent from "src/components/community/post/detail/blocks/ButtonDropDownComponent";
+
+import "moment/locale/ja";
 
 interface IBoxInfoProps {
   title: string;
   text: string;
   textColor?: string;
   fontWeight: number;
+}
+
+interface ICommunityPostDataProps {
+  data?: any;
 }
 
 const BoxInfo: React.SFC<IBoxInfoProps> = ({ title, text, textColor, fontWeight }) => (
@@ -53,7 +59,7 @@ const BoxInfo: React.SFC<IBoxInfoProps> = ({ title, text, textColor, fontWeight 
   </Box>
 );
 
-const PostDetailComponent = () => {
+const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
   const { t } = useTranslation();
 
   return (
@@ -69,7 +75,7 @@ const PostDetailComponent = () => {
         backgroundColor: "white",
       }}
     >
-      {isContributor && <ButtonDropDownComponent />}
+      <ButtonDropDownComponent />
 
       <Typography
         component="span"
@@ -78,7 +84,7 @@ const PostDetailComponent = () => {
           fontWeight: 700,
         }}
       >
-        {postDetail.title}
+        {data?.title}
       </Typography>
 
       <Box
@@ -93,7 +99,7 @@ const PostDetailComponent = () => {
             width: ["32px", "54px"],
             height: ["32px", "54px"],
           }}
-          src={postDetail.avatar}
+          src={data?.user?.profile_image}
         />
 
         <Box
@@ -110,7 +116,7 @@ const PostDetailComponent = () => {
               fontSize: [10, 14],
             }}
           >
-            {postDetail.last_login}
+            {moment(data?.created_at).utc().format("LLL")}
           </Typography>
           <Typography
             component="div"
@@ -120,17 +126,17 @@ const PostDetailComponent = () => {
               mr: ["16px", 0],
             }}
           >
-            {postDetail.name}
+            {data?.user?.username}
           </Typography>
         </Box>
       </Box>
 
-      {status === "withdraw" && (
-        <React.Fragment>
-          <BoxInfo title={t("community:url")} text={postDetail.url} textColor={theme.blue} fontWeight={500} />
-          <BoxInfo title={t("community:address")} text={postDetail.address} fontWeight={400} />
-        </React.Fragment>
-      )}
+      <React.Fragment>
+        {data?.reference_url && (
+          <BoxInfo title={t("community:url")} text={data?.reference_url} textColor={theme.blue} fontWeight={500} />
+        )}
+        {data?.address && <BoxInfo title={t("community:address")} text={data?.address} fontWeight={400} />}
+      </React.Fragment>
 
       <Divider
         sx={{
@@ -140,7 +146,7 @@ const PostDetailComponent = () => {
       />
 
       <Box mt="20px">
-        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(postDetail.content) }} />
+        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data?.content) }} />
       </Box>
     </Box>
   );

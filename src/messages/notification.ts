@@ -16,3 +16,7 @@ export const BLOCK_MEMBER = "ブロックしました。";
 export const BLOCKED_MEMBER = "ブロックを解除しました。";
 export const APPPROVE_MEMBER = "承認しました。";
 export const REJECT_MEMBER = "拒否しました。";
+export const CREATE_POST = "投稿を作成しました。";
+export const UPDATE_POST = "投稿を編集しました。";
+export const DELETE_POST = "投稿を削除しました。";
+export const NOTE_FOUNT_POST = "投稿が見つかりません。";
