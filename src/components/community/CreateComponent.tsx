@@ -86,7 +86,7 @@ const BoxTextValidate = styled(Box)({
 const CreateComponent = () => {
   const { t } = useTranslation();
   const router = useRouter();
-
+  const rolePrivateCommunity = infoCommunitySetting.rolesCreatePost.slice(0, 2);
   const auth = useSelector((state: IStoreState) => state.user);
   const [value, setValue] = useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -108,6 +108,7 @@ const CreateComponent = () => {
   });
   const [tagData, setTagData] = useState([]);
   const [profileImage, setProfileImage] = useState(infoCommunitySetting.avatar);
+  const [isDeleteImage, setIsDeleteImage] = useState(false);
   const [srcProfileImage, setSrcProfileImage] = useState(infoCommunitySetting.avatar);
   const [tagDataValidate, setTagDataValidate] = useState(false);
 
@@ -190,7 +191,10 @@ const CreateComponent = () => {
     ) {
       setDisableBtnSubmit(false);
       setProfileImage(file);
+      errorMessages.profile_image = null;
+      setProfileImage(file);
       setSrcProfileImage(URL.createObjectURL(file));
+      setIsDeleteImage(false);
 
       // @ts-ignore
       document.getElementById("avatar").value = null;
@@ -203,8 +207,9 @@ const CreateComponent = () => {
   };
 
   const removeProfileImage = () => {
-    setProfileImage("");
-    setSrcProfileImage("");
+    setProfileImage(infoCommunitySetting.avatar);
+    setSrcProfileImage(infoCommunitySetting.avatar);
+    setIsDeleteImage(false);
     errorMessages.profile_image = null;
     setErrorValidates(errorMessages);
   };
@@ -255,6 +260,9 @@ const CreateComponent = () => {
 
       if (profileImage) {
         formData.append("profile_image", profileImage);
+      }
+      if (isDeleteImage && !profileImage) {
+        formData.append("profile_image", infoCommunitySetting.avatar);
       }
 
       const res = await createCommunity(formData);
@@ -345,13 +353,18 @@ const CreateComponent = () => {
                   justifyContent: ["center", "flex-start"],
                 }}
               >
-                <Avatar
-                  sx={{
-                    mb: 0,
+                <img
+                  style={{
                     width: "160px",
                     height: "160px",
+                    padding: srcProfileImage === "/assets/images/logo/logo.png" ? "1em" : "0",
+                    objectFit: srcProfileImage === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                    border: "3px #80808014 solid",
+                    background: "#F4FDFF",
+                    borderRadius: "50%",
                   }}
-                  src={srcProfileImage || infoCommunitySetting.avatar}
+                  src={srcProfileImage ?? "/assets/images/logo/logo.png"}
+                  alt="image_avatar"
                 />
               </Grid>
               <Grid
@@ -399,12 +412,11 @@ const CreateComponent = () => {
                 </label>
 
                 <BoxTextValidate sx={{ mb: "20px" }}>{errorValidates.profile_image}</BoxTextValidate>
-
-                {profileImage && (
+                {srcProfileImage !== infoCommunitySetting.avatar && srcProfileImage?.length > 0 ? (
                   <TypographyButton mb={["28px", "33px"]} onClick={removeProfileImage}>
                     {t("community:setting.form.delete-img")}
                   </TypographyButton>
-                )}
+                ) : null}
               </Grid>
               <GridTitle item xs={12} sm={3}>
                 <BoxTitle>{t("community:setting.form.name")}</BoxTitle>
@@ -495,12 +507,23 @@ const CreateComponent = () => {
                       inputProps={{ "aria-label": "Role join" }}
                       sx={{ border: errorValidates.post_permission ? "1px solid #FF9458" : "none" }}
                     >
-                      {infoCommunitySetting.rolesCreatePost &&
+                      {roleJoinSelected.toString() === "true"
+                        ? infoCommunitySetting.rolesCreatePost.map((option, index) => (
+                            <MenuItem key={index.toString()} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))
+                        : rolePrivateCommunity.map((option, index) => (
+                            <MenuItem key={index.toString()} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                      {/* {infoCommunitySetting.rolesCreatePost &&
                         infoCommunitySetting.rolesCreatePost.map((option, index) => (
                           <MenuItem key={index.toString()} value={option.value}>
                             {option.label}
                           </MenuItem>
-                        ))}
+                        ))} */}
                     </SelectCustom>
                   </ThemeProvider>
                 </Box>

@@ -104,6 +104,7 @@ const UpdateComponent = () => {
   const ITEM_PADDING_TOP = 8;
   const LIMIT = 10;
   const IS_MEMBER = "member";
+  const rolePrivateCommunity = infoCommunitySetting.rolesCreatePost.slice(0, 2);
   const MenuProps = {
     PaperProps: {
       style: {
@@ -142,9 +143,9 @@ const UpdateComponent = () => {
     profile_image: null,
   });
   const [tagData, setTagData] = useState([]);
-  const [profileImage, setProfileImage] = useState("");
+  const [profileImage, setProfileImage] = useState(infoCommunitySetting.avatar);
   const [isDeleteImage, setIsDeleteImage] = useState(false);
-  const [srcProfileImage, setSrcProfileImage] = useState("");
+  const [srcProfileImage, setSrcProfileImage] = useState("/assets/images/logo/logo.png");
   const [openDialog, setOpen] = useState(false);
   const [tagDataValidate, setTagDataValidate] = useState(false);
   const [valueCursor, setValueCursor] = useState("");
@@ -320,6 +321,8 @@ const UpdateComponent = () => {
     ) {
       setDisableBtnSubmit(false);
       setProfileImage(file);
+      errorMessages.profile_image = null;
+      setErrorValidates(errorMessages);
       setSrcProfileImage(URL.createObjectURL(file));
       setIsDeleteImage(false);
 
@@ -334,8 +337,8 @@ const UpdateComponent = () => {
   };
 
   const removeProfileImage = () => {
-    setProfileImage("");
-    setSrcProfileImage("");
+    setProfileImage(infoCommunitySetting.avatar);
+    setSrcProfileImage("/assets/images/logo/logo.png");
     setIsDeleteImage(true);
     errorMessages.profile_image = null;
     setDisableBtnSubmit(false);
@@ -386,7 +389,6 @@ const UpdateComponent = () => {
       Object.keys(communityRequest).filter((key) => {
         formData.append(key, communityRequest[key]);
       });
-
       // eslint-disable-next-line array-callback-return
       Object.keys(tagData).filter((key) => {
         formData.append("tags[]", tagData[key]);
@@ -407,11 +409,12 @@ const UpdateComponent = () => {
       }
 
       if (isDeleteImage && !profileImage) {
-        formData.append("profile_image", "");
+        formData.append("profile_image", infoCommunitySetting.avatar);
       }
 
       const communityId = router.query;
       const res = await updateCommunity(communityId?.indexId, formData);
+      router.push(`/community/${communityId?.indexId}`);
       return res;
     }
   };
@@ -499,13 +502,18 @@ const UpdateComponent = () => {
                     justifyContent: ["center", "flex-start"],
                   }}
                 >
-                  <Avatar
-                    sx={{
-                      mb: 0,
+                  <img
+                    style={{
                       width: "160px",
                       height: "160px",
+                      padding: srcProfileImage === "/assets/images/logo/logo.png" ? "1em" : "0",
+                      objectFit: srcProfileImage === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                      border: "3px #80808014 solid",
+                      background: "#F4FDFF",
+                      borderRadius: "50%",
                     }}
-                    src={srcProfileImage || infoCommunitySetting.avatar}
+                    src={srcProfileImage ?? "/assets/images/logo/logo.png"}
+                    alt="image_avatar"
                   />
                 </Grid>
                 <Grid
@@ -553,7 +561,7 @@ const UpdateComponent = () => {
                   </label>
 
                   <BoxTextValidate sx={{ mb: "20px" }}>{errorValidates.profile_image}</BoxTextValidate>
-                  {srcProfileImage?.length > 0 ? (
+                  {srcProfileImage !== infoCommunitySetting.avatar && srcProfileImage?.length > 0 ? (
                     <TypographyButton mb={["28px", "33px"]} onClick={removeProfileImage}>
                       {t("community:setting.form.delete-img")}
                     </TypographyButton>
@@ -767,12 +775,17 @@ const UpdateComponent = () => {
                         inputProps={{ "aria-label": "Role join" }}
                         sx={{ border: errorValidates.post_permission ? "1px solid #FF9458" : "none" }}
                       >
-                        {infoCommunitySetting.rolesCreatePost &&
-                          infoCommunitySetting.rolesCreatePost.map((option, index) => (
-                            <MenuItem key={index.toString()} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))}
+                        {roleJoinSelected.toString() === "true"
+                          ? infoCommunitySetting.rolesCreatePost.map((option, index) => (
+                              <MenuItem key={index.toString()} value={option.value}>
+                                {option.label}
+                              </MenuItem>
+                            ))
+                          : rolePrivateCommunity.map((option, index) => (
+                              <MenuItem key={index.toString()} value={option.value}>
+                                {option.label}
+                              </MenuItem>
+                            ))}
                       </SelectCustom>
                     </ThemeProvider>
                   </Box>

@@ -138,10 +138,10 @@ const LoginComponent = () => {
                       fontSize: 14,
                       fontWeight: 400,
                       color: theme.navy,
-                      display: { xs: "block", sm: "-webkit-box" },
+                      display: { xs: "block", sm: "block", lg: "-webkit-box" },
                     }}
                   >
-                    <Box sx={{ display: "flex" }}>
+                    <Box sx={{ display: "-webkit-box" }}>
                       <Box>{t("login:cannot-login")}</Box>
                       <Link href="/register" color="secondary">
                         <Box color={theme.blue}>{t("login:register")}</Box>

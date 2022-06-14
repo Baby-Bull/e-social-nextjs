@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "next-i18next";
-import { Box, Grid, InputBase, TextareaAutosize, Typography } from "@mui/material";
+import { Box, Grid, InputBase, TextareaAutosize, Typography, Chip } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import DOMPurify from "isomorphic-dompurify";
 
@@ -98,8 +98,28 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
         }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={3}>
+          <Grid
+            item
+            xs={12}
+            sm={3}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
             <BoxTitle>{t("community:form.title")}</BoxTitle>
+            <Chip
+              label="必須"
+              sx={{
+                ml: 1,
+                width: "54px",
+                height: "20px",
+                fontSize: 12,
+                fontWeight: 600,
+                color: "white",
+                backgroundColor: theme.orange,
+              }}
+            />
           </Grid>
           <Grid item xs={12} sm={9}>
             <InputCustom
@@ -110,8 +130,28 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={3}>
+          <Grid
+            item
+            xs={12}
+            sm={3}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
             <BoxTitle>{t("community:form.detail")}</BoxTitle>
+            <Chip
+              label="必須"
+              sx={{
+                ml: 1,
+                width: "54px",
+                height: "20px",
+                fontSize: 12,
+                fontWeight: 600,
+                color: "white",
+                backgroundColor: theme.orange,
+              }}
+            />
           </Grid>
           <Grid item xs={12} sm={9}>
             <Box
