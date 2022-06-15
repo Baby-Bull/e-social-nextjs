@@ -46,7 +46,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
 
   const fetchDataUsers = async (cursor: string = "") => {
     const communityId = router.query;
-    const resData = await CommunityMembers(communityId?.indexId, LIMIT, cursor);
+    const resData = await CommunityMembers(communityId?.id, LIMIT, cursor);
     // eslint-disable-next-line no-unsafe-optional-chaining
     setCommunityMembers([...communityMembers, ...resData?.items]);
     setTotalCommunityMembers(resData?.items_count);
