@@ -306,7 +306,7 @@ const MailSettingComponent = () => {
                 width: { xs: "unset", lg: "80%" },
               }}
             >
-              <TabPanel value={value} index={0}>
+              <TabPanel value={value} index={1}>
                 <Box sx={{ p: { xs: "0", lg: "6px 0 0 59px" } }}>
                   <Box
                     sx={{
@@ -392,7 +392,7 @@ const MailSettingComponent = () => {
                   </Box>
                 </Box>
               </TabPanel>
-              <TabPanel value={value} index={1}>
+              <TabPanel value={value} index={2}>
                 <Box sx={{ p: { xs: "0", lg: "6px 0 0 59px" } }}>
                   <Box sx={{ mb: "40px", display: { xs: "none", lg: "block" } }}>
                     <Typography component="span" fontSize={20} fontWeight={700} lineHeight="28.96px" color={theme.navy}>

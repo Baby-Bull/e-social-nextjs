@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 
+import { infoCommunitySetting } from "src/components/community/mockData";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmWithAvatarComponent from "src/components/common/dialog/DialogConfirmWithAvatarComponent";
@@ -64,11 +65,16 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
             >
               <Avatar
                 sx={{
-                  mb: 0,
+                  marginBottom: 0,
+                  background: "#F4FDFF",
                   width: ["80px", "160px"],
                   height: ["80px", "160px"],
+
+                  ".MuiAvatar-img": {
+                    objectFit: data?.profile_image === infoCommunitySetting.avatar ? "contain" : "cover",
+                  },
                 }}
-                src={data?.profile_image || "/assets/images/svg/php.svg"}
+                src={data?.profile_image || infoCommunitySetting.avatar}
               />
             </Box>
             <Box

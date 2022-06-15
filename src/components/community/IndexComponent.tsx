@@ -65,7 +65,7 @@ const CommunityComponent = () => {
     const data = await getCommunity(communityId?.id);
     if (data?.error_code === "401") {
       toast.warning(t("common:not_have_access"));
-      setTimeout(() => router.push("/"), 1000);
+      setTimeout(() => router.push("/"), 100);
     } else {
       setDataCommunityDetail(data);
       fetchDataUsers();
