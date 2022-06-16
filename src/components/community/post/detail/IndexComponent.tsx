@@ -87,6 +87,8 @@ const DetailPostComponent = () => {
         setCommunityPostRequest({
           content: "",
         });
+        comments.unshift(res);
+        setTotalComment(totalComment + 1);
       }
       return res;
     }
@@ -135,6 +137,7 @@ const DetailPostComponent = () => {
     const res = await deleteCommunityPostComment(community?.id, community?.detailId, commentId);
     if (res) {
       setComments(comments.filter((_, index) => index !== indexComment));
+      setTotalComment(totalComment - 1);
     }
     return res;
   };
