@@ -276,3 +276,13 @@ export const deleteCommunityPostComment = async (communityId, postId, commentId)
     return error;
   }
 };
+
+export const getListCommunityPost = async (communityId, limit: number = 10, cursor: string = "") => {
+  try {
+    const res = await api.get(`community/${communityId}/posts/?limit=${limit}&cursor=${cursor}`);
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};

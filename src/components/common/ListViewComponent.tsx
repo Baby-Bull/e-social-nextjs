@@ -1,15 +1,19 @@
 import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { useRouter } from "next/router";
+import moment from "moment";
 
 import theme from "src/theme";
 
+import "moment/locale/ja";
+
 export interface IData {
-  title: string;
-  name: string;
-  avatar: string;
-  last_login: string;
-  count_message: string;
+  id?: string;
+  title?: string;
+  name?: string;
+  created_at?: string;
+  comment_count?: string;
+  user?: any;
 }
 interface IListViewComponentProps {
   data: IData;
@@ -21,6 +25,11 @@ interface IListViewComponentProps {
 
 const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) => {
   const router = useRouter();
+
+  const redirectPostDetail = () => {
+    const community = router.query;
+    router.push(`/community/${community?.id}/post/detail/${data?.id}`);
+  };
 
   return (
     <Box
@@ -55,7 +64,7 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
             width: ["24px", "64px"],
             height: "100%",
           }}
-          src={data.avatar}
+          src={data?.user?.profile_image}
         />
 
         {/* Grid right Info */}
@@ -79,9 +88,9 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
                 textDecoration: "underline",
               },
             }}
-            onClick={() => router.push(`/community/post/detail`)}
+            onClick={redirectPostDetail}
           >
-            {data.title}
+            {data?.title}
           </Typography>
 
           <Box
@@ -91,7 +100,7 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
             }}
           >
             <Typography component="span" fontSize={12}>
-              {data.name}
+              {data?.user?.username}
             </Typography>
             <Typography
               component="span"
@@ -101,7 +110,7 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
                 color: theme.gray,
               }}
             >
-              {data.last_login}
+              {moment(data?.created_at).utc().format("LLL")}
             </Typography>
 
             <img src="/assets/images/svg/message.svg" alt="message" />
@@ -114,7 +123,7 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
                 color: theme.gray,
               }}
             >
-              {data.count_message}
+              {data?.comment_count}
             </Typography>
           </Box>
         </Box>
