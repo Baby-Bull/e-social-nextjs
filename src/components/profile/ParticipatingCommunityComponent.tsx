@@ -32,7 +32,19 @@ const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({ communitie
               }}
             >
               <Box sx={{ display: "flex", justifyContent: "center" }}>
-                <Avatar sx={{ width: "124px", height: "124px" }} src={item.profile_image} alt="Image Community" />
+                <Avatar
+                  sx={{
+                    width: "124px",
+                    height: "124px",
+                    img: {
+                      objectFit: item?.profile_image === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                      border: item?.profile_image === "/assets/images/logo/logo.png" ? "3px #e8ecf1 solid" : "none",
+                      borderRadius: "50%",
+                    },
+                  }}
+                  src={item?.profile_image}
+                  alt="Image Community"
+                />
               </Box>
               <Typography
                 sx={{

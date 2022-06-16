@@ -1,39 +1,82 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { Box, Grid, Paper, Typography, IconButton, Menu, MenuItem } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import _ from "lodash";
 import InfiniteScroll from "react-infinite-scroller";
+import { useRouter } from "next/router";
 
-import styles from "src/components/chat/chat.module.scss";
+import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
+import styles from "src/components/chat/chat.module.scss";
 import { formatChatDateRoom } from "src/helpers/helper";
+
+import PopupReviewComponent from "./PopupReviewComponent";
 
 interface IThreadDropDownProps {
   open: boolean;
-  handleClose: () => void;
   anchorEl: any;
+  handleClose: () => void;
+  redirectToProfile: () => void;
+  setShowPopupReport: any;
+  setShowPopupReview: any;
 }
 
-const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({ open, handleClose, anchorEl }) => (
-  <Menu open={open} className="dropdown-option-thread" anchorEl={anchorEl} onClose={handleClose}>
-    <MenuItem onClick={handleClose}>プロフィールを見る</MenuItem>
-    <MenuItem onClick={handleClose}>レビューを投稿</MenuItem>
+const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({
+  open,
+  handleClose,
+  anchorEl,
+  redirectToProfile,
+  setShowPopupReport,
+  setShowPopupReview,
+}) => (
+  <Menu
+    open={open}
+    className="dropdown-option-thread"
+    anchorEl={anchorEl}
+    onClose={handleClose}
+    keepMounted
+    disablePortal
+    sx={{
+      top: "9px",
+      left: "-9em",
+      "& .MuiMenu-paper": {
+        borderRadius: "12px",
+      },
+    }}
+  >
+    <MenuItem onClick={redirectToProfile}>プロフィールを見る</MenuItem>
+    <MenuItem
+      onClick={() => {
+        setShowPopupReview(true);
+        handleClose();
+      }}
+    >
+      レビューを投稿
+    </MenuItem>
     <MenuItem onClick={handleClose}>ブロックする</MenuItem>
-    <MenuItem onClick={handleClose}>運営に通報</MenuItem>
+    <MenuItem
+      onClick={() => {
+        setShowPopupReport(true);
+        handleClose();
+      }}
+    >
+      運営に通報
+    </MenuItem>
   </Menu>
 );
 
 const ChatBoxLeftComponent = ({
   listRooms,
   userId,
+  user,
   onSelectRoom,
   setSearchChatRoom,
   hasMoreChatRoom,
   loadMoreChatRooms,
 }) => {
   const { t } = useTranslation();
-
+  const router = useRouter();
   const inputSearchRef = useRef(null);
 
   const debounce = useCallback(
@@ -59,6 +102,13 @@ const ChatBoxLeftComponent = ({
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const redirectToProfile = () => {
+    router.push(`/profile/${userId}`);
+    handleClose();
+  };
+  const [showPopupReport, setShowPopupReport] = useState(false);
+  const [showPopupReview, setShowPopupReview] = useState(false);
 
   return (
     <Grid item className={styles.chatBoxLeft}>
@@ -95,7 +145,14 @@ const ChatBoxLeftComponent = ({
                     <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
                       <img alt="more-options" src="/assets/images/chat/more_options.svg" />
                     </IconButton>
-                    <ThreadDropdown open={open} handleClose={handleClose} anchorEl={anchorEl} />
+                    <ThreadDropdown
+                      open={open}
+                      handleClose={handleClose}
+                      setShowPopupReport={setShowPopupReport}
+                      setShowPopupReview={setShowPopupReview}
+                      anchorEl={anchorEl}
+                      redirectToProfile={redirectToProfile}
+                    />
                   </div>
                 </div>
               </li>
@@ -103,6 +160,8 @@ const ChatBoxLeftComponent = ({
           </InfiniteScroll>
         </ul>
       </Box>
+      <PopupReportUser showPopup={showPopupReport} setShowPopup={setShowPopupReport} user={user} />
+      <PopupReviewComponent showPopup={showPopupReview} setShowPopup={setShowPopupReview} user={user} />
     </Grid>
   );
 };

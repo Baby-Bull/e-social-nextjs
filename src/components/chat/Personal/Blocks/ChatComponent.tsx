@@ -6,12 +6,12 @@ import classNames from "classnames";
 import { useQuery } from "react-query";
 
 import styles from "src/components/chat/chat.module.scss";
-import ChatBoxLeftComponent from "src/components/chat/Personal/Blocks/ChatBoxLeftComponent";
 import useViewport from "src/helpers/useViewport";
 import { getListChatRooms } from "src/services/chat";
 import { getToken } from "src/helpers/storage";
 import { REACT_QUERY_KEYS } from "src/constants/constants";
 import { sortListRoomChat } from "src/helpers/helper";
+import ChatBoxLeftComponent from "src/components/chat/Personal/Blocks/ChatBoxLeftComponent";
 
 import ChatBoxRightComponent from "./ChatBoxRightComponent";
 import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
@@ -218,6 +218,7 @@ const BlockChatComponent = ({ hasData, setHasData }) => {
         <ChatBoxLeftComponent
           listRooms={listRooms}
           userId={userId}
+          user={user}
           onSelectRoom={onSelectRoom}
           setSearchChatRoom={setSearchChatRoom}
           hasMoreChatRoom={hasMoreChatRoom}

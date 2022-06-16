@@ -427,18 +427,14 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
           <Box sx={{ display: authPage ? "none" : "inherit" }}>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <IconButton
-                size="large"
-                aria-label="show 4 new mails"
-                color="inherit"
-                sx={{ p: "12px 16px" }}
-                onClick={() => router.push(`chat/personal`)}
-              >
-                <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
-                {/* <Badge badgeContent={mess} color="error">
+              <Link href="/chat/personal">
+                <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{ p: "12px 16px" }}>
+                  <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
+                  {/* <Badge badgeContent={mess} color="error">
                   <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
                 </Badge> */}
-              </IconButton>
+                </IconButton>
+              </Link>
               <IconButton
                 size="large"
                 aria-label="show 17 new notifications"
@@ -475,18 +471,14 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
               </Box>
             </Box>
             <Box sx={{ display: { xs: "flex", md: "none", color: "#080B47" } }}>
-              <IconButton
-                size="large"
-                aria-label="show 4 new mails"
-                color="inherit"
-                sx={{ p: "12px 16px" }}
-                onClick={() => router.push(`chat/personal`)}
-              >
-                <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
-                {/* <Badge badgeContent={mess} color="error">
+              <Link href="/chat/personal">
+                <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{ p: "12px 16px" }}>
+                  <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
+                  {/* <Badge badgeContent={mess} color="error">
                   <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
                 </Badge> */}
-              </IconButton>
+                </IconButton>
+              </Link>
               <IconButton
                 size="large"
                 aria-label="show 17 new notifications"
