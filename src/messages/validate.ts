@@ -164,4 +164,7 @@ export const VALIDATE_FORM_COMMUNITY_POST = {
   address: {
     max_length: "100文字以内で入力してください。",
   },
+  content_comment: {
+    max_length: "1000文字以内で入力してください。",
+  },
 };

@@ -180,7 +180,7 @@ export const createCommunityPost = async (communityId, body) => {
   try {
     const res = await api.post(`community/${communityId}/posts`, body);
     if (!res.data.error_code) {
-      toast.success("Thêm comunity post thành công");
+      toast.success(CREATE_POST);
       return res.data;
     }
     toast.error(SERVER_ERROR);
@@ -194,7 +194,7 @@ export const detailCommunityPost = async (communityId, postId) => {
   try {
     const res = await api.get(`community/${communityId}/posts/${postId}`);
     if (res.data.error_code === "404") {
-      toast.error(CREATE_POST);
+      toast.error(NOTE_FOUNT_POST);
       const router = useRouter();
       setTimeout(() => router.push(`community/${communityId}`), 1000);
       return false;
@@ -229,6 +229,30 @@ export const deleteCommunityPost = async (communityId, postId) => {
       return false;
     }
     toast.success(DELETE_POST);
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const createPostComment = async (communityId, postId, body) => {
+  try {
+    const res = await api.post(`community/${communityId}/posts/${postId}/comments`, body);
+    if (!res.data.error_code) {
+      toast.success(CREATE_POST);
+      return res.data;
+    }
+    toast.error(SERVER_ERROR);
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const getListComment = async (communityId, postId, limit: number = 10, cursor: string = "") => {
+  try {
+    const res = await api.get(`community/${communityId}/posts/${postId}/comments?limit=${limit}&cursor=${cursor}`);
     return res.data;
   } catch (error) {
     toast.error(SERVER_ERROR);
