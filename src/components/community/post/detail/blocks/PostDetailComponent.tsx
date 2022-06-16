@@ -3,11 +3,14 @@ import { Box, Typography, Avatar, Divider } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import DOMPurify from "isomorphic-dompurify";
 import moment from "moment";
+import { useRouter } from "next/router";
 
 import theme from "src/theme";
+// eslint-disable-next-line import/order
 import ButtonDropDownComponent from "src/components/community/post/detail/blocks/ButtonDropDownComponent";
 
 import "moment/locale/ja";
+import { deleteCommunityPost } from "src/services/community";
 
 interface IBoxInfoProps {
   title: string;
@@ -61,7 +64,15 @@ const BoxInfo: React.SFC<IBoxInfoProps> = ({ title, text, textColor, fontWeight 
 
 const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
   const { t } = useTranslation();
+  const router = useRouter();
 
+  const handleCallbackRemove = () => {
+    const community = router.query;
+    const res = deleteCommunityPost(community?.id, community?.detailId);
+    if (res) {
+      router.push(`/community/${community?.id}`);
+    }
+  };
   return (
     <Box
       sx={{
@@ -75,7 +86,7 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
         backgroundColor: "white",
       }}
     >
-      <ButtonDropDownComponent />
+      <ButtonDropDownComponent handleCallbackRemove={handleCallbackRemove} />
 
       <Typography
         component="span"
