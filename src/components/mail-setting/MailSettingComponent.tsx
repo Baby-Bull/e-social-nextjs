@@ -128,7 +128,7 @@ const MailSettingComponent = () => {
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(1);
   const [isNotifyMess, setIsNotifyMess] = React.useState(true);
   const [valueOnchange, setValueOnchange] = React.useState(false);
   const [mailOnChange, setMailOnChange] = React.useState(false);

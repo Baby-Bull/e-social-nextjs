@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { useCallback, useRef } from "react";
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import { Box, Grid, Paper, Typography, IconButton, Menu, MenuItem } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import _ from "lodash";
 import InfiniteScroll from "react-infinite-scroller";
@@ -9,19 +9,20 @@ import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
 import { formatChatDateRoom } from "src/helpers/helper";
 
-// interface IThreadDropDownProps {
-//   open: boolean;
-//   handleClose: () => void;
-//   anchorEl: any;
-// }
+interface IThreadDropDownProps {
+  open: boolean;
+  handleClose: () => void;
+  anchorEl: any;
+}
 
-// const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({ open, handleClose, anchorEl }) => (
-//   <Menu open={open} className="dropdown-option-thread" anchorEl={anchorEl} onClose={handleClose}>
-//     <MenuItem onClick={handleClose}>Menu 1</MenuItem>
-//     <MenuItem onClick={handleClose}>Menu 2</MenuItem>
-//     <MenuItem onClick={handleClose}>Menu 3</MenuItem>
-//   </Menu>
-// );
+const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({ open, handleClose, anchorEl }) => (
+  <Menu open={open} className="dropdown-option-thread" anchorEl={anchorEl} onClose={handleClose}>
+    <MenuItem onClick={handleClose}>プロフィールを見る</MenuItem>
+    <MenuItem onClick={handleClose}>レビューを投稿</MenuItem>
+    <MenuItem onClick={handleClose}>ブロックする</MenuItem>
+    <MenuItem onClick={handleClose}>運営に通報</MenuItem>
+  </Menu>
+);
 
 const ChatBoxLeftComponent = ({
   listRooms,
@@ -50,14 +51,14 @@ const ChatBoxLeftComponent = ({
     debounce(inputSearchRef.current.value);
   };
 
-  // const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  // const open = Boolean(anchorEl);
-  // const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Grid item className={styles.chatBoxLeft}>
@@ -90,12 +91,12 @@ const ChatBoxLeftComponent = ({
                     <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
                   </div>
                   <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
-                  {/* <div className="more-options">
-                  <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
-                    <img alt="more-options" src="/assets/images/chat/more_options.svg" />
-                  </IconButton>
-                  <ThreadDropdown open={open} handleClose={handleClose} anchorEl={anchorEl} />
-                </div> */}
+                  <div className="more-options">
+                    <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
+                      <img alt="more-options" src="/assets/images/chat/more_options.svg" />
+                    </IconButton>
+                    <ThreadDropdown open={open} handleClose={handleClose} anchorEl={anchorEl} />
+                  </div>
                 </div>
               </li>
             ))}

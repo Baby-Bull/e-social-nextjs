@@ -210,7 +210,6 @@ const HomeIndexComponents = () => {
             handleOpenMatchingModal={handleOpenMatchingModal}
           />
         ))}
-
         {openModal && (
           <ModalMatchingComponent
             userRequestMatching={userRequestMatching}

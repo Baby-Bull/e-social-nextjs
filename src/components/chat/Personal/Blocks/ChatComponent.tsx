@@ -156,7 +156,9 @@ const BlockChatComponent = ({ hasData, setHasData }) => {
   useEffect(() => {
     setListRooms(sortListRoomChat(listRoomResQuery?.items || []));
     if (!roomSelect?.id) {
-      const roomQuerySelect = listRoomResQuery?.items?.find((item: any) => item.id === roomQuery);
+      const roomQuerySelect = listRoomResQuery?.items?.find(
+        (item: any) => item.id === roomQuery || item?.user?.id === roomQuery,
+      );
       if (roomQuerySelect) {
         setRoomSelect(roomQuerySelect);
         setUserId(roomQuerySelect?.user?.id);
@@ -171,7 +173,7 @@ const BlockChatComponent = ({ hasData, setHasData }) => {
       cursor: listRoomResQuery?.cursor,
       hasMore: listRoomResQuery?.hasMore,
     });
-  }, [listRoomResQuery]);
+  }, [listRoomResQuery, roomSelect?.id]);
 
   const loadMoreChatRooms = async () => {
     if (hasMoreChatRoom.cursor?.length) {
