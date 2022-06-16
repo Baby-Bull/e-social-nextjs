@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Tabs, Stack, Pagination } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
@@ -8,6 +8,8 @@ import theme from "src/theme";
 import { TabPanel, a11yProps, ChildTabCustom } from "src/components/common/Tab/BlueChildTabComponent";
 import ListViewComponent, { IData } from "src/components/common/ListViewComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
+import { getListCommunityPost } from "src/services/community";
+import PaginationCustomComponent from "src/components/common/PaginationCustomComponent";
 
 export const PaginationCustom = styled(Pagination)({
   "& .MuiButtonBase-root": {
@@ -50,12 +52,45 @@ interface IChildTabComponentProps {
 const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataChild, maxWidth }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const tabs = [{ text: "新着順" }, { text: "オススメ順" }];
+  const LIMIT = 10;
 
-  const [valueChildTab, setValueChildTab] = React.useState(0);
+  const [valueChildTab, setValueChildTab] = useState(0);
+  const [posts, setPost] = useState([]);
+  const [totalCommunityPost, setTotalCommunityPost] = useState(0);
+  const [pagePost, setPagePost] = useState(1);
+  const [perPagePost, setperPagePost] = useState(2);
+  const [valueCursorPost, setCursorPost] = useState("");
 
   const onChangeChildTab = (event: React.SyntheticEvent, newValue: number) => {
     setValueChildTab(newValue);
   };
+
+  const communityPosts = async (cursor: string = "") => {
+    const communityId = router.query;
+    const res = await getListCommunityPost(communityId?.id, LIMIT, cursor);
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    setPost([...posts, ...res?.items]);
+    setTotalCommunityPost(res?.items_count);
+    setCursorPost(res?.cursor);
+    return res;
+  };
+
+  const handleCallbackChangePagination = (event, value) => {
+    setPagePost(value);
+    if (perPagePost <= value) {
+      setperPagePost(perPagePost + 1);
+      communityPosts(valueCursorPost ?? "");
+    }
+  };
+
+  const redirectToCreatePost = () => {
+    const community = router.query;
+    router.push(`/community/${community?.id}/post/create`);
+  };
+  useEffect(() => {
+    communityPosts();
+  }, []);
 
   return (
     <Box
@@ -87,7 +122,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataChild, maxW
             },
           }}
         >
-          {dataChild?.map((tab, index) => (
+          {tabs?.map((tab, index) => (
             <ChildTabCustom
               key={index.toString()}
               props={{
@@ -114,7 +149,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataChild, maxW
               fontSize: "12px",
             },
           }}
-          onClick={() => router.push("/community/post/create")}
+          onClick={redirectToCreatePost}
         >
           {t("community:button.create-post")}
         </ButtonComponent>
@@ -126,8 +161,8 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataChild, maxW
             borderBottom: `1px solid ${theme.lightGray}`,
           }}
         >
-          {dataChild[0]?.data?.length &&
-            dataChild[0]?.data.map((tab, index) => (
+          {posts.length > 0 &&
+            posts.slice((pagePost - 1) * LIMIT, pagePost * LIMIT).map((tab, index) => (
               <React.Fragment key={index.toString()}>
                 <Box>
                   <ListViewComponent
@@ -149,7 +184,18 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataChild, maxW
           }}
         >
           <Stack>
-            <PaginationCustom count={4} />
+            {totalCommunityPost > LIMIT && (
+              <PaginationCustomComponent
+                handleCallbackChangePagination={handleCallbackChangePagination}
+                page={pagePost}
+                perPage={perPagePost}
+                totalPage={
+                  Math.floor(totalCommunityPost / LIMIT) < totalCommunityPost / LIMIT
+                    ? Math.floor(totalCommunityPost / LIMIT) + 1
+                    : Math.floor(totalCommunityPost / LIMIT)
+                }
+              />
+            )}
           </Stack>
         </Box>
       </TabPanel>

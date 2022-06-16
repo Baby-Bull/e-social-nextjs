@@ -13,6 +13,7 @@ interface IListCommentProps {
   perPage?: number;
   totalComment?: number;
   handleCallBackPaginationIndex?: any;
+  handleCallbackRemove?: any;
 }
 
 const ListCommentComponent: React.SFC<IListCommentProps> = ({
@@ -21,6 +22,7 @@ const ListCommentComponent: React.SFC<IListCommentProps> = ({
   perPage,
   totalComment,
   handleCallBackPaginationIndex,
+  handleCallbackRemove,
 }) => {
   const { t } = useTranslation();
   const LIMIT = 10;
@@ -110,7 +112,12 @@ const ListCommentComponent: React.SFC<IListCommentProps> = ({
         }}
       >
         {comments?.map((item, index) => (
-          <CommentComponent item={item} key={index.toString()} />
+          <CommentComponent
+            item={item}
+            index={index}
+            key={index.toString()}
+            handleCallbackRemove={handleCallbackRemove}
+          />
         ))}
       </Box>
     </Box>

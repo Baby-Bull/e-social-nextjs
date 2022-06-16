@@ -8,17 +8,13 @@ import theme from "src/theme";
 import ButtonDropDownComponent from "src/components/community/post/detail/blocks/ButtonDropDownComponent";
 import { isContributorOrCommenter } from "src/components/community/mockData";
 
-export interface IItem {
-  avatar: string;
-  name: string;
-  content: string;
-  last_login: string;
-}
 interface ICommentComponentProps {
   item: any;
+  handleCallbackRemove?: any;
+  index?: string;
 }
 
-const CommentComponent: React.SFC<ICommentComponentProps> = ({ item }) => (
+const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallbackRemove, index }) => (
   <Box
     sx={{
       borderTop: `1px solid ${theme.lightGray}`,
@@ -27,7 +23,15 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item }) => (
       position: "relative",
     }}
   >
-    {isContributorOrCommenter && <ButtonDropDownComponent top={["4px", "10px"]} right="0" />}
+    {isContributorOrCommenter && (
+      <ButtonDropDownComponent
+        top={["4px", "10px"]}
+        right="0"
+        handleCallbackRemove={handleCallbackRemove}
+        index={index}
+        commentId={item?.id}
+      />
+    )}
     <Box
       sx={{
         display: "flex",
@@ -42,7 +46,6 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item }) => (
         }}
         src={item?.user?.profile_image}
       />
-
       <Box
         sx={{
           display: "flex",

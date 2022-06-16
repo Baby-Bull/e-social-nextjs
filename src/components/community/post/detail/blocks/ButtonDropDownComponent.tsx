@@ -5,14 +5,22 @@ import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
-import { deleteCommunityPost } from "src/services/community";
 
 interface IButtonDropDownComponentProps {
   top?: string[];
   right?: string;
+  index?: string;
+  handleCallbackRemove?: any;
+  commentId?: string;
 }
 
-const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({ top, right }) => {
+const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({
+  top,
+  right,
+  handleCallbackRemove,
+  index,
+  commentId,
+}) => {
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -40,13 +48,8 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({ top
     setOpen(false);
   };
   const handleDialogOK = () => {
-    const community = router.query;
-    const res = deleteCommunityPost(community?.id, community?.detailId);
-    if (res) {
-      handleCloseDialog();
-      setOpen(false);
-      router.push(`/community/${community?.id}`);
-    }
+    handleCallbackRemove(index, commentId);
+    handleCloseDialog();
   };
 
   return (

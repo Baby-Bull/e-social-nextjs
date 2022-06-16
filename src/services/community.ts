@@ -259,3 +259,30 @@ export const getListComment = async (communityId, postId, limit: number = 10, cu
     return error;
   }
 };
+
+export const deleteCommunityPostComment = async (communityId, postId, commentId) => {
+  try {
+    const res = await api.delete(`community/${communityId}/posts/${postId}/comments/${commentId}`);
+    if (res.data.error_code === "404") {
+      toast.error(NOTE_FOUNT_POST);
+      const router = useRouter();
+      setTimeout(() => router.push(`community/${communityId}`), 1000);
+      return false;
+    }
+    toast.success(DELETE_POST);
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const getListCommunityPost = async (communityId, limit: number = 10, cursor: string = "") => {
+  try {
+    const res = await api.get(`community/${communityId}/posts/?limit=${limit}&cursor=${cursor}`);
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};

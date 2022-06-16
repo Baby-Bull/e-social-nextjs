@@ -11,7 +11,13 @@ import IntroCommunityComponent from "src/components/community/blocks/IntroCommun
 import PostDetailComponent from "src/components/community/post/detail/blocks/PostDetailComponent";
 import ListCommentComponent from "src/components/community/post/detail/blocks/ListCommentComponent";
 import LayoutComponent from "src/components/community/LayoutComponent";
-import { getCommunity, detailCommunityPost, createPostComment, getListComment } from "src/services/community";
+import {
+  getCommunity,
+  detailCommunityPost,
+  createPostComment,
+  getListComment,
+  deleteCommunityPostComment,
+} from "src/services/community";
 import { VALIDATE_FORM_COMMUNITY_POST } from "src/messages/validate";
 
 const BoxTextValidate = styled(Box)({
@@ -81,6 +87,8 @@ const DetailPostComponent = () => {
         setCommunityPostRequest({
           content: "",
         });
+        comments.unshift(res);
+        setTotalComment(totalComment + 1);
       }
       return res;
     }
@@ -124,6 +132,16 @@ const DetailPostComponent = () => {
       fetchComments(valueCursor ?? "");
     }
   };
+  const handleCallbackRemove = async (indexComment, commentId) => {
+    const community = router.query;
+    const res = await deleteCommunityPostComment(community?.id, community?.detailId, commentId);
+    if (res) {
+      setComments(comments.filter((_, index) => index !== indexComment));
+      setTotalComment(totalComment - 1);
+    }
+    return res;
+  };
+
   useEffect(() => {
     fetchCommunity();
     fetchComments();
@@ -177,6 +195,7 @@ const DetailPostComponent = () => {
               page={page}
               perPage={perPage}
               handleCallBackPaginationIndex={handleCallBackPaginationIndex}
+              handleCallbackRemove={handleCallbackRemove}
               totalComment={totalComment ?? 0}
             />
 
