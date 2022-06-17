@@ -4,6 +4,7 @@ import { Box, Grid, IconButton, Paper, Typography, Avatar } from "@mui/material"
 import { useTranslation } from "next-i18next";
 import InfiniteScroll from "react-infinite-scroller";
 import { useQuery } from "react-query";
+import Linkify from "react-linkify";
 
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
@@ -44,7 +45,9 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({ message, time, isStartOfDay = f
       ) : null}
       <Box className={styles.itemMessageMyChat}>
         <Typography className="time">{time}</Typography>
-        <div className={`message-content ${isErrorMessage ? "error-message" : ""}`}>{message}</div>
+        <div className={`message-content ${isErrorMessage ? "error-message" : ""}`}>
+          <Linkify>{message}</Linkify>
+        </div>
       </Box>
 
       {isErrorMessage ? (
@@ -67,7 +70,9 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({ message, time, isStartOfDay = f
 const BoxChatOthers: React.SFC<IBoxChatProps> = ({ avatar, message, time }) => (
   <Box className={styles.itemMsgOther}>
     <Avatar className="avatar" alt="Avatar" src={avatar} />
-    <div className="message-content">{message}</div>
+    <div className="message-content">
+      <Linkify>{message}</Linkify>
+    </div>
     <Typography className="time">{time}</Typography>
   </Box>
 );
@@ -103,9 +108,7 @@ const ChatBoxRightComponent = ({
   });
 
   const [showPopup, setShowPopup] = useState(false);
-  const handleShow = () => {
-    setShowPopup(true);
-  };
+  const handleShow = () => setShowPopup(true);
 
   const [showPopupReview, setShowPopupReview] = useState(false);
   const handleShowReview = () => setShowPopupReview(true);

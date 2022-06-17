@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Box, Tabs, Typography, Avatar, Select, MenuItem, SelectChangeEvent } from "@mui/material";
+import { Box, Tabs, Typography, Avatar, Select, MenuItem, SelectChangeEvent, Grid } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
@@ -229,64 +229,79 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
 
       <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.community}>
         {data[4]?.data?.length ? (
-          <Box
+          <Grid
             sx={{
-              mt: ["40px", 0],
-              mx: ["20px", "40px"],
-              display: "flex",
-              justifyContent: "flex-start",
-              flexWrap: "wrap",
+              flexGrow: 1,
+              display: "block",
             }}
+            container
           >
-            {data[4]?.data?.map((tab, tabIndex) => (
-              <React.Fragment key={tabIndex.toString()}>
-                <Box
-                  onClick={() => handleRedirectCommunity(tab?.id)}
-                  sx={{
-                    cursor: "pointer",
-                    mt: [0, "40px"],
-                    mb: ["20px", 0],
-                    mx: [0, "20px"],
-                    flex: ["0 0 50%", "0 0 18%"],
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <Avatar
-                    variant="circular"
-                    sx={{
-                      width: ["149px", "124px"],
-                      height: ["149px", "124px"],
-                    }}
-                    src={tab?.profile_image}
-                  />
+            <Box
+              sx={{
+                mt: ["30px", 0],
+                display: "flex",
+                justifyContent: "flex-start",
+                flexWrap: "wrap",
+              }}
+            >
+              {data[4]?.data?.map((tab, tabIndex) => (
+                <React.Fragment key={tabIndex.toString()}>
+                  <Grid xs={6} md={3}>
+                    <Box
+                      onClick={() => handleRedirectCommunity(tab?.id)}
+                      sx={{
+                        cursor: "pointer",
+                        mt: [0, "40px"],
+                        mb: ["20px", 0],
+                        mx: [0, "20px"],
+                        // flex: ["0 0 50%", "0 0 25%"],
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Avatar
+                        variant="circular"
+                        sx={{
+                          width: ["149px", "124px"],
+                          height: ["149px", "124px"],
+                          img: {
+                            objectFit: tab?.profile_image === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                            border:
+                              tab?.profile_image === "/assets/images/logo/logo.png" ? "3px #e8ecf1 solid" : "none",
+                            borderRadius: "50%",
+                          },
+                        }}
+                        src={tab?.profile_image}
+                      />
 
-                  <Typography
-                    component="span"
-                    pt="10px"
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: 700,
-                      color: "black",
-                    }}
-                  >
-                    {tab?.name}
-                  </Typography>
-                  <Typography
-                    component="span"
-                    pt="8px"
-                    sx={{
-                      fontSize: [10, 14],
-                      color: theme.gray,
-                    }}
-                  >
-                    {t("matching:count-member")} {tab?.member_count} 人
-                  </Typography>
-                </Box>
-              </React.Fragment>
-            ))}
-          </Box>
+                      <Typography
+                        component="span"
+                        pt="10px"
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: 700,
+                          color: "black",
+                        }}
+                      >
+                        {tab?.name}
+                      </Typography>
+                      <Typography
+                        component="span"
+                        pt="8px"
+                        sx={{
+                          fontSize: [10, 14],
+                          color: theme.gray,
+                        }}
+                      >
+                        {t("matching:count-member")} {tab?.member_count} 人
+                      </Typography>
+                    </Box>
+                  </Grid>
+                </React.Fragment>
+              ))}
+            </Box>
+          </Grid>
         ) : (
           <EmptyMatchingComponent text={t("matching:text-empty.tab-5")} mode="community" />
         )}

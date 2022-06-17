@@ -413,7 +413,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                     bgColor: theme.blue,
                     dimension: "small",
                   }}
-                  onClick={() => router.push(`/chat/personal`)}
+                  onClick={() => router.push(`/chat/personal?room=${data?.id}`)}
                 >
                   {t("thread:button.open-message")}
                 </ButtonComponent>
@@ -475,7 +475,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                     bgColor: theme.blue,
                     dimension: "small",
                   }}
-                  onClick={() => router.push(`/chat/personal`)}
+                  onClick={() => router.push(`/chat/personal?room=${data?.id}`)}
                 >
                   {t("thread:button.open-message")}
                 </ButtonComponent>
@@ -554,7 +554,6 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   {type === "confirm" || type === "reject"
                     ? moment(data?.updated_at).utc().format("lll").toString()
                     : moment(data?.desired_match_date).utc().format("lll").toString()}
-                  {/* {moment(data?.desired_match_date).utc().format("lll").toString()} */}
                 </ThreadContent>
               </Box>
               <Box
@@ -655,7 +654,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   mb: "5px",
                   fontSize: 14,
                 }}
-                onClick={() => router.push(`/chat/personal`)}
+                onClick={() => router.push(`/chat/personal?room=${data?.id}`)}
               >
                 {t("thread:button.open-message-SP")}
               </ButtonComponent>
@@ -725,7 +724,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   mb: "5px",
                   fontSize: 14,
                 }}
-                onClick={() => router.push(`/chat/personal`)}
+                onClick={() => router.push(`/chat/personal?room=${data?.id}`)}
               >
                 {t("thread:button.open-message-SP")}
               </ButtonComponent>

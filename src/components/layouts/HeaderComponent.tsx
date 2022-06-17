@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
-import Badge from "@mui/material/Badge";
+// import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { useRouter } from "next/router";
@@ -132,8 +132,8 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     },
   ];
 
-  const [mess] = useState(9);
-  const [notify] = useState("99+");
+  // const [mess] = useState(9);
+  // const [notify] = useState("99+");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [notifyAnchorEl, setNotifyAnchorEl] = React.useState(null);
@@ -427,11 +427,14 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
           <Box sx={{ display: authPage ? "none" : "inherit" }}>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{ p: "12px 16px" }}>
-                <Badge badgeContent={mess} color="error">
+              <Link href="/chat/personal">
+                <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{ p: "12px 16px" }}>
                   <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
-                </Badge>
-              </IconButton>
+                  {/* <Badge badgeContent={mess} color="error">
+                  <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
+                </Badge> */}
+                </IconButton>
+              </Link>
               <IconButton
                 size="large"
                 aria-label="show 17 new notifications"
@@ -439,9 +442,10 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 sx={{ p: "12px 16px" }}
                 onClick={handleNotifyOpenMenu}
               >
-                <Badge badgeContent={notify} color="error">
+                <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
+                {/* <Badge badgeContent={notify} color="error">
                   <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
-                </Badge>
+                </Badge> */}
               </IconButton>
               <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <IconButton
@@ -467,15 +471,24 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
               </Box>
             </Box>
             <Box sx={{ display: { xs: "flex", md: "none", color: "#080B47" } }}>
-              <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{ p: "12px 16px" }}>
-                <Badge badgeContent={mess} color="error">
+              <Link href="/chat/personal">
+                <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{ p: "12px 16px" }}>
                   <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
-                </Badge>
-              </IconButton>
-              <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
-                <Badge badgeContent={notify} color="error">
+                  {/* <Badge badgeContent={mess} color="error">
+                  <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
+                </Badge> */}
+                </IconButton>
+              </Link>
+              <IconButton
+                size="large"
+                aria-label="show 17 new notifications"
+                color="inherit"
+                onClick={handleNotifyOpenMenu}
+              >
+                <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
+                {/* <Badge badgeContent={notify} color="error">
                   <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
-                </Badge>
+                </Badge> */}
               </IconButton>
               <IconButton
                 size="large"

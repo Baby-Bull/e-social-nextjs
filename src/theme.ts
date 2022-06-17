@@ -23,6 +23,7 @@ declare module "@mui/material/styles" {
       white: string;
     };
   }
+  
 
   interface ThemeOptions {
     lightBlue?: string;

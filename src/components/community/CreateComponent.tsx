@@ -342,7 +342,11 @@ const CreateComponent = () => {
               backgroundColor: "white",
             }}
           >
-            <Grid container>
+            <Grid
+              container
+              rowSpacing={{ xs: 1, sm: 2, md: 4 }}
+              // columnSpacing={{ md: 5 }}
+            >
               <Grid
                 item
                 xs={12}
@@ -517,12 +521,6 @@ const CreateComponent = () => {
                               {option.label}
                             </MenuItem>
                           ))}
-                      {/* {infoCommunitySetting.rolesCreatePost &&
-                        infoCommunitySetting.rolesCreatePost.map((option, index) => (
-                          <MenuItem key={index.toString()} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))} */}
                     </SelectCustom>
                   </ThemeProvider>
                 </Box>
