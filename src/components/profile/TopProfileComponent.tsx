@@ -69,7 +69,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
 
   const redirect = (page: string) => {
     if (page) {
-      window.location.href = page;
+      window.open(page);
     }
   };
 

@@ -69,11 +69,13 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataChild, maxW
   const communityPosts = async (cursor: string = "") => {
     const communityId = router.query;
     const res = await getListCommunityPost(communityId?.id, LIMIT, cursor);
-    // eslint-disable-next-line no-unsafe-optional-chaining
-    setPost([...posts, ...res?.items]);
-    setTotalCommunityPost(res?.items_count);
-    setCursorPost(res?.cursor);
-    return res;
+    if (res?.error_code !== "403") {
+      // eslint-disable-next-line no-unsafe-optional-chaining
+      setPost([...posts, ...res?.items]);
+      setTotalCommunityPost(res?.items_count);
+      setCursorPost(res?.cursor);
+      return res;
+    }
   };
 
   const handleCallbackChangePagination = (event, value) => {

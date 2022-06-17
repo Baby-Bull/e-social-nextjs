@@ -286,3 +286,31 @@ export const getListCommunityPost = async (communityId, limit: number = 10, curs
     return error;
   }
 };
+
+export const joinCommunity = async (communityId) => {
+  try {
+    const res = await api.post(`community/${communityId}/join`);
+    if (!res.data.error_code) {
+      toast.success(CREATE_POST);
+      return res.data;
+    }
+    toast.error(SERVER_ERROR);
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const leaveCommunity = async (communityId) => {
+  try {
+    const res = await api.post(`community/${communityId}/leave`);
+    if (!res.data.error_code) {
+      toast.success(CREATE_POST);
+      return res.data;
+    }
+    toast.error(SERVER_ERROR);
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
