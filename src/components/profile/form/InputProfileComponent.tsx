@@ -18,6 +18,7 @@ export interface FieldProps {
 
 const InputCustom = styled(TextField)({
   width: "100%",
+  fontFamily: "Noto Sans JP",
   borderRadius: "6px",
   "& fieldset": {
     border: "none",

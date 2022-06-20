@@ -18,6 +18,7 @@ const FieldTextArea = styled(TextareaAutosize)({
   border: "none",
   backgroundColor: "#F4FDFF",
   fontSize: 16,
+  fontFamily: "Noto Sans JP",
   padding: "9px 16px",
   borderRadius: "6px",
   "&::placeholder": {
