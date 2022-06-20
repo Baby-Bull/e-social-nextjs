@@ -246,7 +246,7 @@ const MailSettingComponent = () => {
           mt: "65px",
         }}
       >
-        <Box sx={{ mb: "200px" }}>
+        <Box sx={{ mb: { xs: "80%", lg: "200px" } }}>
           <Box
             sx={{
               flexGrow: 1,
@@ -263,6 +263,8 @@ const MailSettingComponent = () => {
                 background: theme.whiteBlue,
                 border: "none",
                 "& .MuiTabs-flexContainer": {
+                  display: { xs: "block", lg: "flex" },
+                  marginTop: { xs: "30px", lg: "0" },
                   flexDirection: { xs: "row", lg: "column" },
                 },
               }}
@@ -311,7 +313,8 @@ const MailSettingComponent = () => {
                   <Box
                     sx={{
                       mb: "19px",
-                      display: { xs: "none", lg: "block" },
+                      display: "block",
+                      textAlign: { xs: "center", lg: "start" },
                     }}
                   >
                     <Typography component="span" fontSize={20} fontWeight={700} lineHeight="28.96px" color={theme.navy}>
@@ -320,10 +323,12 @@ const MailSettingComponent = () => {
                   </Box>
                   <Typography
                     fontFamily="Roboto"
-                    fontSize={16}
-                    fontWeight={300}
+                    fontWeight={400}
                     lineHeight="28.96px"
                     color={theme.navy}
+                    sx={{
+                      fontSize: { xs: 14, lg: 16 },
+                    }}
                   >
                     {t("mail-setting:mail-setting-description")}
                   </Typography>
@@ -371,8 +376,15 @@ const MailSettingComponent = () => {
                     id="mail"
                     value={email}
                   />
-                  <Box sx={{ color: "#FF0000", fontSize: "10px" }}>{errorValidates.email}</Box>
-                  <Box sx={{ display: "flex", alignItems: "center", mt: "55px" }}>
+                  <Box sx={{ color: "#FF9458", fontSize: "10px" }}>{errorValidates.email}</Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      mt: "55px",
+                      justifyContent: { xs: "center", lg: "start" },
+                    }}
+                  >
                     <ButtonComponent
                       sx={{
                         background: mailOnChange ? "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)" : theme.gray,

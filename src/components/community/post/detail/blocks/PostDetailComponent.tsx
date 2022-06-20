@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Avatar, Divider } from "@mui/material";
+import { Box, Typography, Avatar, Divider, Paper, ListItem, Chip } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import DOMPurify from "isomorphic-dompurify";
 import moment from "moment";
@@ -11,6 +11,17 @@ import ButtonDropDownComponent from "src/components/community/post/detail/blocks
 
 import "moment/locale/ja";
 import { deleteCommunityPost } from "src/services/community";
+
+const MOCKTAGS = [
+  "community",
+  "javascript",
+  "timeline",
+  "Reactjs",
+  "any tag have space",
+  "tag with length more than 20 characters",
+  "bonus-tag",
+  "   tag   ",
+];
 
 interface IBoxInfoProps {
   title: string;
@@ -141,6 +152,44 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
           </Typography>
         </Box>
       </Box>
+      <Paper
+        sx={{
+          m: 0,
+          p: 0,
+          backgroundColor: "transparent",
+          display: "flex",
+          flexWrap: "wrap",
+          listStyle: "none",
+          boxShadow: "none",
+          marginBottom: "20px",
+        }}
+        component="ul"
+      >
+        {MOCKTAGS.map((value, index) => (
+          <ListItem
+            key={index}
+            sx={{
+              width: "fit-content",
+              ml: 0,
+              padding: "4px 4px",
+            }}
+          >
+            <Chip
+              variant="outlined"
+              size="small"
+              label={value}
+              sx={{
+                fontSize: 12,
+                fontWeight: 400,
+                color: theme.blue,
+                backgroundColor: "white",
+                borderRadius: "6px",
+                borderColor: theme.blue,
+              }}
+            />
+          </ListItem>
+        ))}
+      </Paper>
 
       <React.Fragment>
         {data?.reference_url && (

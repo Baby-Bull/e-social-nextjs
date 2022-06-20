@@ -171,9 +171,9 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   const handleOpenMenu = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-  const handleNotifyOpenMenu = (event) => {
-    setNotifyAnchorEl(event.currentTarget);
-  };
+  // const handleNotifyOpenMenu = (event) => {
+  //   setNotifyAnchorEl(event.currentTarget);
+  // };
 
   const handleLogout = async () => {
     await logout();
@@ -435,7 +435,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 </Badge> */}
                 </IconButton>
               </Link>
-              <IconButton
+              {/* <IconButton
                 size="large"
                 aria-label="show 17 new notifications"
                 color="inherit"
@@ -443,10 +443,10 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 onClick={handleNotifyOpenMenu}
               >
                 <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
-                {/* <Badge badgeContent={notify} color="error">
+                <Badge badgeContent={notify} color="error">
                   <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
-                </Badge> */}
-              </IconButton>
+                </Badge>
+              </IconButton> */}
               <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <IconButton
                   onClick={handleOpenMenu}
@@ -479,17 +479,17 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 </Badge> */}
                 </IconButton>
               </Link>
-              <IconButton
+              {/* <IconButton
                 size="large"
                 aria-label="show 17 new notifications"
                 color="inherit"
                 onClick={handleNotifyOpenMenu}
               >
                 <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
-                {/* <Badge badgeContent={notify} color="error">
+                <Badge badgeContent={notify} color="error">
                   <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
-                </Badge> */}
-              </IconButton>
+                </Badge>
+              </IconButton> */}
               <IconButton
                 size="large"
                 aria-label="show more"

@@ -71,7 +71,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                   height: ["80px", "160px"],
 
                   ".MuiAvatar-img": {
-                    objectFit: data?.profile_image === infoCommunitySetting.avatar ? "contain" : "cover",
+                    objectFit: data?.profile_image === "/assets/images/logo/logo.png" ? "contain" : "cover",
                   },
                 }}
                 src={data?.profile_image || infoCommunitySetting.avatar}
