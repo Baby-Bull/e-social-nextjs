@@ -134,8 +134,9 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
     if (handleValidateFormCommunityPost()) {
       const communityId = router.query;
       if (editable) {
+        console.log(communityPostRequest, communityId);
         const res = await updateCommunityPost(communityId?.id, communityId?.updateId, communityPostRequest);
-        setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${res?.slug}`), 1000);
+        setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${communityId?.updateId}`), 1000);
         return res;
       }
       const res = await createCommunityPost(communityId?.id, communityPostRequest);
@@ -154,6 +155,12 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
       setAddress(res?.address);
       setContent(res?.content);
       setReferenceUrl(res?.reference_url);
+      setCommunityPostRequest({
+        title: res?.title,
+        address: res?.address,
+        content: res?.content,
+        reference_url: res?.reference_url,
+      });
     }
   };
 
@@ -166,6 +173,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
         sx={{
           fontSize: [18, 20],
           fontWeight: 700,
+          pt: [0, "40px"],
         }}
       >
         {editable ? t("community:form.edit") : t("community:form.create")}

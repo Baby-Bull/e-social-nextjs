@@ -66,18 +66,20 @@ const ParticipationComponent: React.SFC<IParticipationComponentProps> = ({ isPub
           borderBottom: { sm: `1px solid ${theme.lightGray}` },
         }}
       >
-        <Typography
-          sx={{
-            fontWeight: 500,
-            py: ["20px", "28px"],
-            px: [0, "40px"],
-            textAlign: ["center", "left"],
-          }}
-        >
-          {`${t("community:setting.participation.title")} ${countParticipates}${t(
-            "community:setting.participation.subject",
-          )}`}
-        </Typography>
+        {countParticipates > 0 && (
+          <Typography
+            sx={{
+              fontWeight: 500,
+              py: ["20px", "28px"],
+              px: [0, "40px"],
+              textAlign: ["center", "left"],
+            }}
+          >
+            {`${t("community:setting.participation.title")} ${countParticipates}${t(
+              "community:setting.participation.subject",
+            )}`}
+          </Typography>
+        )}
         {participates?.slice((page - 1) * LIMIT, page * LIMIT)?.length > 0 ? (
           participates?.slice((page - 1) * LIMIT, page * LIMIT).map((data, index) => (
             <React.Fragment key={index.toString()}>

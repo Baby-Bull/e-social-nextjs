@@ -94,8 +94,13 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem sx={{ py: "0px" }}>
-          <Box onClick={redirectUpdatePost}>
+        <MenuItem sx={{ py: "0px" }} onClick={redirectUpdatePost}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Avatar
+              src="/assets/images/icon/edit_blue.svg"
+              variant="square"
+              sx={{ width: "11px", height: "11px", mr: "8px" }}
+            />
             <Typography
               sx={{
                 color: theme.gray,
@@ -108,14 +113,21 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({
         </MenuItem>
         <Divider />
         <MenuItem sx={{ py: "0px" }} onClick={handleOpenDialog}>
-          <Typography
-            sx={{
-              color: theme.gray,
-              fontSize: 14,
-            }}
-          >
-            {t("community:button.dropdown.delete")}
-          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Avatar
+              src="/assets/images/icon/delete_blue.svg"
+              variant="square"
+              sx={{ width: "11px", height: "11px", mr: "8px" }}
+            />
+            <Typography
+              sx={{
+                color: theme.gray,
+                fontSize: 14,
+              }}
+            >
+              {t("community:button.dropdown.delete")}
+            </Typography>
+          </Box>
         </MenuItem>
       </Menu>
 

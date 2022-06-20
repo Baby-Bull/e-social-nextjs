@@ -14,6 +14,11 @@ import {
   UPDATE_COMMUNITY,
   UPDATE_POST,
   CREATE_POST,
+  FORBIDDEN, 
+  DELETE_COMMENT,
+  CREATE_COMMENT,
+  JOIN_COMMUNITY,
+  LEAVE_COMMUNITY,
 } from "src/messages/notification";
 import { api } from "src/helpers/api";
 
@@ -105,9 +110,12 @@ export const MemberBlocked = async (communityId, userId) => {
     const res = await api.post(`community/${communityId}/members/${userId}/block`);
     if (!res.data.error_code) {
       toast.success(BLOCK_MEMBER);
+    } else if (res.data.error_code === "403") {
+      toast.warning(FORBIDDEN);
     } else {
       toast.error(SERVER_ERROR);
     }
+    return res;
   } catch (error) {
     toast.error(SERVER_ERROR);
     return error;
@@ -119,6 +127,8 @@ export const MemberUnBlock = async (communityId, userId) => {
     const res = await api.post(`community/${communityId}/members/${userId}/unblock`);
     if (!res.data.error_code) {
       toast.success(BLOCKED_MEMBER);
+    } else if (res.data.error_code === "403") {
+      toast.warning(FORBIDDEN);
     } else {
       toast.error(SERVER_ERROR);
     }
@@ -240,7 +250,7 @@ export const createPostComment = async (communityId, postId, body) => {
   try {
     const res = await api.post(`community/${communityId}/posts/${postId}/comments`, body);
     if (!res.data.error_code) {
-      toast.success(CREATE_POST);
+      toast.success(CREATE_COMMENT);
       return res.data;
     }
     toast.error(SERVER_ERROR);
@@ -269,7 +279,7 @@ export const deleteCommunityPostComment = async (communityId, postId, commentId)
       setTimeout(() => router.push(`community/${communityId}`), 1000);
       return false;
     }
-    toast.success(DELETE_POST);
+    toast.success(DELETE_COMMENT);
     return res.data;
   } catch (error) {
     toast.error(SERVER_ERROR);
@@ -291,7 +301,7 @@ export const joinCommunity = async (communityId) => {
   try {
     const res = await api.post(`community/${communityId}/join`);
     if (!res.data.error_code) {
-      toast.success(CREATE_POST);
+      toast.success(JOIN_COMMUNITY);
       return res.data;
     }
     toast.error(SERVER_ERROR);
@@ -305,7 +315,7 @@ export const leaveCommunity = async (communityId) => {
   try {
     const res = await api.post(`community/${communityId}/leave`);
     if (!res.data.error_code) {
-      toast.success(CREATE_POST);
+      toast.success(LEAVE_COMMUNITY);
       return res.data;
     }
     toast.error(SERVER_ERROR);

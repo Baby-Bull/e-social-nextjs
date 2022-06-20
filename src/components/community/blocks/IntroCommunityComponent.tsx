@@ -5,9 +5,12 @@ import { useTranslation } from "next-i18next";
 import moment from "moment";
 
 import theme from "src/theme";
+// eslint-disable-next-line import/order
 import ButtonComponent from "src/components/common/ButtonComponent";
 
 import "moment/locale/ja";
+
+import { ShowTextArea } from "src/components/common/ShowTextAreaComponent";
 
 import { countMemberOnVirtualRoom, status, textRolesCreatePost } from "../mockData";
 
@@ -42,8 +45,7 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
         >
           {t("community:intro.title.detail")}
         </Typography>
-        <Typography component="span">{data?.description}</Typography>
-
+        <ShowTextArea value={data?.description} />
         <Typography
           component="span"
           sx={{

@@ -16,6 +16,7 @@ interface IGridViewComponentProps {
   data: any;
   type: Type;
   index: any;
+  isAdmin: boolean;
   callbackHandleRemoveElmMember: any;
 }
 
@@ -24,6 +25,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
   type,
   index,
   callbackHandleRemoveElmMember,
+  isAdmin,
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -33,12 +35,18 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
   const MemberBlock = async () => {
     const communityId = router.query;
     const resData = await MemberBlocked(communityId?.indexId, data.id);
+    if (resData?.data?.error_code === "403") {
+      setTimeout(() => router.push("/"), 1000);
+    }
     return resData;
   };
 
   const MemberUnBlocked = async () => {
     const communityId = router.query;
     const resData = await MemberUnBlock(communityId?.indexId, data.id);
+    if (resData?.data?.error_code === "403") {
+      setTimeout(() => router.push("/"), 1000);
+    }
     return resData;
   };
 
@@ -165,7 +173,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
                 dimension: "x-small",
               }}
               sx={{
-                display: ["none", data.role !== IS_OWNER && "flex"],
+                display: ["none", ((data.role !== IS_OWNER && !isAdmin) || data.role === IS_MEMBER) && "flex"],
                 height: "36px",
               }}
               onClick={handleOpenDialogBlock}
@@ -180,7 +188,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
                   dimension: "x-small",
                 }}
                 sx={{
-                  display: ["none", data.role === IS_OWNER ? "none" : "inherit"],
+                  display: ["none", ((data.role !== IS_OWNER && !isAdmin) || data.role === IS_MEMBER) && "inherit"],
                   height: "36px",
                 }}
                 onClick={handleOpenDialogUnBlock}

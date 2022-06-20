@@ -41,6 +41,7 @@ import {
   CommunityMembers,
   deleteCommunity,
   checkMemberCommunity,
+  leaveCommunity,
 } from "src/services/community";
 
 import { infoCommunitySetting, tabsCommunitySetting } from "./mockData";
@@ -103,6 +104,7 @@ const UpdateComponent = () => {
   const ITEM_PADDING_TOP = 8;
   const LIMIT = 10;
   const IS_MEMBER = "member";
+  const IS_OWNER = "owner";
   const rolePrivateCommunity = infoCommunitySetting.rolesCreatePost.slice(0, 2);
   const MenuProps = {
     PaperProps: {
@@ -154,14 +156,23 @@ const UpdateComponent = () => {
   const [checkMember, setCheckMember] = useState(false);
   const auth = useSelector((state: IStoreState) => state.user);
   const [userId] = useState(auth?.id);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [mySelf, setMySelf] = useState({
+    role: null,
+  });
 
   const fetchData = async () => {
     const admins = [];
+    const adminIds = [];
     const communityId = router.query;
     const data = await getCommunity(communityId?.indexId);
     for (let i = 0; i < data?.admins?.length; i++) {
-      admins.push(`${data?.admins[i].id},${data?.admins[i].username}`);
+      if (data?.admins[i].id !== userId) {
+        admins.push(`${data?.admins[i].id},${data?.admins[i].username}`);
+      }
+      adminIds.push(data?.admins[i].id);
     }
+    setIsAdmin(adminIds.includes(userId));
     setIsPublic(data?.is_public);
     setPersonName(admins);
     setName(data?.name);
@@ -198,6 +209,7 @@ const UpdateComponent = () => {
     const communityId = router.query;
     const data = await checkMemberCommunity(communityId?.indexId, userId);
     if (data?.id && data?.role !== IS_MEMBER) {
+      setMySelf(data);
       fetchDataUsers();
       setCheckMember(true);
       fetchData();
@@ -266,6 +278,16 @@ const UpdateComponent = () => {
       setTimeout(() => router.push(`/search_community`), 1000);
       return res;
     }
+  };
+
+  const handleLeaveCommunity = async () => {
+    const community = router.query;
+    const res = await leaveCommunity(community?.indexId);
+    if (res) {
+      setTimeout(() => router.push(`/community/${community?.indexId}`), 1000);
+      setOpen(false);
+    }
+    return res;
   };
 
   const [errorValidates, setErrorValidates] = useState({
@@ -413,7 +435,7 @@ const UpdateComponent = () => {
 
       const communityId = router.query;
       const res = await updateCommunity(communityId?.indexId, formData);
-      router.push(`/community/${communityId?.indexId}`);
+      setDisableBtnSubmit(true);
       return res;
     }
   };
@@ -948,29 +970,45 @@ const UpdateComponent = () => {
                   }}
                   onClick={handleOpenDialog}
                 >
-                  {t("community:setting.form.delete-community")}
+                  {mySelf?.role === IS_OWNER
+                    ? t("community:setting.form.delete-community")
+                    : t("community:banner.withdraw")}
                 </TypographyButton>
               </Box>
             </Box>
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <MemberComponent />
+            <MemberComponent isAdmin={isAdmin} />
           </TabPanel>
           <TabPanel value={value} index={2}>
             <ParticipatedMemberComponent isPublic={isPublic} />
           </TabPanel>
         </Box>
       )}
-      <DialogConfirmComponent
-        title={t("community:setting.form.dialog.title")}
-        content={t("community:setting.form.dialog.content")}
-        btnLeft={t("community:button.dialog.cancel-2")}
-        btnRight={t("community:button.dialog.delete-community")}
-        isShow={openDialog}
-        handleClose={handleCloseDialog}
-        handleCancel={handleDialogCancel}
-        handleOK={handleDeleteCommunity}
-      />
+      {mySelf?.role === IS_OWNER ? (
+        <DialogConfirmComponent
+          title={t("community:setting.form.dialog.title")}
+          content={t("community:setting.form.dialog.content")}
+          btnLeft={t("community:button.dialog.cancel-2")}
+          btnRight={t("community:button.dialog.delete-community")}
+          isShow={openDialog}
+          handleClose={handleCloseDialog}
+          handleCancel={handleDialogCancel}
+          handleOK={handleDeleteCommunity}
+        />
+      ) : (
+        <DialogConfirmComponent
+          title={`${communityRequest?.name}を本当に退会しますか？`}
+          content={t("community:dialog.note")}
+          btnLeft={t("community:button.dialog.cancel")}
+          btnRight={t("community:button.dialog.withdraw")}
+          isShow={openDialog}
+          handleClose={handleCloseDialog}
+          handleCancel={handleDialogCancel}
+          handleOK={handleLeaveCommunity}
+          avatar={srcProfileImage}
+        />
+      )}
     </ContentComponent>
   );
 };
