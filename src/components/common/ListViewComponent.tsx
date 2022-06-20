@@ -59,7 +59,6 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
         }}
       >
         <Avatar
-          variant="square"
           sx={{
             width: ["24px", "64px"],
             height: "100%",

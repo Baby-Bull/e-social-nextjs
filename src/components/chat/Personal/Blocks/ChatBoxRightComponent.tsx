@@ -1,10 +1,12 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import crypto from "crypto";
+
 import React, { useEffect, useState, useRef } from "react";
 import { Box, Grid, IconButton, Paper, Typography, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import InfiniteScroll from "react-infinite-scroller";
 import { useQuery } from "react-query";
-import Linkify from "react-linkify";
+// import Linkify from "react-linkify";
 
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
@@ -14,7 +16,7 @@ import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser
 import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupReviewComponent";
 import scrollEl from "src/helpers/scrollEl";
 import { getMessages } from "src/services/chat";
-import { formatChatDate } from "src/helpers/helper";
+import { formatChatDate, formatListMessages } from "src/helpers/helper";
 import { MESSAGE_CONTENT_TYPES, REACT_QUERY_KEYS } from "src/constants/constants";
 
 interface IBoxChatProps {
@@ -27,6 +29,9 @@ interface IBoxMyChatProps {
   time: string;
   isStartOfDay?: boolean;
   isErrorMessage?: boolean;
+  id: any;
+  resendMessage?: Function;
+  deleteErrorMessage?: Function;
 }
 
 interface INameOfChatSPProps {
@@ -34,7 +39,15 @@ interface INameOfChatSPProps {
   handleClick: () => void;
 }
 
-const BoxMyChat: React.SFC<IBoxMyChatProps> = ({ message, time, isStartOfDay = false, isErrorMessage = false }) => {
+const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
+  message,
+  time,
+  isStartOfDay = false,
+  isErrorMessage = false,
+  id,
+  resendMessage,
+  deleteErrorMessage,
+}) => {
   const { t } = useTranslation();
   return (
     <React.Fragment>
@@ -45,19 +58,17 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({ message, time, isStartOfDay = f
       ) : null}
       <Box className={styles.itemMessageMyChat}>
         <Typography className="time">{time}</Typography>
-        <div className={`message-content ${isErrorMessage ? "error-message" : ""}`}>
-          <Linkify>{message}</Linkify>
-        </div>
+        <div className={`message-content ${isErrorMessage ? "error-message" : ""}`}>{message}</div>
       </Box>
 
       {isErrorMessage ? (
         <div className={styles.errorMessage}>
           <div className="span-error-message">{t("chat:span-error-message")}</div>
           <div className="div-btn-action">
-            <a type="button" className="btn-action btn-resend">
+            <a type="button" className="btn-action btn-resend" onClick={() => resendMessage(message, id)}>
               {t("chat:btn-resend")}
             </a>
-            <a type="button" className="btn-action btn-delete">
+            <a type="button" className="btn-action btn-delete" onClick={() => deleteErrorMessage(id)}>
               {t("chat:btn-delete")}
             </a>
           </div>
@@ -70,9 +81,7 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({ message, time, isStartOfDay = f
 const BoxChatOthers: React.SFC<IBoxChatProps> = ({ avatar, message, time }) => (
   <Box className={styles.itemMsgOther}>
     <Avatar className="avatar" alt="Avatar" src={avatar} />
-    <div className="message-content">
-      <Linkify>{message}</Linkify>
-    </div>
+    <div className="message-content">{message}</div>
     <Typography className="time">{time}</Typography>
   </Box>
 );
@@ -101,6 +110,7 @@ const ChatBoxRightComponent = ({
   const isFirstRender = useRef(true);
 
   const [listMessages, setListMessages] = useState([]);
+  const [listMessagesShow, setListMessagesShow] = useState([]);
 
   const [hasMoreParams, setHasMoreParams] = useState({
     cursor: null,
@@ -173,6 +183,11 @@ const ChatBoxRightComponent = ({
     }
   }, [newMessageOfRoom]);
 
+  useEffect(() => {
+    const listMessagesFormat = formatListMessages(listMessages);
+    setListMessagesShow(listMessagesFormat);
+  }, [listMessages]);
+
   const handleSendTextMessage = () => {
     const message = inputChatRef.current.value.trim();
     if (message) {
@@ -180,10 +195,12 @@ const ChatBoxRightComponent = ({
       setListMessages([
         ...listMessages,
         {
+          id: crypto.randomBytes(16).toString("hex"),
           content: message,
           content_type: MESSAGE_CONTENT_TYPES.TEXT,
           created_at: new Date().toISOString(),
           sender_id: "123",
+          isErrorMessage: !navigator.onLine,
         },
       ]);
       inputChatRef.current.value = "";
@@ -193,6 +210,29 @@ const ChatBoxRightComponent = ({
   const onKeyUpMessageText = (e) => {
     if (!e.shiftKey && e.keyCode === 13 && e.target.value) {
       handleSendTextMessage();
+    }
+  };
+
+  const deletedMessageError = (id: any) => {
+    setListMessages(listMessages.filter((message) => message?.id !== id));
+  };
+
+  const resendMessage = (message: string, id: any) => {
+    const listMessagesTmp = listMessages.filter((item) => item?.id !== id);
+    if (message) {
+      sendTextMessage(message);
+      setListMessages([
+        ...listMessagesTmp,
+        {
+          id: crypto.randomBytes(16).toString("hex"),
+          content: message,
+          content_type: MESSAGE_CONTENT_TYPES.TEXT,
+          created_at: new Date().toISOString(),
+          sender_id: "123",
+          isErrorMessage: !navigator.onLine,
+        },
+      ]);
+      inputChatRef.current.value = "";
     }
   };
 
@@ -225,24 +265,33 @@ const ChatBoxRightComponent = ({
               isReverse
               useWindow={false}
             >
-              {listMessages?.map((message, index) =>
-                message?.sender_id !== userId ? (
-                  <BoxMyChat
-                    key={index}
-                    message={message?.content}
-                    time={formatChatDate(message?.created_at)}
-                    // isStartOfDay={!!message?.isStartOfDay}
-                    // isErrorMessage={!!message?.isErrorMessage}
-                  />
-                ) : (
-                  <BoxChatOthers
-                    key={index}
-                    avatar={message?.user?.profile_image || "/assets/images/svg/avatar.svg"}
-                    message={message?.content}
-                    time={formatChatDate(message?.created_at)}
-                  />
-                ),
-              )}
+              {Object.keys(listMessagesShow)?.map((dateText) => (
+                <React.Fragment key={dateText}>
+                  <div className={styles.spanStartOfDay}>
+                    <span>{dateText}</span>
+                  </div>
+                  {listMessagesShow[dateText]?.map((message: any, index: number) =>
+                    message?.sender_id !== userId ? (
+                      <BoxMyChat
+                        key={index}
+                        message={message?.content}
+                        time={formatChatDate(message?.created_at)}
+                        isErrorMessage={!!message?.isErrorMessage}
+                        resendMessage={resendMessage}
+                        deleteErrorMessage={deletedMessageError}
+                        id={message?.id}
+                      />
+                    ) : (
+                      <BoxChatOthers
+                        key={index}
+                        avatar={message?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+                        message={message?.content}
+                        time={formatChatDate(message?.created_at)}
+                      />
+                    ),
+                  )}
+                </React.Fragment>
+              ))}
             </InfiniteScroll>
           ) : null}
         </Box>

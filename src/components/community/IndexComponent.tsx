@@ -13,7 +13,7 @@ import TabComponent from "src/components/community/blocks/TabComponent";
 import BannerComponent from "src/components/community/blocks/BannerComponent";
 import EmptyComponent from "src/components/community/blocks/EmptyComponent";
 import { COPY_SUCCESSFUL } from "src/messages/notification";
-import { CommunityMembers, getCommunity } from "src/services/community";
+import { CommunityMembers, getCommunity, joinCommunity } from "src/services/community";
 
 import { tabsCommunity, status, bgColorByStatus } from "./mockData";
 
@@ -83,6 +83,15 @@ const CommunityComponent = () => {
     router.push(`/community/members/${communityId?.id}`);
   };
 
+  const handleJoinCommunity = async () => {
+    const community = router.query;
+    const res = await joinCommunity(community?.id);
+    if (res) {
+      router.reload();
+    }
+    return res;
+  };
+
   return (
     <LayoutComponent>
       {!checkMember ? (
@@ -139,7 +148,7 @@ const CommunityComponent = () => {
             >
               <Box
                 sx={{
-                  display: "flex",
+                  display: communityMembers?.length > 0 ? "flex" : "none",
                   justifyContent: "space-between",
                   alignItems: "center",
                 }}
@@ -262,6 +271,7 @@ const CommunityComponent = () => {
                     height: "48px",
                     marginTop: "35px",
                   }}
+                  onClick={dataCommunityDetail?.community_role !== PENDING ? handleJoinCommunity : null}
                   props={{
                     bgColor: dataCommunityDetail?.community_role === PENDING ? theme.gray : theme.orange,
                   }}

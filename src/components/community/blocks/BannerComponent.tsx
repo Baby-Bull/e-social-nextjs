@@ -8,6 +8,7 @@ import { infoCommunitySetting } from "src/components/community/mockData";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmWithAvatarComponent from "src/components/common/dialog/DialogConfirmWithAvatarComponent";
+import { joinCommunity, leaveCommunity } from "src/services/community";
 
 import { bgColorByStatus } from "../mockData";
 
@@ -29,6 +30,24 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
   const MEMBER = "member";
   const OWNER = "owner";
 
+  const handleLeaveCommunity = async () => {
+    const community = router.query;
+    const res = await leaveCommunity(community?.id);
+    if (res) {
+      router.reload();
+      setOpen(false);
+    }
+    return res;
+  };
+
+  const handleJoinCommunity = async () => {
+    const community = router.query;
+    const res = await joinCommunity(community?.id);
+    if (res) {
+      router.reload();
+    }
+    return res;
+  };
   return (
     <React.Fragment>
       <Box
@@ -190,7 +209,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                   props={{
                     bgColor: data?.community_role === PENDING ? theme.gray : theme.orange,
                   }}
-                  onClick={handleClickOpen}
+                  onClick={data?.community_role !== PENDING ? handleJoinCommunity : null}
                 >
                   {data?.community_role === PENDING ? "申請中" : "参加申請する"}
                 </ButtonComponent>
@@ -209,7 +228,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                   props={{
                     bgColor: data.community_role ? "red" : bgColorByStatus,
                   }}
-                  onClick={handleClickOpen}
+                  onClick={data.community_role === MEMBER ? handleClickOpen : handleJoinCommunity}
                 >
                   {data.community_role === MEMBER ? t("community:banner.withdraw-SP") : t("community:banner.join-SP")}
                 </ButtonComponent>
@@ -250,6 +269,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
               props={{
                 bgColor: data?.community_role === PENDING ? theme.gray : theme.orange,
               }}
+              onClick={data?.community_role !== PENDING ? handleJoinCommunity : null}
             >
               {data?.community_role === PENDING ? t("community:banner.applying") : t("community:banner.apply")}
             </ButtonComponent>
@@ -265,7 +285,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                 props={{
                   bgColor: data.community_role ? "red" : bgColorByStatus,
                 }}
-                onClick={handleClickOpen}
+                onClick={data.community_role === MEMBER ? handleClickOpen : handleJoinCommunity}
               >
                 {data.community_role === MEMBER ? t("community:banner.withdraw") : t("community:banner.join")}
               </ButtonComponent>
@@ -293,14 +313,15 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
       </Box>
 
       <DialogConfirmWithAvatarComponent
-        title={t("community:dialog.confirm")}
+        title={`${data?.name}を本当に退会しますか？`}
         content={t("community:dialog.note")}
         btnLeft={t("community:button.dialog.cancel")}
         btnRight={t("community:button.dialog.withdraw")}
         isShow={open}
         handleClose={handleClose}
         handleCancel={handleClose}
-        handleOK={handleClose}
+        avatar={data?.profile_image}
+        handleOK={handleLeaveCommunity}
       />
     </React.Fragment>
   );
