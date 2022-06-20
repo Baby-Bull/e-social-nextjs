@@ -97,7 +97,7 @@ const CommunityComponent = () => {
       {!checkMember ? (
         <Box sx={{ minHeight: "74.6vh" }} />
       ) : (
-        <Box>
+        <Box sx={{ pt: [0, "80px"] }}>
           <Box textAlign={["center", "right"]}>
             <ButtonComponent
               variant="outlined"

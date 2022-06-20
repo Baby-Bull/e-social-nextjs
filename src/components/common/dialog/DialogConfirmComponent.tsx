@@ -119,6 +119,7 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
                 fontWeight: 700,
                 display: "flex",
                 alignItems: "center",
+                justifyContent: avatar ? "none" : "center",
               }}
             >
               <Avatar src={avatar} sx={{ mr: "11px", display: avatar ? "block" : "none" }} />

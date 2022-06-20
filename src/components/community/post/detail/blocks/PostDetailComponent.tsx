@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, Typography, Avatar, Divider, Paper, ListItem, Chip } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import DOMPurify from "isomorphic-dompurify";
 import moment from "moment";
 import { useRouter } from "next/router";
 
@@ -11,6 +10,7 @@ import ButtonDropDownComponent from "src/components/community/post/detail/blocks
 
 import "moment/locale/ja";
 import { deleteCommunityPost } from "src/services/community";
+import { ShowTextArea } from "src/components/common/ShowTextAreaComponent";
 
 const MOCKTAGS = [
   "community",
@@ -206,7 +206,7 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
       />
 
       <Box mt="20px">
-        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data?.content) }} />
+        <ShowTextArea value={data?.content} />
       </Box>
     </Box>
   );

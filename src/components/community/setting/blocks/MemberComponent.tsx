@@ -9,7 +9,11 @@ import { ChildTabCustom, a11yProps, TabPanel } from "src/components/common/Tab/B
 import PaginationCustomComponent from "src/components/common/PaginationCustomComponent";
 import { CommunityMembers, CommunityMembersBlocked } from "src/services/community";
 
-const MemberComponent = () => {
+interface IMemberComponentProps {
+  isAdmin?: boolean;
+}
+
+const MemberComponent: React.SFC<IMemberComponentProps> = ({ isAdmin }) => {
   const LIMIT = 10;
   const LIST_BLOCK = 0;
   const LIST_BLOCKED = 1;
@@ -161,6 +165,7 @@ const MemberComponent = () => {
                   index={index + (pageBlock - 1) * LIMIT}
                   type="participated"
                   callbackHandleRemoveElmMember={callbackHandleRemoveMemberBlock}
+                  isAdmin={isAdmin}
                 />
               </Box>
             </React.Fragment>
@@ -202,6 +207,7 @@ const MemberComponent = () => {
                   callbackHandleRemoveElmMember={callbackHandleRemoveMemberBlocked}
                   type="block"
                   index={index + (pageBlocked - 1) * LIMIT}
+                  isAdmin={isAdmin}
                 />
               </Box>
             </React.Fragment>
