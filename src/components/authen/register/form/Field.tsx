@@ -46,9 +46,14 @@ export interface IFieldProps {
 interface IPlaceholderProps {
   children: any;
 }
-const Placeholder: React.SFC<IPlaceholderProps> = ({ children }) => <div style={{ color: "#aaa" }}>{children}</div>;
+const Placeholder: React.SFC<IPlaceholderProps> = ({ children }) => (
+  <div style={{ fontSize: "14px", color: "#989EA8" }}>{children}</div>
+);
 
 const InputCustom = styled(InputBase)({
+  "& ::placeholder": {
+    color: "black!important",
+  },
   "& .MuiInputBase-input": {
     position: "relative",
     backgroundColor: "white",
@@ -223,7 +228,7 @@ export const Field: React.SFC<IFieldProps> = ({
               <Box
                 sx={{
                   fontFamily: "Noto Sans JP",
-                  fontSize: "14px",
+                  fontSize: "18px",
                 }}
                 display="flex"
               >
@@ -266,7 +271,7 @@ export const Field: React.SFC<IFieldProps> = ({
               <Box
                 sx={{
                   fontFamily: "Noto Sans JP",
-                  fontSize: "14px",
+                  fontSize: "18px",
                   display: "flex",
                 }}
               >
@@ -382,7 +387,7 @@ export const Field: React.SFC<IFieldProps> = ({
               <Box
                 sx={{
                   fontFamily: "Noto Sans JP",
-                  fontSize: "14px",
+                  fontSize: "18px",
                   display: "flex",
                 }}
               >
@@ -522,7 +527,7 @@ export const Field: React.SFC<IFieldProps> = ({
               <Box
                 sx={{
                   fontFamily: "Noto Sans JP",
-                  fontSize: "14px",
+                  fontSize: "18px",
                   display: "flex",
                 }}
               >
@@ -562,6 +567,9 @@ export const Field: React.SFC<IFieldProps> = ({
                       fontFamily: "Noto Sans JP",
                       alignItems: "center",
                       display: "flex",
+                      "& ::placeholder": {
+                        color: "#989EA8",
+                      },
                     }}
                   >
                     <input

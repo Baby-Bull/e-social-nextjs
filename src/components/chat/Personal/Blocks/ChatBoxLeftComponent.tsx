@@ -39,28 +39,45 @@ const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({
     disablePortal
     sx={{
       top: "9px",
-      left: "-9em",
+      left: "-7em",
       "& .MuiMenu-paper": {
         borderRadius: "12px",
       },
+      ".MuiMenuItem-root": {
+        fontSize: "12px",
+      },
+      img: {
+        height: "16px",
+        width: "16px",
+        marginRight: "7px",
+        filter: `invert(67%) sepia(61%) saturate(5498%) hue-rotate(152deg) brightness(103%) contrast(98%)`,
+      },
     }}
   >
-    <MenuItem onClick={redirectToProfile}>プロフィールを見る</MenuItem>
+    <MenuItem onClick={redirectToProfile}>
+      <img src="/assets/images/svg/user_chat.svg" alt="image_to_profile" />
+      プロフィールを見る
+    </MenuItem>
     <MenuItem
       onClick={() => {
         setShowPopupReview(true);
         handleClose();
       }}
     >
+      <img src="/assets/images/svg/review_chat.svg" alt="image_review" />
       レビューを投稿
     </MenuItem>
-    <MenuItem onClick={handleClose}>ブロックする</MenuItem>
+    <MenuItem disabled onClick={handleClose}>
+      <img src="/assets/images/svg/block_chat.svg" alt="image_block" />
+      ブロックする
+    </MenuItem>
     <MenuItem
       onClick={() => {
         setShowPopupReport(true);
         handleClose();
       }}
     >
+      <img src="/assets/images/svg/report_chat.svg" alt="image_report" />
       運営に通報
     </MenuItem>
   </Menu>

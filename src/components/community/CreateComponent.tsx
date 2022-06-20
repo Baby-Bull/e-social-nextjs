@@ -342,16 +342,13 @@ const CreateComponent = () => {
               backgroundColor: "white",
             }}
           >
-            <Grid
-              container
-              rowSpacing={{ xs: 1, sm: 2, md: 4 }}
-              // columnSpacing={{ md: 5 }}
-            >
+            <Grid container>
               <Grid
                 item
                 xs={12}
                 sm={3}
                 sx={{
+                  marginBottom: "2em",
                   display: "flex",
                   justifyContent: ["center", "flex-start"],
                 }}
@@ -649,6 +646,24 @@ const CreateComponent = () => {
                     ))}
                   </Paper>
                 </Box>
+              </Grid>
+              <GridTitle item xs={12} sm={3}>
+                <BoxTitle>{t("community:setting.form.virtual-room")}</BoxTitle>
+              </GridTitle>
+              <Grid
+                item
+                xs={12}
+                sm={9}
+                sx={{
+                  mb: ["36px", "30px"],
+                }}
+              >
+                <Field
+                  onChangeInput={onChangeCommunityRequest}
+                  id="link"
+                  placeholder={t("community:setting.form.placeholder.virtual-room")}
+                  error={errorValidates.name}
+                />
               </Grid>
             </Grid>
 

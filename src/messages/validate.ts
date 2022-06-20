@@ -24,7 +24,8 @@ export const VALIDATE_MESSAGE_FORM_REGISTER = {
   email: {
     required: "「tanakataro@rebase.co.jp」の形式でメールアドレスを入力してください",
     invalid:
-      "メールアドレスの形式は正しくありません。「tanakataro@rebase.co.jp」の形式でメールアドレスを入力してください",
+      // "メールアドレスの形式は正しくありません。「tanakataro@rebase.co.jp」の形式でメールアドレスを入力してください",
+      "入力に誤りがあるため、ご確認ください。",
   },
   address: {
     required: "お住まいの地域を選択してください",

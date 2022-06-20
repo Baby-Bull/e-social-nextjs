@@ -36,7 +36,7 @@ const SelectCustom = styled(Select)({
     fontSize: 16,
     padding: "9px 16px",
     borderRadius: 6,
-    fontFamily: "Noto Sans",
+    fontFamily: "Noto Sans JP",
     "@media (max-width: 1200px)": {
       fontSize: 14,
     },
@@ -61,7 +61,7 @@ export const FieldSelect: React.SFC<FieldProps> = ({ id, value, error, onChangeV
       defaultValue={options[0]?.value}
       onChange={(e) => onChangeValue(id, e.target.value)}
       displayEmpty
-      sx={{ color: value ? "#1A2944" : theme.gray, border: error ? "solid 1px #FF9458" : "none", height: "45px" }}
+      sx={{ color: value ? "#1A2944" : "#b8bfc0", border: error ? "solid 1px #FF9458" : "none", height: "45px" }}
     >
       {options &&
         options.map((option, index) => (

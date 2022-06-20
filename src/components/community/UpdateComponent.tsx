@@ -497,6 +497,7 @@ const UpdateComponent = () => {
                   xs={12}
                   sm={3}
                   sx={{
+                    marginBottom: "2em",
                     display: "flex",
                     justifyContent: ["center", "flex-start"],
                   }}

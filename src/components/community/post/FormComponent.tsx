@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography, Avatar, Paper, ListItem, Chip } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
-import { Field } from "src/components/community/blocks/Form/InputComponent";
+import { Field, InputCustom } from "src/components/community/blocks/Form/InputComponent";
 import { TextArea } from "src/components/community/blocks/Form/TextAreaComponent";
 import { REGEX_RULES, VALIDATE_FORM_COMMUNITY_POST } from "src/messages/validate";
 import { createCommunityPost, detailCommunityPost, updateCommunityPost } from "src/services/community";
@@ -17,6 +17,13 @@ const BoxTitle = styled(Box)({
     fontSize: 16,
   },
   fontWeight: 700,
+});
+
+const BoxTextValidate = styled(Box)({
+  color: "#FF9458",
+  lineHeight: "20px",
+  fontWeight: "400",
+  fontSize: "14px",
 });
 
 interface ILayoutComponentProps {
@@ -30,6 +37,10 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
   const [content, setContent] = useState("");
   const [referenceUrl, setReferenceUrl] = useState("");
   const [address, setAddress] = useState("");
+  const [tagData, setTagData] = useState([]);
+
+  const [tagDataValidate, setTagDataValidate] = useState(false);
+
   const [communityPostRequest, setCommunityPostRequest] = useState({
     title,
     content,
@@ -48,6 +59,21 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
     content: null,
     reference_url: null,
     address: null,
+  };
+
+  const onKeyPress = (e) => {
+    if (e.target.value.length > 20) {
+      setTagDataValidate(true);
+      return false;
+    }
+    if (e.key === "Enter" && e.target.value) {
+      setTagDataValidate(false);
+      setTagData([...tagData, e.target.value]);
+      (document.getElementById("input_tags") as HTMLInputElement).value = "";
+    }
+  };
+  const handleDeleteTag = (indexRemove) => () => {
+    setTagData(tagData.filter((_, index) => index !== indexRemove));
   };
 
   const onChangeCommunityPostRequest = (key: string, valueInput: any) => {
@@ -247,6 +273,74 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
               onChangeInput={onChangeCommunityPostRequest}
               value={address}
             />
+          </Grid>
+
+          <Grid item xs={12} sm={3}>
+            <BoxTitle>{t("community:setting.form.tag-post")}</BoxTitle>
+          </Grid>
+          <Grid item xs={12} sm={9}>
+            <InputCustom
+              sx={{
+                ml: 1,
+                flex: 1,
+                border: tagDataValidate ? "1px solid #FF9458" : "none",
+              }}
+              placeholder={t("community:setting.form.placeholder.tag")}
+              inputProps={{ "aria-label": t("community:setting.form.placeholder.tag") }}
+              id="input_tags"
+              onKeyPress={onKeyPress}
+            />
+            {tagDataValidate && <BoxTextValidate>{t("community:max_length_tag")}</BoxTextValidate>}
+
+            <Box>
+              <Paper
+                sx={{
+                  mt: "12px",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  listStyle: "none",
+                  boxShadow: "none",
+                }}
+              >
+                {tagData?.map((tag, index) => (
+                  <ListItem
+                    key={index}
+                    sx={{
+                      px: "3px",
+                      width: "auto",
+                    }}
+                  >
+                    <Chip
+                      label={tag}
+                      onDelete={handleDeleteTag(index)}
+                      deleteIcon={
+                        <Avatar
+                          src="/assets/images/svg/delete.svg"
+                          sx={{
+                            width: "16px",
+                            height: "16px",
+                            backgroundColor: "white",
+                            "& img": {
+                              p: "4px",
+                            },
+                          }}
+                        />
+                      }
+                      sx={{
+                        fontSize: 12,
+                        fontWeight: 500,
+                        color: "white",
+                        height: "22px",
+                        backgroundColor: theme.blue,
+                        borderRadius: "4px",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    />
+                  </ListItem>
+                ))}
+              </Paper>
+            </Box>
           </Grid>
         </Grid>
 
