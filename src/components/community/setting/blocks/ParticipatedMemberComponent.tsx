@@ -61,11 +61,7 @@ const ParticipationComponent: React.SFC<IParticipationComponentProps> = ({ isPub
         borderRadius: "12px",
       }}
     >
-      <Box
-        sx={{
-          borderBottom: { sm: `1px solid ${theme.lightGray}` },
-        }}
-      >
+      <Box>
         {countParticipates > 0 && (
           <Typography
             sx={{
@@ -98,6 +94,7 @@ const ParticipationComponent: React.SFC<IParticipationComponentProps> = ({ isPub
                 text2={t("community:setting.participation.empty-public2")}
                 text3={t("community:setting.participation.empty-public3")}
                 text4={t("community:setting.participation.empty-public4")}
+                text5={t("community:setting.participation.empty-public5")}
               />
             ) : (
               <EmptyComponent text={t("community:setting.participation.empty-private")} />
@@ -111,6 +108,7 @@ const ParticipationComponent: React.SFC<IParticipationComponentProps> = ({ isPub
           py: "40px",
           display: "flex",
           justifyContent: "center",
+          borderTop: { sm: `1px solid ${theme.lightGray}` },
         }}
       >
         {countParticipates > LIMIT && (

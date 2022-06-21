@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import moment from "moment";
 
 import theme from "src/theme";
@@ -16,11 +16,16 @@ import { countMemberOnVirtualRoom, status, textRolesCreatePost } from "../mockDa
 
 interface ICommunityDataProps {
   data?: any;
+  createPost?: any;
 }
 
-const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
+const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createPost }) => {
   const { t } = useTranslation();
-  // const router = useRouter();
+  const router = useRouter();
+  const redirectCreatePost = () => {
+    const communityId = router.query;
+    router.push(`/community/${communityId?.id}/post/create`);
+  };
 
   return (
     <React.Fragment>
@@ -126,29 +131,29 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
         )}
       </Box>
 
-      {/* {canCreatePost && ( */}
-      {/*  <Box */}
-      {/*    sx={{ */}
-      {/*      display: "flex", */}
-      {/*      justifyContent: "center", */}
-      {/*    }} */}
-      {/*  > */}
-      {/*    <ButtonComponent */}
-      {/*      props={{ */}
-      {/*        square: true, */}
-      {/*        mode: "gradient", */}
-      {/*        dimension: "medium", */}
-      {/*      }} */}
-      {/*      sx={{ */}
-      {/*        mt: ["20px", "40px"], */}
-      {/*        height: "54px", */}
-      {/*      }} */}
-      {/*      onClick={() => router.push(`/community/post/create`)} */}
-      {/*    > */}
-      {/*      {t("community:button.intro.create-post")} */}
-      {/*    </ButtonComponent> */}
-      {/*  </Box> */}
-      {/* )} */}
+      {createPost && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <ButtonComponent
+            props={{
+              square: true,
+              mode: "gradient",
+              dimension: "medium",
+            }}
+            sx={{
+              mt: ["20px", "40px"],
+              height: "54px",
+            }}
+            onClick={redirectCreatePost}
+          >
+            {t("community:button.intro.create-post")}
+          </ButtonComponent>
+        </Box>
+      )}
     </React.Fragment>
   );
 };
