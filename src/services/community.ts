@@ -1,5 +1,4 @@
 import { toast } from "react-toastify";
-import { useRouter } from "next/router";
 
 import {
   APPPROVE_MEMBER,
@@ -8,13 +7,11 @@ import {
   CREATE_COMMUNITY,
   DELETE_COMMUNITY,
   DELETE_POST,
-  NOTE_FOUNT_POST,
   REJECT_MEMBER,
   SERVER_ERROR,
   UPDATE_COMMUNITY,
   UPDATE_POST,
   CREATE_POST,
-  FORBIDDEN, 
   DELETE_COMMENT,
   CREATE_COMMENT,
   JOIN_COMMUNITY,
@@ -110,8 +107,6 @@ export const MemberBlocked = async (communityId, userId) => {
     const res = await api.post(`community/${communityId}/members/${userId}/block`);
     if (!res.data.error_code) {
       toast.success(BLOCK_MEMBER);
-    } else if (res.data.error_code === "403") {
-      toast.warning(FORBIDDEN);
     } else {
       toast.error(SERVER_ERROR);
     }
@@ -127,8 +122,6 @@ export const MemberUnBlock = async (communityId, userId) => {
     const res = await api.post(`community/${communityId}/members/${userId}/unblock`);
     if (!res.data.error_code) {
       toast.success(BLOCKED_MEMBER);
-    } else if (res.data.error_code === "403") {
-      toast.warning(FORBIDDEN);
     } else {
       toast.error(SERVER_ERROR);
     }
@@ -153,8 +146,6 @@ export const MemberApprove = async (communityId, joinRequestId) => {
     const res = await api.post(`community/${communityId}/join-requests/${joinRequestId}/accept`);
     if (!res.data.error_code) {
       toast.success(APPPROVE_MEMBER);
-    } else {
-      toast.error(SERVER_ERROR);
     }
   } catch (error) {
     toast.error(SERVER_ERROR);
@@ -167,8 +158,6 @@ export const MemberReject = async (communityId, joinRequestId) => {
     const res = await api.delete(`community/${communityId}/join-requests/${joinRequestId}/reject`);
     if (!res.data.error_code) {
       toast.success(REJECT_MEMBER);
-    } else {
-      toast.error(SERVER_ERROR);
     }
   } catch (error) {
     toast.error(SERVER_ERROR);
@@ -203,13 +192,9 @@ export const createCommunityPost = async (communityId, body) => {
 export const detailCommunityPost = async (communityId, postId) => {
   try {
     const res = await api.get(`community/${communityId}/posts/${postId}`);
-    if (res.data.error_code === "404") {
-      toast.error(NOTE_FOUNT_POST);
-      const router = useRouter();
-      setTimeout(() => router.push(`community/${communityId}`), 1000);
-      return false;
+    if (!res.data.error_code) {
+      return res.data;
     }
-    return res.data;
   } catch (error) {
     return error;
   }
@@ -232,13 +217,9 @@ export const updateCommunityPost = async (communityId, postId, body) => {
 export const deleteCommunityPost = async (communityId, postId) => {
   try {
     const res = await api.delete(`community/${communityId}/posts/${postId}`);
-    if (res.data.error_code === "404") {
-      toast.error(NOTE_FOUNT_POST);
-      const router = useRouter();
-      setTimeout(() => router.push(`community/${communityId}`), 1000);
-      return false;
+    if (!res.data.error_code) {
+      toast.success(DELETE_POST);
     }
-    toast.success(DELETE_POST);
     return res.data;
   } catch (error) {
     toast.error(SERVER_ERROR);
@@ -273,13 +254,9 @@ export const getListComment = async (communityId, postId, limit: number = 10, cu
 export const deleteCommunityPostComment = async (communityId, postId, commentId) => {
   try {
     const res = await api.delete(`community/${communityId}/posts/${postId}/comments/${commentId}`);
-    if (res.data.error_code === "404") {
-      toast.error(NOTE_FOUNT_POST);
-      const router = useRouter();
-      setTimeout(() => router.push(`community/${communityId}`), 1000);
-      return false;
+    if (!res.data.error_code) {
+      toast.success(DELETE_COMMENT);
     }
-    toast.success(DELETE_COMMENT);
     return res.data;
   } catch (error) {
     toast.error(SERVER_ERROR);
@@ -304,7 +281,6 @@ export const joinCommunity = async (communityId) => {
       toast.success(JOIN_COMMUNITY);
       return res.data;
     }
-    toast.error(SERVER_ERROR);
   } catch (error) {
     toast.error(SERVER_ERROR);
     return error;
@@ -318,7 +294,6 @@ export const leaveCommunity = async (communityId) => {
       toast.success(LEAVE_COMMUNITY);
       return res.data;
     }
-    toast.error(SERVER_ERROR);
   } catch (error) {
     toast.error(SERVER_ERROR);
     return error;

@@ -69,7 +69,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataChild, maxW
   const communityPosts = async (cursor: string = "") => {
     const communityId = router.query;
     const res = await getListCommunityPost(communityId?.id, LIMIT, cursor);
-    if (res?.error_code !== "403") {
+    if (!res?.error_code) {
       // eslint-disable-next-line no-unsafe-optional-chaining
       setPost([...posts, ...res?.items]);
       setTotalCommunityPost(res?.items_count);

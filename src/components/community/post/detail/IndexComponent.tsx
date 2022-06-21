@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography, TextareaAutosize } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import { toast } from "react-toastify";
 import { styled } from "@mui/material/styles";
 
 import theme from "src/theme";
@@ -61,8 +60,10 @@ const DetailPostComponent = () => {
   const [page, setPage] = React.useState(1);
   const [perPage, setPerPage] = React.useState(2);
   const [valueCursor, setCursor] = React.useState("");
+  const [content, setContent] = React.useState("");
 
   const onChangeCommunityPostRequest = (key: string, valueInput: any) => {
+    setContent(valueInput);
     setCommunityPostRequest({
       ...communityPostRequest,
       [key]: typeof valueInput === "string" ? valueInput.trim() : valueInput,
@@ -84,9 +85,7 @@ const DetailPostComponent = () => {
       const communityId = router.query;
       const res = await createPostComment(communityId?.id, communityId?.detailId, communityPostRequest);
       if (res) {
-        setCommunityPostRequest({
-          content: "",
-        });
+        setContent("");
         comments.unshift(res);
         setTotalComment(totalComment + 1);
       }
@@ -97,7 +96,7 @@ const DetailPostComponent = () => {
   const fetchComments = async (cursor: string = "") => {
     const community = router.query;
     const data = await getListComment(community?.id, community?.detailId, LIMIT, cursor);
-    if (data) {
+    if (!data?.error_code) {
       // eslint-disable-next-line no-unsafe-optional-chaining
       setComments([...comments, ...data?.items]);
       setTotalComment(data?.items_count);
@@ -109,12 +108,8 @@ const DetailPostComponent = () => {
   const fetchCommunity = async () => {
     const communityId = router.query;
     const data = await getCommunity(communityId?.id);
-    if (data?.error_code === "401") {
-      toast.warning(t("common:not_have_access"));
-      setTimeout(() => router.push("/"), 1000);
-    } else {
+    if (!data?.error_code) {
       setDataCommunityDetail(data);
-      // setCheckMember(true);
       return data;
     }
   };
@@ -122,7 +117,10 @@ const DetailPostComponent = () => {
   const fetchCommunityPost = async () => {
     const community = router.query;
     const res = await detailCommunityPost(community?.id, community?.detailId);
-    setCommunityPost(res);
+    if (!res?.error_code) {
+      setCommunityPost(res);
+      fetchComments();
+    }
   };
 
   const handleCallBackPaginationIndex = (pageCallBack, perPageCallBack) => {
@@ -144,7 +142,6 @@ const DetailPostComponent = () => {
 
   useEffect(() => {
     fetchCommunity();
-    fetchComments();
     fetchCommunityPost();
   }, []);
   return (
@@ -152,7 +149,7 @@ const DetailPostComponent = () => {
       <Box
         sx={{
           mt: "40px",
-          pt: "80px",
+          pt: ["8px", "80px"],
           display: "flex",
           flexDirection: ["column-reverse", "row"],
         }}
@@ -162,7 +159,7 @@ const DetailPostComponent = () => {
             width: { md: "20%" },
           }}
         >
-          <IntroCommunityComponent data={dataCommunityDetail} />
+          <IntroCommunityComponent data={dataCommunityDetail} createPost />
         </Box>
 
         <Box
@@ -210,25 +207,23 @@ const DetailPostComponent = () => {
             </Typography>
 
             <TextareaAutosize
-              aria-label="write-comment"
               placeholder={t("community:place-holder")}
               style={{
                 marginTop: "8px",
                 paddingTop: "8px",
                 paddingLeft: "8px",
                 width: "100%",
-                height: "120px",
-                resize: "none",
+                minHeight: "120px",
                 border: errorValidates?.content ? `2px solid ${theme.orange}` : `2px solid ${theme.whiteGray}`,
                 borderRadius: "12px",
               }}
               onChange={(e) => onChangeCommunityPostRequest("content", e.target.value)}
-              value={communityPostRequest.content}
+              value={content}
             />
             {errorValidates?.content && <BoxTextValidate>{errorValidates?.content}</BoxTextValidate>}
             <Box sx={{ textAlign: "right" }}>
               <ButtonComponent
-                disabled={!communityPostRequest?.content?.length}
+                disabled={!content?.length}
                 props={{
                   square: true,
                   bgColor: theme.blue,

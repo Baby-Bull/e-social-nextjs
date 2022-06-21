@@ -8,13 +8,13 @@ interface IEmptyComponentProps {
   text2?: string;
   text3?: string;
   text4?: string;
+  text5?: string;
 }
 
-const EmptyComponent: React.SFC<IEmptyComponentProps> = ({ text, text2, text3, text4 }) => (
+const EmptyComponent: React.SFC<IEmptyComponentProps> = ({ text, text2, text3, text4, text5 }) => (
   <Box
     sx={{
       mx: ["20px", 0],
-      borderTop: { sm: `2px solid ${theme.lightGray}` },
       height: { sm: "490px" },
       display: "flex",
       flexDirection: "column",
@@ -25,18 +25,20 @@ const EmptyComponent: React.SFC<IEmptyComponentProps> = ({ text, text2, text3, t
   >
     <Typography
       sx={{
-        my: "40px",
+        my: "80px",
         fontSize: [14, 16],
         fontWeight: 400,
         textAlign: "center",
+        px: "10px",
       }}
     >
       {text}
       <br />
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
         {text2}
         <Box sx={{ color: theme.blue }}>{text3}</Box>
         {text4}
+        <Box>{text5}</Box>
       </Box>
     </Typography>
   </Box>
