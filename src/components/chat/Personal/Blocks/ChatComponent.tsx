@@ -164,9 +164,9 @@ const BlockChatComponent = ({ hasData, setHasData }) => {
         setUserId(roomQuerySelect?.user?.id);
         setUser(roomQuerySelect?.user);
       } else {
-        setRoomSelect(listRoomResQuery?.items[0] || {});
-        setUserId(listRoomResQuery?.items[0]?.user?.id);
-        setUser(listRoomResQuery?.items[0]?.user);
+        setRoomSelect(listRoomResQuery?.items?.[0] || {});
+        setUserId(listRoomResQuery?.items?.[0]?.user?.id);
+        setUser(listRoomResQuery?.items?.[0]?.user);
       }
     }
     setHasMoreChatRoom({

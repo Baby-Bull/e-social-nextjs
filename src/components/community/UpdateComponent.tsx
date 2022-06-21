@@ -131,6 +131,7 @@ const UpdateComponent = () => {
   const [roleJoinSelected, setRoleJoin] = useState(infoCommunitySetting.rolesJoin[0].value);
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
+  const [virtualLink, setVirtualLink] = useState(null);
   const [communityMembers, setCommunityMembers] = useState([]);
   const [communityRequest, setCommunityRequest] = useState({
     name,
@@ -177,6 +178,7 @@ const UpdateComponent = () => {
     setPersonName(admins);
     setName(data?.name);
     setDescription(data?.description);
+    setVirtualLink(data?.gather_url);
     setRoleCreatePost(data?.post_permission);
     setRoleJoin(data?.is_public);
     setSrcProfileImage(data?.profile_image);
@@ -222,6 +224,7 @@ const UpdateComponent = () => {
   useEffect(() => {
     checkRoleMemberCommunity();
   }, []);
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setCommunityMembers([]);
     setHasMore(true);
@@ -311,15 +314,15 @@ const UpdateComponent = () => {
     if (key === "description") {
       setDescription(valueInput);
     }
-
     if (key === "post_permission") {
       setRoleCreatePost(valueInput);
     }
-
     if (key === "is_public") {
       setRoleJoin(valueInput);
     }
-
+    if (key === "gather_url") {
+      setVirtualLink(valueInput);
+    }
     setDisableBtnSubmit(false);
 
     setCommunityRequest({
@@ -436,6 +439,7 @@ const UpdateComponent = () => {
       const communityId = router.query;
       const res = await updateCommunity(communityId?.indexId, formData);
       setDisableBtnSubmit(true);
+      router.push(`/community/${communityId?.indexId}`);
       return res;
     }
   };
@@ -935,6 +939,25 @@ const UpdateComponent = () => {
                       ))}
                     </Paper>
                   </Box>
+                </Grid>
+                <GridTitle item xs={12} sm={3}>
+                  <BoxTitle>{t("community:setting.form.virtual-room")}</BoxTitle>
+                </GridTitle>
+                <Grid
+                  item
+                  xs={12}
+                  sm={9}
+                  sx={{
+                    mb: ["36px", "30px"],
+                  }}
+                >
+                  <Field
+                    onChangeInput={onChangeCommunityRequest}
+                    id="gather_url"
+                    placeholder={t("community:setting.form.placeholder.virtual-room")}
+                    error={errorValidates.name}
+                    value={virtualLink}
+                  />
                 </Grid>
               </Grid>
 

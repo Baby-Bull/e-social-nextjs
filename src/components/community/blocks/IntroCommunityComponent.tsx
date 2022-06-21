@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import moment from "moment";
 
 import theme from "src/theme";
@@ -12,7 +12,7 @@ import "moment/locale/ja";
 
 import { ShowTextArea } from "src/components/common/ShowTextAreaComponent";
 
-import { countMemberOnVirtualRoom, status, textRolesCreatePost } from "../mockData";
+import { countMemberOnVirtualRoom, textRolesCreatePost } from "../mockData";
 
 interface ICommunityDataProps {
   data?: any;
@@ -20,7 +20,7 @@ interface ICommunityDataProps {
 
 const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
   const { t } = useTranslation();
-  // const router = useRouter();
+  const router = useRouter();
 
   return (
     <React.Fragment>
@@ -94,7 +94,7 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
         </Typography>
         <Typography component="span">{textRolesCreatePost[data?.post_permission]}</Typography>
 
-        {status === "withdraw" && (
+        {["member", "admin", "owner"].includes(data?.community_role) && (
           <ButtonComponent
             props={{
               square: true,
@@ -105,6 +105,7 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
               width: "197px",
               height: "102px",
             }}
+            onClick={() => router.push(data?.gather_url)}
           >
             <Box>
               {t("community:button.go-to-virtual-room")}
