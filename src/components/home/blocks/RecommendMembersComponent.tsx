@@ -13,6 +13,7 @@ import {
   HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS,
   HOMEPAGE_RECOMMEND_MEMBER_STATUS,
 } from "src/components/constants/constants";
+import { JOBS } from "src/constants/constants";
 import styles from "src/components/home/home.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
@@ -139,7 +140,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
               />
               <div className="member-info">
                 <div className="name">{data?.username}</div>
-                <div className="career">{data?.job ?? "情報なし"}</div>
+                <div className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? "情報なし"}</div>
                 <div className="review">
                   {t("home:box-member-recommend.review")}: {data?.review_count ?? 0}
                 </div>

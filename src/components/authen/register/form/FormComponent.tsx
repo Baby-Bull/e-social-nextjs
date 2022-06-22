@@ -152,6 +152,12 @@ const FormRegisterComponents = () => {
     } else if (userInfo?.birthday?.length !== 0 && userInfo?.birthday?.error_invalid) {
       isValidForm = false;
       errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.invalid_date;
+    } else if (
+      userInfo?.birthday?.length !== 0 &&
+      userInfo?.birthday?.dob_value >= new Date().toISOString().slice(0, 10)
+    ) {
+      isValidForm = false;
+      errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.future_input;
     }
 
     // validate email
@@ -361,7 +367,8 @@ const FormRegisterComponents = () => {
         >
           <Fab
             variant="circular"
-            onClick={handleTutorialDone}
+            // onClick={handleTutorialDone}
+            onClick={() => setOpen(false)}
             sx={{
               position: "absolute",
               top: ["7px", "20px"],
@@ -384,9 +391,10 @@ const FormRegisterComponents = () => {
                 display: "flex",
                 justifyContent: "center",
               }}
-              src={
-                !isTutorialDone ? "/assets/images/svg/arrow-right-circle.svg" : "/assets/images/svg/delete-circle.svg"
-              }
+              // src={
+              //   !isTutorialDone ? "/assets/images/svg/arrow-right-circle.svg" : "/assets/images/svg/delete-circle.svg"
+              // }
+              src="/assets/images/svg/delete-circle.svg"
             />
           </Fab>
         </DialogTitle>

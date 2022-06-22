@@ -11,7 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import styles from "src/components/profile/profile.module.scss";
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
-import { HOMEPAGE_RECOMMEND_MEMBER_STATUS, USER_SEARCH_STATUS, JOBS } from "src/components/constants/constants";
+import { HOMEPAGE_RECOMMEND_MEMBER_STATUS, USER_SEARCH_STATUS } from "src/components/constants/constants";
+import { JOBS } from "src/constants/constants";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
 import { sendMatchingRequest } from "src/services/matching";
@@ -124,7 +125,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
               <img src={data?.profile_image} alt="img-member" />
               <div className="member-info">
                 <p className="name">{data?.username}</p>
-                <p className="career">{JOBS[data?.job]?.label}</p>
+                <p className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? "情報なし"}</p>
                 <p className="review">
                   {t("home:box-member-recommend.review")}: {data?.review_count}
                 </p>
