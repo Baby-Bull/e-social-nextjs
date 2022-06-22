@@ -27,6 +27,12 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
     router.push(`/community/${communityId?.id}/post/create`);
   };
 
+  const redirectGatherUrl = () => {
+    if (data?.gather_url) {
+      window.open(data?.gather_url);
+    }
+  };
+
   return (
     <React.Fragment>
       <Box
@@ -39,6 +45,7 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
           border: `2px solid ${theme.whiteGray}`,
           borderRadius: "12px",
           color: theme.navy,
+          position: "relative",
         }}
       >
         <Typography
@@ -130,8 +137,33 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
             </Box>
           </ButtonComponent>
         )}
+        {data?.community_role && data?.community_role !== "pending" && (
+          <Box
+            sx={{
+              p: "15px 15px",
+              backgroundColor: theme.orange,
+              color: "white",
+              borderRadius: "12px",
+              position: "absolute",
+              bottom: "0",
+              margin: "0 auto",
+              mb: "41px",
+              width: "200px",
+              cursor: "pointer",
+            }}
+            onClick={redirectGatherUrl}
+          >
+            <Box sx={{ fontSize: "16px", fontWeight: 700, lineHeight: "23.17px" }}>{t("community:virtual-room")}</Box>
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <Avatar
+                src="/assets/images/icon_room_virtual.png"
+                sx={{ width: "39px", height: "39px", mt: "10px" }}
+                variant="square"
+              />
+            </Box>
+          </Box>
+        )}
       </Box>
-
       {createPost && (
         <Box
           sx={{

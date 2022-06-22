@@ -26,11 +26,29 @@ const BoxTextValidate = styled(Box)({
   fontSize: "14px",
 });
 
+export const TextareaAutosizeCustom = styled(TextareaAutosize)({
+  "&::-webkit-input-placeholder": {
+    color: theme.gray,
+  },
+  "@media (min-width: 768px)": {
+    fontSize: 16,
+  },
+  "&:focus-visible": {
+    border: `2px solid ${theme.blue}`,
+    outline: "none",
+  },
+  marginTop: "8px",
+  paddingTop: "8px",
+  paddingLeft: "8px",
+  width: "100%",
+  minHeight: "120px",
+  borderRadius: "12px",
+});
+
 const DetailPostComponent = () => {
   const { t } = useTranslation();
   const LIMIT = 10;
   const router = useRouter();
-  // const [checkMember, setCheckMember] = useState(false);
   const [dataCommunityDetail, setDataCommunityDetail] = useState({
     name: null,
     profile_image: null,
@@ -81,7 +99,7 @@ const DetailPostComponent = () => {
   };
 
   const handleSaveForm = async () => {
-    if (handleValidateFormCommunityPost()) {
+    if (handleValidateFormCommunityPost() && communityPostRequest?.content?.length > 0) {
       const communityId = router.query;
       const res = await createPostComment(communityId?.id, communityId?.detailId, communityPostRequest);
       if (res) {
@@ -170,7 +188,7 @@ const DetailPostComponent = () => {
             width: { md: "80%" },
           }}
         >
-          <PostDetailComponent data={communityPost} />
+          <PostDetailComponent data={communityPost} dataCommunityDetail={dataCommunityDetail} />
 
           <Box
             sx={{
@@ -194,6 +212,7 @@ const DetailPostComponent = () => {
               handleCallBackPaginationIndex={handleCallBackPaginationIndex}
               handleCallbackRemove={handleCallbackRemove}
               totalComment={totalComment ?? 0}
+              dataCommunityDetail={dataCommunityDetail}
             />
 
             <Typography
@@ -205,20 +224,21 @@ const DetailPostComponent = () => {
             >
               {t("community:write-comment")}
             </Typography>
-
-            <TextareaAutosize
+            <TextareaAutosizeCustom
               placeholder={t("community:place-holder")}
-              style={{
-                marginTop: "8px",
-                paddingTop: "8px",
-                paddingLeft: "8px",
-                width: "100%",
-                minHeight: "120px",
-                border: errorValidates?.content ? `2px solid ${theme.orange}` : `2px solid ${theme.whiteGray}`,
-                borderRadius: "12px",
-              }}
               onChange={(e) => onChangeCommunityPostRequest("content", e.target.value)}
               value={content}
+              sx={{ border: errorValidates?.content ? `2px solid ${theme.orange}` : `2px solid ${theme.whiteGray}` }}
+              onKeyPress={(e) => {
+                if (e.shiftKey && (e.keyCode || e.which) === 13) {
+                  return true;
+                }
+                if ((e.keyCode || e.which) === 13) {
+                  e.preventDefault();
+                  handleSaveForm();
+                  return true;
+                }
+              }}
             />
             {errorValidates?.content && <BoxTextValidate>{errorValidates?.content}</BoxTextValidate>}
             <Box sx={{ textAlign: "right" }}>
