@@ -244,11 +244,7 @@ const ChatBoxRightComponent = ({
     <Grid item className={styles.chatBoxRight}>
       <Box className="box-title">
         <Typography className="username">
-          {isMobile ? (
-            <NameOfChatSP name="福くん株式会社" handleClick={toggleRenderSide} />
-          ) : (
-            roomSelect?.user?.username
-          )}
+          {isMobile ? <NameOfChatSP name="福くん株式会社" handleClick={toggleRenderSide} /> : user?.username}
         </Typography>
         <ButtonComponent mode="info" size="medium" className="btn-chat" onClick={handleShow}>
           {t("chat:btn-report")}

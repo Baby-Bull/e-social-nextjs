@@ -413,7 +413,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                     bgColor: theme.blue,
                     dimension: "small",
                   }}
-                  onClick={() => router.push(`/chat/personal?room=${data?.id}`)}
+                  onClick={() => router.push(`/chat/personal?room=${data?.user?.id}`)}
                 >
                   {t("thread:button.open-message")}
                 </ButtonComponent>
@@ -654,7 +654,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   mb: "5px",
                   fontSize: 14,
                 }}
-                onClick={() => router.push(`/chat/personal?room=${data?.id}`)}
+                onClick={() => router.push(`/chat/personal?room=${data?.user?.id}`)}
               >
                 {t("thread:button.open-message-SP")}
               </ButtonComponent>
