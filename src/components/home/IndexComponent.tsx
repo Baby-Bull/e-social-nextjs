@@ -200,7 +200,8 @@ const HomeIndexComponents = () => {
         <Grid
           container
           sx={{
-            padding: ["0", "0 8em"],
+            maxWidth: "1440px",
+            padding: ["0", "0 2em"],
           }}
         >
           <NotificationComponent />

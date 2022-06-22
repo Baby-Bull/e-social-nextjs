@@ -12,17 +12,6 @@ import "moment/locale/ja";
 import { deleteCommunityPost } from "src/services/community";
 import { ShowTextArea } from "src/components/common/ShowTextAreaComponent";
 
-const MOCKTAGS = [
-  "community",
-  "javascript",
-  "timeline",
-  "Reactjs",
-  "any tag have space",
-  "tag with length more than 20 characters",
-  "bonus-tag",
-  "   tag   ",
-];
-
 interface IBoxInfoProps {
   title: string;
   text: string;
@@ -165,7 +154,7 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
         }}
         component="ul"
       >
-        {MOCKTAGS.map((value, index) => (
+        {data?.tags?.map((value: any, index: number) => (
           <ListItem
             key={index}
             sx={{

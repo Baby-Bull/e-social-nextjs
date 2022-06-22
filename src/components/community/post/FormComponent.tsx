@@ -37,7 +37,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
   const [content, setContent] = useState("");
   const [referenceUrl, setReferenceUrl] = useState("");
   const [address, setAddress] = useState("");
-  const [tagData, setTagData] = useState([]);
+  const [tags, setTags] = useState([]);
 
   const [tagDataValidate, setTagDataValidate] = useState(false);
 
@@ -46,6 +46,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
     content,
     reference_url: referenceUrl,
     address,
+    tags,
   });
   const [errorValidates, setErrorValidates] = useState({
     title: null,
@@ -68,12 +69,12 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
     }
     if (e.key === "Enter" && e.target.value) {
       setTagDataValidate(false);
-      setTagData([...tagData, e.target.value]);
-      (document.getElementById("input_tags") as HTMLInputElement).value = "";
+      setTags([...tags, e.target.value]);
+      (document.getElementById("tags") as HTMLInputElement).value = "";
     }
   };
   const handleDeleteTag = (indexRemove) => () => {
-    setTagData(tagData.filter((_, index) => index !== indexRemove));
+    setTags(tags.filter((_, index) => index !== indexRemove));
   };
 
   const onChangeCommunityPostRequest = (key: string, valueInput: any) => {
@@ -134,7 +135,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
     if (handleValidateFormCommunityPost()) {
       const communityId = router.query;
       if (editable) {
-        console.log(communityPostRequest, communityId);
+        communityPostRequest.tags = tags;
         const res = await updateCommunityPost(communityId?.id, communityId?.updateId, communityPostRequest);
         setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${communityId?.updateId}`), 1000);
         return res;
@@ -155,11 +156,13 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
       setAddress(res?.address);
       setContent(res?.content);
       setReferenceUrl(res?.reference_url);
+      setTags(res?.tags);
       setCommunityPostRequest({
         title: res?.title,
         address: res?.address,
         content: res?.content,
         reference_url: res?.reference_url,
+        tags: res?.tags,
       });
     }
   };
@@ -295,7 +298,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
               }}
               placeholder={t("community:setting.form.placeholder.tag")}
               inputProps={{ "aria-label": t("community:setting.form.placeholder.tag") }}
-              id="input_tags"
+              id="tags"
               onKeyPress={onKeyPress}
             />
             {tagDataValidate && <BoxTextValidate>{t("community:max_length_tag")}</BoxTextValidate>}
@@ -310,7 +313,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
                   boxShadow: "none",
                 }}
               >
-                {tagData?.map((tag, index) => (
+                {tags?.map((tag, index) => (
                   <ListItem
                     key={index}
                     sx={{

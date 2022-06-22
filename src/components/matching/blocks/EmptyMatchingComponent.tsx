@@ -50,7 +50,7 @@ const EmptyMatchingComponent: React.SFC<IEmptyMatchingComponentProps> = ({ text,
         </ButtonComponent>
       </Link>
 
-      <Link underline="none" href="/community/setting">
+      <Link underline="none" href="/community/create">
         <ButtonComponent
           props={{
             dimension: "medium",

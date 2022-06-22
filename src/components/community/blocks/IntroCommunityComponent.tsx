@@ -12,7 +12,7 @@ import "moment/locale/ja";
 
 import { ShowTextArea } from "src/components/common/ShowTextAreaComponent";
 
-import { countMemberOnVirtualRoom, status, textRolesCreatePost } from "../mockData";
+import { countMemberOnVirtualRoom, textRolesCreatePost } from "../mockData";
 
 interface ICommunityDataProps {
   data?: any;
@@ -99,7 +99,7 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
         </Typography>
         <Typography component="span">{textRolesCreatePost[data?.post_permission]}</Typography>
 
-        {status === "withdraw" && (
+        {["member", "admin", "owner"].includes(data?.community_role) && (
           <ButtonComponent
             props={{
               square: true,
@@ -110,6 +110,7 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
               width: "197px",
               height: "102px",
             }}
+            onClick={() => router.push(data?.gather_url)}
           >
             <Box>
               {t("community:button.go-to-virtual-room")}

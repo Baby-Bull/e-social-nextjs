@@ -25,7 +25,7 @@ const BlockChatComponent = ({ hasData, setHasData }) => {
   const [isRenderRightSide, setIsRenderRightSide] = useState(false);
 
   const [listRooms, setListRooms] = useState([]);
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(roomQuery);
   const [user, setUser] = useState({});
   const [roomSelect, setRoomSelect] = useState(null);
 
@@ -92,13 +92,14 @@ const BlockChatComponent = ({ hasData, setHasData }) => {
       router.push(
         {
           pathname: "/chat/personal",
-          query: { room: roomSelect?.id },
+          // query: { room: roomSelect?.id },
+          query: { room: userId },
         },
         undefined,
         { shallow: true },
       );
     }
-  }, [roomSelect]);
+  }, [userId, roomSelect]);
 
   useEffect(() => {
     if (isMobile) {
@@ -157,16 +158,21 @@ const BlockChatComponent = ({ hasData, setHasData }) => {
     setListRooms(sortListRoomChat(listRoomResQuery?.items || []));
     if (!roomSelect?.id) {
       const roomQuerySelect = listRoomResQuery?.items?.find(
-        (item: any) => item.id === roomQuery || item?.user?.id === roomQuery,
+        (item: any) =>
+          // item.id === roomQuery ||
+          item?.user?.id === roomQuery,
       );
       if (roomQuerySelect) {
         setRoomSelect(roomQuerySelect);
-        setUserId(roomQuerySelect?.user?.id);
+        setUserId(
+          roomQuerySelect?.user?.id,
+          // roomQuery
+        );
         setUser(roomQuerySelect?.user);
       } else {
-        setRoomSelect(listRoomResQuery?.items[0] || {});
-        setUserId(listRoomResQuery?.items[0]?.user?.id);
-        setUser(listRoomResQuery?.items[0]?.user);
+        setRoomSelect(listRoomResQuery?.items?.[0] || {});
+        setUserId(listRoomResQuery?.items?.[0]?.user?.id ?? roomQuery);
+        setUser(listRoomResQuery?.items?.[0]?.user);
       }
     }
     setHasMoreChatRoom({

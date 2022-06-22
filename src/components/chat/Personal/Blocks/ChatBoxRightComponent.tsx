@@ -6,7 +6,7 @@ import { Box, Grid, IconButton, Paper, Typography, Avatar } from "@mui/material"
 import { useTranslation } from "next-i18next";
 import InfiniteScroll from "react-infinite-scroller";
 import { useQuery } from "react-query";
-// import Linkify from "react-linkify";
+import Linkify from "react-linkify";
 
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
@@ -58,7 +58,9 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
       ) : null}
       <Box className={styles.itemMessageMyChat}>
         <Typography className="time">{time}</Typography>
-        <div className={`message-content ${isErrorMessage ? "error-message" : ""}`}>{message}</div>
+        <div className={`message-content ${isErrorMessage ? "error-message" : ""}`}>
+          <Linkify>{message}</Linkify>
+        </div>
       </Box>
 
       {isErrorMessage ? (
@@ -81,7 +83,9 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
 const BoxChatOthers: React.SFC<IBoxChatProps> = ({ avatar, message, time }) => (
   <Box className={styles.itemMsgOther}>
     <Avatar className="avatar" alt="Avatar" src={avatar} />
-    <div className="message-content">{message}</div>
+    <div className="message-content">
+      <Linkify>{message}</Linkify>
+    </div>
     <Typography className="time">{time}</Typography>
   </Box>
 );
@@ -240,11 +244,7 @@ const ChatBoxRightComponent = ({
     <Grid item className={styles.chatBoxRight}>
       <Box className="box-title">
         <Typography className="username">
-          {isMobile ? (
-            <NameOfChatSP name="福くん株式会社" handleClick={toggleRenderSide} />
-          ) : (
-            roomSelect?.user?.username
-          )}
+          {isMobile ? <NameOfChatSP name="福くん株式会社" handleClick={toggleRenderSide} /> : user?.username}
         </Typography>
         <ButtonComponent mode="info" size="medium" className="btn-chat" onClick={handleShow}>
           {t("chat:btn-report")}

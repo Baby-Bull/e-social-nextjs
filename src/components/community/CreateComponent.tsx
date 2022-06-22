@@ -99,9 +99,11 @@ const CreateComponent = () => {
   const [roleJoinSelected, setRoleJoin] = useState(infoCommunitySetting.rolesJoin[0].value);
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
+  const [gatherUrl, setGatherUrl] = useState(null);
   const [communityRequest, setCommunityRequest] = useState({
     name,
     description,
+    gather_url: gatherUrl,
     post_permission: roleCreatePostSelected,
     is_public: roleJoinSelected,
   });
@@ -166,6 +168,10 @@ const CreateComponent = () => {
 
     if (key === "is_public") {
       setRoleJoin(valueInput);
+    }
+
+    if (key === "gather_url") {
+      setGatherUrl(valueInput);
     }
 
     setDisableBtnSubmit(false);
@@ -660,7 +666,7 @@ const CreateComponent = () => {
               >
                 <Field
                   onChangeInput={onChangeCommunityRequest}
-                  id="link"
+                  id="gather_url"
                   placeholder={t("community:setting.form.placeholder.virtual-room")}
                   error={errorValidates.name}
                 />
