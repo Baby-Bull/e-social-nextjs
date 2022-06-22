@@ -25,3 +25,4 @@ export const DELETE_COMMENT = "コメントが削除されました。";
 export const CREATE_COMMENT = "コメントが投稿されました。";
 export const JOIN_COMMUNITY = "コミュニティに参加しました。";
 export const LEAVE_COMMUNITY = "コミュニティを退会しました。";
+export const NOT_FOUND = "データが存在しません。";

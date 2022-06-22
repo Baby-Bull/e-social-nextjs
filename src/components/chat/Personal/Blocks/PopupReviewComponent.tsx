@@ -75,6 +75,7 @@ const FieldTextAreaReview = styled(TextareaAutosize)({
   border: "1px solid #03BCDB",
   backgroundColor: "#fff",
   fontSize: 16,
+  fontFamily: "Noto Sans JP",
   padding: "9px 16px",
   borderRadius: "12px",
   "&:placeholder": { color: theme.gray },
@@ -87,6 +88,7 @@ const FieldTextAreaReview = styled(TextareaAutosize)({
 const FieldTextAreaCheck = styled(TextareaAutosize)({
   width: "440px",
   fontSize: 16,
+  fontFamily: "Noto Sans JP",
   background: theme.whiteBlue,
   border: "none",
   "@media (max-width: 1200px)": {

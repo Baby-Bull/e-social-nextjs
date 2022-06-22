@@ -35,18 +35,12 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
   const MemberBlock = async () => {
     const communityId = router.query;
     const resData = await MemberBlocked(communityId?.indexId, data.id);
-    if (resData?.data?.error_code === "403") {
-      setTimeout(() => router.push("/"), 1000);
-    }
     return resData;
   };
 
   const MemberUnBlocked = async () => {
     const communityId = router.query;
     const resData = await MemberUnBlock(communityId?.indexId, data.id);
-    if (resData?.data?.error_code === "403") {
-      setTimeout(() => router.push("/"), 1000);
-    }
     return resData;
   };
 
@@ -81,7 +75,11 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
           position: "relative",
         }}
       >
-        <Box display={data.role !== IS_OWNER && type !== "block" ? "block" : "none"}>
+        <Box
+          display={
+            ((data.role !== IS_OWNER && !isAdmin) || data.role === IS_MEMBER) && type !== "block" ? "block" : "none"
+          }
+        >
           <DropDownBlockUserComponent
             handleOK={handleDialogApproveBlock}
             title={`${data?.username}${t("community:setting.member.dialog-block.title")}`}

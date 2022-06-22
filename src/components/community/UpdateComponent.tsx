@@ -168,9 +168,7 @@ const UpdateComponent = () => {
     const communityId = router.query;
     const data = await getCommunity(communityId?.indexId);
     for (let i = 0; i < data?.admins?.length; i++) {
-      if (data?.admins[i].id !== userId) {
-        admins.push(`${data?.admins[i].id},${data?.admins[i].username}`);
-      }
+      admins.push(`${data?.admins[i].id},${data?.admins[i].username}`);
       adminIds.push(data?.admins[i].id);
     }
     setIsAdmin(adminIds.includes(userId));
@@ -697,7 +695,7 @@ const UpdateComponent = () => {
                           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                             {selected.length !== 0 ? (
                               selected?.map((valueOption) =>
-                                valueOption ? (
+                                valueOption && userId !== valueOption?.split(",")[0] ? (
                                   <Chip
                                     key={valueOption}
                                     label={valueOption?.split(",")[1]}
@@ -723,7 +721,18 @@ const UpdateComponent = () => {
                                       "& .MuiChip-label": { color: theme.blue },
                                     }}
                                   />
-                                ) : null,
+                                ) : (
+                                  <Chip
+                                    key={valueOption}
+                                    label={valueOption?.split(",")[1]}
+                                    clickable
+                                    sx={{
+                                      background: theme.whiteBlue,
+                                      border: `1px solid ${theme.blue}`,
+                                      "& .MuiChip-label": { color: theme.blue },
+                                    }}
+                                  />
+                                ),
                               )
                             ) : (
                               <Box
@@ -749,7 +758,7 @@ const UpdateComponent = () => {
                                 key={nameOption?.id}
                                 value={`${nameOption?.id},${nameOption?.username}`}
                                 style={getStyles(`${nameOption?.id},${nameOption?.username}`, personName)}
-                                disabled={isLoading ?? true}
+                                disabled={(isLoading || nameOption?.id === userId) ?? true}
                                 sx={{
                                   "&:hover": {
                                     background: `${theme.blue} !important`,
