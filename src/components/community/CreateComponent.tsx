@@ -269,7 +269,6 @@ const CreateComponent = () => {
       if (isDeleteImage && !profileImage) {
         formData.append("profile_image", infoCommunitySetting.avatar);
       }
-
       const res = await createCommunity(formData);
       if (res) {
         setTimeout(() => router.push(`/community/${res?.id}`), 1000);
