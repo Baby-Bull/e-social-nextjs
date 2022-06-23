@@ -215,7 +215,9 @@ const CommunityComponent = () => {
             }}
           >
             {((dataCommunityDetail?.community_role && dataCommunityDetail?.community_role !== PENDING) ||
-              dataCommunityDetail?.is_public) && <TabComponent data={tabsCommunity} />}
+              dataCommunityDetail?.is_public) && (
+              <TabComponent data={tabsCommunity} dataCommunityDetail={dataCommunityDetail} />
+            )}
 
             <Box display={status === "apply" || status === "applying" ? "inherit" : "none"}>
               <EmptyComponent
