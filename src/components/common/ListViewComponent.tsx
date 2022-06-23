@@ -109,7 +109,7 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
                 color: theme.gray,
               }}
             >
-              {moment(data?.created_at).utc().format("LLL")}
+              {moment(data?.created_at).utc().toNow().replace("後", "前")}
             </Typography>
 
             <img src="/assets/images/svg/message.svg" alt="message" />

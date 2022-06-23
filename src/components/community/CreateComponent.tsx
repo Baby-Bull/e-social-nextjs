@@ -97,9 +97,9 @@ const CreateComponent = () => {
   const [roleCreatePostSelected, setRoleCreatePost] = useState(infoCommunitySetting.rolesCreatePost[0].value);
 
   const [roleJoinSelected, setRoleJoin] = useState(infoCommunitySetting.rolesJoin[0].value);
-  const [name, setName] = useState(null);
-  const [description, setDescription] = useState(null);
-  const [gatherUrl, setGatherUrl] = useState(null);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [gatherUrl, setGatherUrl] = useState("");
   const [communityRequest, setCommunityRequest] = useState({
     name,
     description,
@@ -271,7 +271,7 @@ const CreateComponent = () => {
       }
 
       const res = await createCommunity(formData);
-      if (res) {
+      if (!res?.error_code) {
         setTimeout(() => router.push(`/community/${res?.id}`), 1000);
         return res;
       }

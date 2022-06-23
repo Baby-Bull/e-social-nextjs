@@ -12,7 +12,7 @@ import "moment/locale/ja";
 
 import { ShowTextArea } from "src/components/common/ShowTextAreaComponent";
 
-import { countMemberOnVirtualRoom, textRolesCreatePost } from "../mockData";
+import { textRolesCreatePost } from "../mockData";
 
 interface ICommunityDataProps {
   data?: any;
@@ -22,10 +22,16 @@ interface ICommunityDataProps {
 const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createPost }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const RoleAdmin = ["admin", "owner"];
   const redirectCreatePost = () => {
     const communityId = router.query;
     router.push(`/community/${communityId?.id}/post/create`);
   };
+
+  const checkRoleCreatPost =
+    RoleAdmin.includes(data?.community_role) ||
+    data?.post_permission === data?.community_role ||
+    data?.post_permission === "all";
 
   const redirectGatherUrl = () => {
     if (data?.gather_url) {
@@ -70,18 +76,19 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
           {t("community:intro.title.administrator")}
         </Typography>
 
-        <Box display="flex">
-          <Avatar
-            sx={{
-              mr: "8px",
-              width: "32px",
-              height: "32px",
-            }}
-            src={data?.owner?.profile_image || "/assets/images/svg/dog.svg"}
-          />
-          {data?.owner?.name}
-        </Box>
-
+        {data?.admins.map((value, index) => (
+          <Box display="flex" key={index}>
+            <Avatar
+              sx={{
+                mr: "8px",
+                width: "32px",
+                height: "32px",
+              }}
+              src={value?.profile_image || "/assets/images/svg/dog.svg"}
+            />
+            {value?.username}
+          </Box>
+        ))}
         <Typography
           component="span"
           sx={{
@@ -106,37 +113,6 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
         </Typography>
         <Typography component="span">{textRolesCreatePost[data?.post_permission]}</Typography>
 
-        {["member", "admin", "owner"].includes(data?.community_role) && (
-          <ButtonComponent
-            props={{
-              square: true,
-              bgColor: theme.orange,
-            }}
-            sx={{
-              mt: ["55px", "26px"],
-              width: "197px",
-              height: "102px",
-            }}
-            onClick={() => router.push(data?.gather_url)}
-          >
-            <Box>
-              {t("community:button.go-to-virtual-room")}
-              <Box
-                sx={{
-                  pt: "8px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <img src="/assets/images/svg/community_message.svg" alt="community_message" />
-                <Typography pl="16px" fontWeight={700}>
-                  {countMemberOnVirtualRoom}
-                </Typography>
-              </Box>
-            </Box>
-          </ButtonComponent>
-        )}
         {data?.community_role && data?.community_role !== "pending" && (
           <Box
             sx={{
@@ -164,7 +140,7 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
           </Box>
         )}
       </Box>
-      {createPost && (
+      {createPost && checkRoleCreatPost && (
         <Box
           sx={{
             display: "flex",

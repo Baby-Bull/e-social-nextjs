@@ -437,7 +437,6 @@ const UpdateComponent = () => {
       const communityId = router.query;
       const res = await updateCommunity(communityId?.indexId, formData);
       setDisableBtnSubmit(true);
-      router.push(`/community/${communityId?.indexId}`);
       return res;
     }
   };
