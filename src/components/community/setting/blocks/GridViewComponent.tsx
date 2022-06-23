@@ -97,7 +97,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
                 color: theme.gray,
               }}
             >
-              {moment(data?.created_at).utc().format("LLL")} {t("community:request")}
+              {moment(data?.created_at).format("LLL")} {t("community:request")}
             </Typography>
 
             <Typography

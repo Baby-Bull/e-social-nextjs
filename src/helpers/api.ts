@@ -55,6 +55,7 @@ api.interceptors.response.use(
     const originalRequest = err.config;
     if (originalRequest.url !== "/auth/tokens") {
       if (err.response.status === 401 && !originalRequest._retry) {
+        toast.warning("401 Authentication");
         if (isRefreshing) {
           return new Promise((resolve, reject) => {
             failedQueue.push({ resolve, reject });

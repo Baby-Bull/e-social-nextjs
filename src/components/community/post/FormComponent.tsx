@@ -137,7 +137,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
       if (editable) {
         communityPostRequest.tags = tags;
         const res = await updateCommunityPost(communityId?.id, communityId?.updateId, communityPostRequest);
-        setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${communityId?.updateId}`), 1000);
+        setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${res?.slug}`), 1000);
         return res;
       }
       const res = await createCommunityPost(communityId?.id, communityPostRequest);

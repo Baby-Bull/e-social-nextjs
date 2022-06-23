@@ -1,11 +1,14 @@
 import React from "react";
 import { Avatar, Box, Typography } from "@mui/material";
 import moment from "moment";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 import "moment/locale/ja";
 import theme from "src/theme";
 import ButtonDropDownComponent from "src/components/community/post/detail/blocks/ButtonDropDownComponent";
 import { ShowTextArea } from "src/components/common/ShowTextAreaComponent";
+import { IStoreState } from "src/constants/interface";
 
 interface ICommentComponentProps {
   item: any;
@@ -21,6 +24,16 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({
   dataCommunityDetail,
 }) => {
   const listRoleAdmin = ["admin", "owner"];
+  // const isOwnerId = dataCommunityDetail?.owner?.id;
+  const auth = useSelector((state: IStoreState) => state.user);
+  const router = useRouter();
+  const redirectProfile = () => {
+    if (item?.user?.id === auth?.id) {
+      router.push("/my-profile");
+    } else {
+      router.push(`/profile/${item?.user?.id}`);
+    }
+  };
   return (
     <Box
       sx={{
@@ -50,7 +63,9 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({
             mr: ["8px", "24px"],
             width: ["32px", "54px"],
             height: ["32px", "54px"],
+            cursor: "pointer",
           }}
+          onClick={redirectProfile}
           src={item?.user?.profile_image}
         />
         <Box
@@ -66,14 +81,16 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({
               fontSize: [10, 14],
             }}
           >
-            {moment(item?.created_at).utc().format("LLL")}
+            {moment(item?.created_at).format("LLL")}
           </Typography>
           <Typography
             sx={{
               fontSize: [14, 20],
               fontWeight: 700,
               mr: ["16px", 0],
+              cursor: "pointer",
             }}
+            onClick={redirectProfile}
           >
             {item?.user?.username}
           </Typography>

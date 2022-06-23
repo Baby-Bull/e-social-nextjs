@@ -11,8 +11,9 @@ import PaginationCustomComponent from "src/components/common/PaginationCustomCom
 
 interface IParticipationComponentProps {
   isPublic?: boolean;
+  handleChangeTab?: any;
 }
-const ParticipationComponent: React.SFC<IParticipationComponentProps> = ({ isPublic }) => {
+const ParticipationComponent: React.SFC<IParticipationComponentProps> = ({ isPublic, handleChangeTab }) => {
   const { t } = useTranslation();
   const LIMIT = 10;
   const router = useRouter();
@@ -95,6 +96,7 @@ const ParticipationComponent: React.SFC<IParticipationComponentProps> = ({ isPub
                 text3={t("community:setting.participation.empty-public3")}
                 text4={t("community:setting.participation.empty-public4")}
                 text5={t("community:setting.participation.empty-public5")}
+                handleChangeTab={handleChangeTab}
               />
             ) : (
               <EmptyComponent text={t("community:setting.participation.empty-private")} />

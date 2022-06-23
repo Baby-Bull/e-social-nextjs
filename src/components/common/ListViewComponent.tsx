@@ -2,9 +2,10 @@ import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { useRouter } from "next/router";
 import moment from "moment";
+import { useSelector } from "react-redux";
 
 import theme from "src/theme";
-
+import { IStoreState } from "src/constants/interface";
 import "moment/locale/ja";
 
 export interface IData {
@@ -25,10 +26,17 @@ interface IListViewComponentProps {
 
 const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) => {
   const router = useRouter();
-
+  const auth = useSelector((state: IStoreState) => state.user);
   const redirectPostDetail = () => {
     const community = router.query;
     router.push(`/community/${community?.id}/post/detail/${data?.id}`);
+  };
+  const redirectProfile = () => {
+    if (data?.user?.id === auth?.id) {
+      router.push("/my-profile");
+    } else {
+      router.push(`/profile/${data?.user?.id}`);
+    }
   };
 
   return (
@@ -62,7 +70,9 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
           sx={{
             width: ["24px", "64px"],
             height: "100%",
+            cursor: "pointer",
           }}
+          onClick={redirectProfile}
           src={data?.user?.profile_image}
         />
 
@@ -98,7 +108,7 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
               alignItems: "center",
             }}
           >
-            <Typography component="span" fontSize={12}>
+            <Typography component="span" fontSize={12} sx={{ cursor: "pointer" }} onClick={redirectProfile}>
               {data?.user?.username}
             </Typography>
             <Typography
@@ -109,7 +119,7 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
                 color: theme.gray,
               }}
             >
-              {moment(data?.created_at).utc().toNow().replace("後", "前")}
+              {moment(data?.created_at).toNow().replace("後", "前")}
             </Typography>
 
             <img src="/assets/images/svg/message.svg" alt="message" />

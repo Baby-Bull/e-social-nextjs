@@ -68,7 +68,6 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataChild, maxW
     dataCommunityDetail?.post_permission === dataCommunityDetail?.community_role ||
     dataCommunityDetail?.post_permission === "all";
   const LIMIT = 10;
-  console.log(checkRoleCreatPost);
   const [valueChildTab, setValueChildTab] = useState(0);
   const [posts, setPost] = useState([]);
   const [totalCommunityPost, setTotalCommunityPost] = useState(0);

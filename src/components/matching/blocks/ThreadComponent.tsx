@@ -123,8 +123,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
   const handleFormatTime = (tempValue: string) => {
     if (tempValue === "favorite") return "";
     if (tempValue === "matched")
-      return moment(data?.matchRequest?.match_date).utc().format("lll").toString() + t("thread:request");
-    return moment(data?.updated_at).utc().format("lll").toString() + t("thread:request");
+      return moment(data?.matchRequest?.match_date).format("lll").toString() + t("thread:request");
+    return moment(data?.updated_at).format("lll").toString() + t("thread:request");
   };
 
   return (
@@ -149,8 +149,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
           }}
         >
           {type === "confirm" || type === "reject"
-            ? moment(data?.updated_at).utc().format("lll").toString()
-            : moment(data?.desired_match_date).utc().format("lll").toString()}
+            ? moment(data?.updated_at).format("lll").toString()
+            : moment(data?.desired_match_date).format("lll").toString()}
         </Typography>
 
         {/* Info user (avatar, ...) */}
@@ -257,7 +257,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   mt: "9px",
                 }}
               >
-                {data?.activity_status === isOnline ? "ログイン中" : moment(data?.last_login_at).utc().fromNow()}
+                {data?.activity_status === isOnline ? "ログイン中" : moment(data?.last_login_at).fromNow()}
               </Typography>
               {/* End Title bottom Avatar tab favorite */}
             </Box>
@@ -515,9 +515,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 mt: "9px",
               }}
             >
-              {data?.user?.activity_status === isOnline
-                ? "ログイン中"
-                : moment(data?.user?.last_login_at).utc().fromNow()}
+              {data?.user?.activity_status === isOnline ? "ログイン中" : moment(data?.user?.last_login_at).fromNow()}
             </Typography>
 
             <Box
@@ -552,8 +550,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 <ThreadTitle>{t("thread:date-interview")}</ThreadTitle>
                 <ThreadContent>
                   {type === "confirm" || type === "reject"
-                    ? moment(data?.updated_at).utc().format("lll").toString()
-                    : moment(data?.desired_match_date).utc().format("lll").toString()}
+                    ? moment(data?.updated_at).format("lll").toString()
+                    : moment(data?.desired_match_date).format("lll").toString()}
                 </ThreadContent>
               </Box>
               <Box

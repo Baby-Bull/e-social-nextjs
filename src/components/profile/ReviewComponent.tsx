@@ -204,7 +204,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, hideReviewer, rating, c
                   fontWeight: 400,
                 }}
               >
-                {moment(createdAt).utc().format("LL")}にレビュー
+                {moment(createdAt).format("LL")}にレビュー
               </Box>
             </Box>
             <Box
