@@ -3,10 +3,13 @@ import { Box, Typography, Avatar, Divider, Paper, ListItem, Chip } from "@mui/ma
 import { useTranslation } from "next-i18next";
 import moment from "moment";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 import theme from "src/theme";
 // eslint-disable-next-line import/order
 import ButtonDropDownComponent from "src/components/community/post/detail/blocks/ButtonDropDownComponent";
+// eslint-disable-next-line import/order
+import { IStoreState } from "src/constants/interface";
 
 import "moment/locale/ja";
 import { deleteCommunityPost } from "src/services/community";
@@ -21,6 +24,7 @@ interface IBoxInfoProps {
 
 interface ICommunityPostDataProps {
   data?: any;
+  dataCommunityDetail?: any;
 }
 
 const BoxInfo: React.SFC<IBoxInfoProps> = ({ title, text, textColor, fontWeight }) => (
@@ -62,10 +66,13 @@ const BoxInfo: React.SFC<IBoxInfoProps> = ({ title, text, textColor, fontWeight 
   </Box>
 );
 
-const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
+const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data, dataCommunityDetail }) => {
+  const auth = useSelector((state: IStoreState) => state.user);
   const { t } = useTranslation();
   const router = useRouter();
-
+  const IS_ADMIN = "admin";
+  const IS_OWNER = "owner";
+  const listRoleAdmin = [IS_ADMIN, IS_OWNER];
   const handleCallbackRemove = () => {
     const community = router.query;
     const res = deleteCommunityPost(community?.id, community?.detailId);
@@ -86,8 +93,9 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
         backgroundColor: "white",
       }}
     >
-      <ButtonDropDownComponent handleCallbackRemove={handleCallbackRemove} />
-
+      {(listRoleAdmin.includes(dataCommunityDetail?.community_role) || auth?.id === data?.user?.id) && (
+        <ButtonDropDownComponent handleCallbackRemove={handleCallbackRemove} data={data} />
+      )}
       <Typography
         component="span"
         sx={{
