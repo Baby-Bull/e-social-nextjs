@@ -80,6 +80,14 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data, dataCom
       router.push(`/community/${community?.id}`);
     }
   };
+
+  const redirectProfile = () => {
+    if (data?.user?.id === auth?.id) {
+      router.push("/my-profile");
+    } else {
+      router.push(`/profile/${data?.user?.id}`);
+    }
+  };
   return (
     <Box
       sx={{
@@ -117,8 +125,10 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data, dataCom
             mr: ["8px", "24px"],
             width: ["32px", "54px"],
             height: ["32px", "54px"],
+            cursor: "pointer",
           }}
           src={data?.user?.profile_image}
+          onClick={redirectProfile}
         />
 
         <Box
@@ -135,7 +145,7 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data, dataCom
               fontSize: [10, 14],
             }}
           >
-            {moment(data?.created_at).utc().format("LLL")}
+            {moment(data?.created_at).format("LLL")}
           </Typography>
           <Typography
             component="div"
@@ -143,7 +153,9 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data, dataCom
               fontSize: [14, 20],
               fontWeight: 700,
               mr: ["16px", 0],
+              cursor: "pointer",
             }}
+            onClick={redirectProfile}
           >
             {data?.user?.username}
           </Typography>

@@ -3,7 +3,9 @@ import { Box, Typography, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import moment from "moment";
+import { useSelector } from "react-redux";
 
+import { IStoreState } from "src/constants/interface";
 import theme from "src/theme";
 // eslint-disable-next-line import/order
 import ButtonComponent from "src/components/common/ButtonComponent";
@@ -21,6 +23,7 @@ interface ICommunityDataProps {
 
 const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createPost }) => {
   const { t } = useTranslation();
+  const auth = useSelector((state: IStoreState) => state.user);
   const router = useRouter();
   const RoleAdmin = ["admin", "owner"];
   const redirectCreatePost = () => {
@@ -39,6 +42,13 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
     }
   };
 
+  const redirectProfile = (userId) => {
+    if (auth?.id === userId) {
+      router.push(`/my-profile`);
+    } else {
+      router.push(`/profile/${userId}`);
+    }
+  };
   return (
     <React.Fragment>
       <Box
@@ -51,7 +61,6 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
           border: `2px solid ${theme.whiteGray}`,
           borderRadius: "12px",
           color: theme.navy,
-          position: "relative",
         }}
       >
         <Typography
@@ -76,19 +85,25 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
           {t("community:intro.title.administrator")}
         </Typography>
 
-        {data?.admins.map((value, index) => (
-          <Box display="flex" key={index}>
-            <Avatar
-              sx={{
-                mr: "8px",
-                width: "32px",
-                height: "32px",
-              }}
-              src={value?.profile_image || "/assets/images/svg/dog.svg"}
-            />
-            {value?.username}
-          </Box>
-        ))}
+        {data?.admins?.length > 0 &&
+          data?.admins.map((value, index) => (
+            <Box
+              display="flex"
+              key={index}
+              sx={{ alignItems: "center", mt: 1, cursor: "pointer" }}
+              onClick={() => redirectProfile(value?.id)}
+            >
+              <Avatar
+                sx={{
+                  mr: "8px",
+                  width: "32px",
+                  height: "32px",
+                }}
+                src={value?.profile_image || "/assets/images/svg/dog.svg"}
+              />
+              {value?.username}
+            </Box>
+          ))}
         <Typography
           component="span"
           sx={{
@@ -99,7 +114,7 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
         >
           {t("community:intro.title.open-date")}
         </Typography>
-        <Typography component="span">{moment(data?.created_at).utc().format("LL")}</Typography>
+        <Typography component="span">{moment(data?.created_at).format("LL")}</Typography>
 
         <Typography
           component="span"
@@ -120,12 +135,10 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
               backgroundColor: theme.orange,
               color: "white",
               borderRadius: "12px",
-              position: "absolute",
-              bottom: "0",
-              margin: "0 auto",
               mb: "41px",
               width: "200px",
               cursor: "pointer",
+              mt: "50px",
             }}
             onClick={redirectGatherUrl}
           >

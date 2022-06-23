@@ -146,7 +146,7 @@ const MemberComponent: React.SFC<IMemberComponentProps> = ({ isAdmin }) => {
           }}
           key={LIST_BLOCKED.toString()}
           iconPosition="top"
-          label={`ブロックリスト${countItemsBlocked ?? 0}人`}
+          label={`ブロックリスト${communityMembersBlocked?.length ?? 0}人`}
           {...a11yProps(LIST_BLOCKED)}
         />
       </Tabs>

@@ -128,7 +128,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) 
                   color: theme.gray,
                 }}
               >
-                {moment(item.last_login_at).utc().fromNow()}
+                {moment(item.last_login_at).fromNow()}
               </Typography>
             </Box>
           </React.Fragment>

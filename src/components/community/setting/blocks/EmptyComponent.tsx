@@ -9,9 +9,10 @@ interface IEmptyComponentProps {
   text3?: string;
   text4?: string;
   text5?: string;
+  handleChangeTab?: any;
 }
 
-const EmptyComponent: React.SFC<IEmptyComponentProps> = ({ text, text2, text3, text4, text5 }) => (
+const EmptyComponent: React.SFC<IEmptyComponentProps> = ({ text, text2, text3, text4, text5, handleChangeTab }) => (
   <Box
     sx={{
       mx: ["20px", 0],
@@ -36,7 +37,9 @@ const EmptyComponent: React.SFC<IEmptyComponentProps> = ({ text, text2, text3, t
       <br />
       <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
         {text2}
-        <Box sx={{ color: theme.blue }}>{text3}</Box>
+        <Box sx={{ color: theme.blue, cursor: "pointer" }} onClick={() => handleChangeTab(0)}>
+          {text3}
+        </Box>
         {text4}
         <Box>{text5}</Box>
       </Box>
