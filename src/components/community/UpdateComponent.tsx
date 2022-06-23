@@ -234,6 +234,10 @@ const UpdateComponent = () => {
     setValue(newValue);
   };
 
+  const handleChangeTab = (valueTab) => {
+    setValue(valueTab);
+  };
+
   const onKeyPress = (e) => {
     if (e.target.value.length > 20) {
       setTagDataValidate(true);
@@ -437,7 +441,6 @@ const UpdateComponent = () => {
       const communityId = router.query;
       const res = await updateCommunity(communityId?.indexId, formData);
       setDisableBtnSubmit(true);
-      router.push(`/community/${communityId?.indexId}`);
       return res;
     }
   };
@@ -1013,7 +1016,7 @@ const UpdateComponent = () => {
             <MemberComponent isAdmin={isAdmin} />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <ParticipatedMemberComponent isPublic={isPublic} />
+            <ParticipatedMemberComponent isPublic={isPublic} handleChangeTab={handleChangeTab} />
           </TabPanel>
         </Box>
       )}

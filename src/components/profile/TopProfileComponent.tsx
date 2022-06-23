@@ -288,7 +288,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                       mt: "11px",
                     }}
                   >
-                    {t("profile:login")}：{moment(user?.last_login_at).utc().fromNow()}
+                    {t("profile:login")}：{moment(user?.last_login_at).fromNow()}
                   </Box>
                   <Box
                     sx={{
@@ -596,7 +596,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   fontSize: "10px",
                 }}
               >
-                {t("profile:login")}：{moment(user?.last_login_at).utc().fromNow()} {t("profile:minutes-ago")}
+                {t("profile:login")}：{moment(user?.last_login_at).fromNow()} {t("profile:minutes-ago")}
               </Box>
 
               <Box

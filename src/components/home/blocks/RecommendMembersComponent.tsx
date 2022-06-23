@@ -124,7 +124,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
                 {data?.activity_status !== isOnline
                   ? replaceLabelByTranslate(
                       t("home:box-member-recommend.last-login"),
-                      moment(data?.last_login_at).utc().fromNow(),
+                      moment(data?.last_login_at).fromNow(),
                     )
                   : t("home:box-member-recommend.no-login")}
               </span>

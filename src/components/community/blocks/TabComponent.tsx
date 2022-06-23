@@ -27,9 +27,10 @@ interface IData {
 
 interface ITabComponentProps {
   data: IData[];
+  dataCommunityDetail: any;
 }
 
-const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
+const TabComponent: React.SFC<ITabComponentProps> = ({ data, dataCommunityDetail }) => {
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -132,7 +133,11 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
         ) : (
           <Box>
             {status === "join" && tabsCommunity[0]?.children ? (
-              <ChildTabComponent dataChild={tabsCommunity[0]?.children} maxWidth="75px" />
+              <ChildTabComponent
+                dataChild={tabsCommunity[0]?.children}
+                dataCommunityDetail={dataCommunityDetail}
+                maxWidth="75px"
+              />
             ) : (
               <EmptyComponent
                 textButton={t("community:button.empty.create-post")}

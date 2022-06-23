@@ -93,7 +93,9 @@
   "detail": {
     "comment": {
       "latest-order": "最新順",
-      "posting-order": "投稿順"
+      "posting-order": "投稿順",
+      "delete-community": "コメントを本当に削除しますか？",
+      "delete-content": "削除したコメントは元には戻せません。"
     }
   },
   "form": {
@@ -176,5 +178,6 @@
   },
   "request": "分にリクエスト",
   "max_length_tag": "1つのタグを20文字以内で入力してください。",
-  "tooltip_update": "管理者はコミュニティの削除以外の管理を全て行うことができます。"
+  "tooltip_update": "管理者はコミュニティの削除以外の管理を全て行うことができます。",
+  "virtual-room": "バーチャルルーム入室"
 }
