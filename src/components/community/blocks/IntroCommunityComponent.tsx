@@ -128,7 +128,7 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
         </Typography>
         <Typography component="span">{textRolesCreatePost[data?.post_permission]}</Typography>
 
-        {data?.community_role && data?.community_role !== "pending" && (
+        {data?.community_role && data?.community_role !== "pending" && data?.gather_url && (
           <Box
             sx={{
               p: "15px 15px",

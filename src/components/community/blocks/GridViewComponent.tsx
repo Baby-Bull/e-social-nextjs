@@ -54,6 +54,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) 
           mx: ["24px"],
           mb: "40px",
           display: "flex",
+          justifyContent: "center",
           flexWrap: "wrap",
         }}
       >

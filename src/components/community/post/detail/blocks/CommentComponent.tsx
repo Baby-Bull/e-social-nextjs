@@ -14,17 +14,9 @@ interface ICommentComponentProps {
   item: any;
   handleCallbackRemove?: any;
   index?: string;
-  dataCommunityDetail?: any;
 }
 
-const CommentComponent: React.SFC<ICommentComponentProps> = ({
-  item,
-  handleCallbackRemove,
-  index,
-  dataCommunityDetail,
-}) => {
-  const listRoleAdmin = ["admin", "owner"];
-  // const isOwnerId = dataCommunityDetail?.owner?.id;
+const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallbackRemove, index }) => {
   const auth = useSelector((state: IStoreState) => state.user);
   const router = useRouter();
   const redirectProfile = () => {
@@ -43,7 +35,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({
         position: "relative",
       }}
     >
-      {(item?.can_delete || item?.can_edit || listRoleAdmin.includes(dataCommunityDetail?.community_role)) && (
+      {(item?.can_delete || item?.can_edit) && (
         <ButtonDropDownComponent
           top={["4px", "10px"]}
           right="0"

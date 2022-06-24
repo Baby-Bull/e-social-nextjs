@@ -195,15 +195,15 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataChild, maxW
                     </React.Fragment>
                   ))}
               </Box>
-              <Box
-                sx={{
-                  py: "40px",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                <Stack>
-                  {totalCommunityPost > LIMIT && (
+              {totalCommunityPost > LIMIT && (
+                <Box
+                  sx={{
+                    py: "40px",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Stack>
                     <PaginationCustomComponent
                       handleCallbackChangePagination={handleCallbackChangePagination}
                       page={pagePost}
@@ -214,9 +214,9 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ dataChild, maxW
                           : Math.floor(totalCommunityPost / LIMIT)
                       }
                     />
-                  )}
-                </Stack>
-              </Box>
+                  </Stack>
+                </Box>
+              )}
             </TabPanel>
 
             <TabPanel value={valueChildTab} index={1}>

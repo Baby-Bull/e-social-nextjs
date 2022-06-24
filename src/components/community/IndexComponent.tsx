@@ -91,7 +91,7 @@ const CommunityComponent = () => {
 
   return (
     <LayoutComponent>
-      <Box sx={{ pt: [0, "80px"] }}>
+      <Box sx={{ pt: ["20px", "80px"] }}>
         <Box textAlign={["center", "right"]}>
           <ButtonComponent
             variant="outlined"

@@ -131,7 +131,7 @@
       "tag-post": "投稿のタグ",
       "placeholder": {
         "name": "40文字以内で記入してください",
-        "virtual-room": "https://link_virtual_room",
+        "virtual-room": "https://www.〇〇.jp",
         "detail": "1000文字以内で記入してください",
         "administrator": "管理人に追加したいメンバーを選択",
         "role-create-post": "選択してください",
@@ -160,7 +160,8 @@
       "dialog-unblock": {
         "title": "のブロックを解除しますか？",
         "content": "ブロックを解除すると、このコミュニティへの参加、内容を見ることができるようになります。"
-      }
+      },
+      "back-community": "コミュニティTOPへ"
     },
     "participation": {
       "title": "参加リクエスト",
@@ -179,5 +180,8 @@
   "request": "分にリクエスト",
   "max_length_tag": "1つのタグを20文字以内で入力してください。",
   "tooltip_update": "管理者はコミュニティの削除以外の管理を全て行うことができます。",
-  "virtual-room": "バーチャルルーム入室"
+  "virtual-room": "バーチャルルーム入室",
+  "post" : {
+    "no-data": "まだレビューがありません。"
+  }
 }

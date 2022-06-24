@@ -58,8 +58,6 @@ export const updateCommunity = async (communityId, body: any) => {
     const res = await api.patch(`community/${communityId}`, body);
     if (!res.data.error_code) {
       toast.success(UPDATE_COMMUNITY);
-    } else {
-      toast.error(SERVER_ERROR);
     }
     return res.data;
   } catch (error) {
@@ -83,8 +81,6 @@ export const deleteCommunity = async (communityId) => {
     const res = await api.delete(`community/${communityId}`);
     if (!res.data.error_code) {
       toast.success(DELETE_COMMUNITY);
-    } else {
-      toast.error(SERVER_ERROR);
     }
   } catch (error) {
     toast.error(SERVER_ERROR);
@@ -107,8 +103,6 @@ export const MemberBlocked = async (communityId, userId) => {
     const res = await api.post(`community/${communityId}/members/${userId}/block`);
     if (!res.data.error_code) {
       toast.success(BLOCK_MEMBER);
-    } else {
-      toast.error(SERVER_ERROR);
     }
     return res;
   } catch (error) {
@@ -122,8 +116,6 @@ export const MemberUnBlock = async (communityId, userId) => {
     const res = await api.post(`community/${communityId}/members/${userId}/unblock`);
     if (!res.data.error_code) {
       toast.success(BLOCKED_MEMBER);
-    } else {
-      toast.error(SERVER_ERROR);
     }
   } catch (error) {
     toast.error(SERVER_ERROR);
@@ -182,7 +174,6 @@ export const createCommunityPost = async (communityId, body) => {
       toast.success(CREATE_POST);
       return res.data;
     }
-    toast.error(SERVER_ERROR);
   } catch (error) {
     toast.error(SERVER_ERROR);
     return error;
@@ -207,7 +198,6 @@ export const updateCommunityPost = async (communityId, postId, body) => {
       toast.success(UPDATE_POST);
       return res.data;
     }
-    toast.error(SERVER_ERROR);
   } catch (error) {
     toast.error(SERVER_ERROR);
     return error;
@@ -234,7 +224,6 @@ export const createPostComment = async (communityId, postId, body) => {
       toast.success(CREATE_COMMENT);
       return res.data;
     }
-    toast.error(SERVER_ERROR);
   } catch (error) {
     toast.error(SERVER_ERROR);
     return error;

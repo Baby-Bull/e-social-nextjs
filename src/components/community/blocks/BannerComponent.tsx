@@ -52,7 +52,8 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
     <React.Fragment>
       <Box
         sx={{
-          backgroundImage: ["none", `url("/assets/images/svg/php_bg.svg")`],
+          mt: "20px",
+          background: ["#fff", `url("/assets/images/svg/php_bg.svg")`],
           backgroundSize: "cover",
           borderRadius: "12px",
           border: [`1px solid ${theme.whiteGray}`, "none"],
@@ -176,7 +177,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                     key={index}
                     sx={{
                       ml: 0,
-                      mr: "2px",
+                      mr: "4px",
                     }}
                   >
                     <Chip
