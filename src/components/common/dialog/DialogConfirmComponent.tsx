@@ -122,7 +122,18 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
                 justifyContent: avatar ? "none" : "center",
               }}
             >
-              <Avatar src={avatar} sx={{ mr: "11px", display: avatar ? "block" : "none" }} />
+              <Avatar
+                src={avatar}
+                sx={{
+                  mr: "11px",
+                  display: avatar ? "block" : "none",
+                  ".MuiAvatar-img": {
+                    objectFit: avatar === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                    borderRadius: "50%",
+                    border: "1px #c2c2c2 solid",
+                  },
+                }}
+              />
               {title}
             </Typography>
 

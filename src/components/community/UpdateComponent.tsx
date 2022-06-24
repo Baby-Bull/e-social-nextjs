@@ -34,7 +34,7 @@ import { TextArea } from "src/components/community/blocks/Form/TextAreaComponent
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
-import { VALIDATE_FORM_COMMUNITY } from "src/messages/validate";
+import { REGEX_RULES, VALIDATE_FORM_COMMUNITY } from "src/messages/validate";
 import {
   getCommunity,
   updateCommunity,
@@ -138,6 +138,7 @@ const UpdateComponent = () => {
     description,
     post_permission: roleCreatePostSelected,
     is_public: roleJoinSelected,
+    gather_url: virtualLink,
   });
   const [owner, setOwner] = useState({
     id: null,
@@ -187,6 +188,7 @@ const UpdateComponent = () => {
       description: data?.description,
       post_permission: data?.post_permission,
       is_public: data?.is_public,
+      gather_url: data?.gather_url,
     });
     return data;
   };
@@ -300,6 +302,7 @@ const UpdateComponent = () => {
     description: null,
     post_permission: null,
     profile_image: null,
+    gather_url: null,
   });
 
   const errorMessages = {
@@ -307,6 +310,7 @@ const UpdateComponent = () => {
     description: null,
     post_permission: null,
     profile_image: null,
+    gather_url: null,
   };
 
   const onChangeCommunityRequest = (key: string, valueInput: any) => {
@@ -396,6 +400,11 @@ const UpdateComponent = () => {
     if (!communityRequest?.post_permission?.length) {
       isValidForm = false;
       errorMessages.post_permission = VALIDATE_FORM_COMMUNITY.post_permission.required;
+    }
+
+    if (communityRequest?.gather_url?.length && !REGEX_RULES.url.test(communityRequest?.gather_url)) {
+      isValidForm = false;
+      errorMessages.gather_url = VALIDATE_FORM_COMMUNITY.gather_url.format;
     }
 
     setErrorValidates(errorMessages);
@@ -967,7 +976,7 @@ const UpdateComponent = () => {
                     onChangeInput={onChangeCommunityRequest}
                     id="gather_url"
                     placeholder={t("community:setting.form.placeholder.virtual-room")}
-                    error={errorValidates.name}
+                    error={errorValidates.gather_url}
                     value={virtualLink}
                   />
                 </Grid>

@@ -15,7 +15,7 @@ export const VALIDATE_MESSAGE_FORM_REGISTER = {
   },
   birthday: {
     required: "生年月日を入力してください",
-    future_input: "今日より前の日付を入力してください（今日選択可能）",
+    future_input: "今日より前の日付を入力してください（今日は選択できません）",
     invalid_date: "無効な日付 (dd/MM/yyyy)",
   },
   status: {
@@ -148,6 +148,9 @@ export const VALIDATE_FORM_COMMUNITY = {
     format: "png, jpg形式の画像を選択してください。",
     max_size: "2MB以下のファイルを選択してください。",
   },
+  gather_url: {
+    format: "正しいURL形式を入力してください",
+  }
 };
 
 export const VALIDATE_FORM_COMMUNITY_POST = {

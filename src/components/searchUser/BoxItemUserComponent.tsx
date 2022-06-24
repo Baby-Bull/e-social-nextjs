@@ -11,7 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import styles from "src/components/searchUser/search_user.module.scss";
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
-import { HOMEPAGE_RECOMMEND_MEMBER_STATUS, USER_SEARCH_STATUS, JOBS } from "src/components/constants/constants";
+import { HOMEPAGE_RECOMMEND_MEMBER_STATUS, USER_SEARCH_STATUS } from "src/components/constants/constants";
+import { JOBS } from "src/constants/constants";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
 import { sendMatchingRequest } from "src/services/matching";
@@ -24,6 +25,7 @@ interface IUserItemProps {
   profile_image: string;
   last_login_at: string;
   username: string;
+  job: string;
   job_position: string;
   review_count: number;
   hitokoto: string;
@@ -92,7 +94,8 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
   };
 
   const handleClickToProfile = () => {
-    router.push(`/profile/${data.id}`);
+    if (auth?.id === data?.id) router.push(`/my-profile`);
+    else router.push(`/profile/${data.id}`);
   };
 
   return (
@@ -122,7 +125,8 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
               <img src={data?.profile_image} alt="img-member" />
               <div className="member-info">
                 <p className="name">{data?.username}</p>
-                <p className="career">{JOBS[data?.job_position]?.label}</p>
+                {/* <p className="career">{JOBS[data?.job_position]?.label}</p> */}
+                <p className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? "情報なし"}</p>
                 <p className="review">
                   {t("home:box-member-recommend.review")}: {data?.review_count}
                 </p>
@@ -148,21 +152,25 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
               {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
             </p>
           </Box>
-          <div className="div-review" onClick={handleClickFavoriteButton}>
-            <img
-              alt="ic-like"
-              src={liked ? "/assets/images/home_page/ic_heart.svg" : "/assets/images/home_page/ic_heart_empty.svg"}
-            />
-            <span>{t("user-search:btn-add-favorite")}</span>
-          </div>
+          {auth?.id !== data?.id && (
+            <React.Fragment>
+              <div className="div-review" onClick={handleClickFavoriteButton}>
+                <img
+                  alt="ic-like"
+                  src={liked ? "/assets/images/home_page/ic_heart.svg" : "/assets/images/home_page/ic_heart_empty.svg"}
+                />
+                <span>{t("user-search:btn-add-favorite")}</span>
+              </div>
 
-          <ButtonComponent
-            fullWidth
-            onClick={() => handleShowModalMatching(data?.match_status)}
-            mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.mode}
-          >
-            {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.label}
-          </ButtonComponent>
+              <ButtonComponent
+                fullWidth
+                onClick={() => handleShowModalMatching(data?.match_status)}
+                mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.mode}
+              >
+                {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.label}
+              </ButtonComponent>
+            </React.Fragment>
+          )}
         </Box>
       </Grid>
 
