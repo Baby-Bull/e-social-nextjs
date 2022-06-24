@@ -131,7 +131,7 @@
       "tag-post": "投稿のタグ",
       "placeholder": {
         "name": "40文字以内で記入してください",
-        "virtual-room": "https://link_vitual_room",
+        "virtual-room": "https://link_virtual_room",
         "detail": "1000文字以内で記入してください",
         "administrator": "管理人に追加したいメンバーを選択",
         "role-create-post": "選択してください",

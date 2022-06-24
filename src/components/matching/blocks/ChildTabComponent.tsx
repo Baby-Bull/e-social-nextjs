@@ -38,7 +38,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
   };
 
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(2);
+  const [perPage, setPerPage] = useState(10000);
   const handleCallbackChangePagination = (event, value) => {
     setPage(value);
     if (perPage <= value) {

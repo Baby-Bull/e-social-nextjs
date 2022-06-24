@@ -148,6 +148,9 @@ export const VALIDATE_FORM_COMMUNITY = {
     format: "png, jpg形式の画像を選択してください。",
     max_size: "2MB以下のファイルを選択してください。",
   },
+  gather_url: {
+    format: "正しいURL形式を入力してください",
+  }
 };
 
 export const VALIDATE_FORM_COMMUNITY_POST = {

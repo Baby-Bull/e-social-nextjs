@@ -1,17 +1,52 @@
-import { Avatar, Box, Grid, Typography } from "@mui/material";
-import React from "react";
+import { Avatar, Box, Grid, Typography, Pagination } from "@mui/material";
+import React, { useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import { styled } from "@mui/material/styles";
 
 import theme from "src/theme";
 
 interface BoxNodataProps {
   communities: any;
+  usePagination: any;
+  NumberOfCommunitiesPerPage: number;
 }
 
-const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({ communities }) => {
+const PaginationCustom = styled(Pagination)({
+  "& .MuiPaginationItem-root": {
+    color: `${theme.blue}`,
+    fontFamily: "Noto Sans JP,sans-serif",
+    fontSize: "14px",
+    fontWeight: "700",
+  },
+  "& .MuiPagination-ul": {
+    width: "fit-content",
+    margin: "auto",
+    marginTop: "0.5em",
+    marginBottom: "0.5em",
+  },
+  "& .Mui-selected": {
+    color: "white",
+    backgroundColor: `${theme.blue}!important`,
+  },
+});
+
+const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({
+  communities,
+  usePagination,
+  NumberOfCommunitiesPerPage,
+}) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const numberAllCommunities = communities?.length ?? 0;
+
+  const [pageCommunity, setPageCommunity] = useState(1);
+  const countCommunity = usePagination(communities, NumberOfCommunitiesPerPage);
+  const handleChangePageCommunity = (e, p) => {
+    setPageCommunity(p);
+    countCommunity.jump(p);
+  };
+
   return (
     <Box
       sx={{
@@ -20,8 +55,17 @@ const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({ communitie
         p: "20px 20px",
       }}
     >
+      <PaginationCustom
+        hideNextButton={
+          pageCommunity === Math.ceil(numberAllCommunities / NumberOfCommunitiesPerPage) ||
+          numberAllCommunities < NumberOfCommunitiesPerPage
+        }
+        hidePrevButton={pageCommunity === 1 || numberAllCommunities < NumberOfCommunitiesPerPage}
+        count={Math.ceil(numberAllCommunities / NumberOfCommunitiesPerPage)}
+        onChange={handleChangePageCommunity}
+      />
       <Grid container>
-        {communities?.map((item, key) => (
+        {countCommunity.currentData()?.map((item, key) => (
           <Grid item xs={12} lg={3} key={key}>
             <Box
               onClick={() => router.push(`/community/${item?.id}`)}

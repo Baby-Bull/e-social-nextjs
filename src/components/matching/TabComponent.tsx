@@ -12,6 +12,8 @@ import ChildTabComponent from "src/components/matching/blocks/ChildTabComponent"
 import { getMatchedRequest } from "src/services/matching";
 import { TAB_VALUE_BY_KEY } from "src/constants/matching";
 
+import PaginationCustomComponent from "../common/PaginationCustomComponent";
+
 // interface IData {
 //   avatar: string;
 //   name: string;
@@ -33,7 +35,8 @@ interface ITabComponentProps {
   setTabValue: Function;
 }
 
-const LIMIT = 20;
+const LIMITAPIMATCHED = 20;
+const LIMITCOUNTPERPAGE = 10;
 const OPTIONS = [
   { value: "newest", label: "新しい順" },
   { value: "oldest", label: "古い順" },
@@ -57,7 +60,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
   useEffect(() => {
     if (tabValue === TAB_VALUE_BY_KEY.matched) {
       const fetchMatchedUsers = async () => {
-        const res = await getMatchedRequest(LIMIT, "", optionSelected);
+        const res = await getMatchedRequest(LIMITAPIMATCHED, "", optionSelected);
         setMatchUsers(res?.items);
       };
       fetchMatchedUsers();
@@ -70,6 +73,16 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
   const handleRedirectCommunity = (idComm: string) => {
     router.push(`/community/${idComm}`);
   };
+
+  const [pageFavorite, setPageFavorite] = useState(1);
+  const [perPageFavorite, setPerPageFavorite] = useState(10000);
+  const handleCallbackChangePagination = (event, value) => {
+    setPageFavorite(value);
+    if (perPageFavorite <= value) {
+      setPerPageFavorite(perPageFavorite + 1);
+    }
+  };
+
   return (
     <React.Fragment>
       <Tabs
@@ -141,21 +154,41 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
           }}
         >
           {data[2]?.data?.length ? (
-            data[2]?.data?.map((tab, tabIndex) => (
-              <React.Fragment key={tabIndex.toString()}>
-                <Box
-                  sx={{
-                    px: [0, "40px"],
-                    backgroundColor: "white",
-                    "&:last-of-type": {
-                      borderBottom: { sm: `2px solid ${theme.lightGray}` },
-                    },
-                  }}
-                >
-                  <ThreadComponent data={tab} type="favorite" setKeyRefetchData={setKeyRefetchData} />
-                </Box>
-              </React.Fragment>
-            ))
+            <React.Fragment>
+              {data[2]?.data
+                ?.slice((pageFavorite - 1) * LIMITCOUNTPERPAGE, pageFavorite * LIMITCOUNTPERPAGE)
+                .map((tab, tabIndex) => (
+                  <React.Fragment key={tabIndex.toString()}>
+                    <Box
+                      sx={{
+                        px: [0, "40px"],
+                        backgroundColor: "white",
+                        "&:last-of-type": {
+                          borderBottom: { sm: `2px solid ${theme.lightGray}` },
+                        },
+                      }}
+                    >
+                      <ThreadComponent data={tab} type="favorite" setKeyRefetchData={setKeyRefetchData} />
+                    </Box>
+                  </React.Fragment>
+                ))}
+              <Box
+                sx={{
+                  py: "40px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {data[2]?.data?.length > LIMITCOUNTPERPAGE && (
+                  <PaginationCustomComponent
+                    handleCallbackChangePagination={handleCallbackChangePagination}
+                    page={pageFavorite}
+                    perPage={perPageFavorite}
+                    totalPage={Math.ceil(data[2]?.data?.length > 0 ? data[2].data.length / LIMITCOUNTPERPAGE : 1)}
+                  />
+                )}
+              </Box>
+            </React.Fragment>
           ) : (
             <EmptyMatchingComponent text={t("matching:text-empty.tab-4")} />
           )}
@@ -169,7 +202,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
             backgroundColor: theme.whiteBlue,
           }}
         >
-          {data[3]?.data?.length ? (
+          {matchedUsers?.length ? (
             <React.Fragment>
               <Box
                 sx={{
@@ -205,6 +238,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
                 </Select>
               </Box>
 
+              {/* {matchedUsers?.slice((pageFavorite - 1) * LIMITCOUNTPERPAGE, pageFavorite * LIMITCOUNTPERPAGE).map((tab, tabIndex) => ( */}
               {matchedUsers?.map((tab, tabIndex) => (
                 <React.Fragment key={tabIndex.toString()}>
                   <Box
@@ -220,6 +254,22 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
                   </Box>
                 </React.Fragment>
               ))}
+              {/* <Box
+                sx={{
+                  py: "40px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {matchedUsers?.length > LIMITCOUNTPERPAGE && (
+                  <PaginationCustomComponent
+                    handleCallbackChangePagination={handleCallbackChangePagination}
+                    page={pageFavorite}
+                    perPage={perPageFavorite}
+                    totalPage={Math.ceil(matchedUsers?.length > 0 ? (matchedUsers.length / LIMITCOUNTPERPAGE) : 1)}
+                  />
+                )}
+              </Box> */}
             </React.Fragment>
           ) : (
             <EmptyMatchingComponent text={t("matching:text-empty.tab-4")} />

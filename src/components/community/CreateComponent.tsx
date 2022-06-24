@@ -27,7 +27,7 @@ import { TextArea } from "src/components/community/blocks/Form/TextAreaComponent
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
-import { VALIDATE_FORM_COMMUNITY } from "src/messages/validate";
+import { VALIDATE_FORM_COMMUNITY, REGEX_RULES } from "src/messages/validate";
 import { IStoreState } from "src/constants/interface";
 import { createCommunity } from "src/services/community";
 
@@ -145,6 +145,7 @@ const CreateComponent = () => {
     description: null,
     post_permission: null,
     profile_image: null,
+    gather_url: null,
   });
 
   const errorMessages = {
@@ -152,6 +153,7 @@ const CreateComponent = () => {
     description: null,
     post_permission: null,
     profile_image: null,
+    gather_url: null,
   };
 
   const onChangeCommunityRequest = (key: string, valueInput: any) => {
@@ -244,6 +246,11 @@ const CreateComponent = () => {
     if (!communityRequest?.post_permission?.length) {
       isValidForm = false;
       errorMessages.post_permission = VALIDATE_FORM_COMMUNITY.post_permission.required;
+    }
+
+    if (communityRequest?.gather_url?.length && !REGEX_RULES.url.test(communityRequest?.gather_url)) {
+      isValidForm = false;
+      errorMessages.gather_url = VALIDATE_FORM_COMMUNITY.gather_url.format;
     }
 
     setErrorValidates(errorMessages);
@@ -667,7 +674,7 @@ const CreateComponent = () => {
                   onChangeInput={onChangeCommunityRequest}
                   id="gather_url"
                   placeholder={t("community:setting.form.placeholder.virtual-room")}
-                  error={errorValidates.name}
+                  error={errorValidates.gather_url}
                 />
               </Grid>
             </Grid>
