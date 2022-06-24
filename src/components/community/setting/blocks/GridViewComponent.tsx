@@ -58,6 +58,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
       </Typography>
 
       {/* Info user (avatar, ...) */}
+      <Box sx={{ mb: 1, color: theme.gray, fontSize: "12px", lineHeight: "17.38px" }}>
+        {moment(data?.created_at).format("LLL")} {t("community:request")}
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -169,13 +172,14 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
               fontSize: 14,
               height: "40px",
             }}
+            onClick={callbackHandleApprove}
           >
             {t("community:button.setting.participation.approve")}
           </ButtonComponent>
 
           <ButtonComponent
             props={{
-              bgColor: theme.blue,
+              bgColor: theme.gray,
               dimension: "x-small",
             }}
             sx={{
@@ -183,6 +187,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
               fontSize: 14,
               height: "40px",
             }}
+            onClick={callbackHandleReject}
           >
             {t("community:button.setting.participation.reject")}
           </ButtonComponent>

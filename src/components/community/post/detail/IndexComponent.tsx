@@ -188,7 +188,7 @@ const DetailPostComponent = () => {
             width: { md: "80%" },
           }}
         >
-          <PostDetailComponent data={communityPost} dataCommunityDetail={dataCommunityDetail} />
+          <PostDetailComponent data={communityPost} />
 
           <Box
             sx={{
@@ -202,7 +202,7 @@ const DetailPostComponent = () => {
                 fontWeight: 700,
               }}
             >
-              {t("community:comment")}（{totalComment ?? 0}）
+              {t("community:comment")}（{comments?.length ?? 0}）
             </Typography>
 
             <ListCommentComponent
@@ -212,7 +212,6 @@ const DetailPostComponent = () => {
               handleCallBackPaginationIndex={handleCallBackPaginationIndex}
               handleCallbackRemove={handleCallbackRemove}
               totalComment={totalComment ?? 0}
-              dataCommunityDetail={dataCommunityDetail}
             />
 
             <Typography

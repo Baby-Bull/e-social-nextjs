@@ -2,11 +2,9 @@ import React from "react";
 import { Avatar, IconButton, Menu, MenuItem, Divider, Typography, Box } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
 
 import theme from "src/theme";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
-import { IStoreState } from "src/constants/interface";
 
 interface IButtonDropDownComponentProps {
   top?: string[];
@@ -25,7 +23,6 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({
   comment,
   data,
 }) => {
-  const auth = useSelector((state: IStoreState) => state.user);
   const { t } = useTranslation();
   const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -98,7 +95,7 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        {(comment ? auth?.id === comment?.user?.id : auth?.id === data?.user?.id) && (
+        {(comment ? comment?.can_edit : data?.can_edit) && (
           <MenuItem sx={{ py: "0px" }} onClick={redirectUpdatePost}>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Avatar
@@ -117,7 +114,7 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({
             </Box>
           </MenuItem>
         )}
-        {auth?.id === data?.user?.id && <Divider />}
+        {comment?.can_delete && comment?.can_edit && <Divider />}
         <MenuItem sx={{ py: "0px" }} onClick={handleOpenDialog}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Avatar

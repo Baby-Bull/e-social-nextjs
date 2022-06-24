@@ -26,7 +26,7 @@ export const TabPanel = (props: ITabPanelProps) => {
       style={{
         backgroundColor: theme.whiteBlue,
         width: "100%",
-        paddingBottom: isMobile ? "80px" : "170px",
+        paddingBottom: isMobile ? "40px" : "170px",
       }}
     >
       {value === index && <Box> {children}</Box>}

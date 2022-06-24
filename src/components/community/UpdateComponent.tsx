@@ -324,6 +324,11 @@ const UpdateComponent = () => {
       setRoleCreatePost(valueInput);
     }
     if (key === "is_public") {
+      if (valueInput === "false") {
+        setRoleCreatePost(infoCommunitySetting.rolesCreatePost[0].value);
+      } else {
+        setRoleCreatePost(communityRequest?.post_permission);
+      }
       setRoleJoin(valueInput);
     }
     if (key === "gather_url") {
@@ -612,6 +617,7 @@ const UpdateComponent = () => {
                   sm={9}
                   sx={{
                     mb: ["36px", "30px"],
+                    mt: ["20px", 0],
                   }}
                 >
                   <Field
@@ -706,45 +712,36 @@ const UpdateComponent = () => {
                         renderValue={(selected: any) => (
                           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                             {selected.length !== 0 ? (
-                              selected?.map((valueOption) =>
-                                valueOption && userId !== valueOption?.split(",")[0] ? (
-                                  <Chip
-                                    key={valueOption}
-                                    label={valueOption?.split(",")[1]}
-                                    clickable
-                                    deleteIcon={
-                                      <Avatar
-                                        onMouseDown={(event) => event.stopPropagation()}
-                                        src="/assets/images/svg/delete_white.svg"
-                                        sx={{
-                                          width: "16px",
-                                          height: "16px",
-                                          backgroundColor: theme.blue,
-                                          "& img": {
-                                            p: "4px",
-                                          },
-                                        }}
-                                      />
-                                    }
-                                    onDelete={(e) => handleDeleteChipAdmin(e, valueOption)}
-                                    sx={{
-                                      background: theme.whiteBlue,
-                                      border: `1px solid ${theme.blue}`,
-                                      "& .MuiChip-label": { color: theme.blue },
-                                    }}
-                                  />
-                                ) : (
-                                  <Chip
-                                    key={valueOption}
-                                    label={valueOption?.split(",")[1]}
-                                    clickable
-                                    sx={{
-                                      background: theme.whiteBlue,
-                                      border: `1px solid ${theme.blue}`,
-                                      "& .MuiChip-label": { color: theme.blue },
-                                    }}
-                                  />
-                                ),
+                              selected?.map(
+                                (valueOption) =>
+                                  valueOption &&
+                                  userId !== valueOption?.split(",")[0] && (
+                                    <Chip
+                                      key={valueOption}
+                                      label={valueOption?.split(",")[1]}
+                                      clickable
+                                      deleteIcon={
+                                        <Avatar
+                                          onMouseDown={(event) => event.stopPropagation()}
+                                          src="/assets/images/svg/delete_white.svg"
+                                          sx={{
+                                            width: "16px",
+                                            height: "16px",
+                                            backgroundColor: theme.blue,
+                                            "& img": {
+                                              p: "4px",
+                                            },
+                                          }}
+                                        />
+                                      }
+                                      onDelete={(e) => handleDeleteChipAdmin(e, valueOption)}
+                                      sx={{
+                                        background: theme.whiteBlue,
+                                        border: `1px solid ${theme.blue}`,
+                                        "& .MuiChip-label": { color: theme.blue },
+                                      }}
+                                    />
+                                  ),
                               )
                             ) : (
                               <Box
@@ -970,6 +967,7 @@ const UpdateComponent = () => {
                   sm={9}
                   sx={{
                     mb: ["36px", "30px"],
+                    mt: ["20px", 0],
                   }}
                 >
                   <Field

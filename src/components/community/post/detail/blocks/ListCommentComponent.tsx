@@ -14,7 +14,6 @@ interface IListCommentProps {
   totalComment?: number;
   handleCallBackPaginationIndex?: any;
   handleCallbackRemove?: any;
-  dataCommunityDetail?: any;
 }
 
 const ListCommentComponent: React.SFC<IListCommentProps> = ({
@@ -24,7 +23,6 @@ const ListCommentComponent: React.SFC<IListCommentProps> = ({
   totalComment,
   handleCallBackPaginationIndex,
   handleCallbackRemove,
-  dataCommunityDetail,
 }) => {
   const { t } = useTranslation();
   const LIMIT = 10;
@@ -44,85 +42,90 @@ const ListCommentComponent: React.SFC<IListCommentProps> = ({
         px: ["15px", "40px"],
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          mb: "16px",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            px: "12px",
-            borderLeft: `1px solid ${theme.lightGray_1}`,
-            borderRight: `1px solid ${theme.lightGray_1}`,
-          }}
-        >
-          <ButtonComponent
-            variant="text"
+      {comments?.length > 0 ? (
+        <Box>
+          <Box
             sx={{
-              color: theme.blue,
-              width: "46px",
-              height: "24px",
-              fontSize: 14,
-              textTransform: "capitalize",
-              mr: "4px",
+              display: "flex",
+              justifyContent: "center",
+              mb: "16px",
             }}
           >
-            {t("community:detail.comment.posting-order")}
-          </ButtonComponent>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                px: "12px",
+                borderLeft: `1px solid ${theme.lightGray_1}`,
+                borderRight: `1px solid ${theme.lightGray_1}`,
+              }}
+            >
+              <ButtonComponent
+                variant="text"
+                sx={{
+                  color: theme.blue,
+                  width: "46px",
+                  height: "24px",
+                  fontSize: 14,
+                  textTransform: "capitalize",
+                  mr: "4px",
+                }}
+              >
+                {t("community:detail.comment.posting-order")}
+              </ButtonComponent>
 
-          <ButtonComponent
-            variant="text"
+              <ButtonComponent
+                variant="text"
+                sx={{
+                  color: "black",
+                  width: "46px",
+                  height: "24px",
+                  fontSize: 14,
+                  fontWeight: 400,
+                }}
+              >
+                {t("community:detail.comment.latest-order")}
+              </ButtonComponent>
+            </Box>
+          </Box>
+          <Box
             sx={{
-              color: "black",
-              width: "46px",
-              height: "24px",
-              fontSize: 14,
-              fontWeight: 400,
+              display: "flex",
+              justifyContent: "center",
+              mb: "38px",
             }}
           >
-            {t("community:detail.comment.latest-order")}
-          </ButtonComponent>
+            {totalComment > LIMIT && (
+              <PaginationCustomComponent
+                handleCallbackChangePagination={handleCallbackChangePagination}
+                page={page}
+                perPage={perPage}
+                totalPage={
+                  Math.floor((comments?.length ?? 0) / LIMIT) < totalComment / LIMIT
+                    ? Math.floor(totalComment / LIMIT) + 1
+                    : Math.floor(totalComment / LIMIT)
+                }
+              />
+            )}
+          </Box>
+          <Box
+            sx={{
+              color: theme.navy,
+            }}
+          >
+            {comments?.map((item, index) => (
+              <CommentComponent
+                item={item}
+                index={index}
+                key={index.toString()}
+                handleCallbackRemove={handleCallbackRemove}
+              />
+            ))}
+          </Box>
         </Box>
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          mb: "38px",
-        }}
-      >
-        {totalComment > LIMIT && (
-          <PaginationCustomComponent
-            handleCallbackChangePagination={handleCallbackChangePagination}
-            page={page}
-            perPage={perPage}
-            totalPage={
-              Math.floor((comments?.length ?? 0) / LIMIT) < totalComment / LIMIT
-                ? Math.floor(totalComment / LIMIT) + 1
-                : Math.floor(totalComment / LIMIT)
-            }
-          />
-        )}
-      </Box>
-      <Box
-        sx={{
-          color: theme.navy,
-        }}
-      >
-        {comments?.map((item, index) => (
-          <CommentComponent
-            item={item}
-            index={index}
-            key={index.toString()}
-            handleCallbackRemove={handleCallbackRemove}
-            dataCommunityDetail={dataCommunityDetail}
-          />
-        ))}
-      </Box>
+      ) : (
+        <Box sx={{ textAlign: "center", pb: "40px" }}>{t("community:post.no-data")}</Box>
+      )}
     </Box>
   );
 };

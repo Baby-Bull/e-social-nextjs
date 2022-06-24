@@ -195,7 +195,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
       >
         <Grid container spacing={2}>
           <Grid item xs={12} sm={3}>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{ display: "flex", alignItems: "center", width: "240px" }}>
               <BoxTitle>{t("community:form.title")}</BoxTitle>
               <Box
                 sx={{
