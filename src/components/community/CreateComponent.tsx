@@ -439,6 +439,7 @@ const CreateComponent = () => {
                 sm={9}
                 sx={{
                   mb: ["36px", "30px"],
+                  mt: ["9px", 0],
                 }}
               >
                 <Field
@@ -668,6 +669,7 @@ const CreateComponent = () => {
                 sm={9}
                 sx={{
                   mb: ["36px", "30px"],
+                  mt: ["9px", "0"],
                 }}
               >
                 <Field

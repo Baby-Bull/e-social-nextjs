@@ -88,7 +88,7 @@ const MemberComponent = () => {
           onClick={handleRedirectCommunityDetail}
         >
           <Avatar src="/assets/images/icon/left.svg" sx={{ width: "8px", height: "16px", mr: "14px" }} />
-          {t("community:member.back-community")}
+          {t("community:setting.member.back-community")}
         </Box>
       </Box>
     </ContentComponent>
