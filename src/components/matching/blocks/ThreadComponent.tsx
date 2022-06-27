@@ -330,7 +330,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 component="span"
                 className={styles.discussionTopic}
                 sx={{
-                  display: ["none", type === "favorite" && "inherit"],
+                  display: ["none!important", type === "favorite" ? "inherit!important" : "none!important"],
                 }}
               >
                 {data?.discussion_topic ?? "情報なし"}

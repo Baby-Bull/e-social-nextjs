@@ -286,13 +286,13 @@ const ProfileHaveDataComponent = () => {
       <Box
         sx={{
           background: "#F5F5F5",
-          display: "flex",
           justifyContent: "center",
           position: "fixed",
           top: "88%",
           opacity: 0.8,
           width: "100%",
           paddingY: "20px",
+          display: profileSkill?.match_status === "confirmed" ? "none" : "flex",
         }}
       >
         <ButtonComponent

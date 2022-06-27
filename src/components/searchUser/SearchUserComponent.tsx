@@ -159,8 +159,15 @@ const SearchUserComponent = () => {
     );
     setResultSearch(res?.items);
     setShowMore({ cursor: res?.cursor, hasMore: res?.hasMore });
-    setIsSort("");
+    setIsSort("recommended");
     setIsLoading(false);
+    router.push(
+      {
+        pathname: "/search_user",
+      },
+      undefined,
+      { shallow: false },
+    );
   };
 
   const callbackHandleIsRefresh = (status: any) => {
@@ -349,8 +356,18 @@ const SearchUserComponent = () => {
 
               {isMobile && (
                 <Grid item xs={12} className="sort-by-block-sp">
-                  <Link className="sort-link">{t("user-search:recommend-order")}</Link>
-                  <Link className="sort-link active">{t("user-search:last-login-order")}</Link>
+                  <Link
+                    onClick={() => isSort !== "recommended" && handleSort("recommended")}
+                    className={isSort === "recommended" ? "sort-link" : "sort-link active"}
+                  >
+                    {t("user-search:recommend-order")}
+                  </Link>
+                  <Link
+                    onClick={() => isSort !== "login_at" && handleSort("login_at")}
+                    className={isSort === "login_at" ? "sort-link" : "sort-link active"}
+                  >
+                    {t("user-search:last-login-order")}
+                  </Link>
                 </Grid>
               )}
             </Grid>

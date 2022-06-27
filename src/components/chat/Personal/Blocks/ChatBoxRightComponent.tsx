@@ -2,7 +2,7 @@
 import crypto from "crypto";
 
 import React, { useEffect, useState, useRef } from "react";
-import { Box, Grid, IconButton, Paper, Typography, Avatar } from "@mui/material";
+import { Box, Grid, IconButton, Paper, Typography, Avatar, Menu, MenuItem } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import InfiniteScroll from "react-infinite-scroller";
 import { useQuery } from "react-query";
@@ -39,6 +39,36 @@ interface INameOfChatSPProps {
   handleClick: () => void;
 }
 
+interface IThreadDropDownProps {
+  open: boolean;
+  anchorEl: any;
+  handleClose: () => void;
+}
+
+const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({ open, handleClose, anchorEl }) => (
+  <Menu
+    open={open}
+    className="dropdown-option-thread"
+    anchorEl={anchorEl}
+    onClose={handleClose}
+    keepMounted
+    disablePortal
+    sx={{
+      top: "9px",
+      left: "-7em",
+      "& .MuiMenu-paper": {
+        borderRadius: "12px",
+      },
+      ".MuiMenuItem-root": {
+        fontSize: "10px",
+      },
+    }}
+  >
+    <MenuItem onClick={handleClose}>メッセージの編集</MenuItem>
+    <MenuItem onClick={handleClose}>メッセージを削除する</MenuItem>
+  </Menu>
+);
+
 const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
   message,
   time,
@@ -49,6 +79,16 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
   deleteErrorMessage,
 }) => {
   const { t } = useTranslation();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [showOptionMessage, setShowOptionMessage] = useState(false);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+    setShowOptionMessage(false);
+  };
   return (
     <React.Fragment>
       {isStartOfDay ? (
@@ -57,8 +97,22 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
         </div>
       ) : null}
       <Box className={styles.itemMessageMyChat}>
+        <IconButton
+          sx={{
+            display: showOptionMessage ? "block" : "none",
+          }}
+          onClick={handleClick}
+          aria-label="more"
+          aria-haspopup="true"
+        >
+          <img alt="more-options" src="/assets/images/chat/more_options.svg" />
+        </IconButton>
+        <ThreadDropdown open={open} anchorEl={anchorEl} handleClose={handleClose} />
         <Typography className="time">{time}</Typography>
-        <div className={`message-content ${isErrorMessage ? "error-message" : ""}`}>
+        <div
+          className={`message-content ${isErrorMessage ? "error-message" : ""}`}
+          onClick={() => setShowOptionMessage(!showOptionMessage)}
+        >
           <Linkify>{message}</Linkify>
         </div>
       </Box>
@@ -128,6 +182,7 @@ const ChatBoxRightComponent = ({
   const handleShowReview = () => setShowPopupReview(true);
 
   useEffect(() => {
+    boxMessageRef?.current?.scrollTo(0, boxMessageRef?.current?.scrollHeight);
     if (
       isFirstRender.current ||
       boxMessageRef.current.offsetHeight + boxMessageRef.current.scrollTop + 100 >= boxMessageRef.current.scrollHeight
@@ -241,7 +296,13 @@ const ChatBoxRightComponent = ({
   };
 
   return (
-    <Grid item className={styles.chatBoxRight}>
+    <Grid
+      item
+      className={styles.chatBoxRight}
+      sx={{
+        marginTop: isMobile ? "-80px" : "0",
+      }}
+    >
       <Box className="box-title">
         <Typography className="username">
           {isMobile ? <NameOfChatSP name="福くん株式会社" handleClick={toggleRenderSide} /> : user?.username}

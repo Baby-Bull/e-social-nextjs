@@ -241,7 +241,7 @@ export const getOrtherUserProfile = async (userId: string | string[]) => {
 
 export const getUserCommunites = async (userId: string | string[]) => {
   try {
-    const res = await api.get(`/user/${userId}/communities`);
+    const res = await api.get(`/user/${userId}/communities?limit=40`);
     return res?.data;
   } catch (error) {
     return error;
