@@ -9,9 +9,15 @@ import theme from "src/theme";
 interface IContentComponentProps {
   children: any;
   showFooter?: boolean;
+  showHeader?: boolean;
   authPage?: boolean;
 }
-const ContentComponent: React.SFC<IContentComponentProps> = ({ children, showFooter = true, authPage = false }) => (
+const ContentComponent: React.SFC<IContentComponentProps> = ({
+  children,
+  showFooter = true,
+  showHeader = true,
+  authPage = false,
+}) => (
   <Box
     sx={{
       backgroundColor: "#F4FDFF",
@@ -21,7 +27,7 @@ const ContentComponent: React.SFC<IContentComponentProps> = ({ children, showFoo
     <Head>
       <title>Good Tech Hub</title>
     </Head>
-    <HeaderComponent authPage={authPage} />
+    {showHeader && <HeaderComponent authPage={authPage} />}
     {children}
     {showFooter && <FooterComponent authPage={authPage} />}
   </Box>

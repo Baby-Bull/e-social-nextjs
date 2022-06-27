@@ -91,6 +91,7 @@ const ChatBoxLeftComponent = ({
   setSearchChatRoom,
   hasMoreChatRoom,
   loadMoreChatRooms,
+  isMobile,
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -148,18 +149,50 @@ const ChatBoxLeftComponent = ({
         <ul className={styles.boxThreads}>
           <InfiniteScroll loadMore={loadMoreChatRooms} hasMore={hasMoreChatRoom.hasMore} loader="" useWindow={false}>
             {listRooms?.map((thread, index: number) => (
-              <li key={index} onClick={() => onSelectRoom(index)}>
-                <div className={`thread-item ${thread?.user?.id === userId ? "active" : ""}`}>
-                  <div className="avatar">
-                    <img alt="avatar" src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"} />
+              <React.Fragment>
+                <li key={index} onClick={() => onSelectRoom(index)}>
+                  <div className={`thread-item ${thread?.user?.id === userId ? "active" : ""}`}>
+                    <div className="avatar">
+                      <img alt="avatar" src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"} />
+                    </div>
+                    <div className="thread-content">
+                      <Typography className="name">{thread?.user?.username}</Typography>
+                      <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
+                    </div>
+                    <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
+                    {!isMobile && (
+                      <div className="more-options">
+                        <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
+                          <img alt="more-options" src="/assets/images/chat/more_options.svg" />
+                        </IconButton>
+                        <ThreadDropdown
+                          open={open}
+                          handleClose={handleClose}
+                          setShowPopupReport={setShowPopupReport}
+                          setShowPopupReview={setShowPopupReview}
+                          anchorEl={anchorEl}
+                          redirectToProfile={redirectToProfile}
+                        />
+                      </div>
+                    )}
                   </div>
-                  <div className="thread-content">
-                    <Typography className="name">{thread?.user?.username}</Typography>
-                    <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
-                  </div>
-                  <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
-                  <div className="more-options">
-                    <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
+                </li>
+                {isMobile && (
+                  <div className="more-options-SP">
+                    <IconButton
+                      onClick={handleClick}
+                      aria-label="more"
+                      aria-haspopup="true"
+                      sx={{
+                        position: "absolute",
+                        right: "2em",
+                        marginTop: "-2.4em",
+                        height: "40px",
+                        width: "40px",
+                        background: "white",
+                        boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
+                      }}
+                    >
                       <img alt="more-options" src="/assets/images/chat/more_options.svg" />
                     </IconButton>
                     <ThreadDropdown
@@ -171,8 +204,8 @@ const ChatBoxLeftComponent = ({
                       redirectToProfile={redirectToProfile}
                     />
                   </div>
-                </div>
-              </li>
+                )}
+              </React.Fragment>
             ))}
           </InfiniteScroll>
         </ul>

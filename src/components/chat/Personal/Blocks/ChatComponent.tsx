@@ -16,16 +16,16 @@ import ChatBoxLeftComponent from "src/components/chat/Personal/Blocks/ChatBoxLef
 import ChatBoxRightComponent from "./ChatBoxRightComponent";
 import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
 
-const BlockChatComponent = ({ hasData, setHasData }) => {
+const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, setHasData }) => {
   const router = useRouter();
   const { room: roomQuery } = router.query;
   // Responsive
   const viewPort = useViewport();
   const isMobile = viewPort.width <= 992;
-  const [isRenderRightSide, setIsRenderRightSide] = useState(false);
+  // const [isRenderRightSide, setIsRenderRightSide] = useState(false);
 
   const [listRooms, setListRooms] = useState([]);
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(roomQuery);
   const [user, setUser] = useState({});
   const [roomSelect, setRoomSelect] = useState(null);
 
@@ -92,14 +92,14 @@ const BlockChatComponent = ({ hasData, setHasData }) => {
       router.push(
         {
           pathname: "/chat/personal",
-          query: { room: roomSelect?.id },
-          // query: { room: userId },
+          // query: { room: roomSelect?.id },
+          query: { room: userId },
         },
         undefined,
         { shallow: true },
       );
     }
-  }, [roomSelect]);
+  }, [userId, roomSelect]);
 
   useEffect(() => {
     if (isMobile) {
@@ -163,8 +163,8 @@ const BlockChatComponent = ({ hasData, setHasData }) => {
       if (roomQuerySelect) {
         setRoomSelect(roomQuerySelect);
         setUserId(
-          roomQuerySelect?.user?.id,
-          // roomQuery
+          // roomQuerySelect?.user?.id,
+          roomQuery,
         );
         setUser(roomQuerySelect?.user);
       } else {
@@ -206,7 +206,7 @@ const BlockChatComponent = ({ hasData, setHasData }) => {
     }
   };
   const onSelectRoom = (index: number) => {
-    setIsRenderRightSide(!isRenderRightSide);
+    if (isMobile) setIsRenderRightSide(!isRenderRightSide);
     if (listRooms[index]?.user?.id !== userId) {
       setRoomSelect(listRooms[index]);
       setUserId(listRooms[index]?.user?.id);
@@ -227,6 +227,7 @@ const BlockChatComponent = ({ hasData, setHasData }) => {
           setSearchChatRoom={setSearchChatRoom}
           hasMoreChatRoom={hasMoreChatRoom}
           loadMoreChatRooms={loadMoreChatRooms}
+          isMobile={isMobile}
         />
       ) : null}
       {!hasData && <ChatBoxRightNoDataComponent />}

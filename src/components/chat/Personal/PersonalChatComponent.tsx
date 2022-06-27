@@ -5,10 +5,16 @@ import BlockChatComponent from "src/components/chat/Personal/Blocks/ChatComponen
 
 const PersonalChatComponent = () => {
   const [hasData, setHasData] = useState(false);
+  const [isRenderRightSide, setIsRenderRightSide] = useState(false);
 
   return (
-    <ContentComponent showFooter={false}>
-      <BlockChatComponent hasData={hasData} setHasData={setHasData} />
+    <ContentComponent showFooter={false} showHeader={!isRenderRightSide}>
+      <BlockChatComponent
+        hasData={hasData}
+        setHasData={setHasData}
+        isRenderRightSide={isRenderRightSide}
+        setIsRenderRightSide={setIsRenderRightSide}
+      />
     </ContentComponent>
   );
 };
