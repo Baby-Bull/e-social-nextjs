@@ -16,6 +16,7 @@ import {
   CREATE_COMMENT,
   JOIN_COMMUNITY,
   LEAVE_COMMUNITY,
+  UPDATE_COMMENT,
 } from "src/messages/notification";
 import { api } from "src/helpers/api";
 
@@ -230,9 +231,30 @@ export const createPostComment = async (communityId, postId, body) => {
   }
 };
 
-export const getListComment = async (communityId, postId, limit: number = 10, cursor: string = "") => {
+export const updatePostComment = async (communityId, postId, commentId, body) => {
   try {
-    const res = await api.get(`community/${communityId}/posts/${postId}/comments?limit=${limit}&cursor=${cursor}`);
+    const res = await api.patch(`community/${communityId}/posts/${postId}/comments/${commentId}`, body);
+    if (!res.data.error_code) {
+      toast.success(UPDATE_COMMENT);
+      return res.data;
+    }
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const getListComment = async (
+  communityId,
+  postId,
+  limit: number = 10,
+  cursor: string = "",
+  sortOrder: string = "latest",
+) => {
+  try {
+    const res = await api.get(
+      `community/${communityId}/posts/${postId}/comments?limit=${limit}&cursor=${cursor}&sortOrder=${sortOrder}`,
+    );
     return res.data;
   } catch (error) {
     toast.error(SERVER_ERROR);

@@ -32,8 +32,12 @@ const ParticipationComponent: React.SFC<IParticipationComponentProps> = ({ isPub
     const communityId = router.query;
     const resData = await getParticipates(communityId?.indexId, LIMIT, cursor);
     setCheckLoading(true);
-    // eslint-disable-next-line no-unsafe-optional-chaining
-    setParticipates([...participates, ...resData?.items]);
+    if (participates.length < 10) {
+      setParticipates(resData?.items);
+    } else {
+      // eslint-disable-next-line no-unsafe-optional-chaining
+      setParticipates([...participates, ...resData?.items]);
+    }
     setCountParticipates(resData?.items_count ?? 0);
     setCursor(resData?.cursor);
     return resData;

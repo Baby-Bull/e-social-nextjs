@@ -71,7 +71,7 @@ export const rejectMatchingRequestReceived = async (matchRequestReceivedId: stri
 };
 export const cancelMatchingRequestSent = async (matchRequestSentId: string) => {
   try {
-    const res = await api.post(`/user/match-requests/${matchRequestSentId}/cancel`);
+    const res = await api.delete(`/user/match-requests/${matchRequestSentId}/cancel`);
     toast.success(CANCEL_MATCHING);
     return res.data;
   } catch (error) {

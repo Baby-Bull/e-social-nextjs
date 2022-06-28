@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, Typography, Avatar, Chip } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Typography, Avatar, Chip, Backdrop, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -32,18 +32,23 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
   const { t } = useTranslation();
   const router = useRouter();
   const auth = useSelector((state: IStoreState) => state.user);
+  const [isLoading, setIsLoading] = useState(false);
   const IS_OWNER = "owner";
   const IS_MEMBER = "member";
 
   const MemberBlock = async () => {
+    setIsLoading(true);
     const communityId = router.query;
     const resData = await MemberBlocked(communityId?.indexId, data.id);
+    setIsLoading(false);
     return resData;
   };
 
   const MemberUnBlocked = async () => {
+    setIsLoading(true);
     const communityId = router.query;
     const resData = await MemberUnBlock(communityId?.indexId, data.id);
+    setIsLoading(false);
     return resData;
   };
 
@@ -76,6 +81,11 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
 
   return (
     <React.Fragment>
+      {isLoading && (
+        <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       <Box
         sx={{
           py: ["15px", "22px"],

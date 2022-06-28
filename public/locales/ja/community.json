@@ -46,7 +46,8 @@
       "delete-community": "コミュニティを削除",
       "stop-create-community": "コミュニティの作成をやめる ",
       "block": "ブロックする",
-      "unblock": "ブロックを解除する"
+      "unblock": "ブロックを解除する",
+      "delete-comment": "削除する"
     },
     "detail": {
       "submit-post": "投稿する"
@@ -182,6 +183,6 @@
   "tooltip_update": "管理者はコミュニティの削除以外の管理を全て行うことができます。",
   "virtual-room": "バーチャルルーム入室",
   "post" : {
-    "no-data": "まだレビューがありません。"
+    "no-data": "まだコメントがありません。"
   }
 }

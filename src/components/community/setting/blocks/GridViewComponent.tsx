@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, Typography, Avatar } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Typography, Avatar, Backdrop, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -21,23 +21,30 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
   const { t } = useTranslation();
   const router = useRouter();
   const auth = useSelector((state: IStoreState) => state.user);
+  const [isLoading, setIsLoading] = useState(false);
 
   const callbackHandleApprove = async () => {
+    setIsLoading(true);
     const communityId = router.query;
     const resDataApprove = await MemberApprove(communityId?.indexId, data.id);
     callbackHandleRemoveElmMember(index);
+    setIsLoading(false);
     return resDataApprove;
   };
 
   const callbackHandleReject = async () => {
+    setIsLoading(true);
     const communityId = router.query;
     const resDataReject = await MemberReject(communityId?.indexId, data.id);
     callbackHandleRemoveElmMember(index);
+    setIsLoading(false);
     return resDataReject;
   };
 
   const redirectProfile = () => {
+    setIsLoading(true);
     const userId = data?.user?.id;
+    setIsLoading(false);
 
     if (auth?.id === userId) {
       router.push(`/my-profile`);
@@ -57,6 +64,11 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
         backgroundColor: "white",
       }}
     >
+      {isLoading && (
+        <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       <Typography
         sx={{
           display: { sm: "none" },
