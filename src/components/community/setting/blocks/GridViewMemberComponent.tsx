@@ -2,7 +2,9 @@ import React from "react";
 import { Box, Typography, Avatar, Chip } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
+import { IStoreState } from "src/constants/interface";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmWithAvatarComponent from "src/components/common/dialog/DialogConfirmWithAvatarComponent";
@@ -29,6 +31,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const auth = useSelector((state: IStoreState) => state.user);
   const IS_OWNER = "owner";
   const IS_MEMBER = "member";
 
@@ -61,6 +64,14 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
     MemberUnBlocked();
     setOpenDialogUnBlock(false);
     callbackHandleRemoveElmMember(index);
+  };
+
+  const redirectProfile = (userId) => {
+    if (auth?.id === userId) {
+      router.push(`/my-profile`);
+    } else {
+      router.push(`/profile/${userId}`);
+    }
   };
 
   return (
@@ -106,7 +117,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
               sx={{
                 width: "64px",
                 height: "100%",
+                cursor: "pointer",
               }}
+              onClick={() => redirectProfile(data?.user?.id)}
               src={data.profile_image}
             />
 
@@ -129,7 +142,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
                   sx={{
                     fontSize: 16,
                     fontWeight: 700,
+                    cursor: "pointer",
                   }}
+                  onClick={() => redirectProfile(data?.user?.id)}
                 >
                   {data.username}
                 </Typography>

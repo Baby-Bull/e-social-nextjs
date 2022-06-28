@@ -253,9 +253,16 @@ export const deleteCommunityPostComment = async (communityId, postId, commentId)
   }
 };
 
-export const getListCommunityPost = async (communityId, limit: number = 10, cursor: string = "") => {
+export const getListCommunityPost = async (
+  communityId,
+  limit: number = 10,
+  cursor: string = "",
+  sortOrder: string = "latest",
+) => {
   try {
-    const res = await api.get(`community/${communityId}/posts/?limit=${limit}&cursor=${cursor}`);
+    const res = await api.get(
+      `community/${communityId}/posts/?limit=${limit}&cursor=${cursor}&sort_order=${sortOrder}`,
+    );
     return res.data;
   } catch (error) {
     toast.error(SERVER_ERROR);

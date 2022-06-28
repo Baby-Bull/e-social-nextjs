@@ -2,13 +2,14 @@ import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 import moment from "moment";
 
+import { IStoreState } from "src/constants/interface";
 import "moment/locale/ja";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
-
-import { MemberApprove, MemberReject } from "../../../../services/community";
+import { MemberApprove, MemberReject } from "src/services/community";
 
 interface IGridViewComponentProps {
   data: any;
@@ -19,6 +20,7 @@ interface IGridViewComponentProps {
 const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, callbackHandleRemoveElmMember }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const auth = useSelector((state: IStoreState) => state.user);
 
   const callbackHandleApprove = async () => {
     const communityId = router.query;
@@ -32,6 +34,16 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
     const resDataReject = await MemberReject(communityId?.indexId, data.id);
     callbackHandleRemoveElmMember(index);
     return resDataReject;
+  };
+
+  const redirectProfile = () => {
+    const userId = data?.user?.id;
+
+    if (auth?.id === userId) {
+      router.push(`/my-profile`);
+    } else {
+      router.push(`/profile/${userId}`);
+    }
   };
   return (
     <Box
@@ -58,7 +70,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
       </Typography>
 
       {/* Info user (avatar, ...) */}
-      <Box sx={{ mb: 1, color: theme.gray, fontSize: "12px", lineHeight: "17.38px" }}>
+      <Box sx={{ mb: 1, color: theme.gray, fontSize: "12px", lineHeight: "17.38px", display: ["block", "none"] }}>
         {moment(data?.created_at).format("LLL")} {t("community:request")}
       </Box>
       <Box
@@ -79,8 +91,10 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
             sx={{
               width: ["32px", "64px"],
               height: "100%",
+              cursor: "pointer",
             }}
             src={data?.user?.profile_image}
+            onClick={redirectProfile}
           />
 
           {/* Grid right Info */}
@@ -106,7 +120,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
             <Typography
               sx={{
                 fontWeight: 700,
+                cursor: "pointer",
               }}
+              onClick={redirectProfile}
             >
               {data?.user?.username}
             </Typography>

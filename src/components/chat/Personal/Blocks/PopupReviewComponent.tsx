@@ -240,7 +240,7 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
             </Typography>
             <TwitterShareButton
               title={`${user?.username} さんとお話ししてみました！ \n 気になる”あの人”と話してみよう！ \n`}
-              url={`${process?.env?.NEXT_PUBLIC_URL_PROFILE}/profile/${user?.id} リンク' #goodhub」`}
+              url={`${process?.env?.NEXT_PUBLIC_URL_PROFILE}/profile/${user?.id}' #goodhub」`}
             >
               <Button
                 sx={{
