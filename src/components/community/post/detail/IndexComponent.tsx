@@ -115,9 +115,9 @@ const DetailPostComponent = () => {
     }
   };
 
-  const fetchComments = async (cursor: string = "") => {
+  const fetchComments = async (cursor: string = "", statusOrder: string = "oldest") => {
     const community = router.query;
-    const data = await getListComment(community?.id, community?.detailId, LIMIT, cursor);
+    const data = await getListComment(community?.id, community?.detailId, LIMIT, cursor, statusOrder);
     setCheckLoadingComment(true);
     if (!data?.error_code) {
       // eslint-disable-next-line no-unsafe-optional-chaining
@@ -164,6 +164,25 @@ const DetailPostComponent = () => {
     }
     setIsLoading(false);
     return res;
+  };
+
+  const handleCallbackChangeStatusOrder = async (status, totalCommentFb, pageFb, perPageFb, cursorFb) => {
+    setCheckLoadingComment(false);
+    setIsLoading(true);
+    setTotalComment(totalCommentFb);
+    setPage(pageFb);
+    setPerPage(perPageFb);
+    setCursor(cursorFb);
+    const community = router.query;
+    const data = await getListComment(community?.id, community?.detailId, LIMIT, "", status);
+    if (!data?.error_code) {
+      setComments(data?.items);
+      setTotalComment(data?.items_count ?? 0);
+      setCursor(data?.cursor);
+    }
+    setIsLoading(false);
+    setCheckLoadingComment(true);
+    return data;
   };
 
   useEffect(() => {
@@ -228,6 +247,7 @@ const DetailPostComponent = () => {
                   handleCallbackRemove={handleCallbackRemove}
                   totalComment={totalComment ?? 0}
                   checkLoadingComment={checkLoadingComment}
+                  handleCallbackChangeStatusOrder={handleCallbackChangeStatusOrder}
                 />
 
                 <Typography
