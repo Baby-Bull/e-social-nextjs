@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import { Box } from "@mui/material";
+import { Avatar, Box } from "@mui/material";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import GridViewComponent from "src/components/community/blocks/GridViewComponent";
@@ -42,6 +42,11 @@ const MemberComponent = () => {
     }
   };
 
+  const handleRedirectCommunityDetail = () => {
+    const community = router.query;
+    router.push(`/community/${community?.indexId}`);
+  };
+
   return (
     <ContentComponent>
       <Box sx={{ pt: "100px" }}>
@@ -51,7 +56,7 @@ const MemberComponent = () => {
         />
         <Box
           sx={{
-            py: "40px",
+            pb: "40px",
             display: "flex",
             justifyContent: "center",
           }}
@@ -68,6 +73,22 @@ const MemberComponent = () => {
               }
             />
           )}
+        </Box>
+        <Box
+          sx={{
+            fontWeight: 700,
+            lineHeight: "14px",
+            fontSize: "14px",
+            mb: "80px",
+            color: "#03BCDB",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          onClick={handleRedirectCommunityDetail}
+        >
+          <Avatar src="/assets/images/icon/left.svg" sx={{ width: "8px", height: "16px", mr: "14px" }} />
+          {t("community:setting.member.back-community")}
         </Box>
       </Box>
     </ContentComponent>

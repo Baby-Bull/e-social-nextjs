@@ -1,18 +1,16 @@
 import React from "react";
 import { Avatar, IconButton, Menu, MenuItem, Divider, Typography, Box } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
 
 import theme from "src/theme";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
-import { IStoreState } from "src/constants/interface";
 
 interface IButtonDropDownComponentProps {
   top?: string[];
   right?: string;
   index?: string;
   handleCallbackRemove?: any;
+  handleCallbackUpdateComment?: any;
   data?: any;
   comment?: any;
 }
@@ -21,25 +19,20 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({
   top,
   right,
   handleCallbackRemove,
+  handleCallbackUpdateComment,
   index,
   comment,
   data,
 }) => {
-  const auth = useSelector((state: IStoreState) => state.user);
   const { t } = useTranslation();
-  const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  // const [isComment, setIsComment] = useState(false);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const redirectUpdatePost = () => {
-    const community = router.query;
-    router.push(`/community/${community?.id}/post/update/${community?.detailId}`);
   };
 
   const [openDialog, setOpen] = React.useState(false);
@@ -98,8 +91,8 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        {(comment ? auth?.id === comment?.user?.id : auth?.id === data?.user?.id) && (
-          <MenuItem sx={{ py: "0px" }} onClick={redirectUpdatePost}>
+        {(comment ? comment?.can_edit : data?.can_edit) && (
+          <MenuItem sx={{ py: "0px" }} onClick={() => handleCallbackUpdateComment(true)}>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Avatar
                 src="/assets/images/icon/edit_blue.svg"
@@ -117,7 +110,7 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({
             </Box>
           </MenuItem>
         )}
-        {auth?.id === data?.user?.id && <Divider />}
+        {comment?.can_delete && comment?.can_edit && <Divider />}
         <MenuItem sx={{ py: "0px" }} onClick={handleOpenDialog}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Avatar
@@ -141,7 +134,7 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({
         title={comment ? t("community:detail.comment.delete-community") : t("community:dialog.confirm-delete-title")}
         content={comment ? t("community:detail.comment.delete-content") : t("community:dialog.note-delete-title")}
         btnLeft={t("community:button.dialog.cancel")}
-        btnRight={t("community:button.dialog.withdraw")}
+        btnRight={t("community:button.dialog.delete-comment")}
         isShow={openDialog}
         handleClose={handleCloseDialog}
         handleCancel={handleDialogCancel}

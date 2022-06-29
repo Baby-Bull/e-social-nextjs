@@ -39,7 +39,6 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) 
       <Typography
         sx={{
           display: !title && "none",
-          mt: "10px",
           color: theme.navy,
           fontWeight: 700,
           textAlign: "center",
@@ -50,10 +49,11 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) 
 
       <Box
         sx={{
-          mt: ["21px", "10px"],
+          mt: ["21px", 0],
           mx: ["24px"],
           mb: "40px",
           display: "flex",
+          justifyContent: "center",
           flexWrap: "wrap",
         }}
       >

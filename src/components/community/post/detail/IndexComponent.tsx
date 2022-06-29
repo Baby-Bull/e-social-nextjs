@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, TextareaAutosize } from "@mui/material";
+import { Box, Typography, TextareaAutosize, Backdrop, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
@@ -79,7 +79,9 @@ const DetailPostComponent = () => {
   const [perPage, setPerPage] = React.useState(2);
   const [valueCursor, setCursor] = React.useState("");
   const [content, setContent] = React.useState("");
-
+  const [checkLoading, setCheckLoading] = useState(false);
+  const [checkLoadingComment, setCheckLoadingComment] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const onChangeCommunityPostRequest = (key: string, valueInput: any) => {
     setContent(valueInput);
     setCommunityPostRequest({
@@ -100,6 +102,7 @@ const DetailPostComponent = () => {
 
   const handleSaveForm = async () => {
     if (handleValidateFormCommunityPost() && communityPostRequest?.content?.length > 0) {
+      setIsLoading(true);
       const communityId = router.query;
       const res = await createPostComment(communityId?.id, communityId?.detailId, communityPostRequest);
       if (res) {
@@ -107,6 +110,7 @@ const DetailPostComponent = () => {
         comments.unshift(res);
         setTotalComment(totalComment + 1);
       }
+      setIsLoading(false);
       return res;
     }
   };
@@ -114,10 +118,11 @@ const DetailPostComponent = () => {
   const fetchComments = async (cursor: string = "") => {
     const community = router.query;
     const data = await getListComment(community?.id, community?.detailId, LIMIT, cursor);
+    setCheckLoadingComment(true);
     if (!data?.error_code) {
       // eslint-disable-next-line no-unsafe-optional-chaining
       setComments([...comments, ...data?.items]);
-      setTotalComment(data?.items_count);
+      setTotalComment(data?.items_count ?? 0);
       setCursor(data?.cursor);
     }
     return data;
@@ -135,6 +140,7 @@ const DetailPostComponent = () => {
   const fetchCommunityPost = async () => {
     const community = router.query;
     const res = await detailCommunityPost(community?.id, community?.detailId);
+    setCheckLoading(true);
     if (!res?.error_code) {
       setCommunityPost(res);
       fetchComments();
@@ -149,12 +155,14 @@ const DetailPostComponent = () => {
     }
   };
   const handleCallbackRemove = async (indexComment, commentId) => {
+    setIsLoading(true);
     const community = router.query;
     const res = await deleteCommunityPostComment(community?.id, community?.detailId, commentId);
     if (res) {
       setComments(comments.filter((_, index) => index !== indexComment));
       setTotalComment(totalComment - 1);
     }
+    setIsLoading(false);
     return res;
   };
 
@@ -164,101 +172,112 @@ const DetailPostComponent = () => {
   }, []);
   return (
     <LayoutComponent>
-      <Box
-        sx={{
-          mt: "40px",
-          pt: ["8px", "80px"],
-          display: "flex",
-          flexDirection: ["column-reverse", "row"],
-        }}
-      >
-        <Box
-          sx={{
-            width: { md: "20%" },
-          }}
-        >
-          <IntroCommunityComponent data={dataCommunityDetail} createPost />
-        </Box>
-
-        <Box
-          sx={{
-            mr: { md: "13px" },
-            ml: { md: "25px" },
-            mb: ["80px", "20px"],
-            width: { md: "80%" },
-          }}
-        >
-          <PostDetailComponent data={communityPost} dataCommunityDetail={dataCommunityDetail} />
-
+      {isLoading && (
+        <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
+      <Box>
+        {checkLoading && (
           <Box
             sx={{
               mt: "40px",
+              pt: ["8px", "80px"],
+              display: "flex",
+              flexDirection: ["column-reverse", "row"],
             }}
           >
-            <Typography
-              component="span"
+            <Box
               sx={{
-                fontSize: [14, 20],
-                fontWeight: 700,
+                width: { md: "20%" },
               }}
             >
-              {t("community:comment")}（{totalComment ?? 0}）
-            </Typography>
+              <IntroCommunityComponent data={dataCommunityDetail} createPost />
+            </Box>
 
-            <ListCommentComponent
-              comments={comments.slice((page - 1) * LIMIT, page * LIMIT)}
-              page={page}
-              perPage={perPage}
-              handleCallBackPaginationIndex={handleCallBackPaginationIndex}
-              handleCallbackRemove={handleCallbackRemove}
-              totalComment={totalComment ?? 0}
-              dataCommunityDetail={dataCommunityDetail}
-            />
-
-            <Typography
-              component="span"
+            <Box
               sx={{
-                fontSize: [14, 20],
-                fontWeight: 700,
+                mr: { md: "13px" },
+                ml: { md: "25px" },
+                mb: ["80px", "20px"],
+                width: { md: "80%" },
               }}
             >
-              {t("community:write-comment")}
-            </Typography>
-            <TextareaAutosizeCustom
-              placeholder={t("community:place-holder")}
-              onChange={(e) => onChangeCommunityPostRequest("content", e.target.value)}
-              value={content}
-              sx={{ border: errorValidates?.content ? `2px solid ${theme.orange}` : `2px solid ${theme.whiteGray}` }}
-              onKeyPress={(e) => {
-                if (e.shiftKey && (e.keyCode || e.which) === 13) {
-                  return true;
-                }
-                if ((e.keyCode || e.which) === 13) {
-                  e.preventDefault();
-                  handleSaveForm();
-                  return true;
-                }
-              }}
-            />
-            {errorValidates?.content && <BoxTextValidate>{errorValidates?.content}</BoxTextValidate>}
-            <Box sx={{ textAlign: "right" }}>
-              <ButtonComponent
-                disabled={!content?.length}
-                props={{
-                  square: true,
-                  bgColor: theme.blue,
-                }}
+              <PostDetailComponent data={communityPost} />
+
+              <Box
                 sx={{
-                  mt: "20px",
-                  width: "96px",
+                  mt: "40px",
                 }}
-                onClick={handleSaveForm}
               >
-                {t("community:button.detail.submit-post")}
-              </ButtonComponent>
+                <Typography
+                  component="span"
+                  sx={{
+                    fontSize: [14, 20],
+                    fontWeight: 700,
+                  }}
+                >
+                  {t("community:comment")}（{totalComment ?? 0}）
+                </Typography>
+
+                <ListCommentComponent
+                  comments={comments.slice((page - 1) * LIMIT, page * LIMIT)}
+                  page={page}
+                  perPage={perPage}
+                  handleCallBackPaginationIndex={handleCallBackPaginationIndex}
+                  handleCallbackRemove={handleCallbackRemove}
+                  totalComment={totalComment ?? 0}
+                  checkLoadingComment={checkLoadingComment}
+                />
+
+                <Typography
+                  component="span"
+                  sx={{
+                    fontSize: [14, 20],
+                    fontWeight: 700,
+                  }}
+                >
+                  {t("community:write-comment")}
+                </Typography>
+                <TextareaAutosizeCustom
+                  placeholder={t("community:place-holder")}
+                  onChange={(e) => onChangeCommunityPostRequest("content", e.target.value)}
+                  value={content}
+                  sx={{
+                    border: errorValidates?.content ? `2px solid ${theme.orange}` : `2px solid ${theme.whiteGray}`,
+                  }}
+                  onKeyPress={(e) => {
+                    if (e.shiftKey && (e.keyCode || e.which) === 13) {
+                      return true;
+                    }
+                    if ((e.keyCode || e.which) === 13) {
+                      e.preventDefault();
+                      handleSaveForm();
+                      return true;
+                    }
+                  }}
+                />
+                {errorValidates?.content && <BoxTextValidate>{errorValidates?.content}</BoxTextValidate>}
+                <Box sx={{ textAlign: "right", cursor: "pointer" }}>
+                  <ButtonComponent
+                    disabled={!content?.length}
+                    props={{
+                      square: true,
+                      bgColor: theme.blue,
+                    }}
+                    sx={{
+                      mt: "20px",
+                      width: "96px",
+                    }}
+                    onClick={handleSaveForm}
+                  >
+                    {t("community:button.detail.submit-post")}
+                  </ButtonComponent>
+                </Box>
+              </Box>
             </Box>
           </Box>
-        </Box>
+        )}
       </Box>
     </LayoutComponent>
   );

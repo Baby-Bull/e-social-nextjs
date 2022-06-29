@@ -52,7 +52,8 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
     <React.Fragment>
       <Box
         sx={{
-          backgroundImage: ["none", `url("/assets/images/svg/php_bg.svg")`],
+          mt: "20px",
+          background: ["#fff", `url("/assets/images/svg/php_bg.svg")`],
           backgroundSize: "cover",
           borderRadius: "12px",
           border: [`1px solid ${theme.whiteGray}`, "none"],
@@ -159,42 +160,44 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                 </Typography>
               </Box>
 
-              <Paper
-                sx={{
-                  m: 0,
-                  p: 0,
-                  backgroundColor: "transparent",
-                  display: "flex",
-                  flexWrap: "wrap",
-                  listStyle: "none",
-                  boxShadow: "none",
-                }}
-                component="ul"
-              >
-                {data?.tags?.map((value, index) => (
-                  <ListItem
-                    key={index}
-                    sx={{
-                      ml: 0,
-                      mr: "2px",
-                    }}
-                  >
-                    <Chip
-                      variant="outlined"
-                      size="small"
-                      label={value}
+              <Box sx={{ height: ["40px", "100%"], overflowY: ["scroll", "visible"] }}>
+                <Paper
+                  sx={{
+                    m: 0,
+                    p: 0,
+                    backgroundColor: "transparent",
+                    display: "flex",
+                    flexWrap: "wrap",
+                    listStyle: "none",
+                    boxShadow: "none",
+                  }}
+                  component="ul"
+                >
+                  {data?.tags?.map((value, index) => (
+                    <ListItem
+                      key={index}
                       sx={{
-                        fontSize: 12,
-                        fontWeight: 400,
-                        color: theme.navy,
-                        backgroundColor: theme.whiteBlue,
-                        borderRadius: "4px",
-                        borderColor: "transparent",
+                        ml: 0,
+                        mr: "4px",
                       }}
-                    />
-                  </ListItem>
-                ))}
-              </Paper>
+                    >
+                      <Chip
+                        variant="outlined"
+                        size="small"
+                        label={value}
+                        sx={{
+                          fontSize: 12,
+                          fontWeight: 400,
+                          color: theme.navy,
+                          backgroundColor: theme.whiteBlue,
+                          borderRadius: "4px",
+                          borderColor: "transparent",
+                        }}
+                      />
+                    </ListItem>
+                  ))}
+                </Paper>
+              </Box>
             </Box>
           </Box>
           <Box sx={{ marginTop: "22px" }}>

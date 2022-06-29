@@ -1,14 +1,15 @@
-import React from "react";
-import { Box, Typography, Avatar } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Typography, Avatar, Backdrop, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 import moment from "moment";
 
+import { IStoreState } from "src/constants/interface";
 import "moment/locale/ja";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
-
-import { MemberApprove, MemberReject } from "../../../../services/community";
+import { MemberApprove, MemberReject } from "src/services/community";
 
 interface IGridViewComponentProps {
   data: any;
@@ -19,19 +20,37 @@ interface IGridViewComponentProps {
 const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, callbackHandleRemoveElmMember }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const auth = useSelector((state: IStoreState) => state.user);
+  const [isLoading, setIsLoading] = useState(false);
 
   const callbackHandleApprove = async () => {
+    setIsLoading(true);
     const communityId = router.query;
     const resDataApprove = await MemberApprove(communityId?.indexId, data.id);
     callbackHandleRemoveElmMember(index);
+    setIsLoading(false);
     return resDataApprove;
   };
 
   const callbackHandleReject = async () => {
+    setIsLoading(true);
     const communityId = router.query;
     const resDataReject = await MemberReject(communityId?.indexId, data.id);
     callbackHandleRemoveElmMember(index);
+    setIsLoading(false);
     return resDataReject;
+  };
+
+  const redirectProfile = () => {
+    setIsLoading(true);
+    const userId = data?.user?.id;
+    setIsLoading(false);
+
+    if (auth?.id === userId) {
+      router.push(`/my-profile`);
+    } else {
+      router.push(`/profile/${userId}`);
+    }
   };
   return (
     <Box
@@ -45,6 +64,11 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
         backgroundColor: "white",
       }}
     >
+      {isLoading && (
+        <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       <Typography
         sx={{
           display: { sm: "none" },
@@ -58,6 +82,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
       </Typography>
 
       {/* Info user (avatar, ...) */}
+      <Box sx={{ mb: 1, color: theme.gray, fontSize: "12px", lineHeight: "17.38px", display: ["block", "none"] }}>
+        {moment(data?.created_at).format("LLL")} {t("community:request")}
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -76,8 +103,10 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
             sx={{
               width: ["32px", "64px"],
               height: "100%",
+              cursor: "pointer",
             }}
             src={data?.user?.profile_image}
+            onClick={redirectProfile}
           />
 
           {/* Grid right Info */}
@@ -103,7 +132,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
             <Typography
               sx={{
                 fontWeight: 700,
+                cursor: "pointer",
               }}
+              onClick={redirectProfile}
             >
               {data?.user?.username}
             </Typography>
@@ -169,13 +200,14 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
               fontSize: 14,
               height: "40px",
             }}
+            onClick={callbackHandleApprove}
           >
             {t("community:button.setting.participation.approve")}
           </ButtonComponent>
 
           <ButtonComponent
             props={{
-              bgColor: theme.blue,
+              bgColor: theme.gray,
               dimension: "x-small",
             }}
             sx={{
@@ -183,6 +215,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
               fontSize: 14,
               height: "40px",
             }}
+            onClick={callbackHandleReject}
           >
             {t("community:button.setting.participation.reject")}
           </ButtonComponent>

@@ -24,7 +24,6 @@ interface IBoxInfoProps {
 
 interface ICommunityPostDataProps {
   data?: any;
-  dataCommunityDetail?: any;
 }
 
 const BoxInfo: React.SFC<IBoxInfoProps> = ({ title, text, textColor, fontWeight }) => (
@@ -66,13 +65,10 @@ const BoxInfo: React.SFC<IBoxInfoProps> = ({ title, text, textColor, fontWeight 
   </Box>
 );
 
-const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data, dataCommunityDetail }) => {
+const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
   const auth = useSelector((state: IStoreState) => state.user);
   const { t } = useTranslation();
   const router = useRouter();
-  const IS_ADMIN = "admin";
-  const IS_OWNER = "owner";
-  const listRoleAdmin = [IS_ADMIN, IS_OWNER];
   const handleCallbackRemove = () => {
     const community = router.query;
     const res = deleteCommunityPost(community?.id, community?.detailId);
@@ -101,7 +97,7 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data, dataCom
         backgroundColor: "white",
       }}
     >
-      {(listRoleAdmin.includes(dataCommunityDetail?.community_role) || auth?.id === data?.user?.id) && (
+      {(data?.can_delete || data?.can_edit) && (
         <ButtonDropDownComponent handleCallbackRemove={handleCallbackRemove} data={data} />
       )}
       <Typography

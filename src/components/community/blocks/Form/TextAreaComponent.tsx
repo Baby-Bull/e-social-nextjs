@@ -51,7 +51,6 @@ export const TextArea: React.SFC<ILayoutComponentProps> = ({ error, onChangeInpu
         backgroundColor: "white",
         color: theme.navy,
         borderRadius: "12px",
-        border: [`1px solid ${theme.lightGray_1}`, "none"],
         width: "100%",
       }}
     >
