@@ -1,6 +1,7 @@
 import React from "react";
 import { Avatar, IconButton, Menu, MenuItem, Divider, Typography, Box } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
@@ -27,6 +28,7 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const router = useRouter();
   // const [isComment, setIsComment] = useState(false);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -47,6 +49,11 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({
   const handleDialogOK = () => {
     handleCallbackRemove(index, comment?.id);
     handleCloseDialog();
+  };
+
+  const redirectUpdatePost = () => {
+    const community = router.query;
+    router.push(`/community/${community?.id}/post/update/${community?.detailId}`);
   };
 
   return (
@@ -92,7 +99,7 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         {(comment ? comment?.can_edit : data?.can_edit) && (
-          <MenuItem sx={{ py: "0px" }} onClick={() => handleCallbackUpdateComment(true)}>
+          <MenuItem sx={{ py: "0px" }} onClick={comment ? () => handleCallbackUpdateComment(true) : redirectUpdatePost}>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Avatar
                 src="/assets/images/icon/edit_blue.svg"

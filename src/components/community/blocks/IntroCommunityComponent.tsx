@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import moment from "moment";
 import { useSelector } from "react-redux";
+import GlobalStyles from "@mui/material/GlobalStyles";
 
 import { IStoreState } from "src/constants/interface";
 import theme from "src/theme";
@@ -51,6 +52,21 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
   };
   return (
     <React.Fragment>
+      <GlobalStyles
+        styles={{
+          h1: { color: "grey" },
+          "*::-webkit-scrollbar": {
+            width: "0.2em",
+          },
+          "*::-webkit-scrollbar-track": {
+            "-webkit-box-shadow": "inset 0 0 6px rgba(0,0,0,0.00)",
+          },
+          "*::-webkit-scrollbar-thumb": {
+            backgroundColor: theme.blue,
+            outline: `1px solid ${theme.blue}`,
+          },
+        }}
+      />
       <Box
         sx={{
           backgroundColor: "white",
@@ -72,7 +88,14 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
         >
           {t("community:intro.title.detail")}
         </Typography>
-        <ShowTextArea value={data?.description} />
+        <Box
+          sx={{
+            height: "250px",
+            overflowY: "auto",
+          }}
+        >
+          <ShowTextArea value={data?.description} />
+        </Box>
         <Typography
           component="span"
           sx={{

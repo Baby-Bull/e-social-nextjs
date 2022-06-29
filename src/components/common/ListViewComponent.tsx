@@ -55,6 +55,7 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
           fontSize: [12, 16],
           fontWeight: 700,
         }}
+        onClick={redirectPostDetail}
       >
         {data.title}
       </Typography>
