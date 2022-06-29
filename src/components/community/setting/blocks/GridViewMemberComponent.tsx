@@ -129,7 +129,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
                 height: "100%",
                 cursor: "pointer",
               }}
-              onClick={() => redirectProfile(data?.user?.id)}
+              onClick={() => redirectProfile(data?.id)}
               src={data.profile_image}
             />
 

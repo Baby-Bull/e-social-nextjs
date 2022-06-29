@@ -1,10 +1,10 @@
 import classNames from "classnames";
-import React, { useState } from "react";
+import React from "react";
 import Slider from "react-slick";
 
 import styles from "src/components/home/home.module.scss";
 
-import { notificationsMockData } from "../mockData/mockData";
+// import { notificationsMockData } from "../mockData/mockData";
 
 const NextArrow = (props: any) => {
   const { className, style, onClick } = props;
@@ -32,7 +32,33 @@ const PrevArrow = (props: any) => {
 };
 
 const NotificationComponent = () => {
-  const [notifications] = useState([...notificationsMockData]);
+  const notificationsMockData = [
+    {
+      title: "ヒント",
+      content: (
+        <span>
+          goodhub1へようこそ！まずは
+          <a style={{ color: "#FF9458" }} href="#">
+            プロフィール詳細を記入
+          </a>
+          してみると、マッチング率がUPします☆
+        </span>
+      ),
+    },
+    {
+      title: "ヒント",
+      content: (
+        <span>
+          goodhub2へようこそ！まずは
+          <a style={{ color: "#FF9458" }} href="#">
+            プロフィール詳細を記入
+          </a>
+          してみると、マッチング率がUPします☆
+        </span>
+      ),
+    },
+  ];
+  // const [notifications] = useState([...notificationsMockData]);
 
   const settingsSlickOfNotification = {
     dots: false,
@@ -49,7 +75,7 @@ const NotificationComponent = () => {
     <div className={classNames(styles.notificationsBlock, "homepage-notification-slick", "slick-custom")}>
       <div className="box-content">
         <Slider {...settingsSlickOfNotification}>
-          {notifications?.map((notification, index) => (
+          {notificationsMockData?.map((notification, index) => (
             <div key={index} className="slider-item">
               <img src="/assets/images/home_page/ic_warning.svg" alt="warning" className="icon" />
               <span className="title">{notification?.title}</span>

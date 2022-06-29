@@ -57,7 +57,8 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
   const [isLoading, setIsLoading] = useState(false);
   const [isDisableBtn, setIsDisableBtn] = useState(true);
   const [isUpdateComment, setIsUpdateComment] = useState(false);
-  const [content, setContent] = useState(item?.content);
+  const [content, setContent] = useState("");
+  const [contentUpdateId, setContentUpdateId] = useState("");
   const [communityPostUpdateRequest, setCommunityPostUpdateRequest] = useState({
     content: "",
   });
@@ -99,6 +100,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
       );
       setIsLoading(false);
       setIsUpdateComment(false);
+      setContentUpdateId(item?.id);
       return response;
     }
   };
@@ -112,6 +114,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
   };
 
   const handleCallbackUpdateComment = (status) => {
+    setContent(item?.content);
     setIsUpdateComment(status);
   };
   return (
@@ -222,7 +225,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
             </Box>
           </Box>
         ) : (
-          <ShowTextArea value={item?.content} />
+          <ShowTextArea value={contentUpdateId === item?.id ? content : item?.content} />
         )}
       </Box>
     </Box>

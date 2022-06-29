@@ -79,6 +79,10 @@
 
         @media screen and (max-width: 992px) {
           padding-right: 10px;
+          position: fixed;
+          background: white;
+          z-index: 2;
+          width: 100%;
         }
 
         .btn-chat {
@@ -123,6 +127,10 @@
         border-top: none;
         overflow-y: auto;
         position: relative;
+
+        @media screen and (max-width: 992px) {
+          margin-top: 54px;
+        }
 
         .box-chat {
           border-top: 1px solid #e4e6eb;
@@ -174,15 +182,16 @@
 
     .boxData {
       display: flex;
-      flex-direction: column;
+      flex-direction: column-reverse;
       padding-left: 20px;
       padding-right: 20px;
       padding-top: 29px;
       height: calc(100vh - 176px);
       overflow: auto;
+      scroll-behavior: smooth;
 
       @media screen and (max-width: 992px) {
-        height: calc(100vh - 168px);
+        height: calc(100vh - 60px);
       }
 
       .itemMsgOther {
@@ -305,6 +314,10 @@
     left: 0;
     padding: 8px 12px;
     background: white;
+
+    @media screen and (max-width: 768px) {
+      position: fixed;
+    }
 
     :global {
       .paper-chat {

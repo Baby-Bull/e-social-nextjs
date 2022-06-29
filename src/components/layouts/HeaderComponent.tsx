@@ -363,7 +363,14 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
           p: { xs: 0, lg: "0 16px" },
         }}
       >
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Toolbar
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: { xs: "100%", xl: "1440px" },
+            margin: "auto",
+          }}
+        >
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Link href="/">
               <a>

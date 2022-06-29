@@ -150,7 +150,20 @@ const ChatBoxLeftComponent = ({
           <InfiniteScroll loadMore={loadMoreChatRooms} hasMore={hasMoreChatRoom.hasMore} loader="" useWindow={false}>
             {listRooms?.map((thread, index: number) => (
               <React.Fragment>
-                <li key={index} onClick={() => onSelectRoom(index)}>
+                <li
+                  key={index}
+                  onClick={() => {
+                    router.push(
+                      {
+                        pathname: "/chat/personal",
+                        query: { room: thread?.user?.id },
+                      },
+                      undefined,
+                      { shallow: false },
+                    );
+                    onSelectRoom(index);
+                  }}
+                >
                   <div className={`thread-item ${thread?.user?.id === userId ? "active" : ""}`}>
                     <div className="avatar">
                       <img alt="avatar" src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"} />

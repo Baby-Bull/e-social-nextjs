@@ -327,7 +327,7 @@ const ChatBoxRightComponent = ({
               useWindow={false}
             >
               {Object.keys(listMessagesShow)?.map((dateText) => (
-                <React.Fragment key={dateText}>
+                <Box key={dateText} sx={{ paddingBottom: "60px" }}>
                   <div className={styles.spanStartOfDay}>
                     <span>{dateText}</span>
                   </div>
@@ -351,7 +351,7 @@ const ChatBoxRightComponent = ({
                       />
                     ),
                   )}
-                </React.Fragment>
+                </Box>
               ))}
             </InfiniteScroll>
           ) : null}

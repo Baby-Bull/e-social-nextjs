@@ -49,6 +49,10 @@ export const VALIDATE_FORM_MATCHING_REQUEST = {
     invalid_date: "日付値が無効です",
     required_date: "時間の入力が必要です",
   },
+  meeting_link: {
+    required: "テキスト入力してください",
+    invalid_url: "正しいURL形式を入力してください",
+  }
 };
 
 export const VALIDATE_FORM_USER_PORT = {

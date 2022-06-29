@@ -87,15 +87,24 @@ const BannerComponent = () => {
         ))}
       </Slider>
       <div className={styles.notificationBanner}>
-        <img src="/assets/images/home_page/ic_spiker_mute.svg" alt="spiker-mute" />
-        <span className="title">{notification?.title}</span>
-        <Slider className={styles.notificationSlick} {...settingNotificationSlick}>
-          {notification?.data?.map((item, index) => (
-            <span key={index} className="content">
-              {item?.content}
-            </span>
-          ))}
-        </Slider>
+        <div
+          style={{
+            maxWidth: "1360px",
+            margin: "auto",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <img src="/assets/images/home_page/ic_spiker_mute.svg" alt="spiker-mute" />
+          <span className="title">{notification?.title}</span>
+          <Slider className={styles.notificationSlick} {...settingNotificationSlick}>
+            {notification?.data?.map((item, index) => (
+              <span key={index} className="content">
+                {item?.content}
+              </span>
+            ))}
+          </Slider>
+        </div>
       </div>
     </div>
   );
