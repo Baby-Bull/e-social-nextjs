@@ -160,6 +160,7 @@ const RegisterComponents = () => {
                 <Box
                   sx={{
                     pt: ["48px", "102px"],
+                    pb: ["80px", "0px"],
                     fontSize: 16,
                     fontWeight: 400,
                     color: theme.navy,

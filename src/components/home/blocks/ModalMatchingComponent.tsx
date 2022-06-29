@@ -9,7 +9,7 @@ import { Field } from "src/components/common/Form/_Field";
 import styles from "src/components/home/home.module.scss";
 import { MATCHING_PURPOSE_OPTIONS } from "src/constants/constants";
 import { IStoreState } from "src/constants/interface";
-import { VALIDATE_FORM_MATCHING_REQUEST } from "src/messages/validate";
+import { REGEX_RULES, VALIDATE_FORM_MATCHING_REQUEST } from "src/messages/validate";
 import actionTypes from "src/store/actionTypes";
 
 interface IModalMatchingComponentProps {
@@ -46,14 +46,16 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
   const auth = useSelector((state: IStoreState) => state.user);
 
   const [matchingRequest, setMatchingRequest] = useState({
-    desired_match_date: new Date()?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }),
     purpose: "",
+    // desired_match_date: new Date()?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }),
+    meeting_link: "",
     message: null,
   });
 
   const [errorValidates, setErrorValidates] = useState({
-    desired_match_date: null,
     purpose: null,
+    // desired_match_date: null,
+    meeting_link: null,
     message: null,
   });
 
@@ -67,8 +69,9 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
   const handleValidateForm = () => {
     let isValidForm = true;
     const errorMessages = {
-      desired_match_date: null,
       purpose: null,
+      // desired_match_date: null,
+      meeting_link: null,
       message: null,
     };
     // validate purpose;
@@ -82,18 +85,28 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
       errorMessages.message = VALIDATE_FORM_MATCHING_REQUEST.message.max_length;
     }
     // validate desired_match_date
-    if (matchingRequest?.desired_match_date) {
-      if (
-        JSON.stringify(matchingRequest?.desired_match_date) === "null" ||
-        matchingRequest?.desired_match_date === "Invalid Date"
-      ) {
-        isValidForm = false;
-        errorMessages.desired_match_date = VALIDATE_FORM_MATCHING_REQUEST.desired_match_date.invalid_date;
-      }
-    } else {
+    // if (matchingRequest?.desired_match_date) {
+    //   if (
+    //     JSON.stringify(matchingRequest?.desired_match_date) === "null" ||
+    //     matchingRequest?.desired_match_date === "Invalid Date"
+    //   ) {
+    //     isValidForm = false;
+    //     errorMessages.desired_match_date = VALIDATE_FORM_MATCHING_REQUEST.desired_match_date.invalid_date;
+    //   }
+    // } else {
+    //   isValidForm = false;
+    //   errorMessages.desired_match_date = VALIDATE_FORM_MATCHING_REQUEST.desired_match_date.required_date;
+    // }
+
+    // validate meeting_link
+    if (!matchingRequest?.meeting_link || matchingRequest?.meeting_link?.length === 0) {
       isValidForm = false;
-      errorMessages.desired_match_date = VALIDATE_FORM_MATCHING_REQUEST.desired_match_date.required_date;
+      errorMessages.meeting_link = VALIDATE_FORM_MATCHING_REQUEST.meeting_link.required;
+    } else if (!REGEX_RULES.url.test(matchingRequest?.meeting_link)) {
+      isValidForm = false;
+      errorMessages.meeting_link = VALIDATE_FORM_MATCHING_REQUEST.meeting_link.invalid_url;
     }
+
     setErrorValidates(errorMessages);
     return isValidForm;
   };
@@ -102,8 +115,9 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
     if (handleValidateForm()) {
       await handleSendMatchingRequest(matchingRequest);
       setMatchingRequest({
-        desired_match_date: new Date()?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }),
+        // desired_match_date: new Date()?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }),
         purpose: "",
+        meeting_link: "",
         message: null,
       });
       dispatch({ type: actionTypes.ADD_MATCH_REQUEST_COUNT, payload: auth });
@@ -113,8 +127,9 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
 
   const handleClose = () => {
     setMatchingRequest({
-      desired_match_date: new Date()?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }),
+      // desired_match_date: new Date()?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }),
       purpose: "",
+      meeting_link: "",
       message: null,
     });
     setOpen(false);
@@ -155,6 +170,17 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
           />
 
           <Field
+            id="meeting_link"
+            required
+            label={t("home:modal-matching.frequency")}
+            placeholder="https://url_link"
+            editor="textbox"
+            value={matchingRequest?.meeting_link}
+            onChangeValue={onChangeMatchingRequest}
+            error={errorValidates.meeting_link}
+          />
+
+          {/* <Field
             id="desired_match_date"
             required
             label={t("home:modal-matching.frequency")}
@@ -163,7 +189,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
             value={matchingRequest?.desired_match_date}
             onChangeValue={onChangeMatchingRequest}
             error={errorValidates.desired_match_date}
-          />
+          /> */}
 
           <Field
             id="message"

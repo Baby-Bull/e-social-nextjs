@@ -332,6 +332,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
                           fontSize: 14,
                           fontWeight: 700,
                           color: "black",
+                          textAlign: "center",
                         }}
                       >
                         {tab?.name}

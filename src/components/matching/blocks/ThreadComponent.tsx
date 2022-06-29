@@ -124,6 +124,9 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
     if (tempValue === "favorite") return "";
     if (tempValue === "matched")
       return moment(data?.matchRequest?.match_date).format("lll").toString() + t("thread:request");
+    if (tempValue === "reject") return `${moment(data?.matchRequest?.match_date).format("lll").toString()}に否承認`;
+    if (tempValue === "confirm")
+      return `${moment(data?.matchRequest?.match_date).format("lll").toString()}にマッチング`;
     return moment(data?.updated_at).format("lll").toString() + t("thread:request");
   };
 
@@ -591,6 +594,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   display: !data?.receiver_id && "none",
                   borderRadius: "12px",
                 }}
+                onClick={() => handleCancelMatchingRequest(data?.id)}
               >
                 {t("thread:button.canceled")}
               </ButtonComponent>
@@ -603,6 +607,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 sx={{
                   display: data?.receiver_id && "none",
                 }}
+                onClick={() => handleAcceptMatchingRequest(data?.id)}
               >
                 {t("thread:button.approve")}
               </ButtonComponent>
@@ -617,6 +622,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   mt: "42px",
                   mb: "20px",
                 }}
+                onClick={() => handleRejectMatchingRequest(data?.id)}
               >
                 {t("thread:button.reject")}
               </ButtonComponent>

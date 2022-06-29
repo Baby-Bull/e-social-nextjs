@@ -88,17 +88,17 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
 
   useEffect(() => {
     chatRoomIdRef.current = roomSelect?.id || null;
-    if (roomSelect?.id) {
-      router.push(
-        {
-          pathname: "/chat/personal",
-          // query: { room: roomSelect?.id },
-          query: { room: userId },
-        },
-        undefined,
-        { shallow: true },
-      );
-    }
+    // if (roomSelect?.id) {
+    //   router.push(
+    //     {
+    //       pathname: "/chat/personal",
+    //       // query: { room: roomSelect?.id },
+    //       query: { room: userId },
+    //     },
+    //     undefined,
+    //     { shallow: true },
+    //   );
+    // }
   }, [userId, roomSelect]);
 
   useEffect(() => {
