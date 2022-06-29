@@ -431,6 +431,11 @@ const UpdateComponent = () => {
       Object.keys(communityRequest).filter((key) => {
         formData.append(key, communityRequest[key]);
       });
+      // @ts-ignore
+      if (communityRequest.is_public === "false" && communityRequest.post_permission === "all") {
+        formData.delete("post_permission");
+        formData.append("post_permission", infoCommunitySetting.rolesCreatePost[0].value);
+      }
       // eslint-disable-next-line array-callback-return
       Object.keys(tagData).filter((key) => {
         formData.append("tags[]", tagData[key]);
