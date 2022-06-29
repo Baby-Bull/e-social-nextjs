@@ -25,16 +25,16 @@ export const notificationMockData = {
   ],
 };
 
-export const notificationsMockData = [
-  {
-    title: "ヒント",
-    content: "goodhub1へようこそ！まずはプロフィール詳細を記入してみると、マッチング率がUPします☆",
-  },
-  {
-    title: "ヒント",
-    content: "goodhub2へようこそ！まずはプロフィール詳細を記入してみると、マッチング率がUPします☆",
-  },
-];
+// export const notificationsMockData = [
+//   {
+//     title: "ヒント",
+//     content: "goodhub1へようこそ！まずはプロフィール詳細を記入してみると、マッチング率がUPします☆",
+//   },
+//   {
+//     title: "ヒント",
+//     content: "goodhub2へようこそ！まずはプロフィール詳細を記入してみると、マッチング率がUPします☆",
+//   },
+// ];
 
 export const menuNotificationsData = [
   {

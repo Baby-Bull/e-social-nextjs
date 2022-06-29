@@ -201,7 +201,6 @@ const HomeIndexComponents = () => {
           container
           sx={{
             maxWidth: "1440px",
-            padding: ["0", "0 2em"],
           }}
         >
           <NotificationComponent />
