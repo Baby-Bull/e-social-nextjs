@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, TextareaAutosize } from "@mui/material";
+import { Box, Typography, TextareaAutosize, Backdrop, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
@@ -81,7 +81,7 @@ const DetailPostComponent = () => {
   const [content, setContent] = React.useState("");
   const [checkLoading, setCheckLoading] = useState(false);
   const [checkLoadingComment, setCheckLoadingComment] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   const onChangeCommunityPostRequest = (key: string, valueInput: any) => {
     setContent(valueInput);
     setCommunityPostRequest({
@@ -102,6 +102,7 @@ const DetailPostComponent = () => {
 
   const handleSaveForm = async () => {
     if (handleValidateFormCommunityPost() && communityPostRequest?.content?.length > 0) {
+      setIsLoading(true);
       const communityId = router.query;
       const res = await createPostComment(communityId?.id, communityId?.detailId, communityPostRequest);
       if (res) {
@@ -109,6 +110,7 @@ const DetailPostComponent = () => {
         comments.unshift(res);
         setTotalComment(totalComment + 1);
       }
+      setIsLoading(false);
       return res;
     }
   };
@@ -120,7 +122,7 @@ const DetailPostComponent = () => {
     if (!data?.error_code) {
       // eslint-disable-next-line no-unsafe-optional-chaining
       setComments([...comments, ...data?.items]);
-      setTotalComment(data?.items_count);
+      setTotalComment(data?.items_count ?? 0);
       setCursor(data?.cursor);
     }
     return data;
@@ -153,12 +155,14 @@ const DetailPostComponent = () => {
     }
   };
   const handleCallbackRemove = async (indexComment, commentId) => {
+    setIsLoading(true);
     const community = router.query;
     const res = await deleteCommunityPostComment(community?.id, community?.detailId, commentId);
     if (res) {
       setComments(comments.filter((_, index) => index !== indexComment));
       setTotalComment(totalComment - 1);
     }
+    setIsLoading(false);
     return res;
   };
 
@@ -168,6 +172,11 @@ const DetailPostComponent = () => {
   }, []);
   return (
     <LayoutComponent>
+      {isLoading && (
+        <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       <Box>
         {checkLoading && (
           <Box
@@ -208,7 +217,7 @@ const DetailPostComponent = () => {
                     fontWeight: 700,
                   }}
                 >
-                  {t("community:comment")}（{comments?.length ?? 0}）
+                  {t("community:comment")}（{totalComment ?? 0}）
                 </Typography>
 
                 <ListCommentComponent
@@ -249,7 +258,7 @@ const DetailPostComponent = () => {
                   }}
                 />
                 {errorValidates?.content && <BoxTextValidate>{errorValidates?.content}</BoxTextValidate>}
-                <Box sx={{ textAlign: "right" }}>
+                <Box sx={{ textAlign: "right", cursor: "pointer" }}>
                   <ButtonComponent
                     disabled={!content?.length}
                     props={{

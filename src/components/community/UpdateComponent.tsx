@@ -18,6 +18,7 @@ import {
   ThemeProvider,
   Button,
   CircularProgress,
+  Backdrop,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { styled, useTheme } from "@mui/material/styles";
@@ -106,6 +107,7 @@ const UpdateComponent = () => {
   const IS_MEMBER = "member";
   const IS_OWNER = "owner";
   const rolePrivateCommunity = infoCommunitySetting.rolesCreatePost.slice(0, 2);
+  const [isLoading, setIsLoading] = useState(false);
   const MenuProps = {
     PaperProps: {
       style: {
@@ -153,7 +155,6 @@ const UpdateComponent = () => {
   const [tagDataValidate, setTagDataValidate] = useState(false);
   const [valueCursor, setValueCursor] = useState("");
   const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const [isPublic, setIsPublic] = useState(true);
   const [checkMember, setCheckMember] = useState(false);
   const auth = useSelector((state: IStoreState) => state.user);
@@ -424,6 +425,7 @@ const UpdateComponent = () => {
 
   const handleSaveForm = async () => {
     if (handleValidateFormCommunity() && !errorValidates.profile_image) {
+      setIsLoading(true);
       const formData = new FormData();
       // eslint-disable-next-line array-callback-return
       Object.keys(communityRequest).filter((key) => {
@@ -455,12 +457,18 @@ const UpdateComponent = () => {
       const communityId = router.query;
       const res = await updateCommunity(communityId?.indexId, formData);
       setDisableBtnSubmit(true);
+      setIsLoading(false);
       return res;
     }
   };
 
   return (
     <ContentComponent>
+      {isLoading && (
+        <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       {!checkMember ? (
         <Box sx={{ minHeight: "74.6vh" }} />
       ) : (

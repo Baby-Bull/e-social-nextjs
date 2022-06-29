@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
-import { Box, Grid, Typography, Avatar, Paper, ListItem, Chip } from "@mui/material";
+import { Box, Grid, Typography, Avatar, Paper, ListItem, Chip, CircularProgress, Backdrop } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 
@@ -38,6 +38,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
   const [referenceUrl, setReferenceUrl] = useState("");
   const [address, setAddress] = useState("");
   const [tags, setTags] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [tagDataValidate, setTagDataValidate] = useState(false);
 
@@ -133,16 +134,19 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
 
   const handleSaveForm = async () => {
     if (handleValidateFormCommunityPost()) {
+      setIsLoading(true);
       const communityId = router.query;
       communityPostRequest.tags = tags;
       if (editable) {
         const res = await updateCommunityPost(communityId?.id, communityId?.updateId, communityPostRequest);
-        setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${res?.slug}`), 1000);
+        setIsLoading(false);
+        setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${res?.slug}`), 200);
         return res;
       }
       const res = await createCommunityPost(communityId?.id, communityPostRequest);
+      setIsLoading(false);
       if (res) {
-        setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${res?.slug}`), 1000);
+        setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${res?.slug}`), 200);
         return res;
       }
     }
@@ -150,6 +154,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
 
   const getCommunityPost = async () => {
     if (editable) {
+      setIsLoading(true);
       const community = router.query;
       const res = await detailCommunityPost(community?.id, community?.updateId);
       setTitle(res?.title);
@@ -164,6 +169,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
         reference_url: res?.reference_url,
         tags: res?.tags,
       });
+      setIsLoading(false);
     }
   };
 
@@ -172,6 +178,11 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
   }, []);
   return (
     <React.Fragment>
+      {isLoading && (
+        <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       <Typography
         sx={{
           fontSize: [18, 20],
