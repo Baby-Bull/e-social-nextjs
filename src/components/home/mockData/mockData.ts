@@ -124,13 +124,16 @@ export const dataMatchingMockData = {
 };
 
 const itemRecommendCommunityMockData = {
-  image: "/assets/images/participating_community/community_sample.png",
-  numberOfRegister: 6,
+  id: "string",
+  profile_image: "/assets/images/participating_community/community_sample.png",
+  login_count: 6,
   name: "コミュニティの名前がここに入ります。最大文字数40文字です。コミュニティの名前が",
-  numberOfMembers: 0,
+  member_count: 0,
   tags: ["#タグ", "#タグ", "#タグタグ", "#タグタグ", "#タグ", "#タグ", "#タグタグ", "#タグタグ"],
   description:
     "概要が数行表示されます。概要が数行表示されます。概要が数行表示されます。概要が数行表示されます。概要が数行表示されます。概要が数行表示概要が数行表示概要が数行表示",
+  is_public: false,
+  join_status: "",
 };
 
 export const recommendCommunityMockData = [
