@@ -32,12 +32,8 @@ const ParticipationComponent: React.SFC<IParticipationComponentProps> = ({ isPub
     const communityId = router.query;
     const resData = await getParticipates(communityId?.indexId, LIMIT, cursor);
     setCheckLoading(true);
-    if (participates.length < 10) {
-      setParticipates(resData?.items);
-    } else {
-      // eslint-disable-next-line no-unsafe-optional-chaining
-      setParticipates([...participates, ...resData?.items]);
-    }
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    setParticipates([...participates, ...resData?.items]);
     setCountParticipates(resData?.items_count ?? 0);
     setCursor(resData?.cursor);
     return resData;
@@ -57,9 +53,18 @@ const ParticipationComponent: React.SFC<IParticipationComponentProps> = ({ isPub
     fetchDataParticipates();
   }, []);
 
-  const callbackHandleRemoveMember = (indexMember) => {
+  const callbackHandleRemoveMember = async (indexMember) => {
     setParticipates(participates.filter((_, index) => index !== indexMember));
     setCountParticipates(countParticipates - 1);
+    if (participates.length <= 10 && countParticipates > 10) {
+      const communityId = router.query;
+      const resData = await getParticipates(communityId?.indexId, LIMIT, "");
+      setCheckLoading(true);
+      setParticipates(resData?.items);
+      setCountParticipates(resData?.items_count ?? 0);
+      setCursor(resData?.cursor);
+      return resData;
+    }
   };
 
   return (

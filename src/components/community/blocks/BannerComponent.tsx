@@ -160,7 +160,12 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                 </Typography>
               </Box>
 
-              <Box sx={{ height: ["40px", "100%"], overflowY: ["scroll", "visible"] }}>
+              <Box
+                sx={{
+                  height: ["50px", "100%"],
+                  overflowY: ["scroll", "visible"],
+                }}
+              >
                 <Paper
                   sx={{
                     m: 0,
