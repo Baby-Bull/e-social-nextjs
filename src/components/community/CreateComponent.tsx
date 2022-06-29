@@ -22,13 +22,12 @@ import { useRouter } from "next/router";
 
 import theme, { themeSelect } from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabVerticalComponent";
-import { InputCustom } from "src/components/community/post/FormComponent";
-import { Field } from "src/components/community/blocks/Form/InputComponent";
+import { Field, InputCustom } from "src/components/community/blocks/Form/InputComponent";
 import { TextArea } from "src/components/community/blocks/Form/TextAreaComponent";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
-import { VALIDATE_FORM_COMMUNITY } from "src/messages/validate";
+import { VALIDATE_FORM_COMMUNITY, REGEX_RULES } from "src/messages/validate";
 import { IStoreState } from "src/constants/interface";
 import { createCommunity } from "src/services/community";
 
@@ -86,7 +85,7 @@ const BoxTextValidate = styled(Box)({
 const CreateComponent = () => {
   const { t } = useTranslation();
   const router = useRouter();
-
+  const rolePrivateCommunity = infoCommunitySetting.rolesCreatePost.slice(0, 2);
   const auth = useSelector((state: IStoreState) => state.user);
   const [value, setValue] = useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -98,17 +97,20 @@ const CreateComponent = () => {
   const [roleCreatePostSelected, setRoleCreatePost] = useState(infoCommunitySetting.rolesCreatePost[0].value);
 
   const [roleJoinSelected, setRoleJoin] = useState(infoCommunitySetting.rolesJoin[0].value);
-  const [name, setName] = useState(null);
-  const [description, setDescription] = useState(null);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [gatherUrl, setGatherUrl] = useState("");
   const [communityRequest, setCommunityRequest] = useState({
     name,
     description,
+    gather_url: gatherUrl,
     post_permission: roleCreatePostSelected,
     is_public: roleJoinSelected,
   });
   const [tagData, setTagData] = useState([]);
-  const [profileImage, setProfileImage] = useState("");
-  const [srcProfileImage, setSrcProfileImage] = useState("");
+  const [profileImage, setProfileImage] = useState(infoCommunitySetting.avatar);
+  const [isDeleteImage, setIsDeleteImage] = useState(false);
+  const [srcProfileImage, setSrcProfileImage] = useState(infoCommunitySetting.avatar);
   const [tagDataValidate, setTagDataValidate] = useState(false);
 
   const onKeyPress = (e) => {
@@ -143,6 +145,7 @@ const CreateComponent = () => {
     description: null,
     post_permission: null,
     profile_image: null,
+    gather_url: null,
   });
 
   const errorMessages = {
@@ -150,6 +153,7 @@ const CreateComponent = () => {
     description: null,
     post_permission: null,
     profile_image: null,
+    gather_url: null,
   };
 
   const onChangeCommunityRequest = (key: string, valueInput: any) => {
@@ -166,6 +170,10 @@ const CreateComponent = () => {
 
     if (key === "is_public") {
       setRoleJoin(valueInput);
+    }
+
+    if (key === "gather_url") {
+      setGatherUrl(valueInput);
     }
 
     setDisableBtnSubmit(false);
@@ -190,7 +198,10 @@ const CreateComponent = () => {
     ) {
       setDisableBtnSubmit(false);
       setProfileImage(file);
+      errorMessages.profile_image = null;
+      setProfileImage(file);
       setSrcProfileImage(URL.createObjectURL(file));
+      setIsDeleteImage(false);
 
       // @ts-ignore
       document.getElementById("avatar").value = null;
@@ -203,8 +214,9 @@ const CreateComponent = () => {
   };
 
   const removeProfileImage = () => {
-    setProfileImage("");
-    setSrcProfileImage("");
+    setProfileImage(infoCommunitySetting.avatar);
+    setSrcProfileImage(infoCommunitySetting.avatar);
+    setIsDeleteImage(false);
     errorMessages.profile_image = null;
     setErrorValidates(errorMessages);
   };
@@ -236,6 +248,11 @@ const CreateComponent = () => {
       errorMessages.post_permission = VALIDATE_FORM_COMMUNITY.post_permission.required;
     }
 
+    if (communityRequest?.gather_url?.length && !REGEX_RULES.url.test(communityRequest?.gather_url)) {
+      isValidForm = false;
+      errorMessages.gather_url = VALIDATE_FORM_COMMUNITY.gather_url.format;
+    }
+
     setErrorValidates(errorMessages);
     return isValidForm;
   };
@@ -256,10 +273,12 @@ const CreateComponent = () => {
       if (profileImage) {
         formData.append("profile_image", profileImage);
       }
-
+      if (isDeleteImage && !profileImage) {
+        formData.append("profile_image", infoCommunitySetting.avatar);
+      }
       const res = await createCommunity(formData);
-      if (res) {
-        setTimeout(() => router.push(`/community/${res?.id}`), 2000);
+      if (!res?.error_code) {
+        setTimeout(() => router.push(`/community/${res?.id}`), 1000);
         return res;
       }
     }
@@ -341,17 +360,23 @@ const CreateComponent = () => {
                 xs={12}
                 sm={3}
                 sx={{
+                  marginBottom: "2em",
                   display: "flex",
                   justifyContent: ["center", "flex-start"],
                 }}
               >
-                <Avatar
-                  sx={{
-                    mb: 0,
+                <img
+                  style={{
                     width: "160px",
                     height: "160px",
+                    padding: srcProfileImage === "/assets/images/logo/logo.png" ? "1em" : "0",
+                    objectFit: srcProfileImage === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                    border: "3px #80808014 solid",
+                    background: "#F4FDFF",
+                    borderRadius: "50%",
                   }}
-                  src={srcProfileImage || infoCommunitySetting.avatar}
+                  src={srcProfileImage ?? "/assets/images/logo/logo.png"}
+                  alt="image_avatar"
                 />
               </Grid>
               <Grid
@@ -399,10 +424,11 @@ const CreateComponent = () => {
                 </label>
 
                 <BoxTextValidate sx={{ mb: "20px" }}>{errorValidates.profile_image}</BoxTextValidate>
-
-                <TypographyButton mb={["28px", "33px"]} onClick={removeProfileImage}>
-                  {t("community:setting.form.delete-img")}
-                </TypographyButton>
+                {srcProfileImage !== infoCommunitySetting.avatar && srcProfileImage?.length > 0 ? (
+                  <TypographyButton mb={["28px", "33px"]} onClick={removeProfileImage}>
+                    {t("community:setting.form.delete-img")}
+                  </TypographyButton>
+                ) : null}
               </Grid>
               <GridTitle item xs={12} sm={3}>
                 <BoxTitle>{t("community:setting.form.name")}</BoxTitle>
@@ -413,6 +439,7 @@ const CreateComponent = () => {
                 sm={9}
                 sx={{
                   mb: ["36px", "30px"],
+                  mt: ["9px", 0],
                 }}
               >
                 <Field
@@ -493,12 +520,17 @@ const CreateComponent = () => {
                       inputProps={{ "aria-label": "Role join" }}
                       sx={{ border: errorValidates.post_permission ? "1px solid #FF9458" : "none" }}
                     >
-                      {infoCommunitySetting.rolesCreatePost &&
-                        infoCommunitySetting.rolesCreatePost.map((option, index) => (
-                          <MenuItem key={index.toString()} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
+                      {roleJoinSelected.toString() === "true"
+                        ? infoCommunitySetting.rolesCreatePost.map((option, index) => (
+                            <MenuItem key={index.toString()} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))
+                        : rolePrivateCommunity.map((option, index) => (
+                            <MenuItem key={index.toString()} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
                     </SelectCustom>
                   </ThemeProvider>
                 </Box>
@@ -628,6 +660,25 @@ const CreateComponent = () => {
                   </Paper>
                 </Box>
               </Grid>
+              <GridTitle item xs={12} sm={3}>
+                <BoxTitle>{t("community:setting.form.virtual-room")}</BoxTitle>
+              </GridTitle>
+              <Grid
+                item
+                xs={12}
+                sm={9}
+                sx={{
+                  mb: ["36px", "30px"],
+                  mt: ["9px", "0"],
+                }}
+              >
+                <Field
+                  onChangeInput={onChangeCommunityRequest}
+                  id="gather_url"
+                  placeholder={t("community:setting.form.placeholder.virtual-room")}
+                  error={errorValidates.gather_url}
+                />
+              </Grid>
             </Grid>
 
             <Box
@@ -662,7 +713,7 @@ const CreateComponent = () => {
                 }}
                 onClick={handleOpenDialog}
               >
-                {t("community:setting.form.delete-community")}
+                {t("community:setting.form.stop-create-community")}
               </TypographyButton>
             </Box>
           </Box>
@@ -670,10 +721,10 @@ const CreateComponent = () => {
       </Box>
 
       <DialogConfirmComponent
-        title={t("community:setting.form.dialog.title")}
+        title={t("community:button.dialog.stop-create-community")}
         content={t("community:setting.form.dialog.content")}
         btnLeft={t("community:button.dialog.cancel-2")}
-        btnRight={t("community:button.dialog.delete-community")}
+        btnRight={t("community:button.dialog.stop-create-community")}
         isShow={openDialog}
         handleClose={handleCloseDialog}
         handleCancel={handleDialogCancel}

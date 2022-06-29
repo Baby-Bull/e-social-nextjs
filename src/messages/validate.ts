@@ -1,9 +1,9 @@
 export const REGEX_RULES = {
-  username_register: /^[一-龯ぁ-んァ-ンa-zA-Z0-9\w]+$/,
+  username_register: /^[一-龯ぁ-んァ-ンa-zA-Z0-9\w ]+$/,
   only_japanese: /^[一-龯ぁ-んァ-ン]+$/,
   email: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-  username_profile: /^[一-龯ぁ-んァ-ンa-zA-Z\w]+$/,
-  text_input: /^[一-龯ぁ-んァ-ンa-zA-Z\w]+$/,
+  username_profile: /^[一-龯ぁ-んァ-ンa-zA-Z0-9\w ]+$/,
+  text_input: /^[一-龯ぁ-んァ-ンa-zA-Z0-9\w ]+$/,
   url: /^(ftp|http|https):\/\/[^ "]+$/,
 };
 
@@ -15,7 +15,7 @@ export const VALIDATE_MESSAGE_FORM_REGISTER = {
   },
   birthday: {
     required: "生年月日を入力してください",
-    future_input: "今日より前の日付を入力してください（今日選択可能）",
+    future_input: "今日より前の日付を入力してください（今日は選択できません）",
     invalid_date: "無効な日付 (dd/MM/yyyy)",
   },
   status: {
@@ -24,7 +24,8 @@ export const VALIDATE_MESSAGE_FORM_REGISTER = {
   email: {
     required: "「tanakataro@rebase.co.jp」の形式でメールアドレスを入力してください",
     invalid:
-      "メールアドレスの形式は正しくありません。「tanakataro@rebase.co.jp」の形式でメールアドレスを入力してください",
+      // "メールアドレスの形式は正しくありません。「tanakataro@rebase.co.jp」の形式でメールアドレスを入力してください",
+      "入力に誤りがあるため、ご確認ください。",
   },
   address: {
     required: "お住まいの地域を選択してください",
@@ -56,6 +57,7 @@ export const VALIDATE_FORM_USER_PORT = {
   },
   detail: {
     max_length: "1タグにつき1000文字以内で入力してください",
+    required: "空白のままにしないでください",
   },
 };
 
@@ -145,5 +147,28 @@ export const VALIDATE_FORM_COMMUNITY = {
   profile_image: {
     format: "png, jpg形式の画像を選択してください。",
     max_size: "2MB以下のファイルを選択してください。",
+  },
+  gather_url: {
+    format: "正しいURL形式を入力してください",
+  }
+};
+
+export const VALIDATE_FORM_COMMUNITY_POST = {
+  title: {
+    max_length: "60文字以内で入力してください。",
+    required: "コミュニティタイトルを入力してください。",
+  },
+  content: {
+    max_length: "1000文字以内で入力してください。",
+    required: "コミュニティ詳細を入力してください。",
+  },
+  reference_url: {
+    format: "https://www.〇〇.jpの形式の URL を入力してください。",
+  },
+  address: {
+    max_length: "100文字以内で入力してください。",
+  },
+  content_comment: {
+    max_length: "1000文字以内で入力してください。",
   },
 };

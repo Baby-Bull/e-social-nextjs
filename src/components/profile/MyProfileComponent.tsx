@@ -5,6 +5,7 @@ import Pagination from "@mui/material/Pagination";
 import { styled } from "@mui/material/styles";
 import { useSelector } from "react-redux";
 
+import useViewport from "src/helpers/useViewport";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ProfileSkillComponent from "src/components/profile/ProfileSkillComponent";
 import ReviewComponent from "src/components/profile/ReviewComponent";
@@ -73,7 +74,12 @@ function usePagination(data: any, itemsPerPage: any) {
 
 const ProfileHaveDataComponent = () => {
   const { t } = useTranslation();
+  const viewPort = useViewport();
+  const isMobile = viewPort.width <= 992;
   const LIMIT = 20;
+  const NumberOfReviewsPerPage = isMobile ? 5 : 10;
+  const NumberOfCommunitiesPerPage = isMobile ? 2 : 8;
+
   const auth = useSelector((state: IStoreState) => state.user);
   const [profileSkill, setProfileSkill] = useState([]);
   const [communities, setCommunities] = useState([]);
@@ -83,7 +89,7 @@ const ProfileHaveDataComponent = () => {
   const [isRefresh, setIsRefresh] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showModalMatching, setModalMatching] = React.useState(false);
-  const [userId] = useState(auth?.user?.id);
+  const [userId] = useState(auth?.id);
 
   const fetchProfileSkill = async () => {
     setIsLoading(true);
@@ -130,7 +136,7 @@ const ProfileHaveDataComponent = () => {
   };
 
   const [page, setPage] = useState(1);
-  const reviews = usePagination(allReviews, 10);
+  const reviews = usePagination(allReviews, NumberOfReviewsPerPage);
   const handleChange = (e, p) => {
     setPage(p);
     reviews.jump(p);
@@ -183,7 +189,11 @@ const ProfileHaveDataComponent = () => {
         >
           {t("profile:title-participating-community")} ({communities?.length ?? 0})
           {communities?.length > 0 ? (
-            <ParticipatingCommunityComponent communities={communities} />
+            <ParticipatingCommunityComponent
+              communities={communities}
+              usePagination={usePagination}
+              NumberOfCommunitiesPerPage={NumberOfCommunitiesPerPage}
+            />
           ) : (
             <BoxNoDataComponent content="まだ参加中のコミュニティがありません" />
           )}
@@ -199,8 +209,8 @@ const ProfileHaveDataComponent = () => {
         >
           {t("profile:title-review")}（{countReviews}）
           <PaginationCustom
-            hideNextButton={page === Math.ceil(countReviews / 10)}
-            hidePrevButton={page === 1}
+            hideNextButton={page === Math.ceil(countReviews / 10) || countReviews < 10}
+            hidePrevButton={page === 1 || countReviews < 10}
             count={Math.ceil(countReviews / 10)}
             onChange={handleChange}
           />

@@ -564,7 +564,7 @@ export const infoCommunity = {
 export const postDetail = {
   avatar: "/assets/images/svg/account.svg",
   name: "佐藤 太郎",
-  title: `${text1}タイトルの最大文字数は、60文字です。`,
+  title: `test11143fd`,
   last_login: "2021年8月27日13:48",
   content: `
     <p>${text1} </p>
@@ -579,7 +579,7 @@ export const postDetail = {
     <br />
     <span>${text1}${text2}</span>
   `,
-  url: "https://connpass.com/",
+  reference_url: "https://connpass.com/",
   address: "〒160-8484 東京都新宿区歌舞伎町１丁目４−１",
 };
 
@@ -638,7 +638,7 @@ export const admins = [
 ];
 
 export const infoCommunitySetting = {
-  avatar: "/assets/images/svg/php.svg",
+  avatar: "/assets/images/logo/logo.png",
   admin: infoAdmin,
   rolesCreatePost: [
     { value: "member", label: "コミュニティ内の人が投稿可能" },

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import InfiniteScroll from "react-infinite-scroller";
 import {
   Avatar,
   Box,
@@ -17,27 +16,39 @@ import {
   OutlinedInput,
   FormControl,
   ThemeProvider,
+  Button,
   CircularProgress,
+  Backdrop,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { styled, useTheme } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import _without from "lodash/without";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
+import { IStoreState } from "src/constants/interface";
 import theme from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabVerticalComponent";
-import { InputCustom } from "src/components/community/post/FormComponent";
-import { Field } from "src/components/community/blocks/Form/InputComponent";
+import { Field, InputCustom } from "src/components/community/blocks/Form/InputComponent";
 import { TextArea } from "src/components/community/blocks/Form/TextAreaComponent";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
-import { VALIDATE_FORM_COMMUNITY } from "src/messages/validate";
-import { getCommunity, updateCommunity, CommunityMembers, deleteCommunity } from "src/services/community";
+import { REGEX_RULES, VALIDATE_FORM_COMMUNITY } from "src/messages/validate";
+import {
+  getCommunity,
+  updateCommunity,
+  CommunityMembers,
+  deleteCommunity,
+  checkMemberCommunity,
+  leaveCommunity,
+} from "src/services/community";
 
 import { infoCommunitySetting, tabsCommunitySetting } from "./mockData";
 import MemberComponent from "./setting/blocks/MemberComponent";
 import ParticipatedMemberComponent from "./setting/blocks/ParticipatedMemberComponent";
+import styles from "./update.module.scss";
 
 const BoxTitle = styled(Box)({
   fontSize: 18,
@@ -93,6 +104,10 @@ const UpdateComponent = () => {
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const LIMIT = 10;
+  const IS_MEMBER = "member";
+  const IS_OWNER = "owner";
+  const rolePrivateCommunity = infoCommunitySetting.rolesCreatePost.slice(0, 2);
+  const [isLoading, setIsLoading] = useState(false);
   const MenuProps = {
     PaperProps: {
       style: {
@@ -101,7 +116,7 @@ const UpdateComponent = () => {
       },
     },
   };
-
+  const [hint, setHint] = useState(false);
   const getStyles = (name, personName) => ({
     color: personName.indexOf(name) === -1 ? theme.navy : theme.blue,
     background: personName.indexOf(name) === -1 ? "white" : theme.whiteBlue,
@@ -110,9 +125,6 @@ const UpdateComponent = () => {
   const [personName, setPersonName] = React.useState([]);
 
   const [value, setValue] = useState(0);
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
 
   const [disableBtnSubmit, setDisableBtnSubmit] = useState(true);
 
@@ -121,13 +133,14 @@ const UpdateComponent = () => {
   const [roleJoinSelected, setRoleJoin] = useState(infoCommunitySetting.rolesJoin[0].value);
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
+  const [virtualLink, setVirtualLink] = useState(null);
   const [communityMembers, setCommunityMembers] = useState([]);
-  const [itemsCount, setItemsCount] = useState(0);
   const [communityRequest, setCommunityRequest] = useState({
     name,
     description,
     post_permission: roleCreatePostSelected,
     is_public: roleJoinSelected,
+    gather_url: virtualLink,
   });
   const [owner, setOwner] = useState({
     id: null,
@@ -135,25 +148,37 @@ const UpdateComponent = () => {
     profile_image: null,
   });
   const [tagData, setTagData] = useState([]);
-  const [profileImage, setProfileImage] = useState("");
+  const [profileImage, setProfileImage] = useState(infoCommunitySetting.avatar);
   const [isDeleteImage, setIsDeleteImage] = useState(false);
-  const [srcProfileImage, setSrcProfileImage] = useState("");
+  const [srcProfileImage, setSrcProfileImage] = useState("/assets/images/logo/logo.png");
   const [openDialog, setOpen] = useState(false);
   const [tagDataValidate, setTagDataValidate] = useState(false);
   const [valueCursor, setValueCursor] = useState("");
   const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPublic, setIsPublic] = useState(true);
+  const [checkMember, setCheckMember] = useState(false);
+  const auth = useSelector((state: IStoreState) => state.user);
+  const [userId] = useState(auth?.id);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [mySelf, setMySelf] = useState({
+    role: null,
+  });
 
   const fetchData = async () => {
     const admins = [];
+    const adminIds = [];
     const communityId = router.query;
     const data = await getCommunity(communityId?.indexId);
     for (let i = 0; i < data?.admins?.length; i++) {
       admins.push(`${data?.admins[i].id},${data?.admins[i].username}`);
+      adminIds.push(data?.admins[i].id);
     }
+    setIsAdmin(adminIds.includes(userId));
+    setIsPublic(data?.is_public);
     setPersonName(admins);
     setName(data?.name);
     setDescription(data?.description);
+    setVirtualLink(data?.gather_url);
     setRoleCreatePost(data?.post_permission);
     setRoleJoin(data?.is_public);
     setSrcProfileImage(data?.profile_image);
@@ -164,6 +189,7 @@ const UpdateComponent = () => {
       description: data?.description,
       post_permission: data?.post_permission,
       is_public: data?.is_public,
+      gather_url: data?.gather_url,
     });
     return data;
   };
@@ -175,7 +201,6 @@ const UpdateComponent = () => {
       const data = await CommunityMembers(communityId?.indexId, LIMIT, valueCursor);
       // eslint-disable-next-line no-unsafe-optional-chaining
       setCommunityMembers([...communityMembers, ...data?.items]);
-      setItemsCount(data?.items_count);
       setValueCursor(data?.cursor);
       setHasMore(data?.hasMore);
       setIsLoading(false);
@@ -183,10 +208,38 @@ const UpdateComponent = () => {
     }
   };
 
+  const checkRoleMemberCommunity = async () => {
+    const communityId = router.query;
+    const data = await checkMemberCommunity(communityId?.indexId, userId);
+    if (data?.id && data?.role !== IS_MEMBER) {
+      setMySelf(data);
+      fetchDataUsers();
+      setCheckMember(true);
+      fetchData();
+      return data;
+    }
+    toast.warning(t("common:not_have_access"));
+    setTimeout(() => router.push("/"), 1000);
+  };
+
   useEffect(() => {
-    fetchDataUsers();
-    fetchData();
+    checkRoleMemberCommunity();
   }, []);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setCommunityMembers([]);
+    setHasMore(true);
+    setValueCursor("");
+    if (newValue === 0) {
+      fetchData();
+      fetchDataUsers();
+    }
+    setValue(newValue);
+  };
+
+  const handleChangeTab = (valueTab) => {
+    setValue(valueTab);
+  };
 
   const onKeyPress = (e) => {
     if (e.target.value.length > 20) {
@@ -212,10 +265,12 @@ const UpdateComponent = () => {
       // eslint-disable-next-line no-shadow
       target: { value },
     } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value,
-    );
+    if (value.length <= 10) {
+      setPersonName(
+        // On autofill we get a stringified value.
+        typeof value === "string" ? value.split(",") : value,
+      );
+    }
   };
 
   const handleOpenDialog = () => setOpen(true);
@@ -228,9 +283,19 @@ const UpdateComponent = () => {
     const communityId = router.query;
     const res = await deleteCommunity(communityId?.indexId);
     if (!res?.error_code) {
-      setTimeout(() => router.push(`/search_community`), 2000);
+      setTimeout(() => router.push(`/search_community`), 1000);
       return res;
     }
+  };
+
+  const handleLeaveCommunity = async () => {
+    const community = router.query;
+    const res = await leaveCommunity(community?.indexId);
+    if (res) {
+      setTimeout(() => router.push(`/community/${community?.indexId}`), 1000);
+      setOpen(false);
+    }
+    return res;
   };
 
   const [errorValidates, setErrorValidates] = useState({
@@ -238,6 +303,7 @@ const UpdateComponent = () => {
     description: null,
     post_permission: null,
     profile_image: null,
+    gather_url: null,
   });
 
   const errorMessages = {
@@ -245,6 +311,7 @@ const UpdateComponent = () => {
     description: null,
     post_permission: null,
     profile_image: null,
+    gather_url: null,
   };
 
   const onChangeCommunityRequest = (key: string, valueInput: any) => {
@@ -254,15 +321,20 @@ const UpdateComponent = () => {
     if (key === "description") {
       setDescription(valueInput);
     }
-
     if (key === "post_permission") {
       setRoleCreatePost(valueInput);
     }
-
     if (key === "is_public") {
+      if (valueInput === "false") {
+        setRoleCreatePost(infoCommunitySetting.rolesCreatePost[0].value);
+      } else {
+        setRoleCreatePost(communityRequest?.post_permission);
+      }
       setRoleJoin(valueInput);
     }
-
+    if (key === "gather_url") {
+      setVirtualLink(valueInput);
+    }
     setDisableBtnSubmit(false);
 
     setCommunityRequest({
@@ -285,11 +357,13 @@ const UpdateComponent = () => {
     ) {
       setDisableBtnSubmit(false);
       setProfileImage(file);
+      errorMessages.profile_image = null;
+      setErrorValidates(errorMessages);
       setSrcProfileImage(URL.createObjectURL(file));
       setIsDeleteImage(false);
 
       // @ts-ignore
-      document.getElementById("avatar").value = null;
+      document.getElementById("avatar").value = "";
       return true;
     }
 
@@ -299,8 +373,8 @@ const UpdateComponent = () => {
   };
 
   const removeProfileImage = () => {
-    setProfileImage("");
-    setSrcProfileImage("");
+    setProfileImage(infoCommunitySetting.avatar);
+    setSrcProfileImage("/assets/images/logo/logo.png");
     setIsDeleteImage(true);
     errorMessages.profile_image = null;
     setDisableBtnSubmit(false);
@@ -334,6 +408,11 @@ const UpdateComponent = () => {
       errorMessages.post_permission = VALIDATE_FORM_COMMUNITY.post_permission.required;
     }
 
+    if (communityRequest?.gather_url?.length && !REGEX_RULES.url.test(communityRequest?.gather_url)) {
+      isValidForm = false;
+      errorMessages.gather_url = VALIDATE_FORM_COMMUNITY.gather_url.format;
+    }
+
     setErrorValidates(errorMessages);
     return isValidForm;
   };
@@ -346,12 +425,12 @@ const UpdateComponent = () => {
 
   const handleSaveForm = async () => {
     if (handleValidateFormCommunity() && !errorValidates.profile_image) {
+      setIsLoading(true);
       const formData = new FormData();
       // eslint-disable-next-line array-callback-return
       Object.keys(communityRequest).filter((key) => {
         formData.append(key, communityRequest[key]);
       });
-
       // eslint-disable-next-line array-callback-return
       Object.keys(tagData).filter((key) => {
         formData.append("tags[]", tagData[key]);
@@ -361,7 +440,9 @@ const UpdateComponent = () => {
         formData.append("admin_ids[]", "");
       } else {
         for (let i = 0; i < personName.length; i++) {
-          formData.append("admin_ids[]", personName[i]?.split(",")[0]);
+          if (personName[i]?.length !== undefined) {
+            formData.append("admin_ids[]", personName[i]?.split(",")[0]);
+          }
         }
       }
 
@@ -370,548 +451,614 @@ const UpdateComponent = () => {
       }
 
       if (isDeleteImage && !profileImage) {
-        formData.append("profile_image", null);
+        formData.append("profile_image", infoCommunitySetting.avatar);
       }
 
       const communityId = router.query;
       const res = await updateCommunity(communityId?.indexId, formData);
-      if (!res.error_code) {
-        setTimeout(() => router.push(`/community/${communityId?.indexId}`), 2000);
-        return res;
-      }
+      setDisableBtnSubmit(true);
+      setIsLoading(false);
+      return res;
     }
   };
 
   return (
     <ContentComponent>
-      <Box
-        sx={{
-          mt: ["20px", "38px"],
-          pt: "60px",
-          ml: [0, "40px"],
-          bgcolor: "white",
-          display: "flex",
-          flexDirection: ["column", "row"],
-          backgroundColor: theme.whiteBlue, // bg lg
-        }}
-      >
-        <Box sx={{ backgroundColor: theme.whiteBlue }}>
-          <Typography
-            sx={{
-              pl: "26px",
-              mb: ["0", "23px"],
-              mt: ["20px", 0],
-              display: ["flex", "inherit"],
-              justifyContent: "center",
-              fontSize: 20,
-              fontWeight: 700,
-            }}
-          >
-            {t("community:setting.title")}
-          </Typography>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            aria-label="Vertical tabs example"
-            TabIndicatorProps={{
-              style: {
-                backgroundColor: "transparent",
-              },
-            }}
-            sx={{
-              display: ["none", "block"],
-              "& .MuiTabs-flexContainer": {
-                flexDirection: ["row", "column"],
-              },
-            }}
-          >
-            {tabsCommunitySetting?.map((tab, index) => (
-              <TabCustom
-                props={{
-                  xsWidth: "33.33%",
-                  smWidth: "239px",
-                }}
-                key={index.toString()}
-                iconPosition="top"
-                label={tab.text}
-                {...a11yProps(index)}
-              />
-            ))}
-          </Tabs>
-        </Box>
-
-        <TabPanel value={value} index={0}>
-          <Box
-            sx={{
-              mt: "20px",
-              mr: ["20px", "17.32%"],
-              ml: ["20px", "0"],
-              pt: ["20px ", "40px"],
-              px: ["10px", "40px"],
-              pb: "64px",
-              backgroundColor: "white",
-            }}
-          >
-            <Grid container>
-              <Grid
-                item
-                xs={12}
-                sm={3}
-                sx={{
-                  display: "flex",
-                  justifyContent: ["center", "flex-start"],
-                }}
-              >
-                <Avatar
-                  sx={{
-                    mb: 0,
-                    width: "160px",
-                    height: "160px",
-                  }}
-                  src={srcProfileImage || infoCommunitySetting.avatar}
-                />
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                sm={9}
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: ["center", "flex-start"],
-                  justifyContent: ["center", "flex-start"],
-                }}
-              >
-                <Typography>{t("community:setting.form.text-upload")}</Typography>
-                <Typography>{t("community:setting.form.max-upload")}</Typography>
-                <input
-                  id="avatar"
-                  name="profile_image"
-                  type="file"
-                  accept="image/png,image/jpeg,image/gif"
-                  hidden
-                  onChange={uploadProfileImage}
-                />
-                <label htmlFor="avatar">
-                  <Box
-                    sx={{
-                      mt: "12px",
-                      mb: "5px",
-                      height: "56px",
-                      width: "240px",
-                      backgroundColor: theme.gray,
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      fontWeight: "700",
-                      lineHeight: "24.62",
-                      fontSize: "17px",
-                      color: "#fff",
-                      cursor: "pointer",
-                      borderRadius: "4px",
-                    }}
-                  >
-                    {t("community:button.setting.upload")}
-                  </Box>
-                </label>
-
-                <BoxTextValidate sx={{ mb: "20px" }}>{errorValidates.profile_image}</BoxTextValidate>
-
-                <TypographyButton mb={["28px", "33px"]} onClick={removeProfileImage}>
-                  {t("community:setting.form.delete-img")}
-                </TypographyButton>
-              </Grid>
-              <GridTitle item xs={12} sm={3}>
-                <BoxTitle>{t("community:setting.form.name")}</BoxTitle>
-              </GridTitle>
-              <Grid
-                item
-                xs={12}
-                sm={9}
-                sx={{
-                  mb: ["36px", "30px"],
-                }}
-              >
-                <Field
-                  onChangeInput={onChangeCommunityRequest}
-                  id="name"
-                  placeholder={t("community:setting.form.placeholder.name")}
-                  error={errorValidates.name}
-                  value={name}
-                />
-              </Grid>
-              <GridTitle item xs={12} sm={3}>
-                <BoxTitle>{t("community:setting.form.detail")}</BoxTitle>
-              </GridTitle>
-              <GridContent item xs={12} sm={9}>
-                <Box
-                  sx={{
-                    height: "100%",
-                    borderRadius: "6px",
-                    marginBottom: "4px",
-                    "& div": {
-                      height: "100%",
-                      outline: "none",
-                      borderRadius: "6px",
-                    },
-                    "& div:focus-visible": {
-                      border: `2px solid ${theme.blue}`,
-                    },
-                  }}
-                >
-                  <TextArea
-                    placeholder={t("community:place-holder")}
-                    onChangeInput={onChangeCommunityRequest}
-                    id="description"
-                    error={errorValidates.description}
-                    value={description}
-                  />
-                </Box>
-              </GridContent>
-
-              <GridTitle item xs={12} sm={3}>
-                <BoxTitle>{t("community:setting.form.representative")}</BoxTitle>
-              </GridTitle>
-              <GridContent item xs={12} sm={9}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Avatar
-                    sx={{
-                      mb: 0,
-                      width: "32px",
-                      height: "32px",
-                    }}
-                    src={owner?.profile_image}
-                  />
-
-                  <Box
-                    sx={{
-                      fontWeight: 500,
-                      ml: "8px",
-                    }}
-                  >
-                    {owner?.username}
-                  </Box>
-                </Box>
-              </GridContent>
-              <GridTitle item xs={12} sm={3}>
-                <BoxTitle>{t("community:setting.form.administrator")}</BoxTitle>
-              </GridTitle>
-              <GridContent item xs={12} sm={9}>
-                <Box>
-                  <FormControl sx={{ m: 1, margin: 0, width: "100%" }} size="small">
-                    <SelectCustom
-                      sx={{ width: "100%" }}
-                      labelId="admin-multiple-chip-label"
-                      id="admin-multiple-chip"
-                      multiple
-                      displayEmpty
-                      value={personName}
-                      onChange={handleChangeAdmins}
-                      input={<OutlinedInput id="select-multiple-chip" />}
-                      renderValue={(selected: any) => (
-                        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                          {selected.length !== 0 ? (
-                            selected?.map((valueOption) => (
-                              <Chip
-                                key={valueOption}
-                                label={valueOption?.split(",")[1]}
-                                clickable
-                                deleteIcon={
-                                  <Avatar
-                                    onMouseDown={(event) => event.stopPropagation()}
-                                    src="/assets/images/svg/delete_white.svg"
-                                    sx={{
-                                      width: "16px",
-                                      height: "16px",
-                                      backgroundColor: theme.blue,
-                                      "& img": {
-                                        p: "4px",
-                                      },
-                                    }}
-                                  />
-                                }
-                                onDelete={(e) => handleDeleteChipAdmin(e, valueOption)}
-                                sx={{
-                                  background: theme.whiteBlue,
-                                  border: `1px solid ${theme.blue}`,
-                                  "& .MuiChip-label": { color: theme.blue },
-                                }}
-                              />
-                            ))
-                          ) : (
-                            <Box
-                              sx={{
-                                color: theme.gray,
-                                fontWeight: 400,
-                              }}
-                            >
-                              {t("community:setting.form.placeholder.administrator")}
-                            </Box>
-                          )}
-                        </Box>
-                      )}
-                      MenuProps={MenuProps}
-                    >
-                      <Box sx={{ height: "208px", overflow: "auto" }}>
-                        <InfiniteScroll
-                          loadMore={fetchDataUsers}
-                          hasMore={communityMembers?.length < itemsCount}
-                          useWindow={false}
-                          initialLoad={false}
-                          loader={
-                            isLoading && (
-                              <Box sx={{ color: theme.blue, marginTop: "-115px", textAlign: "center" }}>
-                                <CircularProgress color="inherit" />
-                              </Box>
-                            )
-                          }
-                        >
-                          <MenuItem disabled value="">
-                            {t("community:setting.form.placeholder.administrator")}
-                          </MenuItem>
-                          {communityMembers?.map(
-                            (nameOption) =>
-                              nameOption?.id !== owner?.id && (
-                                <MenuItem
-                                  key={nameOption?.id}
-                                  value={`${nameOption?.id},${nameOption?.username}`}
-                                  style={getStyles(`${nameOption?.id},${nameOption?.username}`, personName)}
-                                  disabled={isLoading ?? true}
-                                  sx={{
-                                    "&:hover": {
-                                      background: `${theme.blue} !important`,
-                                      color: "white !important",
-                                    },
-                                  }}
-                                >
-                                  <Avatar
-                                    src={nameOption?.profile_image}
-                                    sx={{
-                                      width: "24px",
-                                      height: "24px",
-                                      marginRight: "8px",
-                                    }}
-                                  />
-                                  {nameOption?.username}
-                                </MenuItem>
-                              ),
-                          )}
-                        </InfiniteScroll>
-                      </Box>
-                    </SelectCustom>
-                  </FormControl>
-                </Box>
-                <BoxTextValidate>{errorValidates.post_permission}</BoxTextValidate>
-              </GridContent>
-              <GridTitle item xs={12} sm={3}>
-                <BoxTitle>{t("community:setting.form.role-create-post")}</BoxTitle>
-              </GridTitle>
-              <GridContent item xs={12} sm={9}>
-                <Box>
-                  <ThemeProvider theme={themeSelect}>
-                    <SelectCustom
-                      size="small"
-                      value={roleCreatePostSelected}
-                      onChange={(e) => onChangeCommunityRequest("post_permission", e.target.value)}
-                      inputProps={{ "aria-label": "Role join" }}
-                      sx={{ border: errorValidates.post_permission ? "1px solid #FF9458" : "none" }}
-                    >
-                      {infoCommunitySetting.rolesCreatePost &&
-                        infoCommunitySetting.rolesCreatePost.map((option, index) => (
-                          <MenuItem key={index.toString()} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                    </SelectCustom>
-                  </ThemeProvider>
-                </Box>
-                <BoxTextValidate>{errorValidates.post_permission}</BoxTextValidate>
-              </GridContent>
-              <GridTitle item xs={12} sm={3}>
-                <BoxTitle>{t("community:setting.form.role-join")}</BoxTitle>
-              </GridTitle>
-              <GridContent item xs={12} sm={9}>
-                <RadioGroup
-                  aria-label="gender"
-                  name="controlled-radio-buttons-group"
-                  value={roleJoinSelected}
-                  onChange={(e) => onChangeCommunityRequest("is_public", e.target.value)}
-                  sx={{
-                    flexDirection: "row",
-                    justifyContent: ["space-between", "inherit"],
-                  }}
-                >
-                  {infoCommunitySetting.rolesJoin &&
-                    infoCommunitySetting.rolesJoin.map((item, index) => (
-                      <FormControlLabel
-                        key={index.toString()}
-                        value={item.value}
-                        control={
-                          <Radio
-                            icon={
-                              <Avatar
-                                sx={{
-                                  mb: 0,
-                                  width: "16px",
-                                  height: "16px",
-                                }}
-                                src="/assets/images/svg/radio_off.svg"
-                              />
-                            }
-                            checkedIcon={
-                              <Avatar
-                                sx={{
-                                  mb: 0,
-                                  width: "16px",
-                                  height: "16px",
-                                }}
-                                src="/assets/images/svg/radio_on.svg"
-                              />
-                            }
-                          />
-                        }
-                        label={item.label}
-                        sx={{
-                          mr: [0, "40px"],
-                          "& .MuiTypography-root": {
-                            fontSize: 14,
-                            fontWeight: 500,
-                          },
-                        }}
-                      />
-                    ))}
-                </RadioGroup>
-              </GridContent>
-
-              <GridTitle item xs={12} sm={3}>
-                <BoxTitle>{t("community:setting.form.tag")}</BoxTitle>
-              </GridTitle>
-              <Grid item xs={12} sm={9}>
-                <InputCustom
-                  sx={{
-                    display: ["inherit", "inherit"],
-                    ml: 1,
-                    flex: 1,
-                    border: tagDataValidate ? "1px solid #FF9458" : "none",
-                  }}
-                  placeholder={t("community:setting.form.placeholder.tag")}
-                  inputProps={{ "aria-label": t("community:setting.form.placeholder.tag") }}
-                  id="input_tags"
-                  onKeyPress={onKeyPress}
-                />
-                {tagDataValidate && <BoxTextValidate>{t("community:max_length_tag")}</BoxTextValidate>}
-                <Box>
-                  <Paper
-                    sx={{
-                      mt: "12px",
-                      display: "flex",
-                      flexWrap: "wrap",
-                      listStyle: "none",
-                      boxShadow: "none",
-                    }}
-                  >
-                    {tagData?.map((tag, index) => (
-                      <ListItem
-                        key={index}
-                        sx={{
-                          px: "3px",
-                          width: "auto",
-                        }}
-                      >
-                        <Chip
-                          label={tag}
-                          onDelete={handleDeleteTag(index)}
-                          deleteIcon={
-                            <Avatar
-                              src="/assets/images/svg/delete.svg"
-                              sx={{
-                                width: "16px",
-                                height: "16px",
-                                backgroundColor: "white",
-                                "& img": {
-                                  p: "4px",
-                                },
-                              }}
-                            />
-                          }
-                          sx={{
-                            fontSize: 12,
-                            fontWeight: 500,
-                            color: "white",
-                            height: "22px",
-                            backgroundColor: theme.blue,
-                            borderRadius: "4px",
-                            display: "flex",
-                            alignItems: "center",
-                          }}
-                        />
-                      </ListItem>
-                    ))}
-                  </Paper>
-                </Box>
-              </Grid>
-            </Grid>
-
-            <Box
+      {isLoading && (
+        <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
+      {!checkMember ? (
+        <Box sx={{ minHeight: "74.6vh" }} />
+      ) : (
+        <Box
+          sx={{
+            mt: ["20px", "38px"],
+            pt: "60px",
+            ml: [0, "40px"],
+            bgcolor: "white",
+            display: checkMember ? "flex" : "none",
+            flexDirection: ["column", "row"],
+            backgroundColor: theme.whiteBlue, // bg lg
+            minHeight: "74.6vh",
+          }}
+        >
+          <Box sx={{ backgroundColor: theme.whiteBlue }}>
+            <Typography
               sx={{
-                mt: ["40px", "69px"],
-                textAlign: "center",
+                pl: "26px",
+                mb: ["20px", "23px"],
+                mt: ["20px", 0],
+                display: ["flex", "inherit"],
+                justifyContent: "center",
+                fontSize: 20,
+                fontWeight: 700,
               }}
             >
-              <ButtonComponent
-                props={{
-                  dimension: "medium",
-                  bgColor: disableBtnSubmit ? theme.gray : theme.blue,
-                }}
-                sx={{
-                  fontSize: { sm: 20 },
-                  height: ["48px", "56px"],
-                  "@media (max-width: 425px)": {
-                    width: "200px",
-                  },
-                  "&:hover": {
-                    cursor: disableBtnSubmit && "not-allowed",
-                  },
-                }}
-                onClick={!disableBtnSubmit ? handleSaveForm : null}
-              >
-                {t("community:button.setting.save")}
-              </ButtonComponent>
-
-              <TypographyButton
-                sx={{
-                  mt: "40px",
-                }}
-                onClick={handleOpenDialog}
-              >
-                {t("community:setting.form.delete-community")}
-              </TypographyButton>
-            </Box>
+              {t("community:setting.title")}
+            </Typography>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="Vertical tabs example"
+              TabIndicatorProps={{
+                style: {
+                  backgroundColor: "transparent",
+                },
+              }}
+              sx={{
+                "& .MuiTabs-flexContainer": {
+                  flexDirection: ["row", "column"],
+                },
+              }}
+            >
+              {tabsCommunitySetting?.map((tab, index) => (
+                <TabCustom
+                  props={{
+                    xsWidth: "33.33%",
+                    smWidth: "239px",
+                  }}
+                  key={index.toString()}
+                  iconPosition="top"
+                  label={tab.text}
+                  {...a11yProps(index)}
+                />
+              ))}
+            </Tabs>
           </Box>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <MemberComponent />
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <ParticipatedMemberComponent />
-        </TabPanel>
-      </Box>
 
-      <DialogConfirmComponent
-        title={t("community:setting.form.dialog.title")}
-        content={t("community:setting.form.dialog.content")}
-        btnLeft={t("community:button.dialog.cancel-2")}
-        btnRight={t("community:button.dialog.delete-community")}
-        isShow={openDialog}
-        handleClose={handleCloseDialog}
-        handleCancel={handleDialogCancel}
-        handleOK={handleDeleteCommunity}
-      />
+          <TabPanel value={value} index={0}>
+            <Box
+              sx={{
+                mt: "20px",
+                mr: ["20px", "17.32%"],
+                ml: ["20px", "0"],
+                pt: ["20px ", "40px"],
+                px: ["10px", "40px"],
+                pb: "64px",
+                backgroundColor: "white",
+              }}
+            >
+              <Grid container>
+                <Grid
+                  item
+                  xs={12}
+                  sm={3}
+                  sx={{
+                    marginBottom: "2em",
+                    display: "flex",
+                    justifyContent: ["center", "flex-start"],
+                  }}
+                >
+                  <img
+                    style={{
+                      width: "160px",
+                      height: "160px",
+                      padding: srcProfileImage === "/assets/images/logo/logo.png" ? "1em" : "0",
+                      objectFit: srcProfileImage === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                      border: "3px #80808014 solid",
+                      background: "#F4FDFF",
+                      borderRadius: "50%",
+                    }}
+                    src={srcProfileImage ?? "/assets/images/logo/logo.png"}
+                    alt="image_avatar"
+                  />
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sm={9}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: ["center", "flex-start"],
+                    justifyContent: ["center", "flex-start"],
+                  }}
+                >
+                  <Typography>{t("community:setting.form.text-upload")}</Typography>
+                  <Typography>{t("community:setting.form.max-upload")}</Typography>
+                  <input
+                    id="avatar"
+                    name="profile_image"
+                    type="file"
+                    accept="image/png,image/jpeg,image/gif"
+                    hidden
+                    onChange={uploadProfileImage}
+                  />
+                  <label htmlFor="avatar">
+                    <Box
+                      sx={{
+                        mt: "12px",
+                        mb: "5px",
+                        height: "56px",
+                        width: "240px",
+                        backgroundColor: theme.gray,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        fontWeight: "700",
+                        lineHeight: "24.62",
+                        fontSize: "17px",
+                        color: "#fff",
+                        cursor: "pointer",
+                        borderRadius: "4px",
+                      }}
+                    >
+                      {t("community:button.setting.upload")}
+                    </Box>
+                  </label>
+
+                  <BoxTextValidate sx={{ mb: "20px" }}>{errorValidates.profile_image}</BoxTextValidate>
+                  {srcProfileImage !== infoCommunitySetting.avatar && srcProfileImage?.length > 0 ? (
+                    <TypographyButton mb={["28px", "33px"]} onClick={removeProfileImage}>
+                      {t("community:setting.form.delete-img")}
+                    </TypographyButton>
+                  ) : null}
+                </Grid>
+                <GridTitle item xs={12} sm={3}>
+                  <BoxTitle>{t("community:setting.form.name")}</BoxTitle>
+                </GridTitle>
+                <Grid
+                  item
+                  xs={12}
+                  sm={9}
+                  sx={{
+                    mb: ["36px", "30px"],
+                    mt: ["20px", 0],
+                  }}
+                >
+                  <Field
+                    onChangeInput={onChangeCommunityRequest}
+                    id="name"
+                    placeholder={t("community:setting.form.placeholder.name")}
+                    error={errorValidates.name}
+                    value={name}
+                  />
+                </Grid>
+                <GridTitle item xs={12} sm={3}>
+                  <BoxTitle>{t("community:setting.form.detail")}</BoxTitle>
+                </GridTitle>
+                <GridContent item xs={12} sm={9}>
+                  <Box
+                    sx={{
+                      height: "100%",
+                      borderRadius: "6px",
+                      marginBottom: "4px",
+                      "& div": {
+                        height: "100%",
+                        outline: "none",
+                        borderRadius: "6px",
+                      },
+                      "& div:focus-visible": {
+                        border: `2px solid ${theme.blue}`,
+                      },
+                    }}
+                  >
+                    <TextArea
+                      placeholder={t("community:place-holder")}
+                      onChangeInput={onChangeCommunityRequest}
+                      id="description"
+                      error={errorValidates.description}
+                      value={description}
+                    />
+                  </Box>
+                </GridContent>
+
+                <GridTitle item xs={12} sm={3}>
+                  <BoxTitle>{t("community:setting.form.representative")}</BoxTitle>
+                </GridTitle>
+                <GridContent item xs={12} sm={9}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Avatar
+                      sx={{
+                        mb: 0,
+                        width: "32px",
+                        height: "32px",
+                      }}
+                      src={owner?.profile_image}
+                    />
+
+                    <Box
+                      sx={{
+                        fontWeight: 500,
+                        ml: "8px",
+                      }}
+                    >
+                      {owner?.username}
+                    </Box>
+                  </Box>
+                </GridContent>
+                <GridTitle item xs={12} sm={3}>
+                  <Box sx={{ display: "flex" }}>
+                    <BoxTitle>{t("community:setting.form.administrator")}</BoxTitle>
+                    <Box sx={{ ml: "4px" }}>
+                      <Box className={styles.hintIconQuestion} onClick={() => setHint(!hint)}>
+                        <img src="/assets/images/icon/ic_question_mark.png" alt="ic_question_mark" />
+                      </Box>
+                      <Box className={styles.hint}>{t("community:tooltip_update")}</Box>
+                    </Box>
+                  </Box>
+                </GridTitle>
+                <GridContent item xs={12} sm={9}>
+                  <Box>
+                    <FormControl sx={{ m: 1, margin: 0, width: "100%" }} size="small">
+                      <SelectCustom
+                        sx={{ width: "100%" }}
+                        labelId="admin-multiple-chip-label"
+                        id="admin-multiple-chip"
+                        multiple
+                        displayEmpty
+                        value={personName}
+                        onChange={handleChangeAdmins}
+                        input={<OutlinedInput id="select-multiple-chip" />}
+                        renderValue={(selected: any) => (
+                          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                            {selected.length !== 0 ? (
+                              selected?.map(
+                                (valueOption) =>
+                                  valueOption &&
+                                  userId !== valueOption?.split(",")[0] && (
+                                    <Chip
+                                      key={valueOption}
+                                      label={valueOption?.split(",")[1]}
+                                      clickable
+                                      deleteIcon={
+                                        <Avatar
+                                          onMouseDown={(event) => event.stopPropagation()}
+                                          src="/assets/images/svg/delete_white.svg"
+                                          sx={{
+                                            width: "16px",
+                                            height: "16px",
+                                            backgroundColor: theme.blue,
+                                            "& img": {
+                                              p: "4px",
+                                            },
+                                          }}
+                                        />
+                                      }
+                                      onDelete={(e) => handleDeleteChipAdmin(e, valueOption)}
+                                      sx={{
+                                        background: theme.whiteBlue,
+                                        border: `1px solid ${theme.blue}`,
+                                        "& .MuiChip-label": { color: theme.blue },
+                                      }}
+                                    />
+                                  ),
+                              )
+                            ) : (
+                              <Box
+                                sx={{
+                                  color: theme.gray,
+                                  fontWeight: 400,
+                                }}
+                              >
+                                {t("community:setting.form.placeholder.administrator")}
+                              </Box>
+                            )}
+                          </Box>
+                        )}
+                        MenuProps={MenuProps}
+                      >
+                        <MenuItem disabled value="">
+                          {t("community:setting.form.placeholder.administrator")}
+                        </MenuItem>
+                        {communityMembers?.map(
+                          (nameOption) =>
+                            nameOption?.id !== owner?.id && (
+                              <MenuItem
+                                key={nameOption?.id}
+                                value={`${nameOption?.id},${nameOption?.username}`}
+                                style={getStyles(`${nameOption?.id},${nameOption?.username}`, personName)}
+                                disabled={(isLoading || nameOption?.id === userId) ?? true}
+                                sx={{
+                                  "&:hover": {
+                                    background: `${theme.blue} !important`,
+                                    color: "white !important",
+                                  },
+                                }}
+                              >
+                                <Avatar
+                                  src={nameOption?.profile_image}
+                                  sx={{
+                                    width: "24px",
+                                    height: "24px",
+                                    marginRight: "8px",
+                                  }}
+                                />
+                                {nameOption?.username}
+                              </MenuItem>
+                            ),
+                        )}
+                        {isLoading && (
+                          <Box sx={{ color: theme.blue, marginTop: "-120px", textAlign: "center" }}>
+                            <CircularProgress color="inherit" />
+                          </Box>
+                        )}
+                        {hasMore && !isLoading ? (
+                          <Button
+                            variant="text"
+                            onClick={fetchDataUsers}
+                            sx={{ color: theme.blue, ml: "16px", fontSize: "14px" }}
+                          >
+                            {t("common:showMore")}
+                          </Button>
+                        ) : null}
+                      </SelectCustom>
+                    </FormControl>
+                  </Box>
+                  <BoxTextValidate>{errorValidates.post_permission}</BoxTextValidate>
+                </GridContent>
+                <GridTitle item xs={12} sm={3}>
+                  <BoxTitle>{t("community:setting.form.role-create-post")}</BoxTitle>
+                </GridTitle>
+                <GridContent item xs={12} sm={9}>
+                  <Box>
+                    <ThemeProvider theme={themeSelect}>
+                      <SelectCustom
+                        size="small"
+                        value={roleCreatePostSelected}
+                        onChange={(e) => onChangeCommunityRequest("post_permission", e.target.value)}
+                        inputProps={{ "aria-label": "Role join" }}
+                        sx={{ border: errorValidates.post_permission ? "1px solid #FF9458" : "none" }}
+                      >
+                        {roleJoinSelected.toString() === "true"
+                          ? infoCommunitySetting.rolesCreatePost.map((option, index) => (
+                              <MenuItem key={index.toString()} value={option.value}>
+                                {option.label}
+                              </MenuItem>
+                            ))
+                          : rolePrivateCommunity.map((option, index) => (
+                              <MenuItem key={index.toString()} value={option.value}>
+                                {option.label}
+                              </MenuItem>
+                            ))}
+                      </SelectCustom>
+                    </ThemeProvider>
+                  </Box>
+                  <BoxTextValidate>{errorValidates.post_permission}</BoxTextValidate>
+                </GridContent>
+                <GridTitle item xs={12} sm={3}>
+                  <BoxTitle>{t("community:setting.form.role-join")}</BoxTitle>
+                </GridTitle>
+                <GridContent item xs={12} sm={9}>
+                  <RadioGroup
+                    aria-label="gender"
+                    name="controlled-radio-buttons-group"
+                    value={roleJoinSelected}
+                    onChange={(e) => onChangeCommunityRequest("is_public", e.target.value)}
+                    sx={{
+                      flexDirection: "row",
+                      justifyContent: ["space-between", "inherit"],
+                    }}
+                  >
+                    {infoCommunitySetting.rolesJoin &&
+                      infoCommunitySetting.rolesJoin.map((item, index) => (
+                        <FormControlLabel
+                          key={index.toString()}
+                          value={item.value}
+                          control={
+                            <Radio
+                              icon={
+                                <Avatar
+                                  sx={{
+                                    mb: 0,
+                                    width: "16px",
+                                    height: "16px",
+                                  }}
+                                  src="/assets/images/svg/radio_off.svg"
+                                />
+                              }
+                              checkedIcon={
+                                <Avatar
+                                  sx={{
+                                    mb: 0,
+                                    width: "16px",
+                                    height: "16px",
+                                  }}
+                                  src="/assets/images/svg/radio_on.svg"
+                                />
+                              }
+                            />
+                          }
+                          label={item.label}
+                          sx={{
+                            mr: [0, "40px"],
+                            "& .MuiTypography-root": {
+                              fontSize: 14,
+                              fontWeight: 500,
+                            },
+                          }}
+                        />
+                      ))}
+                  </RadioGroup>
+                </GridContent>
+
+                <GridTitle item xs={12} sm={3}>
+                  <BoxTitle>{t("community:setting.form.tag")}</BoxTitle>
+                </GridTitle>
+                <Grid item xs={12} sm={9}>
+                  <InputCustom
+                    sx={{
+                      display: ["inherit", "inherit"],
+                      ml: 1,
+                      flex: 1,
+                      border: tagDataValidate ? "1px solid #FF9458" : "none",
+                    }}
+                    placeholder={t("community:setting.form.placeholder.tag")}
+                    inputProps={{ "aria-label": t("community:setting.form.placeholder.tag") }}
+                    id="input_tags"
+                    onKeyPress={onKeyPress}
+                  />
+                  {tagDataValidate && <BoxTextValidate>{t("community:max_length_tag")}</BoxTextValidate>}
+                  <Box>
+                    <Paper
+                      sx={{
+                        mt: "12px",
+                        display: "flex",
+                        flexWrap: "wrap",
+                        listStyle: "none",
+                        boxShadow: "none",
+                      }}
+                    >
+                      {tagData?.map((tag, index) => (
+                        <ListItem
+                          key={index}
+                          sx={{
+                            px: "3px",
+                            width: "auto",
+                          }}
+                        >
+                          <Chip
+                            label={tag}
+                            onDelete={handleDeleteTag(index)}
+                            deleteIcon={
+                              <Avatar
+                                src="/assets/images/svg/delete.svg"
+                                sx={{
+                                  width: "16px",
+                                  height: "16px",
+                                  backgroundColor: "white",
+                                  "& img": {
+                                    p: "4px",
+                                  },
+                                }}
+                              />
+                            }
+                            sx={{
+                              fontSize: 12,
+                              fontWeight: 500,
+                              color: "white",
+                              height: "22px",
+                              backgroundColor: theme.blue,
+                              borderRadius: "4px",
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          />
+                        </ListItem>
+                      ))}
+                    </Paper>
+                  </Box>
+                </Grid>
+                <GridTitle item xs={12} sm={3}>
+                  <BoxTitle>{t("community:setting.form.virtual-room")}</BoxTitle>
+                </GridTitle>
+                <Grid
+                  item
+                  xs={12}
+                  sm={9}
+                  sx={{
+                    mb: ["36px", "30px"],
+                    mt: ["20px", 0],
+                  }}
+                >
+                  <Field
+                    onChangeInput={onChangeCommunityRequest}
+                    id="gather_url"
+                    placeholder={t("community:setting.form.placeholder.virtual-room")}
+                    error={errorValidates.gather_url}
+                    value={virtualLink}
+                  />
+                </Grid>
+              </Grid>
+
+              <Box
+                sx={{
+                  mt: ["40px", "69px"],
+                  textAlign: "center",
+                }}
+              >
+                <ButtonComponent
+                  props={{
+                    dimension: "medium",
+                    bgColor: disableBtnSubmit ? theme.gray : theme.blue,
+                  }}
+                  sx={{
+                    fontSize: { sm: 20 },
+                    height: ["48px", "56px"],
+                    "@media (max-width: 425px)": {
+                      width: "200px",
+                    },
+                    "&:hover": {
+                      cursor: disableBtnSubmit && "not-allowed",
+                    },
+                  }}
+                  onClick={!disableBtnSubmit ? handleSaveForm : null}
+                >
+                  {t("community:button.setting.save")}
+                </ButtonComponent>
+
+                <TypographyButton
+                  sx={{
+                    mt: "40px",
+                  }}
+                  onClick={handleOpenDialog}
+                >
+                  {mySelf?.role === IS_OWNER
+                    ? t("community:setting.form.delete-community")
+                    : t("community:banner.withdraw")}
+                </TypographyButton>
+              </Box>
+            </Box>
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <MemberComponent isAdmin={isAdmin} />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <ParticipatedMemberComponent isPublic={isPublic} handleChangeTab={handleChangeTab} />
+          </TabPanel>
+        </Box>
+      )}
+      {mySelf?.role === IS_OWNER ? (
+        <DialogConfirmComponent
+          title={t("community:setting.form.dialog.title")}
+          content={t("community:setting.form.dialog.content")}
+          btnLeft={t("community:button.dialog.cancel-2")}
+          btnRight={t("community:button.dialog.delete-community")}
+          isShow={openDialog}
+          handleClose={handleCloseDialog}
+          handleCancel={handleDialogCancel}
+          handleOK={handleDeleteCommunity}
+        />
+      ) : (
+        <DialogConfirmComponent
+          title={`${communityRequest?.name}を本当に退会しますか？`}
+          content={t("community:dialog.note")}
+          btnLeft={t("community:button.dialog.cancel")}
+          btnRight={t("community:button.dialog.withdraw")}
+          isShow={openDialog}
+          handleClose={handleCloseDialog}
+          handleCancel={handleDialogCancel}
+          handleOK={handleLeaveCommunity}
+          avatar={srcProfileImage}
+        />
+      )}
     </ContentComponent>
   );
 };

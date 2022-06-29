@@ -8,6 +8,9 @@ export const InputCustom = styled(InputBase)({
   backgroundColor: theme.whiteBlue,
   borderRadius: "6px",
   width: "100%",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
   "&.MuiInputBase-root": {
     marginLeft: "0px",
     "& .MuiInputBase-input": {
@@ -21,7 +24,7 @@ export const InputCustom = styled(InputBase)({
       height: 36,
       paddingTop: 0,
       paddingBottom: 0,
-      border: `2px solid transparent`,
+      border: `2px solid transparent !important`,
       paddingLeft: "18px",
       "&:focus": {
         border: `2px solid ${theme.blue}`,
@@ -42,7 +45,7 @@ interface ILayoutComponentProps {
   error?: string;
   id?: string;
   placeholder?: string;
-  onChangeInput: Function;
+  onChangeInput?: Function;
   value?: string;
 }
 
@@ -53,7 +56,6 @@ export const Field: React.SFC<ILayoutComponentProps> = ({ error, onChangeInput, 
       backgroundColor: "white",
       color: theme.navy,
       borderRadius: "12px",
-      border: [`1px solid ${theme.lightGray_1}`, "none"],
     }}
   >
     <Grid container spacing={2}>

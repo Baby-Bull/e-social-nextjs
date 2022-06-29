@@ -22,6 +22,15 @@ export const getUserFavorite = async (limit: number, cursor: string) => {
   }
 };
 
+export const getUserStatics = async () => {
+  try {
+    const res = await api.get(`/user/stats`);
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+}
+
 export const getUserFavoriteTags = async (limit: number, cursor: string = "") => {
   try {
     const res = await api.get(`/user/favorite/tag-users?limit=${limit}&cursor=${cursor}`);
@@ -232,7 +241,7 @@ export const getOrtherUserProfile = async (userId: string | string[]) => {
 
 export const getUserCommunites = async (userId: string | string[]) => {
   try {
-    const res = await api.get(`/user/${userId}/communities`);
+    const res = await api.get(`/user/${userId}/communities?limit=40`);
     return res?.data;
   } catch (error) {
     return error;

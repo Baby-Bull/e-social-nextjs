@@ -54,6 +54,22 @@ const reducer = (state, action: any) => {
           match_request_count: (state?.user?.match_request_count || 0) - 1,
         },
       };
+    case actionTypes.ADD_COMMUNITY_COUNT:
+      return {
+        ...state,
+        user: {
+          ...state?.user,
+          community_count: (state?.user?.community_count || 0) + 1,
+        },
+      }
+    case actionTypes.REMOVE_COMMUNITY_COUNT:
+      return {
+        ...state,
+        user: {
+          ...state?.user,
+          community_count: (state?.user?.community_count || 0) - 1,
+        }
+      }
     case actionTypes.REFRESH_TOKEN:
       refreshToken();
       return state;

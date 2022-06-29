@@ -10,7 +10,7 @@ import { getUserFavorite } from "src/services/user";
 import { getListCommunities } from "src/services/community";
 import { TAB_VALUE_BY_KEY, TYPE } from "src/constants/matching";
 
-const LIMIT = 20;
+const LIMIT = 40;
 
 const MatchingComponent = () => {
   const typeQuery = useRouter()?.query?.type as string;
@@ -234,8 +234,9 @@ const MatchingComponent = () => {
       <Box
         sx={{
           minHeight: "60vh",
-          mt: ["88px"],
+          mt: ["88px", "0px"],
           px: [0, "8.4%"],
+          pt: [0, "148px"],
           mb: ["0", "114px"],
         }}
       >

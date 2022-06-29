@@ -46,7 +46,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
   const auth = useSelector((state: IStoreState) => state.user);
   const [hint, setHint] = useState(false);
   const [showPopupAnalysis, setShowPopupAnalysis] = useState(false);
-  const urlProfile = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${auth?.user?.id}`;
+  const urlProfile = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${auth?.id}`;
 
   useEffect(() => {
     setLiked(user?.is_favorite);
@@ -69,7 +69,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
 
   const redirect = (page: string) => {
     if (page) {
-      window.location.href = page;
+      window.open(page);
     }
   };
 
@@ -288,7 +288,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                       mt: "11px",
                     }}
                   >
-                    {t("profile:login")}：{moment(user?.last_login_at).utc().fromNow()}
+                    {t("profile:login")}：{moment(user?.last_login_at).fromNow()}
                   </Box>
                   <Box
                     sx={{
@@ -596,7 +596,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   fontSize: "10px",
                 }}
               >
-                {t("profile:login")}：{moment(user?.last_login_at).utc().fromNow()} {t("profile:minutes-ago")}
+                {t("profile:login")}：{moment(user?.last_login_at).fromNow()} {t("profile:minutes-ago")}
               </Box>
 
               <Box

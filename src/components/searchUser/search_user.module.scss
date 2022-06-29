@@ -1,3 +1,99 @@
+.boxSearchLeft {
+  @media screen and (min-width: 993px) {
+    margin-right: 45px;
+    width: 240px;
+    margin-left: 1.5em;
+    position: sticky;
+    top: 5em;
+    margin-bottom: 1em;
+  }
+
+  @media screen and (max-width: 992px) {
+    padding: 20px 27px 27px 28px;
+    margin-bottom: -2em;
+  }
+
+  .blockInputTag {
+    :global {
+      .paper-search-tag {
+        border: 1px solid #989ea8;
+        background: white;
+        border-radius: 40px;
+        padding: 9px 39px 9px 0;
+        height: 40px;
+        box-shadow: none;
+
+        .input-search-tag {
+          color: #989ea8;
+          font-size: 16px;
+          font-weight: 400;
+
+          .MuiInputBase-input {
+            color: #989ea8;
+
+            &::placeholder {
+              color: #989ea8;
+              opacity: 1;
+            }
+          }
+        }
+      }
+
+      .tags {
+        ul {
+          display: flex;
+          flex-wrap: wrap;
+          padding-left: 0;
+
+          li {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            background: #03bcdb;
+            padding: 5px 8px;
+            font-size: 12px;
+            font-weight: 500;
+            color: white;
+            margin-right: 6px;
+            margin-top: 6px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+
+            .button-remove-icon {
+              width: 14px;
+              height: 14px;
+              background: white;
+              margin-left: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  :global {
+    .btn-user-search {
+      height: 54px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 4px;
+
+      &.btn-search {
+        color: white;
+        background: #03bcdb;
+        margin-top: 20px;
+      }
+
+      &.btn-clear {
+        color: #1a2944;
+        background: #dadada;
+        margin-top: 16px;
+      }
+    }
+  }
+}
+
 .boxContainer {
   padding: 80px 107px 40px 34px;
   display: flex;
@@ -7,101 +103,16 @@
     flex-direction: column;
   }
 
-  .boxSearchLeft {
-    @media screen and (min-width: 993px) {
-      margin-right: 45px;
-      width: 240px;
-      position: fixed;
-    }
-
-    .blockInputTag {
-      :global {
-        .paper-search-tag {
-          border: 1px solid #989ea8;
-          background: white;
-          border-radius: 40px;
-          padding: 9px 39px 9px 0;
-          height: 40px;
-          box-shadow: none;
-
-          .input-search-tag {
-            color: #989ea8;
-            font-size: 16px;
-            font-weight: 400;
-
-            .MuiInputBase-input {
-              color: #989ea8;
-
-              &::placeholder {
-                color: #989ea8;
-                opacity: 1;
-              }
-            }
-          }
-        }
-
-        .tags {
-          ul {
-            display: flex;
-            flex-wrap: wrap;
-            padding-left: 0;
-
-            li {
-              white-space: nowrap;
-              text-overflow: ellipsis;
-              overflow: hidden;
-              background: #03bcdb;
-              padding: 5px 8px;
-              font-size: 12px;
-              font-weight: 500;
-              color: white;
-              margin-right: 6px;
-              margin-top: 6px;
-              border-radius: 4px;
-              display: flex;
-              align-items: center;
-
-              .button-remove-icon {
-                width: 14px;
-                height: 14px;
-                background: white;
-                margin-left: 8px;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    :global {
-      .btn-user-search {
-        height: 54px;
-        font-size: 16px;
-        font-weight: 700;
-        border-radius: 4px;
-
-        &.btn-search {
-          color: white;
-          background: #03bcdb;
-          margin-top: 20px;
-        }
-
-        &.btn-clear {
-          color: #1a2944;
-          background: #dadada;
-          margin-top: 16px;
-        }
-      }
-    }
-  }
-
   .boxResultSearch {
+    //min-height: 35em;
     flex-grow: 1;
     padding-left: 285px;
+    @media screen and (min-width: 992px) {
+      margin-top: -34em;
+    }
     @media screen and (max-width: 992px) {
       padding-left: 0;
     }
-
     .titleResultSearch {
       display: flex;
       align-items: center;
@@ -353,6 +364,11 @@
         margin: auto;
         margin-bottom: 24px;
         width: 90%;
+
+        &:hover {
+          background: #dcf9ff;
+          cursor: pointer;
+        }
 
         img {
           margin-right: 10px;

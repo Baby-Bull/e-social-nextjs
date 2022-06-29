@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 export const sortListRoomChat = (listRooms: any) => {
   listRooms.sort((a: any, b: any) => {
     const dateA = Date.parse(a.last_chat_message_at);
@@ -17,7 +18,6 @@ const equalsYearMonthDate = (date1: Date, date2: Date) => {
 
 export const formatChatDateRoom = (date: string) => {
   const chatRoomDate = new Date(date);
-  //if (dayjs(new Date()).format("YYYYMMDD") === dayjs(date).format("YYYYMMDD")) {
   if (equalsYearMonthDate(new Date(), chatRoomDate)) {
     return `${chatRoomDate.getHours()}:${chatRoomDate.getMinutes()}`;
   }
@@ -27,4 +27,33 @@ export const formatChatDateRoom = (date: string) => {
 export const formatChatDate = (chatDate: string) => {
   const date = new Date(chatDate);
   return `${date.getHours()}:${date.getMinutes()}`;
+};
+
+export const formatDateToText = (date: string) => {
+  const newDate = new Date(date);
+  const now = new Date();
+
+  if (
+    newDate.getFullYear() === now.getFullYear() &&
+    newDate.getMonth() === now.getMonth() &&
+    newDate.getDate() === now.getDate()
+  ) {
+    return "今日";
+  }
+
+  return `${newDate.getFullYear()}/${newDate.getMonth() + 1}/${newDate.getDate()}`;
+};
+
+export const formatListMessages = (messages: any) => {
+  let preViousDate = null;
+  return messages.reduce((prev: any, item: any) => {
+    const itemDate = new Date(item.created_at);
+    if (!preViousDate || !equalsYearMonthDate(preViousDate, itemDate)) {
+      prev[formatDateToText(item.created_at)] = [item];
+    } else {
+      prev[formatDateToText(item.created_at)] = [...prev[formatDateToText(item.created_at)], item];
+    }
+    preViousDate = itemDate;
+    return prev;
+  }, {});
 };

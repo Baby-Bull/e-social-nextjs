@@ -4,9 +4,11 @@ import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 
+import { infoCommunitySetting } from "src/components/community/mockData";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmWithAvatarComponent from "src/components/common/dialog/DialogConfirmWithAvatarComponent";
+import { joinCommunity, leaveCommunity } from "src/services/community";
 
 import { bgColorByStatus } from "../mockData";
 
@@ -28,11 +30,30 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
   const MEMBER = "member";
   const OWNER = "owner";
 
+  const handleLeaveCommunity = async () => {
+    const community = router.query;
+    const res = await leaveCommunity(community?.id);
+    if (res) {
+      router.reload();
+      setOpen(false);
+    }
+    return res;
+  };
+
+  const handleJoinCommunity = async () => {
+    const community = router.query;
+    const res = await joinCommunity(community?.id);
+    if (res) {
+      router.reload();
+    }
+    return res;
+  };
   return (
     <React.Fragment>
       <Box
         sx={{
-          backgroundImage: ["none", `url("/assets/images/svg/php_bg.svg")`],
+          mt: "20px",
+          background: ["#fff", `url("/assets/images/svg/php_bg.svg")`],
           backgroundSize: "cover",
           borderRadius: "12px",
           border: [`1px solid ${theme.whiteGray}`, "none"],
@@ -64,11 +85,16 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
             >
               <Avatar
                 sx={{
-                  mb: 0,
+                  marginBottom: 0,
+                  background: "#F4FDFF",
                   width: ["80px", "160px"],
                   height: ["80px", "160px"],
+
+                  ".MuiAvatar-img": {
+                    objectFit: data?.profile_image === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                  },
                 }}
-                src={data?.profile_image || "/assets/images/svg/php.svg"}
+                src={data?.profile_image || infoCommunitySetting.avatar}
               />
             </Box>
             <Box
@@ -134,42 +160,44 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                 </Typography>
               </Box>
 
-              <Paper
-                sx={{
-                  m: 0,
-                  p: 0,
-                  backgroundColor: "transparent",
-                  display: "flex",
-                  flexWrap: "wrap",
-                  listStyle: "none",
-                  boxShadow: "none",
-                }}
-                component="ul"
-              >
-                {data?.tags?.map((value, index) => (
-                  <ListItem
-                    key={index}
-                    sx={{
-                      ml: 0,
-                      mr: "2px",
-                    }}
-                  >
-                    <Chip
-                      variant="outlined"
-                      size="small"
-                      label={value}
+              <Box sx={{ height: ["40px", "100%"], overflowY: ["scroll", "visible"] }}>
+                <Paper
+                  sx={{
+                    m: 0,
+                    p: 0,
+                    backgroundColor: "transparent",
+                    display: "flex",
+                    flexWrap: "wrap",
+                    listStyle: "none",
+                    boxShadow: "none",
+                  }}
+                  component="ul"
+                >
+                  {data?.tags?.map((value, index) => (
+                    <ListItem
+                      key={index}
                       sx={{
-                        fontSize: 12,
-                        fontWeight: 400,
-                        color: theme.navy,
-                        backgroundColor: theme.whiteBlue,
-                        borderRadius: "4px",
-                        borderColor: "transparent",
+                        ml: 0,
+                        mr: "4px",
                       }}
-                    />
-                  </ListItem>
-                ))}
-              </Paper>
+                    >
+                      <Chip
+                        variant="outlined"
+                        size="small"
+                        label={value}
+                        sx={{
+                          fontSize: 12,
+                          fontWeight: 400,
+                          color: theme.navy,
+                          backgroundColor: theme.whiteBlue,
+                          borderRadius: "4px",
+                          borderColor: "transparent",
+                        }}
+                      />
+                    </ListItem>
+                  ))}
+                </Paper>
+              </Box>
             </Box>
           </Box>
           <Box sx={{ marginTop: "22px" }}>
@@ -184,7 +212,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                   props={{
                     bgColor: data?.community_role === PENDING ? theme.gray : theme.orange,
                   }}
-                  onClick={handleClickOpen}
+                  onClick={data?.community_role !== PENDING ? handleJoinCommunity : null}
                 >
                   {data?.community_role === PENDING ? "申請中" : "参加申請する"}
                 </ButtonComponent>
@@ -203,7 +231,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                   props={{
                     bgColor: data.community_role ? "red" : bgColorByStatus,
                   }}
-                  onClick={handleClickOpen}
+                  onClick={data.community_role === MEMBER ? handleClickOpen : handleJoinCommunity}
                 >
                   {data.community_role === MEMBER ? t("community:banner.withdraw-SP") : t("community:banner.join-SP")}
                 </ButtonComponent>
@@ -244,6 +272,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
               props={{
                 bgColor: data?.community_role === PENDING ? theme.gray : theme.orange,
               }}
+              onClick={data?.community_role !== PENDING ? handleJoinCommunity : null}
             >
               {data?.community_role === PENDING ? t("community:banner.applying") : t("community:banner.apply")}
             </ButtonComponent>
@@ -259,7 +288,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                 props={{
                   bgColor: data.community_role ? "red" : bgColorByStatus,
                 }}
-                onClick={handleClickOpen}
+                onClick={data.community_role === MEMBER ? handleClickOpen : handleJoinCommunity}
               >
                 {data.community_role === MEMBER ? t("community:banner.withdraw") : t("community:banner.join")}
               </ButtonComponent>
@@ -277,7 +306,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                   color: theme.blue,
                   borderColor: theme.blue,
                 }}
-                onClick={() => router.push(`/community/update/${data.id}`)}
+                onClick={() => router.push(`/community/setting/${data.id}`)}
               >
                 {t("community:setting.title")}
               </ButtonComponent>
@@ -287,14 +316,15 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
       </Box>
 
       <DialogConfirmWithAvatarComponent
-        title={t("community:dialog.confirm")}
+        title={`${data?.name}を本当に退会しますか？`}
         content={t("community:dialog.note")}
         btnLeft={t("community:button.dialog.cancel")}
         btnRight={t("community:button.dialog.withdraw")}
         isShow={open}
         handleClose={handleClose}
         handleCancel={handleClose}
-        handleOK={handleClose}
+        avatar={data?.profile_image}
+        handleOK={handleLeaveCommunity}
       />
     </React.Fragment>
   );

@@ -17,7 +17,6 @@ const EmptyMatchingComponent: React.SFC<IEmptyMatchingComponentProps> = ({ text,
     <Box
       sx={{
         mx: ["48px", 0],
-        borderTop: { sm: `2px solid ${theme.lightGray}` },
         height: { sm: "490px" },
         display: "flex",
         flexDirection: "column",
@@ -51,7 +50,7 @@ const EmptyMatchingComponent: React.SFC<IEmptyMatchingComponentProps> = ({ text,
         </ButtonComponent>
       </Link>
 
-      <Link underline="none" href="/community/setting">
+      <Link underline="none" href="/community/create">
         <ButtonComponent
           props={{
             dimension: "medium",

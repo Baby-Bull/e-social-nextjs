@@ -108,7 +108,7 @@ const RegisterComponents = () => {
                     setIsLoading(false);
                   }}
                 >
-                  <ButtonComponent props={{ mode: "twitter" }}>{t("login:right.register-twitter")}</ButtonComponent>
+                  <ButtonComponent props={{ mode: "twitter" }}>{t("register:register-twitter")}</ButtonComponent>
                 </LoginSocialTwitter>
               </Box>
               <Box pt="48px">

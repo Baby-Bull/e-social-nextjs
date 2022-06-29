@@ -1,5 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 import axios from "axios";
+import { toast } from "react-toastify";
+
+import { FORBIDDEN, NOT_FOUND, SERVER_ERROR } from "src/messages/notification";
 
 import {
   setToken as setTokenStorage,
@@ -40,9 +43,24 @@ export function setToken(token: string, expiresIn?: number) {
 api.interceptors.response.use(
   (response) => response,
   async (err: any) => {
+    if (err.response.status === 403) {
+      toast.warning(FORBIDDEN);
+      window.location.href = "/";
+    }
+
+    if (err.response.status === 404) {
+      toast.warning(NOT_FOUND);
+      window.location.href = "/";
+    }
+
+    if (err.response.status === 422) {
+      toast.error(SERVER_ERROR);
+      window.location.href = "/";
+    }
     const originalRequest = err.config;
     if (originalRequest.url !== "/auth/tokens") {
       if (err.response.status === 401 && !originalRequest._retry) {
+        toast.error("401 Authentication");
         if (isRefreshing) {
           return new Promise((resolve, reject) => {
             failedQueue.push({ resolve, reject });

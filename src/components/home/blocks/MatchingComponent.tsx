@@ -4,10 +4,12 @@ import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import styles from "src/components/home/home.module.scss";
 import { IStoreState } from "src/constants/interface";
+import actionTypes from "src/store/actionTypes";
+import { getUserStatics } from "src/services/user";
 
 interface IMatchingItemProps {
   label: string;
@@ -63,7 +65,26 @@ const MatchingItemMobile: React.SFC<IMatchingItemMobileProps> = ({ label, data, 
 };
 
 const MatchingComponent = () => {
+  const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
+  useEffect(() => {
+    const fetchNewDataStatics = async () => {
+      const res = await getUserStatics();
+      auth.review_count = res.review_count;
+      auth.match_request_count = res.match_request_count;
+      auth.match_request_rejected_count = res.match_request_rejected_count;
+      auth.match_request_pending_count = res.match_request_pending_count;
+      auth.match_request_confirmed_count = res.match_request_confirmed_count;
+      auth.match_application_count = res.match_application_count;
+      auth.match_application_rejected_count = res.match_application_rejected_count;
+      auth.match_application_pending_count = res.match_application_pending_count;
+      auth.match_application_confirmed_count = res.match_application_confirmed_count;
+      auth.favorite_count = res.favorite_count;
+      auth.community_count = res.community_count;
+      dispatch({ type: actionTypes.UPDATE_PROFILE, payload: auth });
+    };
+    fetchNewDataStatics();
+  }, []);
 
   const { t } = useTranslation();
 

@@ -1,24 +1,54 @@
 import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import moment from "moment";
+import { useSelector } from "react-redux";
 
+import { IStoreState } from "src/constants/interface";
 import theme from "src/theme";
+// eslint-disable-next-line import/order
 import ButtonComponent from "src/components/common/ButtonComponent";
 
 import "moment/locale/ja";
 
-import { countMemberOnVirtualRoom, status, textRolesCreatePost } from "../mockData";
+import { ShowTextArea } from "src/components/common/ShowTextAreaComponent";
+
+import { textRolesCreatePost } from "../mockData";
 
 interface ICommunityDataProps {
   data?: any;
+  createPost?: any;
 }
 
-const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
+const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createPost }) => {
   const { t } = useTranslation();
-  // const router = useRouter();
+  const auth = useSelector((state: IStoreState) => state.user);
+  const router = useRouter();
+  const RoleAdmin = ["admin", "owner"];
+  const redirectCreatePost = () => {
+    const communityId = router.query;
+    router.push(`/community/${communityId?.id}/post/create`);
+  };
 
+  const checkRoleCreatPost =
+    RoleAdmin.includes(data?.community_role) ||
+    data?.post_permission === data?.community_role ||
+    data?.post_permission === "all";
+
+  const redirectGatherUrl = () => {
+    if (data?.gather_url) {
+      window.open(data?.gather_url);
+    }
+  };
+
+  const redirectProfile = (userId) => {
+    if (auth?.id === userId) {
+      router.push(`/my-profile`);
+    } else {
+      router.push(`/profile/${userId}`);
+    }
+  };
   return (
     <React.Fragment>
       <Box
@@ -42,8 +72,7 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
         >
           {t("community:intro.title.detail")}
         </Typography>
-        <Typography component="span">{data?.description}</Typography>
-
+        <ShowTextArea value={data?.description} />
         <Typography
           component="span"
           sx={{
@@ -56,18 +85,25 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
           {t("community:intro.title.administrator")}
         </Typography>
 
-        <Box display="flex">
-          <Avatar
-            sx={{
-              mr: "8px",
-              width: "32px",
-              height: "32px",
-            }}
-            src={data?.owner?.profile_image || "/assets/images/svg/dog.svg"}
-          />
-          {data?.owner?.name}
-        </Box>
-
+        {data?.admins?.length > 0 &&
+          data?.admins.map((value, index) => (
+            <Box
+              display="flex"
+              key={index}
+              sx={{ alignItems: "center", mt: 1, cursor: "pointer" }}
+              onClick={() => redirectProfile(value?.id)}
+            >
+              <Avatar
+                sx={{
+                  mr: "8px",
+                  width: "32px",
+                  height: "32px",
+                }}
+                src={value?.profile_image || "/assets/images/svg/dog.svg"}
+              />
+              {value?.username}
+            </Box>
+          ))}
         <Typography
           component="span"
           sx={{
@@ -78,7 +114,7 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
         >
           {t("community:intro.title.open-date")}
         </Typography>
-        <Typography component="span">{moment(data?.created_at).utc().format("LL")}</Typography>
+        <Typography component="span">{moment(data?.created_at).format("LL")}</Typography>
 
         <Typography
           component="span"
@@ -92,61 +128,54 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
         </Typography>
         <Typography component="span">{textRolesCreatePost[data?.post_permission]}</Typography>
 
-        {status === "withdraw" && (
+        {data?.community_role && data?.community_role !== "pending" && data?.gather_url && (
+          <Box
+            sx={{
+              p: "15px 15px",
+              backgroundColor: theme.orange,
+              color: "white",
+              borderRadius: "12px",
+              mb: "41px",
+              width: "200px",
+              cursor: "pointer",
+              mt: "50px",
+            }}
+            onClick={redirectGatherUrl}
+          >
+            <Box sx={{ fontSize: "16px", fontWeight: 700, lineHeight: "23.17px" }}>{t("community:virtual-room")}</Box>
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <Avatar
+                src="/assets/images/icon_room_virtual.png"
+                sx={{ width: "39px", height: "39px", mt: "10px" }}
+                variant="square"
+              />
+            </Box>
+          </Box>
+        )}
+      </Box>
+      {createPost && checkRoleCreatPost && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <ButtonComponent
             props={{
               square: true,
-              bgColor: theme.orange,
+              mode: "gradient",
+              dimension: "medium",
             }}
             sx={{
-              mt: ["55px", "26px"],
-              width: "197px",
-              height: "102px",
+              mt: ["20px", "40px"],
+              height: "54px",
             }}
+            onClick={redirectCreatePost}
           >
-            <Box>
-              {t("community:button.go-to-virtual-room")}
-              <Box
-                sx={{
-                  pt: "8px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <img src="/assets/images/svg/community_message.svg" alt="community_message" />
-                <Typography pl="16px" fontWeight={700}>
-                  {countMemberOnVirtualRoom}
-                </Typography>
-              </Box>
-            </Box>
+            {t("community:button.intro.create-post")}
           </ButtonComponent>
-        )}
-      </Box>
-
-      {/* {canCreatePost && ( */}
-      {/*  <Box */}
-      {/*    sx={{ */}
-      {/*      display: "flex", */}
-      {/*      justifyContent: "center", */}
-      {/*    }} */}
-      {/*  > */}
-      {/*    <ButtonComponent */}
-      {/*      props={{ */}
-      {/*        square: true, */}
-      {/*        mode: "gradient", */}
-      {/*        dimension: "medium", */}
-      {/*      }} */}
-      {/*      sx={{ */}
-      {/*        mt: ["20px", "40px"], */}
-      {/*        height: "54px", */}
-      {/*      }} */}
-      {/*      onClick={() => router.push(`/community/post/create`)} */}
-      {/*    > */}
-      {/*      {t("community:button.intro.create-post")} */}
-      {/*    </ButtonComponent> */}
-      {/*  </Box> */}
-      {/* )} */}
+        </Box>
+      )}
     </React.Fragment>
   );
 };

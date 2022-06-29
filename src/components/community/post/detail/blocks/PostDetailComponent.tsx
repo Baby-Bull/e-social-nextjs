@@ -1,17 +1,29 @@
 import React from "react";
-import { Box, Typography, Avatar, Divider } from "@mui/material";
+import { Box, Typography, Avatar, Divider, Paper, ListItem, Chip } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import DOMPurify from "isomorphic-dompurify";
+import moment from "moment";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 import theme from "src/theme";
-import { postDetail, status, isContributor } from "src/components/community/mockData";
+// eslint-disable-next-line import/order
 import ButtonDropDownComponent from "src/components/community/post/detail/blocks/ButtonDropDownComponent";
+// eslint-disable-next-line import/order
+import { IStoreState } from "src/constants/interface";
+
+import "moment/locale/ja";
+import { deleteCommunityPost } from "src/services/community";
+import { ShowTextArea } from "src/components/common/ShowTextAreaComponent";
 
 interface IBoxInfoProps {
   title: string;
   text: string;
   textColor?: string;
   fontWeight: number;
+}
+
+interface ICommunityPostDataProps {
+  data?: any;
 }
 
 const BoxInfo: React.SFC<IBoxInfoProps> = ({ title, text, textColor, fontWeight }) => (
@@ -53,9 +65,25 @@ const BoxInfo: React.SFC<IBoxInfoProps> = ({ title, text, textColor, fontWeight 
   </Box>
 );
 
-const PostDetailComponent = () => {
+const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
+  const auth = useSelector((state: IStoreState) => state.user);
   const { t } = useTranslation();
+  const router = useRouter();
+  const handleCallbackRemove = () => {
+    const community = router.query;
+    const res = deleteCommunityPost(community?.id, community?.detailId);
+    if (res) {
+      router.push(`/community/${community?.id}`);
+    }
+  };
 
+  const redirectProfile = () => {
+    if (data?.user?.id === auth?.id) {
+      router.push("/my-profile");
+    } else {
+      router.push(`/profile/${data?.user?.id}`);
+    }
+  };
   return (
     <Box
       sx={{
@@ -69,8 +97,9 @@ const PostDetailComponent = () => {
         backgroundColor: "white",
       }}
     >
-      {isContributor && <ButtonDropDownComponent />}
-
+      {(data?.can_delete || data?.can_edit) && (
+        <ButtonDropDownComponent handleCallbackRemove={handleCallbackRemove} data={data} />
+      )}
       <Typography
         component="span"
         sx={{
@@ -78,7 +107,7 @@ const PostDetailComponent = () => {
           fontWeight: 700,
         }}
       >
-        {postDetail.title}
+        {data?.title}
       </Typography>
 
       <Box
@@ -92,8 +121,10 @@ const PostDetailComponent = () => {
             mr: ["8px", "24px"],
             width: ["32px", "54px"],
             height: ["32px", "54px"],
+            cursor: "pointer",
           }}
-          src={postDetail.avatar}
+          src={data?.user?.profile_image}
+          onClick={redirectProfile}
         />
 
         <Box
@@ -110,7 +141,7 @@ const PostDetailComponent = () => {
               fontSize: [10, 14],
             }}
           >
-            {postDetail.last_login}
+            {moment(data?.created_at).format("LLL")}
           </Typography>
           <Typography
             component="div"
@@ -118,19 +149,59 @@ const PostDetailComponent = () => {
               fontSize: [14, 20],
               fontWeight: 700,
               mr: ["16px", 0],
+              cursor: "pointer",
             }}
+            onClick={redirectProfile}
           >
-            {postDetail.name}
+            {data?.user?.username}
           </Typography>
         </Box>
       </Box>
+      <Paper
+        sx={{
+          m: 0,
+          p: 0,
+          backgroundColor: "transparent",
+          display: "flex",
+          flexWrap: "wrap",
+          listStyle: "none",
+          boxShadow: "none",
+          marginBottom: "20px",
+        }}
+        component="ul"
+      >
+        {data?.tags?.map((value: any, index: number) => (
+          <ListItem
+            key={index}
+            sx={{
+              width: "fit-content",
+              ml: 0,
+              padding: "4px 4px",
+            }}
+          >
+            <Chip
+              variant="outlined"
+              size="small"
+              label={value}
+              sx={{
+                fontSize: 12,
+                fontWeight: 400,
+                color: theme.blue,
+                backgroundColor: "white",
+                borderRadius: "6px",
+                borderColor: theme.blue,
+              }}
+            />
+          </ListItem>
+        ))}
+      </Paper>
 
-      {status === "withdraw" && (
-        <React.Fragment>
-          <BoxInfo title={t("community:url")} text={postDetail.url} textColor={theme.blue} fontWeight={500} />
-          <BoxInfo title={t("community:address")} text={postDetail.address} fontWeight={400} />
-        </React.Fragment>
-      )}
+      <React.Fragment>
+        {data?.reference_url && (
+          <BoxInfo title={t("community:url")} text={data?.reference_url} textColor={theme.blue} fontWeight={500} />
+        )}
+        {data?.address && <BoxInfo title={t("community:address")} text={data?.address} fontWeight={400} />}
+      </React.Fragment>
 
       <Divider
         sx={{
@@ -140,7 +211,7 @@ const PostDetailComponent = () => {
       />
 
       <Box mt="20px">
-        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(postDetail.content) }} />
+        <ShowTextArea value={data?.content} />
       </Box>
     </Box>
   );

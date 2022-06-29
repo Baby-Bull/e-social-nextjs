@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Box, Tabs, Typography, Avatar, Select, MenuItem, SelectChangeEvent } from "@mui/material";
+import { useRouter } from "next/router";
+import { Box, Tabs, Typography, Avatar, Select, MenuItem, SelectChangeEvent, Grid } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
@@ -10,6 +11,8 @@ import ThreadComponent from "src/components/matching/blocks/ThreadComponent";
 import ChildTabComponent from "src/components/matching/blocks/ChildTabComponent";
 import { getMatchedRequest } from "src/services/matching";
 import { TAB_VALUE_BY_KEY } from "src/constants/matching";
+
+import PaginationCustomComponent from "../common/PaginationCustomComponent";
 
 // interface IData {
 //   avatar: string;
@@ -32,7 +35,8 @@ interface ITabComponentProps {
   setTabValue: Function;
 }
 
-const LIMIT = 20;
+const LIMITAPIMATCHED = 20;
+const LIMITCOUNTPERPAGE = 10;
 const OPTIONS = [
   { value: "newest", label: "新しい順" },
   { value: "oldest", label: "古い順" },
@@ -41,12 +45,13 @@ const OPTIONS = [
 
 const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, tabValue, setTabValue }) => {
   const { t } = useTranslation();
+  const router = useRouter();
 
   const onChangeParentTab = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 
-  const [optionSelected, setOption] = React.useState("oldest");
+  const [optionSelected, setOption] = React.useState("newest");
   const handleChange = (event: SelectChangeEvent) => {
     setOption(event.target.value);
   };
@@ -55,7 +60,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
   useEffect(() => {
     if (tabValue === TAB_VALUE_BY_KEY.matched) {
       const fetchMatchedUsers = async () => {
-        const res = await getMatchedRequest(LIMIT, "", optionSelected);
+        const res = await getMatchedRequest(LIMITAPIMATCHED, "", optionSelected);
         setMatchUsers(res?.items);
       };
       fetchMatchedUsers();
@@ -64,6 +69,19 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
 
   const handleDisplayReddot = (tabType: number, countUnconfirmed: number) =>
     (tabType === 1 || tabType === 2) && countUnconfirmed > 0;
+
+  const handleRedirectCommunity = (idComm: string) => {
+    router.push(`/community/${idComm}`);
+  };
+
+  const [pageFavorite, setPageFavorite] = useState(1);
+  const [perPageFavorite, setPerPageFavorite] = useState(10000);
+  const handleCallbackChangePagination = (event, value) => {
+    setPageFavorite(value);
+    if (perPageFavorite <= value) {
+      setPerPageFavorite(perPageFavorite + 1);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -89,6 +107,9 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
             {...a11yProps(index)}
             sx={{
               backgroundColor: "white",
+              "@media (max-width: 768px)": {
+                whiteSpace: "pre-line",
+              },
               "&:before": handleDisplayReddot(tab?.type, tab?.children?.[0]?.count) && {
                 content: `url("/assets/images/svg/red_dot.svg")`,
                 position: "absolute",
@@ -99,19 +120,6 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
                   right: "5px",
                 },
               },
-
-              // "&.Mui-selected": {
-              //   "&:before": {
-              //     content: `url("/assets/images/svg/red_dot.svg")`,
-              //     position: "absolute",
-              //     top: "-5px",
-              //     right: "10px",
-              //     "@media (max-width: 768px)": {
-              //       top: "5px",
-              //       right: "5px",
-              //     },
-              //   },
-              // },
             }}
           />
         ))}
@@ -146,21 +154,41 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
           }}
         >
           {data[2]?.data?.length ? (
-            data[2]?.data?.map((tab, tabIndex) => (
-              <React.Fragment key={tabIndex.toString()}>
-                <Box
-                  sx={{
-                    px: [0, "40px"],
-                    backgroundColor: "white",
-                    "&:last-of-type": {
-                      borderBottom: { sm: `2px solid ${theme.lightGray}` },
-                    },
-                  }}
-                >
-                  <ThreadComponent data={tab} type="favorite" setKeyRefetchData={setKeyRefetchData} />
-                </Box>
-              </React.Fragment>
-            ))
+            <React.Fragment>
+              {data[2]?.data
+                ?.slice((pageFavorite - 1) * LIMITCOUNTPERPAGE, pageFavorite * LIMITCOUNTPERPAGE)
+                .map((tab, tabIndex) => (
+                  <React.Fragment key={tabIndex.toString()}>
+                    <Box
+                      sx={{
+                        px: [0, "40px"],
+                        backgroundColor: "white",
+                        "&:last-of-type": {
+                          borderBottom: { sm: `2px solid ${theme.lightGray}` },
+                        },
+                      }}
+                    >
+                      <ThreadComponent data={tab} type="favorite" setKeyRefetchData={setKeyRefetchData} />
+                    </Box>
+                  </React.Fragment>
+                ))}
+              <Box
+                sx={{
+                  py: "40px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {data[2]?.data?.length > LIMITCOUNTPERPAGE && (
+                  <PaginationCustomComponent
+                    handleCallbackChangePagination={handleCallbackChangePagination}
+                    page={pageFavorite}
+                    perPage={perPageFavorite}
+                    totalPage={Math.ceil(data[2]?.data?.length > 0 ? data[2].data.length / LIMITCOUNTPERPAGE : 1)}
+                  />
+                )}
+              </Box>
+            </React.Fragment>
           ) : (
             <EmptyMatchingComponent text={t("matching:text-empty.tab-4")} />
           )}
@@ -174,7 +202,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
             backgroundColor: theme.whiteBlue,
           }}
         >
-          {data[3]?.data?.length ? (
+          {matchedUsers?.length ? (
             <React.Fragment>
               <Box
                 sx={{
@@ -210,6 +238,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
                 </Select>
               </Box>
 
+              {/* {matchedUsers?.slice((pageFavorite - 1) * LIMITCOUNTPERPAGE, pageFavorite * LIMITCOUNTPERPAGE).map((tab, tabIndex) => ( */}
               {matchedUsers?.map((tab, tabIndex) => (
                 <React.Fragment key={tabIndex.toString()}>
                   <Box
@@ -225,6 +254,22 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
                   </Box>
                 </React.Fragment>
               ))}
+              {/* <Box
+                sx={{
+                  py: "40px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {matchedUsers?.length > LIMITCOUNTPERPAGE && (
+                  <PaginationCustomComponent
+                    handleCallbackChangePagination={handleCallbackChangePagination}
+                    page={pageFavorite}
+                    perPage={perPageFavorite}
+                    totalPage={Math.ceil(matchedUsers?.length > 0 ? (matchedUsers.length / LIMITCOUNTPERPAGE) : 1)}
+                  />
+                )}
+              </Box> */}
             </React.Fragment>
           ) : (
             <EmptyMatchingComponent text={t("matching:text-empty.tab-4")} />
@@ -234,62 +279,79 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
 
       <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.community}>
         {data[4]?.data?.length ? (
-          <Box
+          <Grid
             sx={{
-              mt: ["40px", 0],
-              mx: ["20px", "40px"],
-              display: "flex",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
+              flexGrow: 1,
+              display: "block",
             }}
+            container
           >
-            {data[4]?.data?.map((tab, tabIndex) => (
-              <React.Fragment key={tabIndex.toString()}>
-                <Box
-                  sx={{
-                    mt: [0, "40px"],
-                    mb: ["20px", 0],
-                    mx: [0, "20px"],
-                    flex: ["0 0 50%", "0 0 18%"],
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <Avatar
-                    variant="square"
-                    sx={{
-                      width: ["149px", "124px"],
-                      height: ["149px", "124px"],
-                    }}
-                    src={tab?.profile_image}
-                  />
+            <Box
+              sx={{
+                mt: ["30px", 0],
+                display: "flex",
+                justifyContent: "flex-start",
+                flexWrap: "wrap",
+              }}
+            >
+              {data[4]?.data?.map((tab, tabIndex) => (
+                <React.Fragment key={tabIndex.toString()}>
+                  <Grid xs={6} md={3}>
+                    <Box
+                      onClick={() => handleRedirectCommunity(tab?.id)}
+                      sx={{
+                        cursor: "pointer",
+                        mt: [0, "40px"],
+                        mb: ["20px", 0],
+                        mx: [0, "20px"],
+                        // flex: ["0 0 50%", "0 0 25%"],
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Avatar
+                        variant="circular"
+                        sx={{
+                          width: ["149px", "124px"],
+                          height: ["149px", "124px"],
+                          img: {
+                            objectFit: tab?.profile_image === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                            border:
+                              tab?.profile_image === "/assets/images/logo/logo.png" ? "3px #e8ecf1 solid" : "none",
+                            borderRadius: "50%",
+                          },
+                        }}
+                        src={tab?.profile_image}
+                      />
 
-                  <Typography
-                    component="span"
-                    pt="10px"
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: 700,
-                      color: "black",
-                    }}
-                  >
-                    {tab?.name}
-                  </Typography>
-                  <Typography
-                    component="span"
-                    pt="8px"
-                    sx={{
-                      fontSize: [10, 14],
-                      color: theme.gray,
-                    }}
-                  >
-                    {t("matching:count-member")} {tab?.member_count}
-                  </Typography>
-                </Box>
-              </React.Fragment>
-            ))}
-          </Box>
+                      <Typography
+                        component="span"
+                        pt="10px"
+                        sx={{
+                          fontSize: 14,
+                          fontWeight: 700,
+                          color: "black",
+                        }}
+                      >
+                        {tab?.name}
+                      </Typography>
+                      <Typography
+                        component="span"
+                        pt="8px"
+                        sx={{
+                          fontSize: [10, 14],
+                          color: theme.gray,
+                        }}
+                      >
+                        {t("matching:count-member")} {tab?.member_count} 人
+                      </Typography>
+                    </Box>
+                  </Grid>
+                </React.Fragment>
+              ))}
+            </Box>
+          </Grid>
         ) : (
           <EmptyMatchingComponent text={t("matching:text-empty.tab-5")} mode="community" />
         )}

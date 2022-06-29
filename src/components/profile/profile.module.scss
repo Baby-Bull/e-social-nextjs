@@ -170,6 +170,11 @@
       width: 82%;
       margin-left: 9%;
 
+      &:hover {
+        background: #dcf9ff;
+        cursor: pointer;
+      }
+
       img {
         margin-right: 10px;
       }

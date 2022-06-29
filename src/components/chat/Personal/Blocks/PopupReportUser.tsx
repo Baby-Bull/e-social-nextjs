@@ -152,6 +152,10 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup,
       isValidForm = false;
       errorMessages.detail = VALIDATE_FORM_USER_PORT.detail.max_length;
     }
+    if (userReportRequest?.detail?.length === 0) {
+      isValidForm = false;
+      errorMessages.detail = VALIDATE_FORM_USER_PORT.detail.required;
+    }
     setErrorValidates(errorMessages);
     return isValidForm;
   };

@@ -7,9 +7,13 @@ import ButtonComponent from "src/components/common/ButtonComponent";
 interface IDialogConfirmProps {
   isShow: boolean;
   title: string;
-  content: string;
+  content?: string;
+  content1?: string;
+  content2?: string;
+  avatar?: string;
   btnLeft: string;
   btnRight: string;
+  bgColorBtnRight?: string;
   handleClose: () => void;
   handleCancel?: () => void;
   handleOK?: () => void;
@@ -19,11 +23,15 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
   isShow,
   title,
   content,
+  content1,
+  content2,
   btnLeft,
   btnRight,
   handleClose,
   handleCancel,
   handleOK,
+  avatar,
+  bgColorBtnRight,
 }) => {
   const [fullWidth] = React.useState(true);
 
@@ -35,6 +43,7 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
           maxWidth: "640px",
         },
       }}
+      sx={{ "& .MuiPaper-root": { margin: "32px 20px", width: "100%" } }}
       open={isShow}
       onClose={handleClose}
       scroll="paper"
@@ -108,8 +117,23 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
                 color: theme.navy,
                 fontSize: [16, 20],
                 fontWeight: 700,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: avatar ? "none" : "center",
               }}
             >
+              <Avatar
+                src={avatar}
+                sx={{
+                  mr: "11px",
+                  display: avatar ? "block" : "none",
+                  ".MuiAvatar-img": {
+                    objectFit: avatar === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                    borderRadius: "50%",
+                    border: "1px #c2c2c2 solid",
+                  },
+                }}
+              />
               {title}
             </Typography>
 
@@ -117,12 +141,14 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
               component="span"
               sx={{
                 mt: ["35px"],
-                px: [0, "50px"],
+                px: ["24px", "50px"],
                 fontSize: [14, 16],
                 color: theme.navy,
               }}
             >
               {content}
+              <Box sx={{ fontSize: "12px", lineHeight: "17.38px", fontWeight: "400" }}>{content1}</Box>
+              <Box sx={{ fontSize: "12px", lineHeight: "17.38px", fontWeight: "400" }}>{content2}</Box>
             </Typography>
           </Box>
         </Box>
@@ -159,7 +185,7 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
         <ButtonComponent
           props={{
             dimension: "medium",
-            bgColor: theme.blue,
+            bgColor: bgColorBtnRight ?? theme.blue,
           }}
           sx={{
             height: "56px",

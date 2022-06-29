@@ -5,7 +5,12 @@ import { useTranslation } from "next-i18next";
 import theme from "src/theme";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
 
-const DropDownBlockUserComponent = () => {
+interface IDialogConfirmProps {
+  handleOK?: () => void;
+  title?: string;
+  avatar?: string;
+}
+const DropDownBlockUserComponent: React.SFC<IDialogConfirmProps> = ({ handleOK, title, avatar }) => {
   const { t } = useTranslation();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -20,7 +25,10 @@ const DropDownBlockUserComponent = () => {
   const [openDialog, setOpen] = React.useState(false);
   const handleOpenDialog = () => setOpen(true);
   const handleCloseDialog = () => setOpen(false);
-
+  const handleApproveBlock = () => {
+    setOpen(false);
+    handleOK();
+  };
   return (
     <React.Fragment>
       <IconButton
@@ -82,14 +90,17 @@ const DropDownBlockUserComponent = () => {
       </Menu>
 
       <DialogConfirmComponent
-        title={t("community:dialog.confirm-delete-title")}
-        content={t("community:dialog.note-delete-title")}
+        title={title}
+        avatar={avatar}
+        content1={t("community:dialog.note-delete-title1")}
+        content2={t("community:dialog.note-delete-title2")}
         btnLeft={t("community:button.dialog.cancel")}
-        btnRight={t("community:button.dialog.withdraw")}
+        btnRight={t("community:button.dialog.block")}
+        bgColorBtnRight={theme.red}
         isShow={openDialog}
         handleClose={handleCloseDialog}
         handleCancel={handleCloseDialog}
-        handleOK={handleCloseDialog}
+        handleOK={handleApproveBlock}
       />
     </React.Fragment>
   );

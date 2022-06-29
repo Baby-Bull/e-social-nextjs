@@ -1,8 +1,10 @@
-import React from "react";
-import { Box, Typography, Avatar, Chip } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Typography, Avatar, Chip, Backdrop, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
+import { IStoreState } from "src/constants/interface";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmWithAvatarComponent from "src/components/common/dialog/DialogConfirmWithAvatarComponent";
@@ -16,6 +18,7 @@ interface IGridViewComponentProps {
   data: any;
   type: Type;
   index: any;
+  isAdmin: boolean;
   callbackHandleRemoveElmMember: any;
 }
 
@@ -24,21 +27,28 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
   type,
   index,
   callbackHandleRemoveElmMember,
+  isAdmin,
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const auth = useSelector((state: IStoreState) => state.user);
+  const [isLoading, setIsLoading] = useState(false);
   const IS_OWNER = "owner";
   const IS_MEMBER = "member";
 
   const MemberBlock = async () => {
+    setIsLoading(true);
     const communityId = router.query;
     const resData = await MemberBlocked(communityId?.indexId, data.id);
+    setIsLoading(false);
     return resData;
   };
 
   const MemberUnBlocked = async () => {
+    setIsLoading(true);
     const communityId = router.query;
     const resData = await MemberUnBlock(communityId?.indexId, data.id);
+    setIsLoading(false);
     return resData;
   };
 
@@ -61,8 +71,21 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
     callbackHandleRemoveElmMember(index);
   };
 
+  const redirectProfile = (userId) => {
+    if (auth?.id === userId) {
+      router.push(`/my-profile`);
+    } else {
+      router.push(`/profile/${userId}`);
+    }
+  };
+
   return (
     <React.Fragment>
+      {isLoading && (
+        <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
       <Box
         sx={{
           py: ["15px", "22px"],
@@ -73,8 +96,16 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
           position: "relative",
         }}
       >
-        <Box display={type === "block" && "none"}>
-          <DropDownBlockUserComponent />
+        <Box
+          display={
+            ((data.role !== IS_OWNER && !isAdmin) || data.role === IS_MEMBER) && type !== "block" ? "block" : "none"
+          }
+        >
+          <DropDownBlockUserComponent
+            handleOK={handleDialogApproveBlock}
+            title={`${data?.username}${t("community:setting.member.dialog-block.title")}`}
+            avatar={data.profile_image}
+          />
         </Box>
 
         {/* Info user (avatar, ...) */}
@@ -96,7 +127,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
               sx={{
                 width: "64px",
                 height: "100%",
+                cursor: "pointer",
               }}
+              onClick={() => redirectProfile(data?.user?.id)}
               src={data.profile_image}
             />
 
@@ -119,7 +152,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
                   sx={{
                     fontSize: 16,
                     fontWeight: 700,
+                    cursor: "pointer",
                   }}
+                  onClick={() => redirectProfile(data?.user?.id)}
                 >
                   {data.username}
                 </Typography>
@@ -161,7 +196,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
                 dimension: "x-small",
               }}
               sx={{
-                display: ["none", data.role === IS_MEMBER && "flex"],
+                display: ["none", ((data.role !== IS_OWNER && !isAdmin) || data.role === IS_MEMBER) && "flex"],
                 height: "36px",
               }}
               onClick={handleOpenDialogBlock}
@@ -176,7 +211,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
                   dimension: "x-small",
                 }}
                 sx={{
-                  display: ["none", data.role !== IS_MEMBER ? "none" : "inherit"],
+                  display: ["none", ((data.role !== IS_OWNER && !isAdmin) || data.role === IS_MEMBER) && "inherit"],
                   height: "36px",
                 }}
                 onClick={handleOpenDialogUnBlock}
@@ -209,7 +244,8 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
 
       <DialogConfirmWithAvatarComponent
         title={`${data?.username}${t("community:setting.member.dialog-block.title")}`}
-        content={t("community:setting.member.dialog-block.content")}
+        content1={t("community:setting.member.dialog-block.content1")}
+        content2={t("community:setting.member.dialog-block.content2")}
         btnLeft={t("community:button.dialog.cancel")}
         btnRight={t("community:button.dialog.block")}
         bgColorBtnRight={theme.red}

@@ -16,11 +16,11 @@
     img {
       object-fit: cover;
       @media screen and (min-width: 993px) {
-        width: 47vw;
+        width: 33.33vw;
         min-width: 680px;
         object-fit: cover;
         min-height: 320px;
-        height: 23vw;
+        //height: 23vw;
       }
       @media screen and (max-width: 992px) {
         width: 95vw;
@@ -31,7 +31,7 @@
 
 .notificationBanner {
   height: 40px;
-  padding-left: 80px;
+  padding: 0 3em;
   display: flex;
   align-items: center;
   background: white;
@@ -69,7 +69,7 @@
 }
 
 .notificationsBlock {
-  margin: 40px;
+  margin: 40px 0;
   width: 100%;
   padding-left: 40px;
   padding-right: 40px;

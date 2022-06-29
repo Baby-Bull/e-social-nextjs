@@ -6,9 +6,17 @@ import {
   BLOCKED_MEMBER,
   CREATE_COMMUNITY,
   DELETE_COMMUNITY,
+  DELETE_POST,
   REJECT_MEMBER,
   SERVER_ERROR,
   UPDATE_COMMUNITY,
+  UPDATE_POST,
+  CREATE_POST,
+  DELETE_COMMENT,
+  CREATE_COMMENT,
+  JOIN_COMMUNITY,
+  LEAVE_COMMUNITY,
+  UPDATE_COMMENT,
 } from "src/messages/notification";
 import { api } from "src/helpers/api";
 
@@ -51,8 +59,6 @@ export const updateCommunity = async (communityId, body: any) => {
     const res = await api.patch(`community/${communityId}`, body);
     if (!res.data.error_code) {
       toast.success(UPDATE_COMMUNITY);
-    } else {
-      toast.error(SERVER_ERROR);
     }
     return res.data;
   } catch (error) {
@@ -76,8 +82,6 @@ export const deleteCommunity = async (communityId) => {
     const res = await api.delete(`community/${communityId}`);
     if (!res.data.error_code) {
       toast.success(DELETE_COMMUNITY);
-    } else {
-      toast.error(SERVER_ERROR);
     }
   } catch (error) {
     toast.error(SERVER_ERROR);
@@ -100,9 +104,8 @@ export const MemberBlocked = async (communityId, userId) => {
     const res = await api.post(`community/${communityId}/members/${userId}/block`);
     if (!res.data.error_code) {
       toast.success(BLOCK_MEMBER);
-    } else {
-      toast.error(SERVER_ERROR);
     }
+    return res;
   } catch (error) {
     toast.error(SERVER_ERROR);
     return error;
@@ -114,8 +117,6 @@ export const MemberUnBlock = async (communityId, userId) => {
     const res = await api.post(`community/${communityId}/members/${userId}/unblock`);
     if (!res.data.error_code) {
       toast.success(BLOCKED_MEMBER);
-    } else {
-      toast.error(SERVER_ERROR);
     }
   } catch (error) {
     toast.error(SERVER_ERROR);
@@ -138,8 +139,6 @@ export const MemberApprove = async (communityId, joinRequestId) => {
     const res = await api.post(`community/${communityId}/join-requests/${joinRequestId}/accept`);
     if (!res.data.error_code) {
       toast.success(APPPROVE_MEMBER);
-    } else {
-      toast.error(SERVER_ERROR);
     }
   } catch (error) {
     toast.error(SERVER_ERROR);
@@ -152,8 +151,166 @@ export const MemberReject = async (communityId, joinRequestId) => {
     const res = await api.delete(`community/${communityId}/join-requests/${joinRequestId}/reject`);
     if (!res.data.error_code) {
       toast.success(REJECT_MEMBER);
-    } else {
-      toast.error(SERVER_ERROR);
+    }
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const checkMemberCommunity = async (communityId, memberId) => {
+  try {
+    const res = await api.get(`community/${communityId}/member/${memberId}`);
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const createCommunityPost = async (communityId, body) => {
+  try {
+    const res = await api.post(`community/${communityId}/posts`, body);
+    if (!res.data.error_code) {
+      toast.success(CREATE_POST);
+      return res.data;
+    }
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const detailCommunityPost = async (communityId, postId) => {
+  try {
+    const res = await api.get(`community/${communityId}/posts/${postId}`);
+    if (!res.data.error_code) {
+      return res.data;
+    }
+  } catch (error) {
+    return error;
+  }
+};
+
+export const updateCommunityPost = async (communityId, postId, body) => {
+  try {
+    const res = await api.patch(`community/${communityId}/posts/${postId}`, body);
+    if (!res.data.error_code) {
+      toast.success(UPDATE_POST);
+      return res.data;
+    }
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const deleteCommunityPost = async (communityId, postId) => {
+  try {
+    const res = await api.delete(`community/${communityId}/posts/${postId}`);
+    if (!res.data.error_code) {
+      toast.success(DELETE_POST);
+    }
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const createPostComment = async (communityId, postId, body) => {
+  try {
+    const res = await api.post(`community/${communityId}/posts/${postId}/comments`, body);
+    if (!res.data.error_code) {
+      toast.success(CREATE_COMMENT);
+      return res.data;
+    }
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const updatePostComment = async (communityId, postId, commentId, body) => {
+  try {
+    const res = await api.patch(`community/${communityId}/posts/${postId}/comments/${commentId}`, body);
+    if (!res.data.error_code) {
+      toast.success(UPDATE_COMMENT);
+      return res.data;
+    }
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const getListComment = async (
+  communityId,
+  postId,
+  limit: number = 10,
+  cursor: string = "",
+  sortOrder: string = "latest",
+) => {
+  try {
+    const res = await api.get(
+      `community/${communityId}/posts/${postId}/comments?limit=${limit}&cursor=${cursor}&sortOrder=${sortOrder}`,
+    );
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const deleteCommunityPostComment = async (communityId, postId, commentId) => {
+  try {
+    const res = await api.delete(`community/${communityId}/posts/${postId}/comments/${commentId}`);
+    if (!res.data.error_code) {
+      toast.success(DELETE_COMMENT);
+    }
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const getListCommunityPost = async (
+  communityId,
+  limit: number = 10,
+  cursor: string = "",
+  sortOrder: string = "latest",
+) => {
+  try {
+    const res = await api.get(
+      `community/${communityId}/posts/?limit=${limit}&cursor=${cursor}&sort_order=${sortOrder}`,
+    );
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const joinCommunity = async (communityId) => {
+  try {
+    const res = await api.post(`community/${communityId}/join`);
+    if (!res.data.error_code) {
+      toast.success(JOIN_COMMUNITY);
+      return res.data;
+    }
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const leaveCommunity = async (communityId) => {
+  try {
+    const res = await api.post(`community/${communityId}/leave`);
+    if (!res.data.error_code) {
+      toast.success(LEAVE_COMMUNITY);
+      return res.data;
     }
   } catch (error) {
     toast.error(SERVER_ERROR);

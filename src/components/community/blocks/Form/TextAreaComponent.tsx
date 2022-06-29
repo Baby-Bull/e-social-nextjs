@@ -6,9 +6,8 @@ import theme from "src/theme";
 
 export const TextareaAutosizeCustom = styled(TextareaAutosize)({
   backgroundColor: theme.whiteBlue,
-  paddingTop: "9px",
   width: "100%",
-  resize: "none",
+  // resize: "none",
   minHeight: "80px",
   border: `2px solid transparent`,
   borderRadius: "6px",
@@ -16,7 +15,7 @@ export const TextareaAutosizeCustom = styled(TextareaAutosize)({
   color: theme.navy,
   fontSize: 14,
   paddingLeft: "18px",
-  height: "100% !important",
+  // height: "100% !important",
   "&::-webkit-input-placeholder": {
     color: theme.gray,
   },
@@ -40,7 +39,7 @@ interface ILayoutComponentProps {
   error?: string;
   id?: string;
   placeholder?: string;
-  onChangeInput: Function;
+  onChangeInput?: Function;
   value?: string;
 }
 
@@ -52,7 +51,6 @@ export const TextArea: React.SFC<ILayoutComponentProps> = ({ error, onChangeInpu
         backgroundColor: "white",
         color: theme.navy,
         borderRadius: "12px",
-        border: [`1px solid ${theme.lightGray_1}`, "none"],
         width: "100%",
       }}
     >

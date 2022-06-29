@@ -158,12 +158,13 @@ const ListItem = styled("li")({
 const InputCustom = styled(TextField)({
   width: "100%",
   borderRadius: "6px",
+  fontFamily: "Noto Sans JP",
   "& fieldset": {
     border: "none",
   },
-  "&::placeholder": {
-    color: "#bdbdbd",
-  },
+  // "& ::placeholder": {
+  //   color: "#bdbdbd",
+  // },
   "& .MuiInputBase-input": {
     position: "relative",
     backgroundColor: "#F4FDFF",
@@ -202,7 +203,7 @@ const SelectCustom = styled(Select)({
     fontSize: 16,
     padding: "9px 16px",
     borderRadius: 6,
-    fontFamily: "Noto Sans",
+    fontFamily: "Noto Sans JP",
     "@media (max-width: 1200px)": {
       fontSize: 14,
     },

@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, IconButton, Menu, MenuItem, Divider, Typography, Link } from "@mui/material";
+import { Avatar, IconButton, Menu, MenuItem, Divider, Typography, Box } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
@@ -8,13 +8,26 @@ import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmCo
 interface IButtonDropDownComponentProps {
   top?: string[];
   right?: string;
+  index?: string;
+  handleCallbackRemove?: any;
+  handleCallbackUpdateComment?: any;
+  data?: any;
+  comment?: any;
 }
 
-const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({ top, right }) => {
+const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({
+  top,
+  right,
+  handleCallbackRemove,
+  handleCallbackUpdateComment,
+  index,
+  comment,
+  data,
+}) => {
   const { t } = useTranslation();
-
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  // const [isComment, setIsComment] = useState(false);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -32,8 +45,8 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({ top
     setOpen(false);
   };
   const handleDialogOK = () => {
+    handleCallbackRemove(index, comment?.id);
     handleCloseDialog();
-    setOpen(false);
   };
 
   return (
@@ -78,36 +91,50 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({ top
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem sx={{ py: "0px" }}>
-          <Link href="/community/post/edit">
+        {(comment ? comment?.can_edit : data?.can_edit) && (
+          <MenuItem sx={{ py: "0px" }} onClick={() => handleCallbackUpdateComment(true)}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Avatar
+                src="/assets/images/icon/edit_blue.svg"
+                variant="square"
+                sx={{ width: "11px", height: "11px", mr: "8px" }}
+              />
+              <Typography
+                sx={{
+                  color: theme.gray,
+                  fontSize: 14,
+                }}
+              >
+                {t("community:button.dropdown.edit")}
+              </Typography>
+            </Box>
+          </MenuItem>
+        )}
+        {comment?.can_delete && comment?.can_edit && <Divider />}
+        <MenuItem sx={{ py: "0px" }} onClick={handleOpenDialog}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Avatar
+              src="/assets/images/icon/delete_blue.svg"
+              variant="square"
+              sx={{ width: "11px", height: "11px", mr: "8px" }}
+            />
             <Typography
               sx={{
                 color: theme.gray,
                 fontSize: 14,
               }}
             >
-              {t("community:button.dropdown.edit")}
+              {t("community:button.dropdown.delete")}
             </Typography>
-          </Link>
-        </MenuItem>
-        <Divider />
-        <MenuItem sx={{ py: "0px" }} onClick={handleOpenDialog}>
-          <Typography
-            sx={{
-              color: theme.gray,
-              fontSize: 14,
-            }}
-          >
-            {t("community:button.dropdown.delete")}
-          </Typography>
+          </Box>
         </MenuItem>
       </Menu>
 
       <DialogConfirmComponent
-        title={t("community:dialog.confirm-delete-title")}
-        content={t("community:dialog.note-delete-title")}
+        title={comment ? t("community:detail.comment.delete-community") : t("community:dialog.confirm-delete-title")}
+        content={comment ? t("community:detail.comment.delete-content") : t("community:dialog.note-delete-title")}
         btnLeft={t("community:button.dialog.cancel")}
-        btnRight={t("community:button.dialog.withdraw")}
+        btnRight={t("community:button.dialog.delete-comment")}
         isShow={openDialog}
         handleClose={handleCloseDialog}
         handleCancel={handleDialogCancel}

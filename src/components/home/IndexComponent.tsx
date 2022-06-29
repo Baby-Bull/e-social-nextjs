@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Backdrop, Box, CircularProgress } from "@mui/material";
+import { Backdrop, Box, CircularProgress, Grid } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import React, { useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
@@ -197,28 +197,35 @@ const HomeIndexComponents = () => {
         }}
       >
         <BannerComponent />
-        <NotificationComponent />
-        <MatchingComponent />
+        <Grid
+          container
+          sx={{
+            maxWidth: "1440px",
+            padding: ["0", "0 2em"],
+          }}
+        >
+          <NotificationComponent />
+          <MatchingComponent />
 
-        <RecommendCommunityComponent />
-        {memberRecommends?.map((item, index) => (
-          <RecommendMembersComponent
-            title={item?.title}
-            dataRecommends={item?.data}
-            key={index}
-            indexFetch={index}
-            handleOpenMatchingModal={handleOpenMatchingModal}
-          />
-        ))}
-
-        {openModal && (
-          <ModalMatchingComponent
-            userRequestMatching={userRequestMatching}
-            open={openModal}
-            setOpen={setOpenModal}
-            handleSendMatchingRequest={handleSendMatchingRequest}
-          />
-        )}
+          <RecommendCommunityComponent />
+          {memberRecommends?.map((item, index) => (
+            <RecommendMembersComponent
+              title={item?.title}
+              dataRecommends={item?.data}
+              key={index}
+              indexFetch={index}
+              handleOpenMatchingModal={handleOpenMatchingModal}
+            />
+          ))}
+          {openModal && (
+            <ModalMatchingComponent
+              userRequestMatching={userRequestMatching}
+              open={openModal}
+              setOpen={setOpenModal}
+              handleSendMatchingRequest={handleSendMatchingRequest}
+            />
+          )}
+        </Grid>
       </Box>
     </ContentComponent>
   );

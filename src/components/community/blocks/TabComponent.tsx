@@ -27,13 +27,14 @@ interface IData {
 
 interface ITabComponentProps {
   data: IData[];
+  dataCommunityDetail: any;
 }
 
-const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
+const TabComponent: React.SFC<ITabComponentProps> = ({ data, dataCommunityDetail }) => {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const valueTabMenbers = 2;
+  const valueTabMembers = 2;
   const LIMIT = 20;
 
   const [valueParentTab, setValueParentTab] = React.useState(0);
@@ -43,10 +44,12 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
   const [perPage, setperPage] = React.useState(2);
   const [isCallApi, setIsCallApi] = React.useState(false);
   const [valueCursor, setCursor] = React.useState("");
+  const [checkLoading, setCheckLoading] = useState(false);
 
   const fetchDataUsers = async (cursor: string = "") => {
     const communityId = router.query;
-    const resData = await CommunityMembers(communityId?.indexId, LIMIT, cursor);
+    const resData = await CommunityMembers(communityId?.id, LIMIT, cursor);
+    setCheckLoading(true);
     // eslint-disable-next-line no-unsafe-optional-chaining
     setCommunityMembers([...communityMembers, ...resData?.items]);
     setTotalCommunityMembers(resData?.items_count);
@@ -57,7 +60,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
 
   const onChangeParentTab = (event: React.SyntheticEvent, newValue: number) => {
     setValueParentTab(newValue);
-    if (valueTabMenbers === newValue && !isCallApi) {
+    if (valueTabMembers === newValue && !isCallApi) {
       fetchDataUsers();
     }
   };
@@ -99,12 +102,12 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
               xsHeight: "48px",
               xsBorderColor: theme.blue,
               xsBorderRadius: "12px 12px 0px 0px",
-              mdWidth: "152px",
+              mdWidth: "33.33333%",
               lgWidth: "33.33333%",
             }}
             key={index.toString()}
             iconPosition="top"
-            label={tab.text}
+            label={`${tab.text}`}
             {...a11yProps(index)}
           />
         ))}
@@ -131,23 +134,11 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
           </EmptyComponent>
         ) : (
           <Box>
-            {status === "join" && tabsCommunity[0]?.children ? (
-              <ChildTabComponent dataChild={tabsCommunity[0]?.children} maxWidth="75px" />
-            ) : (
-              <EmptyComponent
-                textButton={t("community:button.empty.create-post")}
-                handleClick={() => router.push("/community/post/create")}
-              >
-                <TypographyCustom>{t("community:empty.no-post")}</TypographyCustom>
-                <TypographyCustom display={["none", "inherit"]}>
-                  {t("community:empty.create-post") + t("community:empty.talk-to-members")}
-                </TypographyCustom>
-                <TypographyCustom display={["inherit", "none"]}>{t("community:empty.create-post")}</TypographyCustom>
-                <TypographyCustom display={["inherit", "none"]}>
-                  {t("community:empty.talk-to-members")}
-                </TypographyCustom>
-              </EmptyComponent>
-            )}
+            <ChildTabComponent
+              dataChild={tabsCommunity[0]?.children}
+              dataCommunityDetail={dataCommunityDetail}
+              maxWidth="75px"
+            />
           </Box>
         )}
       </TabPanel>
@@ -174,38 +165,41 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data }) => {
       </TabPanel>
 
       <TabPanel value={valueParentTab} index={2}>
-        {communityMembers.length ? (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              pb: "40px",
-            }}
-          >
-            <GridViewComponent data={communityMembers.slice((page - 1) * LIMIT, page * LIMIT)} />
-            {totalCommunityMembers > LIMIT && (
-              <PaginationCustomComponent
-                handleCallbackChangePagination={handleCallbackChangePagination}
-                page={page}
-                perPage={perPage}
-                totalPage={
-                  Math.floor(totalCommunityMembers / LIMIT) < totalCommunityMembers / LIMIT
-                    ? Math.floor(totalCommunityMembers / LIMIT) + 1
-                    : Math.floor(totalCommunityMembers / LIMIT)
-                }
-              />
+        {checkLoading && (
+          <Box>
+            {communityMembers.length ? (
+              <Box
+                sx={{
+                  pb: "40px",
+                }}
+              >
+                <GridViewComponent data={communityMembers.slice((page - 1) * LIMIT, page * LIMIT)} />
+                {totalCommunityMembers > LIMIT && (
+                  <PaginationCustomComponent
+                    handleCallbackChangePagination={handleCallbackChangePagination}
+                    page={page}
+                    perPage={perPage}
+                    totalPage={
+                      Math.floor(totalCommunityMembers / LIMIT) < totalCommunityMembers / LIMIT
+                        ? Math.floor(totalCommunityMembers / LIMIT) + 1
+                        : Math.floor(totalCommunityMembers / LIMIT)
+                    }
+                  />
+                )}
+              </Box>
+            ) : (
+              <EmptyComponent textButton={t("community:button.empty.create-post")}>
+                <TypographyCustom>{t("community:empty.no-post")}</TypographyCustom>
+                <TypographyCustom display={["none", "inherit"]}>
+                  {t("community:empty.create-post") + t("community:empty.talk-to-members")}
+                </TypographyCustom>
+                <TypographyCustom display={["inherit", "none"]}>{t("community:empty.create-post")}</TypographyCustom>
+                <TypographyCustom display={["inherit", "none"]}>
+                  {t("community:empty.talk-to-members")}
+                </TypographyCustom>
+              </EmptyComponent>
             )}
           </Box>
-        ) : (
-          <EmptyComponent textButton={t("community:button.empty.create-post")}>
-            <TypographyCustom>{t("community:empty.no-post")}</TypographyCustom>
-            <TypographyCustom display={["none", "inherit"]}>
-              {t("community:empty.create-post") + t("community:empty.talk-to-members")}
-            </TypographyCustom>
-            <TypographyCustom display={["inherit", "none"]}>{t("community:empty.create-post")}</TypographyCustom>
-            <TypographyCustom display={["inherit", "none"]}>{t("community:empty.talk-to-members")}</TypographyCustom>
-          </EmptyComponent>
         )}
       </TabPanel>
     </React.Fragment>

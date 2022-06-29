@@ -94,6 +94,8 @@ export const TabCustom = styled(Tab)<ITabCustomProps>(({ props }) => ({
     "& img": {
       display: "none",
     },
+    minWidth: props?.mdWidth || "20%",
+    maxWidth: props?.mdWidth || "20%",
   },
   "@media (min-width: 1024px)": {
     minWidth: props?.mdWidth || "20%",

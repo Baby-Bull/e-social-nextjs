@@ -194,7 +194,10 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:discussion-topic")}</TitleContentTab>
-                  <ContentTab>{data?.discussion_topic}</ContentTab>
+                  <ContentTab>
+                    {data?.discussion_topic ??
+                      "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
+                  </ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:address")}</TitleContentTab>

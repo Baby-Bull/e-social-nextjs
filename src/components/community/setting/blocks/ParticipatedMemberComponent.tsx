@@ -9,13 +9,18 @@ import GridViewComponent from "src/components/community/setting/blocks/GridViewC
 import { getParticipates } from "src/services/community";
 import PaginationCustomComponent from "src/components/common/PaginationCustomComponent";
 
-const ParticipationComponent = () => {
+interface IParticipationComponentProps {
+  isPublic?: boolean;
+  handleChangeTab?: any;
+}
+const ParticipationComponent: React.SFC<IParticipationComponentProps> = ({ isPublic, handleChangeTab }) => {
   const { t } = useTranslation();
   const LIMIT = 10;
   const router = useRouter();
 
   const [participates, setParticipates] = useState([]);
   const [countParticipates, setCountParticipates] = useState(0);
+  const [checkLoading, setCheckLoading] = useState(false);
 
   // Pagination
   const [page, setPage] = useState(1);
@@ -26,19 +31,26 @@ const ParticipationComponent = () => {
   const fetchDataParticipates = async (cursor: string = "") => {
     const communityId = router.query;
     const resData = await getParticipates(communityId?.indexId, LIMIT, cursor);
-    // eslint-disable-next-line no-unsafe-optional-chaining
-    setParticipates([...participates, ...resData?.items]);
-    setCountParticipates(resData?.items_count);
+    setCheckLoading(true);
+    if (participates.length < 10) {
+      setParticipates(resData?.items);
+    } else {
+      // eslint-disable-next-line no-unsafe-optional-chaining
+      setParticipates([...participates, ...resData?.items]);
+    }
+    setCountParticipates(resData?.items_count ?? 0);
     setCursor(resData?.cursor);
     return resData;
   };
 
   const handleCallbackChangePaginationParticipates = (event, value) => {
+    setCheckLoading(false);
     setPage(value);
     if (perPage <= value) {
       setPerPage(perPage + 1);
       fetchDataParticipates(valueCursor ?? "");
     }
+    setCheckLoading(true);
   };
 
   useEffect(() => {
@@ -58,45 +70,56 @@ const ParticipationComponent = () => {
         borderRadius: "12px",
       }}
     >
-      <Box
-        sx={{
-          borderBottom: { sm: `1px solid ${theme.lightGray}` },
-        }}
-      >
-        <Typography
-          sx={{
-            fontWeight: 500,
-            py: ["20px", "28px"],
-            px: [0, "40px"],
-            textAlign: ["center", "left"],
-          }}
-        >
-          {`${t("community:setting.participation.title")} ${countParticipates}${t(
-            "community:setting.participation.subject",
-          )}`}
-        </Typography>
-        {participates?.slice((page - 1) * LIMIT, page * LIMIT) ? (
-          participates?.slice((page - 1) * LIMIT, page * LIMIT).map((data, index) => (
-            <React.Fragment key={index.toString()}>
-              <GridViewComponent
-                data={data}
-                index={index + (page - 1) * LIMIT}
-                callbackHandleRemoveElmMember={callbackHandleRemoveMember}
-              />
-            </React.Fragment>
-          ))
-        ) : (
-          <Box>
-            <EmptyComponent text={t("community:setting.participation.empty")} />
-          </Box>
-        )}
-      </Box>
-
+      {checkLoading && (
+        <Box>
+          {countParticipates > 0 && (
+            <Typography
+              sx={{
+                fontWeight: 500,
+                py: ["20px", "28px"],
+                px: [0, "40px"],
+                textAlign: ["center", "left"],
+              }}
+            >
+              {`${t("community:setting.participation.title")} ${countParticipates}${t(
+                "community:setting.participation.subject",
+              )}`}
+            </Typography>
+          )}
+          {participates?.slice((page - 1) * LIMIT, page * LIMIT)?.length > 0 ? (
+            participates?.slice((page - 1) * LIMIT, page * LIMIT).map((data, index) => (
+              <React.Fragment key={index.toString()}>
+                <GridViewComponent
+                  data={data}
+                  index={index + (page - 1) * LIMIT}
+                  callbackHandleRemoveElmMember={callbackHandleRemoveMember}
+                />
+              </React.Fragment>
+            ))
+          ) : (
+            <Box>
+              {isPublic ? (
+                <EmptyComponent
+                  text={t("community:setting.participation.empty-public1")}
+                  text2={t("community:setting.participation.empty-public2")}
+                  text3={t("community:setting.participation.empty-public3")}
+                  text4={t("community:setting.participation.empty-public4")}
+                  text5={t("community:setting.participation.empty-public5")}
+                  handleChangeTab={handleChangeTab}
+                />
+              ) : (
+                <EmptyComponent text={t("community:setting.participation.empty-private")} />
+              )}
+            </Box>
+          )}
+        </Box>
+      )}
       <Box
         sx={{
           py: "40px",
           display: "flex",
           justifyContent: "center",
+          borderTop: { sm: `1px solid ${theme.lightGray}` },
         }}
       >
         {countParticipates > LIMIT && (
