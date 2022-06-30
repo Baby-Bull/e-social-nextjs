@@ -2,11 +2,15 @@ import * as React from "react";
 import type { NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { parseCookies } from "nookies";
+import dynamic from "next/dynamic";
 
-import CommunityChatComponent from "src/components/chat/Community/CommunityChatComponent";
 import { USER_TOKEN } from "src/helpers/storage";
 
-const ChatCommunityPage: NextPage = () => <CommunityChatComponent hasData />;
+const CommunityChatComponent = dynamic(() => import("src/components/chat/Community/CommunityChatComponent"), {
+  ssr: false,
+});
+
+const ChatCommunityPage: NextPage = () => <CommunityChatComponent />;
 
 export const getServerSideProps = async (ctx) => {
   const { locale } = ctx;
