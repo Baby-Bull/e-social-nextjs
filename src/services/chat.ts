@@ -33,3 +33,38 @@ export const getMessages = async (userId: string, cursor: string = "", limit: nu
     return error;
   }
 };
+
+export const getListChatRoomsCommunity = async (
+  search: string = "",
+  cursor: string = "",
+  limit: number = LIMIT_PER_PAGE,
+) => {
+  try {
+    let params: IParamsListChatRooms;
+    if (!search) {
+      params = {
+        cursor,
+        limit,
+      };
+    } else {
+      params = { cursor, limit, search };
+    }
+    const res = await api.get(`/user/communities/chat-rooms`, { params });
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getMessagesCommunity = async (
+  communityId: string,
+  cursor: string = "",
+  limit: number = LIMIT_PER_PAGE,
+) => {
+  try {
+    const res = await api.get(`/user/communities/chat-rooms/${communityId}/messages?limit=${limit}&cursor=${cursor}`);
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};

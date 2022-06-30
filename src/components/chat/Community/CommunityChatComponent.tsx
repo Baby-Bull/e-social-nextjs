@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
-import BlockNoDataComponent from "src/components/chat/Community/Blocks/NoDataComponent";
 import BlockChatComponent from "src/components/chat/Community/Blocks/ChatComponent";
 
-interface ICommunityChatComponentProps {
-  hasData?: boolean;
-}
+const CommunityChatComponent = () => {
+  const [hasData, setHasData] = useState(false);
+  const [isRenderRightSide, setIsRenderRightSide] = useState(false);
 
-const CommunityChatComponent: React.SFC<ICommunityChatComponentProps> = ({ hasData = true }) => (
-  <ContentComponent showFooter={false}>{hasData ? <BlockChatComponent /> : <BlockNoDataComponent />}</ContentComponent>
-);
+  return (
+    <ContentComponent showFooter={false} showHeader={!isRenderRightSide}>
+      <BlockChatComponent
+        hasData={hasData}
+        setHasData={setHasData}
+        isRenderRightSide={isRenderRightSide}
+        setIsRenderRightSide={setIsRenderRightSide}
+      />
+    </ContentComponent>
+  );
+};
 
 export default CommunityChatComponent;

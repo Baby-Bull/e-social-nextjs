@@ -22,7 +22,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   // Responsive
   const viewPort = useViewport();
   const isMobile = viewPort.width <= 992;
-  // const [isRenderRightSide, setIsRenderRightSide] = useState(false);
 
   const [listRooms, setListRooms] = useState([]);
   const [userId, setUserId] = useState(roomQuery);
