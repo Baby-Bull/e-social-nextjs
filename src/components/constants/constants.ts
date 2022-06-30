@@ -80,6 +80,18 @@ export const JOBS = {
   "markup-engineer": { label: "マークアップエンジニア" },
 };
 
+export const EMPLOYEES = {
+  fulltime: { label: "正社員" },
+  contract: { label: "契約社員" },
+  temporary: { label: "派遣社員" },
+  freelance: { label: "フリーランス" },
+  president: { label: "社長" },
+  officer: { label: "役員" },
+  "part-time": { label: "転職活動中" },
+  intern: { label: "アルバイト" },
+  "during-job-change": { label: "インターン" },
+};
+
 export const USER_STATUS_OPTIONS = [
   {
     label: "今すぐ話せます",

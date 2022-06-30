@@ -274,7 +274,11 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ maxWidth, dataC
             </Box>
           ) : (
             <Box>
-              <EmptyComponent textButton={t("community:button.empty.create-post")} handleClick={redirectToCreatePost}>
+              <EmptyComponent
+                hiddenButton={!checkRoleCreatPost}
+                textButton={t("community:button.empty.create-post")}
+                handleClick={redirectToCreatePost}
+              >
                 <TypographyCustom>{t("community:empty.no-post")}</TypographyCustom>
                 <TypographyCustom display={["none", "inherit"]}>
                   {t("community:empty.create-post") + t("community:empty.talk-to-members")}
