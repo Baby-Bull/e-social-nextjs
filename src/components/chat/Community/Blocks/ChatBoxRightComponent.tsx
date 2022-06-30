@@ -12,7 +12,7 @@ import { useSelector } from "react-redux";
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
 import scrollEl from "src/helpers/scrollEl";
-import { getMessages, getMessagesCommunity } from "src/services/chat";
+import { getMessagesCommunity } from "src/services/chat";
 import { formatChatDate, formatListMessages } from "src/helpers/helper";
 import { MESSAGE_CONTENT_TYPES, REACT_QUERY_KEYS } from "src/constants/constants";
 import { IStoreState } from "src/constants/interface";
@@ -219,7 +219,7 @@ const ChatBoxRightComponent = ({
 
   const loadMoreData = async () => {
     if (hasMoreParams?.cursor?.length && listMessages.length) {
-      const res = await getMessages(communityId, hasMoreParams?.cursor);
+      const res = await getMessagesCommunity(communityId, hasMoreParams?.cursor);
       setListMessages([...(res?.items?.reverse() || []), ...listMessages]);
       setHasMoreParams({
         cursor: res?.cursor,
