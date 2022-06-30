@@ -31,6 +31,16 @@ export const getListCommunities = async (limit: number, cursor: string) => {
   }
 };
 
+export const getListCommunityHome = async (limit: number, cursor: string) => {
+  try {
+    const res = await api.get(`/community?limit=${limit}&cursor=${cursor}`);
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
 export const getCommunity = async (communityId) => {
   try {
     const res = await api.get(`/community/${communityId}`);
@@ -104,8 +114,8 @@ export const MemberBlocked = async (communityId, userId) => {
     const res = await api.post(`community/${communityId}/members/${userId}/block`);
     if (!res.data.error_code) {
       toast.success(BLOCK_MEMBER);
+      return res;
     }
-    return res;
   } catch (error) {
     toast.error(SERVER_ERROR);
     return error;
@@ -117,6 +127,7 @@ export const MemberUnBlock = async (communityId, userId) => {
     const res = await api.post(`community/${communityId}/members/${userId}/unblock`);
     if (!res.data.error_code) {
       toast.success(BLOCKED_MEMBER);
+      return res;
     }
   } catch (error) {
     toast.error(SERVER_ERROR);
@@ -253,7 +264,7 @@ export const getListComment = async (
 ) => {
   try {
     const res = await api.get(
-      `community/${communityId}/posts/${postId}/comments?limit=${limit}&cursor=${cursor}&sortOrder=${sortOrder}`,
+      `community/${communityId}/posts/${postId}/comments?limit=${limit}&cursor=${cursor}&sort_order=${sortOrder}`,
     );
     return res.data;
   } catch (error) {

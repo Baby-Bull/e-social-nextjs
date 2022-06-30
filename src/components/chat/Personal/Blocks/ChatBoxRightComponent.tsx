@@ -4,8 +4,8 @@ import crypto from "crypto";
 import React, { useEffect, useState, useRef } from "react";
 import { Box, Grid, IconButton, Paper, Typography, Avatar, Menu, MenuItem } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import InfiniteScroll from "react-infinite-scroller";
-import { useQuery } from "react-query";
+import InfiniteScroll from "react-infinite-scroll-component";
+// import InfiniteScroll from "react-infinite-scroller";
 import Linkify from "react-linkify";
 
 import styles from "src/components/chat/chat.module.scss";
@@ -17,7 +17,7 @@ import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupRevie
 import scrollEl from "src/helpers/scrollEl";
 import { getMessages } from "src/services/chat";
 import { formatChatDate, formatListMessages } from "src/helpers/helper";
-import { MESSAGE_CONTENT_TYPES, REACT_QUERY_KEYS } from "src/constants/constants";
+import { MESSAGE_CONTENT_TYPES } from "src/constants/constants";
 
 interface IBoxChatProps {
   avatar?: string;
@@ -157,102 +157,64 @@ const ChatBoxRightComponent = ({
   isMobile,
   toggleRenderSide,
   userId,
-  roomSelect,
+  // roomSelect,
   sendTextMessage,
-  newMessageOfRoom,
+  // newMessageOfRoom,
   user,
 }) => {
   const { t } = useTranslation();
   const inputChatRef = useRef(null);
   const boxMessageRef = useRef(null);
-  const isFirstRender = useRef(true);
+  // const isFirstRender = useRef(true);
+  const [showPopup, setShowPopup] = useState(false);
+  const handleShow = () => setShowPopup(true);
+  const [showPopupReview, setShowPopupReview] = useState(false);
+  const handleShowReview = () => setShowPopupReview(true);
 
   const [listMessages, setListMessages] = useState([]);
   const [listMessagesShow, setListMessagesShow] = useState([]);
 
   const [hasMoreParams, setHasMoreParams] = useState({
-    cursor: null,
+    cursor: "",
     hasMore: false,
   });
 
-  const [showPopup, setShowPopup] = useState(false);
-  const handleShow = () => setShowPopup(true);
-
-  const [showPopupReview, setShowPopupReview] = useState(false);
-  const handleShowReview = () => setShowPopupReview(true);
-
   useEffect(() => {
-    boxMessageRef?.current?.scrollTo(0, boxMessageRef?.current?.scrollHeight);
-    if (
-      isFirstRender.current ||
-      boxMessageRef.current.offsetHeight + boxMessageRef.current.scrollTop + 100 >= boxMessageRef.current.scrollHeight
-    ) {
-      scrollEl(boxMessageRef.current);
-      if (listMessages?.length) {
-        isFirstRender.current = false;
-      }
-    }
-  }, [listMessages]);
-
-  const { data: listMessageResQuery } = useQuery(
-    [REACT_QUERY_KEYS.PERSONAL_CHAT.LIST_MESSAGES, userId],
-    async () => {
+    const fetchMessages = async () => {
       const res = await getMessages(userId);
-      return {
-        ...res,
-        items: res?.items?.reverse() || [],
-      };
-    },
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!userId,
-    },
-  );
-
-  useEffect(() => {
-    setListMessages([]);
-    setHasMoreParams({
-      cursor: null,
-      hasMore: false,
-    });
-    setListMessages(listMessageResQuery?.items || []);
-    setHasMoreParams({
-      cursor: listMessageResQuery?.cursor,
-      hasMore: listMessageResQuery?.hasMore,
-    });
-    isFirstRender.current = true;
-    inputChatRef.current.focus();
-  }, [listMessageResQuery]);
-
-  const loadMoreData = async () => {
-    if (hasMoreParams?.cursor?.length && listMessages.length) {
-      const res = await getMessages(userId, hasMoreParams?.cursor);
-      setListMessages([...(res?.items?.reverse() || []), ...listMessages]);
+      setListMessages(res?.items || []);
       setHasMoreParams({
-        cursor: res?.cursor,
+        cursor: res?.cursor === null ? "" : res?.cursor,
         hasMore: res?.hasMore,
       });
-      isFirstRender.current = false;
-    }
-  };
+    };
+    fetchMessages();
+  }, [userId]);
 
-  useEffect(() => {
-    if (newMessageOfRoom && newMessageOfRoom?.chat_room_id === roomSelect.id) {
-      setListMessages([...listMessages, newMessageOfRoom]);
-    }
-  }, [newMessageOfRoom]);
+  const fetchData = async () => {
+    const messageData = await getMessages(userId, hasMoreParams?.cursor);
+    setListMessages([...listMessages, ...(messageData?.items || [])]);
+    setHasMoreParams({
+      cursor: messageData?.cursor === null ? "" : messageData?.cursor,
+      hasMore: messageData?.hasMore,
+    });
+  };
 
   useEffect(() => {
     const listMessagesFormat = formatListMessages(listMessages);
     setListMessagesShow(listMessagesFormat);
   }, [listMessages]);
 
+  const [triggerScrollEl, setTriggerScrollEl] = useState(false);
+  useEffect(() => {
+    scrollEl(boxMessageRef.current);
+  }, [triggerScrollEl, userId]);
+
   const handleSendTextMessage = () => {
     const message = inputChatRef.current.value.trim();
     if (message) {
       sendTextMessage(message);
       setListMessages([
-        ...listMessages,
         {
           id: crypto.randomBytes(16).toString("hex"),
           content: message,
@@ -261,6 +223,7 @@ const ChatBoxRightComponent = ({
           sender_id: "123",
           isErrorMessage: !navigator.onLine,
         },
+        ...listMessages,
       ]);
       inputChatRef.current.value = "";
     }
@@ -268,6 +231,7 @@ const ChatBoxRightComponent = ({
 
   const onKeyUpMessageText = (e) => {
     if (!e.shiftKey && e.keyCode === 13 && e.target.value) {
+      setTriggerScrollEl(!triggerScrollEl);
       handleSendTextMessage();
     }
   };
@@ -317,45 +281,69 @@ const ChatBoxRightComponent = ({
         </div>
       </Box>
       <Box className="box-content">
-        <Box className={styles.boxData} id="box-message" ref={boxMessageRef}>
+        <div
+          id="scrollableDiv"
+          style={{
+            height: "calc(100vh - 176px)",
+            overflow: "auto",
+            paddingRight: "20px",
+            flexDirection: "column-reverse",
+          }}
+          className={styles.boxData}
+          ref={boxMessageRef}
+        >
           {listMessages?.length ? (
             <InfiniteScroll
-              loadMore={loadMoreData}
-              hasMore={!!listMessages?.length && hasMoreParams.hasMore && !isFirstRender.current}
-              loader="loading..."
-              isReverse
-              useWindow={false}
+              dataLength={listMessages?.length}
+              next={fetchData}
+              hasMore={hasMoreParams?.hasMore}
+              loader="読み込み中..."
+              inverse
+              initialScrollY={0}
+              scrollThreshold={400}
+              style={{
+                display: "flex",
+                flexDirection: "column-reverse",
+              }}
+              scrollableTarget="scrollableDiv"
             >
               {Object.keys(listMessagesShow)?.map((dateText) => (
                 <Box key={dateText} sx={{ paddingBottom: "60px" }}>
                   <div className={styles.spanStartOfDay}>
                     <span>{dateText}</span>
                   </div>
-                  {listMessagesShow[dateText]?.map((message: any, index: number) =>
-                    message?.sender_id !== userId ? (
-                      <BoxMyChat
-                        key={index}
-                        message={message?.content}
-                        time={formatChatDate(message?.created_at)}
-                        isErrorMessage={!!message?.isErrorMessage}
-                        resendMessage={resendMessage}
-                        deleteErrorMessage={deletedMessageError}
-                        id={message?.id}
-                      />
-                    ) : (
-                      <BoxChatOthers
-                        key={index}
-                        avatar={message?.user?.profile_image || "/assets/images/svg/avatar.svg"}
-                        message={message?.content}
-                        time={formatChatDate(message?.created_at)}
-                      />
-                    ),
-                  )}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column-reverse",
+                    }}
+                  >
+                    {listMessagesShow[dateText].map((message: any, index: number) =>
+                      message?.sender_id !== userId ? (
+                        <BoxMyChat
+                          key={index}
+                          message={message?.content}
+                          time={formatChatDate(message?.created_at)}
+                          isErrorMessage={!!message?.isErrorMessage}
+                          resendMessage={resendMessage}
+                          deleteErrorMessage={deletedMessageError}
+                          id={message?.id}
+                        />
+                      ) : (
+                        <BoxChatOthers
+                          key={index}
+                          avatar={message?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+                          message={message?.content}
+                          time={formatChatDate(message?.created_at)}
+                        />
+                      ),
+                    )}
+                  </div>
                 </Box>
               ))}
             </InfiniteScroll>
           ) : null}
-        </Box>
+        </div>
       </Box>
       <Box className={styles.boxChat}>
         <Paper className="paper-chat" sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}>
