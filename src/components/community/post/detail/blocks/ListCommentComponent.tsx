@@ -14,6 +14,7 @@ interface IListCommentProps {
   totalComment?: number;
   handleCallBackPaginationIndex?: any;
   handleCallbackRemove?: any;
+  handleCallbackChangeStatusOrder?: any;
   checkLoadingComment?: boolean;
 }
 
@@ -25,6 +26,7 @@ const ListCommentComponent: React.SFC<IListCommentProps> = ({
   handleCallBackPaginationIndex,
   handleCallbackRemove,
   checkLoadingComment,
+  handleCallbackChangeStatusOrder,
 }) => {
   const { t } = useTranslation();
   const LIMIT = 10;
@@ -36,9 +38,9 @@ const ListCommentComponent: React.SFC<IListCommentProps> = ({
 
   const [order, setOrder] = useState(OLDEST);
 
-  const handleCallbackChangeStatusOrder = (statusOrder) => {
+  const handleChangeStatusOrder = (statusOrder) => {
     setOrder(statusOrder);
-    setOrder(statusOrder);
+    handleCallbackChangeStatusOrder(statusOrder, 0, 1, 2, "");
   };
   return (
     <Box
@@ -82,7 +84,7 @@ const ListCommentComponent: React.SFC<IListCommentProps> = ({
                       textTransform: "capitalize",
                       mr: "4px",
                     }}
-                    onClick={() => handleCallbackChangeStatusOrder(OLDEST)}
+                    onClick={() => handleChangeStatusOrder(OLDEST)}
                   >
                     {t("community:detail.comment.posting-order")}
                   </ButtonComponent>
@@ -96,55 +98,46 @@ const ListCommentComponent: React.SFC<IListCommentProps> = ({
                       fontSize: 14,
                       fontWeight: 400,
                     }}
-                    onClick={() => handleCallbackChangeStatusOrder(LATEST)}
+                    onClick={() => handleChangeStatusOrder(LATEST)}
                   >
                     {t("community:detail.comment.latest-order")}
                   </ButtonComponent>
                 </Box>
               </Box>
-
-              {/* OLDEST */}
-              {order === OLDEST ? (
-                <Box>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      mb: "38px",
-                    }}
-                  >
-                    {totalComment > LIMIT && (
-                      <PaginationCustomComponent
-                        handleCallbackChangePagination={handleCallbackChangePagination}
-                        page={page}
-                        perPage={perPage}
-                        totalPage={
-                          Math.floor((comments?.length ?? 0) / LIMIT) < totalComment / LIMIT
-                            ? Math.floor(totalComment / LIMIT) + 1
-                            : Math.floor(totalComment / LIMIT)
-                        }
-                      />
-                    )}
-                  </Box>
-                  <Box
-                    sx={{
-                      color: theme.navy,
-                    }}
-                  >
-                    {comments?.map((item, index) => (
-                      <CommentComponent
-                        item={item}
-                        index={index}
-                        key={index.toString()}
-                        handleCallbackRemove={handleCallbackRemove}
-                      />
-                    ))}
-                  </Box>
-                </Box>
-              ) : (
-                <Box>sdadsa</Box>
-              )}
-              {/* LATEST */}
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  mb: "38px",
+                }}
+              >
+                {totalComment > LIMIT && (
+                  <PaginationCustomComponent
+                    handleCallbackChangePagination={handleCallbackChangePagination}
+                    page={page}
+                    perPage={perPage}
+                    totalPage={
+                      Math.floor(totalComment / LIMIT) < totalComment / LIMIT
+                        ? Math.floor(totalComment / LIMIT) + 1
+                        : Math.floor(totalComment / LIMIT)
+                    }
+                  />
+                )}
+              </Box>
+              <Box
+                sx={{
+                  color: theme.navy,
+                }}
+              >
+                {comments?.map((item, index) => (
+                  <CommentComponent
+                    item={item}
+                    index={index}
+                    key={index.toString()}
+                    handleCallbackRemove={handleCallbackRemove}
+                  />
+                ))}
+              </Box>
             </Box>
           ) : (
             <Box sx={{ textAlign: "center", pb: "40px" }}>{t("community:post.no-data")}</Box>

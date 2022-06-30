@@ -40,7 +40,7 @@ const MemberComponent: React.SFC<IMemberComponentProps> = ({ isAdmin }) => {
     const resData = await CommunityMembers(communityId?.indexId, LIMIT, cursor);
     // eslint-disable-next-line no-unsafe-optional-chaining
     setCommunityMembers([...communityMembers, ...resData?.items]);
-    setCountItemsBlock(resData?.items_count);
+    setCountItemsBlock(resData?.items_count ?? 0);
     setCursorBlock(resData?.cursor);
     return resData;
   };
@@ -50,7 +50,7 @@ const MemberComponent: React.SFC<IMemberComponentProps> = ({ isAdmin }) => {
     const resData = await CommunityMembersBlocked(communityId?.indexId, LIMIT, cursor);
     // eslint-disable-next-line no-unsafe-optional-chaining
     setCommunityMembersBlocked([...communityMembersBlocked, ...resData?.items]);
-    setCountItemsBlocked(resData?.items_count);
+    setCountItemsBlocked(resData?.items_count ?? 0);
     setCursorBlocked(resData?.cursor);
     return resData;
   };
@@ -86,7 +86,7 @@ const MemberComponent: React.SFC<IMemberComponentProps> = ({ isAdmin }) => {
     setCountItemsBlocked(countItemsBlocked + 1);
     setCountItemsBlock(countItemsBlock - 1);
   };
-  const callbackHandleRemoveMemberBlocked = (indexMember) => {
+  const callbackHandleRemoveMemberBlocked = async (indexMember) => {
     communityMembers.unshift(communityMembersBlocked[indexMember]);
     setCommunityMembersBlocked(communityMembersBlocked.filter((_, index) => index !== indexMember));
     setCountItemsBlocked(countItemsBlocked - 1);
@@ -146,7 +146,7 @@ const MemberComponent: React.SFC<IMemberComponentProps> = ({ isAdmin }) => {
           }}
           key={LIST_BLOCKED.toString()}
           iconPosition="top"
-          label={`ブロックリスト${communityMembersBlocked?.length ?? 0}人`}
+          label={`ブロックリスト${countItemsBlocked ?? 0}人`}
           {...a11yProps(LIST_BLOCKED)}
         />
       </Tabs>
