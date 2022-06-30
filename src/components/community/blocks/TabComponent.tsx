@@ -33,7 +33,8 @@ interface ITabComponentProps {
 const TabComponent: React.SFC<ITabComponentProps> = ({ data, dataCommunityDetail }) => {
   const { t } = useTranslation();
   const router = useRouter();
-
+  const IS_MEMBER = ["admin", "member", "owner"];
+  const checkIsMember = !IS_MEMBER.includes(dataCommunityDetail?.community_role);
   const valueTabMembers = 2;
   const LIMIT = 20;
 
@@ -145,6 +146,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, dataCommunityDetail
 
       <TabPanel value={valueParentTab} index={1}>
         <EmptyComponent
+          hiddenButton={checkIsMember}
           handleClick={() => router.push("/chat/community")}
           textButton={t("community:button.empty.talk-to-community")}
           mtButton={{
