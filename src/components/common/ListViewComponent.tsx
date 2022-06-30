@@ -12,7 +12,7 @@ export interface IData {
   id?: string;
   title?: string;
   name?: string;
-  created_at?: string;
+  updated_at?: string;
   comment_count?: string;
   user?: any;
 }
@@ -120,7 +120,7 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
                 color: theme.gray,
               }}
             >
-              {moment(data?.created_at).toNow().replace("後", "前")}
+              {moment(data?.updated_at).toNow().replace("後", "前")}
             </Typography>
 
             <img src="/assets/images/svg/message.svg" alt="message" />

@@ -114,8 +114,8 @@ export const MemberBlocked = async (communityId, userId) => {
     const res = await api.post(`community/${communityId}/members/${userId}/block`);
     if (!res.data.error_code) {
       toast.success(BLOCK_MEMBER);
+      return res;
     }
-    return res;
   } catch (error) {
     toast.error(SERVER_ERROR);
     return error;
@@ -127,6 +127,7 @@ export const MemberUnBlock = async (communityId, userId) => {
     const res = await api.post(`community/${communityId}/members/${userId}/unblock`);
     if (!res.data.error_code) {
       toast.success(BLOCKED_MEMBER);
+      return res;
     }
   } catch (error) {
     toast.error(SERVER_ERROR);

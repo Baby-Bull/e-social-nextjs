@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Box, Typography, Avatar, Chip, Backdrop, CircularProgress } from "@mui/material";
+import React from "react";
+import { Box, Typography, Avatar, Chip } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -9,7 +9,6 @@ import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmWithAvatarComponent from "src/components/common/dialog/DialogConfirmWithAvatarComponent";
 import { JOBS } from "src/components/constants/constants";
-import { MemberBlocked, MemberUnBlock } from "src/services/community";
 
 import DropDownBlockUserComponent from "./DropDownBlockUserComponent";
 
@@ -32,43 +31,24 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
   const { t } = useTranslation();
   const router = useRouter();
   const auth = useSelector((state: IStoreState) => state.user);
-  const [isLoading, setIsLoading] = useState(false);
   const IS_OWNER = "owner";
   const IS_MEMBER = "member";
-
-  const MemberBlock = async () => {
-    setIsLoading(true);
-    const communityId = router.query;
-    const resData = await MemberBlocked(communityId?.indexId, data.id);
-    setIsLoading(false);
-    return resData;
-  };
-
-  const MemberUnBlocked = async () => {
-    setIsLoading(true);
-    const communityId = router.query;
-    const resData = await MemberUnBlock(communityId?.indexId, data.id);
-    setIsLoading(false);
-    return resData;
-  };
 
   const [openDialogBlock, setOpenDialogBlock] = React.useState(false);
   const handleOpenDialogBlock = () => setOpenDialogBlock(true);
   const handleCloseDialogBlock = () => setOpenDialogBlock(false);
 
   const handleDialogApproveBlock = () => {
-    MemberBlock();
     setOpenDialogBlock(false);
-    callbackHandleRemoveElmMember(index);
+    callbackHandleRemoveElmMember(index, data.id);
   };
 
   const [openDialogUnBlock, setOpenDialogUnBlock] = React.useState(false);
   const handleOpenDialogUnBlock = () => setOpenDialogUnBlock(true);
   const handleCloseDialogUnBlock = () => setOpenDialogUnBlock(false);
   const handleDialogUnBlock = () => {
-    MemberUnBlocked();
     setOpenDialogUnBlock(false);
-    callbackHandleRemoveElmMember(index);
+    callbackHandleRemoveElmMember(index, data.id);
   };
 
   const redirectProfile = (userId) => {
@@ -81,11 +61,6 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
 
   return (
     <React.Fragment>
-      {isLoading && (
-        <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
-          <CircularProgress color="inherit" />
-        </Backdrop>
-      )}
       <Box
         sx={{
           py: ["15px", "22px"],
@@ -154,7 +129,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
                     fontWeight: 700,
                     cursor: "pointer",
                   }}
-                  onClick={() => redirectProfile(data?.user?.id)}
+                  onClick={() => redirectProfile(data?.id)}
                 >
                   {data.username}
                 </Typography>

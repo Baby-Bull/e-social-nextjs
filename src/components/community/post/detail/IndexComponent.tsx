@@ -82,6 +82,7 @@ const DetailPostComponent = () => {
   const [checkLoading, setCheckLoading] = useState(false);
   const [checkLoadingComment, setCheckLoadingComment] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [statusOrder, setStatusOrder] = useState("oldest");
   const onChangeCommunityPostRequest = (key: string, valueInput: any) => {
     setContent(valueInput);
     setCommunityPostRequest({
@@ -115,9 +116,9 @@ const DetailPostComponent = () => {
     }
   };
 
-  const fetchComments = async (cursor: string = "", statusOrder: string = "oldest") => {
+  const fetchComments = async (cursor: string = "", status: string = statusOrder) => {
     const community = router.query;
-    const data = await getListComment(community?.id, community?.detailId, LIMIT, cursor, statusOrder);
+    const data = await getListComment(community?.id, community?.detailId, LIMIT, cursor, status);
     setCheckLoadingComment(true);
     if (!data?.error_code) {
       // eslint-disable-next-line no-unsafe-optional-chaining
@@ -149,7 +150,7 @@ const DetailPostComponent = () => {
 
   const handleCallBackPaginationIndex = (pageCallBack, perPageCallBack) => {
     setPage(pageCallBack);
-    if (perPage <= pageCallBack) {
+    if (perPage <= pageCallBack && totalComment > comments.length) {
       setPerPage(perPageCallBack + 1);
       fetchComments(valueCursor ?? "");
     }
@@ -159,8 +160,20 @@ const DetailPostComponent = () => {
     const community = router.query;
     const res = await deleteCommunityPostComment(community?.id, community?.detailId, commentId);
     if (res) {
+      if (comments.length < 2 + (page - 1) * 10 && page > 1) {
+        handleCallBackPaginationIndex(page - 1, perPage);
+      }
       setComments(comments.filter((_, index) => index !== indexComment));
       setTotalComment(totalComment - 1);
+
+      if (comments.length <= 10 && comments.length < totalComment) {
+        const data = await getListComment(community?.id, community?.detailId, LIMIT, "", statusOrder);
+        setCheckLoadingComment(true);
+        if (!data?.error_code) {
+          setComments(data?.items);
+          setCursor(data?.cursor);
+        }
+      }
     }
     setIsLoading(false);
     return res;
@@ -173,6 +186,7 @@ const DetailPostComponent = () => {
     setPage(pageFb);
     setPerPage(perPageFb);
     setCursor(cursorFb);
+    setStatusOrder(status);
     const community = router.query;
     const data = await getListComment(community?.id, community?.detailId, LIMIT, "", status);
     if (!data?.error_code) {

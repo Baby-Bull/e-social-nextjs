@@ -53,13 +53,23 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
       <Box
         sx={{
           mt: "20px",
-          background: ["#fff", `url("/assets/images/svg/php_bg.svg")`],
-          backgroundSize: "cover",
           borderRadius: "12px",
           border: [`1px solid ${theme.whiteGray}`, "none"],
           height: { xs: "214px", md: "320px" },
+          position: "relative",
         }}
       >
+        <Box
+          sx={{
+            background: ["#fff", `url(${data?.profile_image})` || `url("/assets/images/svg/php_bg.svg")`],
+            backgroundSize: "cover !important",
+            height: "100%",
+            width: "100%",
+            position: "absolute",
+            top: 0,
+            filter: "blur(4px)",
+          }}
+        />
         <Box
           sx={{
             mt: "20px",
@@ -67,6 +77,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
             px: ["17px", "40px"],
             display: "flex",
             justifyContent: "space-between",
+            zIndex: "1",
           }}
         >
           <Box
@@ -106,6 +117,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                 flexDirection: "column",
                 justifyContent: "space-around",
                 alignItems: "flex-start",
+                zIndex: "9999",
               }}
             >
               <Typography
@@ -164,6 +176,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                 sx={{
                   height: ["50px", "100%"],
                   overflowY: ["scroll", "visible"],
+                  zIndex: "9999",
                 }}
               >
                 <Paper
