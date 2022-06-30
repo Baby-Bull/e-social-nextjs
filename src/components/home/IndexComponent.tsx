@@ -15,6 +15,7 @@ import {
 } from "src/services/user";
 import { sendMatchingRequest } from "src/services/matching";
 import theme from "src/theme";
+import { getListCommunityHome } from "src/services/community";
 
 import BannerComponent from "./blocks/BannerComponent";
 import MatchingComponent from "./blocks/MatchingComponent";
@@ -27,7 +28,13 @@ const LIMIT = 20;
 
 const HomeIndexComponents = () => {
   const { t } = useTranslation();
+  const [recommendCommunity, setRecommendCommunity] = useState([]);
   const [memberRecommends, setMemberRecommends] = useState([
+    // Newest
+    {
+      title: t("home:register-newest"),
+      data: [],
+    },
     // Newest
     {
       title: t("home:register-newest"),
@@ -180,6 +187,16 @@ const HomeIndexComponents = () => {
     indexRefetch.current = index;
   };
 
+  const getCommunity = async (cursor: string = "") => {
+    const res = await getListCommunityHome(LIMIT, cursor);
+    setRecommendCommunity(res?.items);
+    return res;
+  };
+
+  useEffect(() => {
+    getCommunity();
+  }, []);
+
   return (
     <ContentComponent>
       {isLoading && (
@@ -206,7 +223,7 @@ const HomeIndexComponents = () => {
           <NotificationComponent />
           <MatchingComponent />
 
-          <RecommendCommunityComponent />
+          <RecommendCommunityComponent recommendCommunity={recommendCommunity} />
           {memberRecommends?.map((item, index) => (
             <RecommendMembersComponent
               title={item?.title}

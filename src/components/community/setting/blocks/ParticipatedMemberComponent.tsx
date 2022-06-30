@@ -56,12 +56,14 @@ const ParticipationComponent: React.SFC<IParticipationComponentProps> = ({ isPub
   const callbackHandleRemoveMember = async (indexMember) => {
     setParticipates(participates.filter((_, index) => index !== indexMember));
     setCountParticipates(countParticipates - 1);
-    if (participates.length <= 10 && countParticipates > 10) {
+    if (participates.length < 2 + (page - 1) * 10 && page > 1) {
+      handleCallbackChangePaginationParticipates("onClick", page - 1);
+    }
+    if (participates.length <= 10 && participates.length < countParticipates) {
       const communityId = router.query;
       const resData = await getParticipates(communityId?.indexId, LIMIT, "");
       setCheckLoading(true);
       setParticipates(resData?.items);
-      setCountParticipates(resData?.items_count ?? 0);
       setCursor(resData?.cursor);
       return resData;
     }
@@ -91,7 +93,7 @@ const ParticipationComponent: React.SFC<IParticipationComponentProps> = ({ isPub
               )}`}
             </Typography>
           )}
-          {participates?.slice((page - 1) * LIMIT, page * LIMIT)?.length > 0 ? (
+          {countParticipates > 0 ? (
             participates?.slice((page - 1) * LIMIT, page * LIMIT).map((data, index) => (
               <React.Fragment key={index.toString()}>
                 <GridViewComponent
