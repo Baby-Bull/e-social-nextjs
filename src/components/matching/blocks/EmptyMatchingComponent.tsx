@@ -17,7 +17,7 @@ const EmptyMatchingComponent: React.SFC<IEmptyMatchingComponentProps> = ({ text,
     <Box
       sx={{
         mx: ["48px", 0],
-        height: { sm: "490px" },
+        // height: { sm: "490px" },
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
