@@ -1,4 +1,4 @@
-import { Box, Grid, Link } from "@mui/material";
+import { Avatar, Box, Grid, Link } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -8,18 +8,20 @@ import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import { HOMEPAGE_RECOMMEND_COMMUNITY_STATUS } from "src/components/constants/constants";
 import styles from "src/components/home/home.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
-
-import { recommendCommunityMockData } from "../mockData/mockData";
+import { joinCommunity } from "src/services/community";
 
 import SlickSliderRecommendComponent from "./SlickSliderRecommendComponent";
 
 interface IRecommendCommunityDataItem {
-  image: string;
-  numberOfRegister: number;
+  id: string;
+  profile_image: string;
   name: string;
-  numberOfMembers: number;
+  member_count: number;
+  login_count: number;
   tags: Array<string>;
   description: string;
+  is_public: boolean;
+  join_status: string;
   status: number;
 }
 
@@ -27,31 +29,56 @@ interface IRecommendCommunityItemProps {
   data: IRecommendCommunityDataItem;
 }
 
+interface IRecommendCommunityProps {
+  recommendCommunity?: any;
+}
+
 const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const [statusJoin, setStatusJoin] = useState(
+    // eslint-disable-next-line no-nested-ternary
+    data?.is_public ? 1 : !data?.is_public && data?.join_status === "pending" ? 2 : 3,
+  );
+  // const statusJoin = ;
+  const redirectToComunnity = () => {
+    router.push(`community/${data?.id}`);
+  };
+
+  const joinCummunityHome = async () => {
+    const res = await joinCommunity(data?.id);
+    if (res) {
+      if (statusJoin === 1) {
+        router.push(`community/${data?.id}`);
+      }
+      if (statusJoin === 3) {
+        setStatusJoin(2);
+      }
+    }
+    return res;
+  };
 
   return (
     <Grid item xs={12} className={classNames(styles.boxRecommend, "box-recommend-community")} style={{ padding: 0 }}>
-      <Box className={styles.boxRecommendCommunity}>
+      <Box className={styles.boxRecommendCommunity} onClick={redirectToComunnity}>
         <Grid container style={{ padding: 10 }}>
           <Grid item xs={6}>
             <div className="label-number-of-register">
-              {replaceLabelByTranslate(t("home:box-community-recommend.number-of-register"), data?.numberOfRegister)}
-            </div>
-          </Grid>
-          <Grid item xs={6}>
-            <div className="label-number-of-members">
-              {replaceLabelByTranslate(t("home:box-community-recommend.number-of-members"), data?.numberOfMembers)}
+              {replaceLabelByTranslate(t("home:box-community-recommend.number-of-register"), data?.login_count ?? 0)}
             </div>
           </Grid>
         </Grid>
         <div className="image-community">
-          <img className="image" src={data?.image} alt="community" />
+          <Avatar
+            src={data?.profile_image}
+            alt="community"
+            sx={{ width: "124px", height: "124px", border: "1px solid #eee" }}
+          />
         </div>
-        <p className="name">{data?.name}</p>
-        <p className="description">{data?.description}</p>
-
+        <div className="name">{data?.name}</div>
+        <div className="label-number-of-members">
+          {replaceLabelByTranslate(t("home:box-community-recommend.number-of-members"), data?.member_count ?? 0)}
+        </div>
         <div className="tags">
           <ul>
             {data?.tags?.map((tag, index) => (
@@ -59,39 +86,33 @@ const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data 
             ))}
           </ul>
         </div>
-        <div className="button">
-          <ButtonComponent
-            mode={HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[data?.status]?.mode}
-            fullWidth
-            onClick={() =>
-              HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[data?.status]?.allowJoinCommunity ? router.push("/community") : ""
-            }
-          >
-            {HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[data?.status]?.label}
-          </ButtonComponent>
-        </div>
+        <p className="description">{data?.description}</p>
+      </Box>
+      <Box sx={{ padding: "0 20px 20px" }}>
+        <ButtonComponent
+          mode={HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[statusJoin]?.mode}
+          fullWidth
+          onClick={joinCummunityHome}
+        >
+          {HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[statusJoin]?.label}
+        </ButtonComponent>
       </Box>
     </Grid>
   );
 };
 
-const RecommendCommunityComponent = () => {
+const RecommendCommunityComponent: React.SFC<IRecommendCommunityProps> = ({ recommendCommunity }) => {
   const { t } = useTranslation();
-  const [recommendCommunities] = useState(recommendCommunityMockData);
 
   const [recommendCommunityItems, setRecommendCommunityItems] = useState([]);
 
   useEffect(() => {
     setRecommendCommunityItems(
-      recommendCommunities.map((item, index) => <RecommendCommunityItem data={item} key={index} />),
+      recommendCommunity.map((item, index) => <RecommendCommunityItem data={item} key={index} />),
     );
-  }, [recommendCommunities]);
+  }, [recommendCommunity]);
   return (
-    <Grid
-      container
-      className={styles.recommendList}
-      sx={{ display: recommendCommunityItems.length > 0 ? "block" : "none" }}
-    >
+    <Grid container className={styles.recommendList}>
       <div className="div-title">
         <span className="title">{t("home:recommend-community")}</span>
         <Link className="link-see-more content-pc" href="/search_community" underline="none">
