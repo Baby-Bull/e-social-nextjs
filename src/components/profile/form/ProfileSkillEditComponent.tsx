@@ -1095,6 +1095,7 @@ const ProfileSkillComponent = () => {
       <Box
         sx={{
           p: { xs: "80px 20px", lg: "80px 120px" },
+          marginTop: { xs: "90px", lg: "0" },
           background: "#F4FDFF",
         }}
       >

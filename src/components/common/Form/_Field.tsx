@@ -269,7 +269,7 @@ export const Field: React.SFC<FieldProps> = ({
         <Typography
           sx={{
             fontSize: "10px",
-            color: "red",
+            color: "#FF9458",
             textAlign: editor === "checkbox" ? "center" : "left",
             "&": {
               "@media (max-width: 425px)": {

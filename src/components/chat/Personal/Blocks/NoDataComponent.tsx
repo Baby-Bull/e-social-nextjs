@@ -3,6 +3,7 @@ import { useTranslation } from "next-i18next";
 import { Box, Grid, IconButton, InputBase, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import classNames from "classnames";
+import { useRouter } from "next/router";
 
 import styles from "src/components/chat/chat.module.scss";
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
@@ -19,7 +20,7 @@ const InputCustom = styled(InputBase)({
 
 const BlockNoDataComponent = () => {
   const { t } = useTranslation();
-
+  const router = useRouter();
   return (
     <React.Fragment>
       <Grid container className={classNames(styles.chatContainerPC, "content-pc")}>
@@ -49,8 +50,7 @@ const BlockNoDataComponent = () => {
             <Box className={styles.boxNoData}>
               <Typography className="title">{t("chat:box-right-no-data")}</Typography>
               <img alt="no-data" src="/assets/images/chat-no-data.png" width={245} />
-
-              <ButtonComponent className="btn-find" mode="gradient">
+              <ButtonComponent className="btn-find" mode="gradient" onClick={() => router.push("/search_user")}>
                 {t("chat:box-right-button-find")}
               </ButtonComponent>
             </Box>
@@ -101,8 +101,7 @@ const BlockNoDataComponent = () => {
           <Box className={styles.boxNoData}>
             <Typography className="title">{t("chat:box-right-no-data-mobile")}</Typography>
             <img alt="no-data" src="/assets/images/chat-no-data.png" width={137} />
-
-            <ButtonComponent className="btn-find" mode="gradient">
+            <ButtonComponent className="btn-find" mode="gradient" onClick={() => router.push("/search_user")}>
               {t("chat:box-right-button-find")}
             </ButtonComponent>
           </Box>
