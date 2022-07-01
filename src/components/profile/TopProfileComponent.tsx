@@ -45,6 +45,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
   const [hint, setHint] = useState(false);
+  const [hintMobile, setHintMobile] = useState(false);
   const [showPopupAnalysis, setShowPopupAnalysis] = useState(false);
   const urlProfile = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${auth?.id}`;
 
@@ -791,9 +792,17 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
               >
                 <Box>{t("profile:character-analysis")}</Box>
               </Button>
-              <Box>
+              <Box onClick={() => setHintMobile(!hintMobile)}>
                 <img src="/assets/images/icon/ic_question_mark.png" alt="ic_question_mark" width="16.7" />
               </Box>
+            </Box>
+            <Box
+              sx={{
+                display: hintMobile ? "block!important" : "none",
+              }}
+              className={styles.hint}
+            >
+              キャラクター診断とは説明テキスト説明テキスト説明テキスト
             </Box>
             <Box
               sx={{
