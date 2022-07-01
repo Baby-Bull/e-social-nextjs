@@ -1024,7 +1024,7 @@ const ProfileSkillComponent = () => {
       const res = await updateProfile(profileSocialRequest);
       if (res) {
         const auth = JSON.parse(sessionStorage.getItem("auth"));
-        setTimeout(() => router.push("/my-profile"), 3000);
+        setTimeout(() => router.push("/my-profile"), 500);
         auth.user.profile.username = profileSocialRequest.username;
         sessionStorage.setItem("auth", JSON.stringify(auth));
         return res;
@@ -1042,7 +1042,7 @@ const ProfileSkillComponent = () => {
           other_language_level: skillRequest.other_language_level,
         };
         const res = await updateProfile({ skills: dataUpdate });
-        setTimeout(() => router.push("/my-profile"), 3000);
+        setTimeout(() => router.push("/my-profile"), 500);
         return res;
       }
       setProfileRequest({
@@ -1050,7 +1050,7 @@ const ProfileSkillComponent = () => {
       });
       const tags = { tags: inputTags };
       const res = await updateProfile({ ...profileRequest, ...tags });
-      setTimeout(() => router.push("/my-profile"), 3000);
+      setTimeout(() => router.push("/my-profile"), 500);
       return res.data;
     }
   };
@@ -1076,7 +1076,7 @@ const ProfileSkillComponent = () => {
         const auth = JSON.parse(sessionStorage.getItem("auth"));
         auth.user.profile.profile_image = res.profile_image;
         sessionStorage.setItem("auth", JSON.stringify(auth));
-        setTimeout(() => router.push("/my-profile"), 3000);
+        setTimeout(() => router.push("/my-profile"), 500);
         return res.data;
       }
     }
