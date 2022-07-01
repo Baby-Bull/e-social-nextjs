@@ -157,9 +157,9 @@ const ChatBoxRightComponent = ({
   isMobile,
   toggleRenderSide,
   userId,
-  // roomSelect,
+  roomSelect,
   sendTextMessage,
-  // newMessageOfRoom,
+  newMessageOfRoom,
   user,
 }) => {
   const { t } = useTranslation();
@@ -189,7 +189,7 @@ const ChatBoxRightComponent = ({
       });
     };
     fetchMessages();
-  }, [userId]);
+  }, [userId, newMessageOfRoom]);
 
   const fetchData = async () => {
     const messageData = await getMessages(userId, hasMoreParams?.cursor);
@@ -199,6 +199,12 @@ const ChatBoxRightComponent = ({
       hasMore: messageData?.hasMore,
     });
   };
+
+  useEffect(() => {
+    if (newMessageOfRoom && newMessageOfRoom?.chat_room_id === roomSelect.id) {
+      setListMessages([...listMessages, newMessageOfRoom]);
+    }
+  }, [newMessageOfRoom]);
 
   useEffect(() => {
     const listMessagesFormat = formatListMessages(listMessages);

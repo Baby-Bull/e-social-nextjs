@@ -33,7 +33,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     hasMore: false,
   });
 
-  // const [newMessageOfRoom, setNewMessageOfRoom] = useState(null);
+  const [newMessageOfRoom, setNewMessageOfRoom] = useState(null);
 
   // Search chat-room
   const [searchChatRoom, setSearchChatRoom] = useState({
@@ -77,7 +77,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
       cursor: listRoomResQuery?.cursor,
       hasMore: listRoomResQuery?.hasMore,
     });
-  }, [listRoomResQuery]);
+  }, [listRoomResQuery, roomSelect?.id]);
 
   const updateLastMessageOfListRooms = async (message: any) => {
     let hasChatRoomExist = false;
@@ -150,7 +150,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
         if (messageReceived["get.chatRoom.message"]) {
           const message = messageReceived["get.chatRoom.message"];
           if (chatRoomIdRef.current === message.chat_room_id) {
-            // setNewMessageOfRoom(message);
+            setNewMessageOfRoom(message);
           }
 
           updateLastMessageOfListRooms(message);
@@ -223,9 +223,9 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
           toggleRenderSide={toggleRenderSide}
           userId={userId}
           user={user}
-          // roomSelect={roomSelect}
+          roomSelect={roomSelect}
           sendTextMessage={sendTextMessage}
-          // newMessageOfRoom={newMessageOfRoom}
+          newMessageOfRoom={newMessageOfRoom}
         />
       ) : null}
     </Grid>
