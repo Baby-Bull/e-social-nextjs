@@ -90,41 +90,42 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
         </Typography>
         <Box
           sx={{
-            height: "250px",
+            maxHeight: "250px",
             overflowY: "auto",
           }}
         >
           <ShowTextArea value={data?.description} />
         </Box>
-        <Typography
-          component="span"
-          sx={{
-            mt: "22px",
-            pb: "8px",
-            fontSize: 18,
-            fontWeight: 700,
-          }}
-        >
-          {t("community:intro.title.administrator")}
-        </Typography>
-
         {data?.admins?.length > 0 &&
           data?.admins.map((value, index) => (
-            <Box
-              display="flex"
-              key={index}
-              sx={{ alignItems: "center", mt: 1, cursor: "pointer" }}
-              onClick={() => redirectProfile(value?.id)}
-            >
-              <Avatar
+            <Box>
+              <Typography
+                component="span"
                 sx={{
-                  mr: "8px",
-                  width: "32px",
-                  height: "32px",
+                  mt: "22px",
+                  pb: "8px",
+                  fontSize: 18,
+                  fontWeight: 700,
                 }}
-                src={value?.profile_image || "/assets/images/svg/dog.svg"}
-              />
-              {value?.username}
+              >
+                {t("community:intro.title.administrator")}
+              </Typography>
+              <Box
+                display="flex"
+                key={index}
+                sx={{ alignItems: "center", mt: 1, cursor: "pointer" }}
+                onClick={() => redirectProfile(value?.id)}
+              >
+                <Avatar
+                  sx={{
+                    mr: "8px",
+                    width: "32px",
+                    height: "32px",
+                  }}
+                  src={value?.profile_image || "/assets/images/svg/dog.svg"}
+                />
+                {value?.username}
+              </Box>
             </Box>
           ))}
         <Typography

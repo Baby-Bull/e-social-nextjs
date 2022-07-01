@@ -12,7 +12,6 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 /* eslint-disable */
 import TabsUnstyled from "@mui/base/TabsUnstyled";
 import TabsListUnstyled from "@mui/base/TabsListUnstyled";
@@ -23,7 +22,6 @@ import MenuItem from "@mui/material/MenuItem";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
-import { useDispatch, useSelector } from "react-redux";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import theme from "src/theme";
@@ -42,8 +40,6 @@ import {
 } from "src/constants/constants";
 // eslint-disable-next-line import/no-duplicates
 import { getUserProfile, updateProfile } from "src/services/user";
-import { IStoreState } from "src/constants/interface";
-import actionTypes from "src/store/actionTypes";
 
 const BoxContentTab = styled(Box)`
   display: flex;
@@ -158,13 +154,12 @@ const ListItem = styled("li")({
 const InputCustom = styled(TextField)({
   width: "100%",
   borderRadius: "6px",
-  fontFamily: "Noto Sans JP",
   "& fieldset": {
     border: "none",
   },
-  // "& ::placeholder": {
-  //   color: "#bdbdbd",
-  // },
+  "&:placeholder": {
+    color: "red",
+  },
   "& .MuiInputBase-input": {
     position: "relative",
     backgroundColor: "#F4FDFF",
@@ -203,7 +198,7 @@ const SelectCustom = styled(Select)({
     fontSize: 16,
     padding: "9px 16px",
     borderRadius: 6,
-    fontFamily: "Noto Sans JP",
+    fontFamily: "Noto Sans",
     "@media (max-width: 1200px)": {
       fontSize: 14,
     },
@@ -239,11 +234,9 @@ const ImgStarLevel = ({ countStar }) => {
 
 const ProfileSkillComponent = () => {
   const { t } = useTranslation();
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const auth = useSelector((state: IStoreState) => state.user);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isFresh, setIsFresh] = useState(false);
   const [username, setUsername] = useState(null);
   const [hitokoto, setHitokoto] = useState(null);
   const [discussionTopic, setDiscussionTopic] = useState(null);
@@ -259,29 +252,27 @@ const ProfileSkillComponent = () => {
   const [address, setAddress] = useState(PROFILE_JAPAN_PROVINCE_OPTIONS[0].value);
   const [inputTags, setInputTags] = useState([]);
   const [isSkillProfile, setIsSkillProfile] = useState(false);
-  const [profileImage, setProfileImage] = useState(auth?.profile_image);
+  const [profileImage, setProfileImage] = useState(null);
   const [upstreamProcess, setUpstreamProcess] = useState(null);
   const [otherLanguageLevel, setOtherLanguageLevel] = useState(null);
   const [skillLanguageData, setSkillLanguage] = useState([
-    { key: 0, name: null, experience_year: 0, experience_month: 1, level: 1, category: "programLanguage" },
+    { key: 0, name: null, experience_year: null, experience_month: 1, level: 1, category: "programLanguage" },
   ]);
   const [skillFrameworkData, setSkillFramework] = useState([
-    { key: 0, name: null, experience_year: 0, experience_month: 1, level: 1, category: "framework" },
+    { key: 0, name: null, experience_year: null, experience_month: 1, level: 1, category: "framework" },
   ]);
   const [skillInfrastructureData, setSkillInfrastructure] = useState([
-    { key: 0, name: null, experience_year: 0, experience_month: 1, level: 1, category: "infrastructure" },
+    { key: 0, name: null, experience_year: null, experience_month: 1, level: 1, category: "infrastructure" },
   ]);
-  const monthLanguage = useState(MONTHS[0].value);
+  const [monthLanguage] = useState(MONTHS[0].value);
   const [levelLanguage] = useState(LEVELS[2].value);
-  const [messSkillLanguageErr, setMessSkillLanguageErr] = useState([{ key: null, mess: null, type: null }]);
-  const [messSkillFrameworkErr, setMessSkillFrameworkErr] = useState([{ key: null, mess: null, type: null }]);
-  const [messSkillInfrastructureErr, setMessSkillInfrastructureErr] = useState([{ key: null, mess: null, type: null }]);
-  const [statusErrNameLanguage, setStatusErrNameLanguage] = useState([{ key: null, status: null }]);
-  const [statusErrYearLanguage, setStatusErrYearLanguage] = useState([{ key: null, status: null }]);
-  const [statusErrNameFramework, setStatusErrNameFramework] = useState([{ key: null, status: null }]);
-  const [statusErrYearFramework, setStatusErrYearFramework] = useState([{ key: null, status: null }]);
-  const [statusErrNameInfrastructure, setStatusErrNameInfrastructure] = useState([{ key: null, status: null }]);
-  const [statusErrYearInfrastructure, setStatusErrYearInfrastructure] = useState([{ key: null, status: null }]);
+  const [statusErrNameLaguage, setStatusErrNameLaguage] = useState(false);
+  const [statusErrYearLaguage, setStatusErrYearLaguage] = useState(false);
+  const [statusErrNameFramework, setStatusErrNameFramework] = useState(false);
+  const [statusErrYearFramework, setStatusErrYearFramework] = useState(false);
+  const [statusErrNameInfrastructure, setStatusErrNameInfrastructure] = useState(false);
+  const [statusErrYearInfrastructure, setStatusErrYearInfrastructure] = useState(false);
+
   const [skillRequest, setSkillRequest] = useState({
     upstream_process: null,
     english_level: null,
@@ -368,33 +359,6 @@ const ProfileSkillComponent = () => {
       other_language_level: null,
       image_profile: null,
     });
-    setStatusErrNameLanguage([]);
-    setStatusErrYearLanguage([]);
-    setStatusErrNameFramework([]);
-    setStatusErrYearFramework([]);
-    setStatusErrYearInfrastructure([]);
-    setStatusErrYearInfrastructure([]);
-    setMessSkillLanguageErr([
-      {
-        key: null,
-        mess: null,
-        type: null,
-      },
-    ]);
-    setMessSkillFrameworkErr([
-      {
-        key: null,
-        mess: null,
-        type: null,
-      },
-    ]);
-    setMessSkillInfrastructureErr([
-      {
-        key: null,
-        mess: null,
-        type: null,
-      },
-    ]);
     setIsLoading(true);
     const data = await getUserProfile();
     setUsername(data.username);
@@ -477,25 +441,23 @@ const ProfileSkillComponent = () => {
     }
     if (arrLanguage.length > 0) {
       setSkillLanguage(arrLanguage);
-    } else {
-      setSkillLanguage([]);
     }
     if (arrFramework.length > 0) {
       setSkillFramework(arrFramework);
-    } else {
-      setSkillFramework([]);
     }
     if (arrInfrastructure.length > 0) {
       setSkillInfrastructure(arrInfrastructure);
-    } else {
-      setSkillInfrastructure([]);
     }
     return data;
   };
 
   useEffect(() => {
     fetchProfileSkill();
-  }, []);
+  }, [isFresh]);
+
+  const [messSkillLanguageErr, setMessSkillLanguageErr] = useState([{ key: null, mess: null, type: null }]);
+  const [messSkillFrameworkErr, setMessSkillFrameworkErr] = useState([{ key: null, mess: null, type: null }]);
+  const [messSkillInfrastructureErr, setMessSkillInfrastructureErr] = useState([{ key: null, mess: null, type: null }]);
 
   // /* Delete item */
   const handleDeleteSkillLanguage = (SkillLanguageToDelete) => () => {
@@ -513,17 +475,8 @@ const ProfileSkillComponent = () => {
   };
 
   const arrMessLanguageErrors = [];
-  const arrStatusNameLanguageErrors = [];
-  const arrStatusYearLanguageErrors = [];
-  const arrStatusNameFrameworkErrors = [];
-  const arrStatusYearFrameworkErrors = [];
-  const arrStatusNameInfrastructureErrors = [];
-  const arrStatusYearInfrastructureErrors = [];
   const arrMessFrameworkErrors = [];
   const arrMessInfrastructureErrors = [];
-  const arrNameLanguage = [];
-  const arrNameFramework = [];
-  const arrNameInfrastructure = [];
 
   const removeSearchTag = (indexRemove) => {
     setInputTags(inputTags.filter((_, index) => index !== indexRemove));
@@ -535,7 +488,7 @@ const ProfileSkillComponent = () => {
     // @ts-ignore
     setSkillLanguage([
       ...skillLanguageData,
-      { key: key + 1, name: null, experience_year: 0, experience_month: 1, level: 1, category: "programLanguage" },
+      { key: key + 1, name: null, experience_year: null, experience_month: 1, level: 1, category: "programLanguage" },
     ]);
   };
 
@@ -543,7 +496,7 @@ const ProfileSkillComponent = () => {
     // @ts-ignore
     setSkillFramework([
       ...skillFrameworkData,
-      { key: key + 1, name: null, experience_year: 0, experience_month: 1, level: 1, category: "framework" },
+      { key: key + 1, name: null, experience_year: null, experience_month: 1, level: 1, category: "framework" },
     ]);
   };
   //
@@ -551,22 +504,14 @@ const ProfileSkillComponent = () => {
     // @ts-ignore
     setSkillInfrastructure([
       ...skillInfrastructureData,
-      { key: key + 1, name: null, experience_year: 0, experience_month: 1, level: 1, category: "infrastructure" },
+      { key: key + 1, name: null, experience_year: null, experience_month: 1, level: 1, category: "infrastructure" },
     ]);
   };
 
   const onKeyPress = (e) => {
     if (e.key === "Enter" && e.target.value) {
-      if (e.target.value?.length > 20) {
-        // isValidForm = false;
-        errorMessages.tags = VALIDATE_FORM_UPDATE_PROFILE.tags.max_size;
-        setErrorValidates(errorMessages);
-      } else {
-        errorMessages.tags = null;
-        setErrorValidates(errorMessages);
-        setInputTags([...inputTags, e.target.value]);
-        (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
-      }
+      setInputTags([...inputTags, e.target.value]);
+      (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
     }
   };
 
@@ -703,10 +648,6 @@ const ProfileSkillComponent = () => {
       isValidForm = false;
       errorMessages.username = VALIDATE_FORM_UPDATE_PROFILE.username.required;
     }
-    if (!REGEX_RULES.text_input.test(profileSocialRequest?.username)) {
-      isValidForm = false;
-      errorMessages.username = VALIDATE_FORM_UPDATE_PROFILE.format;
-    }
     if (profileSocialRequest?.facebook_url?.length > 0 && !REGEX_RULES.url.test(profileSocialRequest?.facebook_url)) {
       isValidForm = false;
       errorMessages.facebook_url = VALIDATE_FORM_UPDATE_PROFILE.facebook_url.format;
@@ -729,17 +670,13 @@ const ProfileSkillComponent = () => {
   const handleValidateForm = () => {
     let isValidForm = true;
     if (isSkillProfile) {
-      // Validate arr input language
+      setStatusErrNameLaguage(false);
+      setStatusErrYearLaguage(false);
+      setStatusErrNameFramework(false);
+      setStatusErrYearFramework(false);
+      setStatusErrNameInfrastructure(false);
+      setStatusErrYearInfrastructure(false);
       for (let i = 0; i < skillLanguageData.length; i++) {
-        arrStatusNameLanguageErrors.push({
-          key: `name_${skillLanguageData[i]?.key}`,
-          status: false,
-        });
-        arrNameLanguage.push(skillLanguageData[i]?.name);
-        arrStatusYearLanguageErrors.push({
-          key: `experience_year_${skillLanguageData[i]?.key}`,
-          status: false,
-        });
         if (skillLanguageData[i]?.name?.length > 40) {
           isValidForm = false;
           arrMessLanguageErrors.push({
@@ -747,36 +684,18 @@ const ProfileSkillComponent = () => {
             mess: VALIDATE_FORM_UPDATE_PROFILE.max_length_name_skill,
             type: "max_length",
           });
-          arrStatusNameLanguageErrors[i].status = true;
+          setStatusErrNameLaguage(true);
         }
-        if (!skillLanguageData[i]?.name || skillLanguageData[i]?.name?.trim()?.length === 0) {
-          skillLanguageData?.splice(i, 1);
-        } else if (
-          skillLanguageData[i]?.name?.trim()?.length > 0 &&
-          !REGEX_RULES.text_input.test(skillLanguageData[i]?.name)
-        ) {
+
+        if (skillLanguageData[i + 1]?.name === skillLanguageData[i].name && skillLanguageData.length > 1) {
           isValidForm = false;
           arrMessLanguageErrors.push({
-            key: `name_${skillLanguageData[i]?.key}`,
-            mess: VALIDATE_FORM_UPDATE_PROFILE.format,
-            type: "format",
+            key: `name_${skillLanguageData[i + 1]?.key}`,
+            mess: VALIDATE_FORM_UPDATE_PROFILE.required_name_skill,
+            type: "required",
           });
-          arrStatusNameLanguageErrors[i].status = true;
+          setStatusErrNameLaguage(true);
         }
-        // if (
-        //   arrNameLanguage.includes(skillLanguageData[i + 1]?.name) &&
-        //   skillLanguageData.length > 1 &&
-        //   skillLanguageData[i + 1]?.name?.length > 0
-        // ) {
-        //   isValidForm = false;
-        //   arrMessLanguageErrors.push({
-        //     key: `name_${skillLanguageData[i + 1]?.key}`,
-        //     mess: VALIDATE_FORM_UPDATE_PROFILE.required_name_skill,
-        //     type: "required",
-        //   });
-        //
-        //   arrStatusNameLanguageErrors[i].status = true;
-        // }
 
         // @ts-ignore
         if (skillLanguageData[i]?.experience_year?.length > 2) {
@@ -786,7 +705,7 @@ const ProfileSkillComponent = () => {
             mess: VALIDATE_FORM_UPDATE_PROFILE.max_length_year_skill,
             type: "max_length",
           });
-          arrStatusYearLanguageErrors[i].status = true;
+          setStatusErrYearLaguage(true);
         }
 
         if (skillLanguageData[i]?.experience_year < 0) {
@@ -796,20 +715,11 @@ const ProfileSkillComponent = () => {
             mess: VALIDATE_FORM_UPDATE_PROFILE.experience_year.min,
             type: "min",
           });
-          arrStatusYearLanguageErrors[i].status = true;
+          setStatusErrYearLaguage(true);
         }
       }
-      // validate arr input framework
+
       for (let i = 0; i < skillFrameworkData.length; i++) {
-        arrStatusNameFrameworkErrors.push({
-          key: `name_${skillFrameworkData[i]?.key}`,
-          status: false,
-        });
-        arrStatusYearFrameworkErrors.push({
-          key: `experience_year_${skillFrameworkData[i]?.key}`,
-          status: false,
-        });
-        arrNameFramework.push(skillFrameworkData[i]?.name);
         if (skillFrameworkData[i]?.name?.length > 40) {
           isValidForm = false;
           arrMessFrameworkErrors.push({
@@ -817,35 +727,18 @@ const ProfileSkillComponent = () => {
             mess: VALIDATE_FORM_UPDATE_PROFILE.max_length_name_skill,
             type: "max_length",
           });
-          arrStatusNameFrameworkErrors[i].status = true;
+          setStatusErrNameFramework(true);
         }
-        if (!skillFrameworkData[i]?.name || skillFrameworkData[i]?.name?.trim()?.length === 0) {
-          skillFrameworkData?.splice(i, 1);
-        } else if (
-          skillFrameworkData[i]?.name?.trim()?.length > 0 &&
-          !REGEX_RULES.text_input.test(skillFrameworkData[i]?.name)
-        ) {
+
+        if (skillFrameworkData[i + 1]?.name === skillFrameworkData[i].name && skillFrameworkData.length > 1) {
           isValidForm = false;
           arrMessFrameworkErrors.push({
-            key: `name_${skillFrameworkData[i]?.key}`,
-            mess: VALIDATE_FORM_UPDATE_PROFILE.format,
-            type: "format",
+            key: `name_${skillFrameworkData[i + 1]?.key}`,
+            mess: VALIDATE_FORM_UPDATE_PROFILE.required_name_skill,
+            type: "required",
           });
-          arrStatusNameFrameworkErrors[i].status = true;
+          setStatusErrNameFramework(true);
         }
-        // if (
-        //   arrNameFramework.includes(skillFrameworkData[i + 1]?.name) &&
-        //   skillFrameworkData.length > 1 &&
-        //   skillFrameworkData[i + 1]?.name.length > 1
-        // ) {
-        //   isValidForm = false;
-        //   arrMessFrameworkErrors.push({
-        //     key: `name_${skillFrameworkData[i + 1]?.key}`,
-        //     mess: VALIDATE_FORM_UPDATE_PROFILE.required_name_skill,
-        //     type: "required",
-        //   });
-        //   arrStatusNameFrameworkErrors[i].status = true;
-        // }
 
         // @ts-ignore
         if (skillFrameworkData[i]?.experience_year?.length > 2) {
@@ -855,7 +748,7 @@ const ProfileSkillComponent = () => {
             mess: VALIDATE_FORM_UPDATE_PROFILE.max_length_year_skill,
             type: "max_length",
           });
-          arrStatusYearFrameworkErrors[i].status = true;
+          setStatusErrYearFramework(true);
         }
 
         if (skillFrameworkData[i]?.experience_year < 0) {
@@ -865,22 +758,11 @@ const ProfileSkillComponent = () => {
             mess: VALIDATE_FORM_UPDATE_PROFILE.experience_year.min,
             type: "min",
           });
-          arrStatusYearFrameworkErrors[i].status = true;
+          setStatusErrYearFramework(true);
         }
       }
 
-      // validate arr input Infrastructure
       for (let i = 0; i < skillInfrastructureData.length; i++) {
-        arrStatusNameInfrastructureErrors.push({
-          key: `name_${skillInfrastructureData[i]?.key}`,
-          status: false,
-        });
-
-        arrStatusYearInfrastructureErrors.push({
-          key: `experience_year_${skillInfrastructureData[i]?.key}`,
-          status: false,
-        });
-        arrNameInfrastructure.push(skillInfrastructureData[i]?.name);
         if (skillInfrastructureData[i]?.name?.length > 40) {
           isValidForm = false;
           arrMessInfrastructureErrors.push({
@@ -888,36 +770,21 @@ const ProfileSkillComponent = () => {
             mess: VALIDATE_FORM_UPDATE_PROFILE.max_length_name_skill,
             type: "max_length",
           });
-          arrStatusNameInfrastructureErrors[i].status = true;
+          setStatusErrNameInfrastructure(true);
         }
 
-        if (!skillInfrastructureData[i]?.name || skillInfrastructureData[i]?.name?.trim()?.length === 0) {
-          skillInfrastructureData?.splice(i, 1);
-        } else if (
-          skillInfrastructureData[i]?.name?.trim()?.length > 0 &&
-          !REGEX_RULES.text_input.test(skillInfrastructureData[i]?.name)
+        if (
+          skillInfrastructureData[i + 1]?.name === skillInfrastructureData[i].name &&
+          skillInfrastructureData.length > 1
         ) {
           isValidForm = false;
           arrMessInfrastructureErrors.push({
-            key: `name_${skillInfrastructureData[i]?.key}`,
-            mess: VALIDATE_FORM_UPDATE_PROFILE.format,
-            type: "format",
+            key: `name_${skillInfrastructureData[i + 1]?.key}`,
+            mess: VALIDATE_FORM_UPDATE_PROFILE.required_name_skill,
+            type: "required",
           });
-          arrStatusNameInfrastructureErrors[i].status = true;
+          setStatusErrNameInfrastructure(true);
         }
-        // if (
-        //   arrNameInfrastructure.includes(skillInfrastructureData[i + 1]?.name) &&
-        //   skillInfrastructureData.length > 1 &&
-        //   skillInfrastructureData[i + 1]?.name?.length > 1
-        // ) {
-        //   isValidForm = false;
-        //   arrMessInfrastructureErrors.push({
-        //     key: `name_${skillInfrastructureData[i + 1]?.key}`,
-        //     mess: VALIDATE_FORM_UPDATE_PROFILE.required_name_skill,
-        //     type: "required",
-        //   });
-        //   arrStatusNameInfrastructureErrors[i].status = true;
-        // }
 
         // @ts-ignore
         if (skillInfrastructureData[i]?.experience_year?.length > 2) {
@@ -927,7 +794,7 @@ const ProfileSkillComponent = () => {
             mess: VALIDATE_FORM_UPDATE_PROFILE.max_length_year_skill,
             type: "max_length",
           });
-          arrStatusYearInfrastructureErrors[i].status = true;
+          setStatusErrYearInfrastructure(true);
         }
 
         if (skillInfrastructureData[i]?.experience_year < 0) {
@@ -937,7 +804,7 @@ const ProfileSkillComponent = () => {
             mess: VALIDATE_FORM_UPDATE_PROFILE.experience_year.min,
             type: "min",
           });
-          arrStatusYearInfrastructureErrors[i].status = true;
+          setStatusErrYearInfrastructure(true);
         }
       }
 
@@ -947,21 +814,15 @@ const ProfileSkillComponent = () => {
       }
 
       if (!skillRequest?.english_level) {
-        skillRequest.english_level = null;
-        // isValidForm = false;
-        // errorMessages.english_level = VALIDATE_FORM_UPDATE_PROFILE.english_level.select;
+        isValidForm = false;
+        errorMessages.english_level = VALIDATE_FORM_UPDATE_PROFILE.english_level.select;
       }
 
       if (skillRequest?.other_language_level?.length > 200) {
         isValidForm = false;
         errorMessages.other_language_level = VALIDATE_FORM_UPDATE_PROFILE.other_language_level.max_length;
       }
-      setStatusErrNameLanguage(arrStatusNameLanguageErrors);
-      setStatusErrYearLanguage(arrStatusYearLanguageErrors);
-      setStatusErrNameFramework(arrStatusNameFrameworkErrors);
-      setStatusErrYearFramework(arrStatusYearFrameworkErrors);
-      setStatusErrNameInfrastructure(arrStatusNameInfrastructureErrors);
-      setStatusErrYearInfrastructure(arrStatusYearInfrastructureErrors);
+
       setMessSkillLanguageErr(arrMessLanguageErrors);
       setMessSkillFrameworkErr(arrMessFrameworkErrors);
       setMessSkillInfrastructureErr(arrMessInfrastructureErrors);
@@ -986,9 +847,8 @@ const ProfileSkillComponent = () => {
 
       // validate job
       if (!profileRequest?.job) {
-        profileRequest.job = null;
-        // isValidForm = false;
-        // errorMessages.job = VALIDATE_FORM_UPDATE_PROFILE.job.select;
+        isValidForm = false;
+        errorMessages.job = VALIDATE_FORM_UPDATE_PROFILE.job.select;
       }
 
       // validate job_position
@@ -999,9 +859,8 @@ const ProfileSkillComponent = () => {
 
       // validate employment_status
       if (!profileRequest?.employment_status) {
-        profileRequest.employment_status = null;
-        // isValidForm = false;
-        // errorMessages.employment_status = VALIDATE_FORM_UPDATE_PROFILE.employment_status.select;
+        isValidForm = false;
+        errorMessages.employment_status = VALIDATE_FORM_UPDATE_PROFILE.employment_status.select;
       }
 
       // validate discussion_topic
@@ -1016,7 +875,6 @@ const ProfileSkillComponent = () => {
         errorMessages.address = VALIDATE_FORM_UPDATE_PROFILE.address.select;
       }
 
-      // validate tag
       if (inputTags?.length < 2) {
         isValidForm = false;
         errorMessages.tags = VALIDATE_FORM_UPDATE_PROFILE.tags.min_tag;
@@ -1031,9 +889,10 @@ const ProfileSkillComponent = () => {
     if (handleValidateFormSocial()) {
       const res = await updateProfile(profileSocialRequest);
       if (res) {
-        setTimeout(() => router.push("/my-profile"), 3000);
-        auth.username = profileSocialRequest.username;
-        dispatch({ type: actionTypes.UPDATE_PROFILE, payload: auth });
+        const auth = JSON.parse(sessionStorage.getItem("auth"));
+        setIsFresh(!isFresh);
+        auth.user.profile.username = profileSocialRequest.username;
+        sessionStorage.setItem("auth", JSON.stringify(auth));
         return res;
       }
     }
@@ -1041,22 +900,23 @@ const ProfileSkillComponent = () => {
   // submit profile form
   const submitUserProfileRequest = async () => {
     if (handleValidateForm()) {
-      const tags = { tags: inputTags };
-      setProfileRequest({
-        ...profileRequest,
-        ...tags,
-      });
-      const res = await updateProfile({
-        ...profileRequest,
-        ...tags,
-        skills: {
+      if (isSkillProfile) {
+        const dataUpdate = {
           code_skills: [...skillLanguageData, ...skillFrameworkData, ...skillInfrastructureData],
           upstream_process: skillRequest.upstream_process,
           english_level: skillRequest.english_level,
           other_language_level: skillRequest.other_language_level,
-        },
+        };
+        const res = await updateProfile({ skills: dataUpdate });
+        setIsFresh(!isFresh);
+        return res;
+      }
+      setProfileRequest({
+        ...profileRequest,
       });
-      setTimeout(() => router.push("/my-profile"), 3000);
+      const tags = { tags: inputTags };
+      const res = await updateProfile({ ...profileRequest, ...tags });
+      setIsFresh(!isFresh);
       return res.data;
     }
   };
@@ -1077,11 +937,12 @@ const ProfileSkillComponent = () => {
       formData.append("profile_image", e.currentTarget.files[0]);
       const res = await updateProfile(formData);
       if (res) {
+        setIsFresh(!isFresh);
         // @ts-ignore
         document.getElementById("avatar").value = null;
-        auth.profile_image = res.profile_image;
-        dispatch({ type: actionTypes.UPDATE_PROFILE, payload: auth });
-        setTimeout(() => router.push("/my-profile"), 3000);
+        const auth = JSON.parse(sessionStorage.getItem("auth"));
+        auth.user.profile.profile_image = res.profile_image;
+        sessionStorage.setItem("auth", JSON.stringify(auth));
         return res.data;
       }
     }
@@ -1099,7 +960,7 @@ const ProfileSkillComponent = () => {
       )}
       <Box
         sx={{
-          p: { xs: "90px 20px", lg: "80px 120px" },
+          p: { xs: "80px 20px", lg: "80px 120px" },
           background: "#F4FDFF",
         }}
       >
@@ -1127,46 +988,30 @@ const ProfileSkillComponent = () => {
                   justifyContent: "center",
                 }}
               >
-                <Avatar
-                  alt="Remy Sharp"
-                  src={profileImage || "/assets/images/avatar.png"}
-                  sx={{
-                    width: { xs: "80px", lg: "160px" },
-                    height: { xs: "80px", lg: "160px" },
-                    mt: { xs: "-40px", lg: "0" },
-                    position: { xs: "relative", lg: "unset" },
-                  }}
-                />
-                <label
-                  htmlFor="avatar"
-                  style={{
-                    cursor: "pointer",
-                  }}
-                >
+                <label htmlFor="avatar">
                   <Avatar
+                    alt="Remy Sharp"
+                    src={profileImage || "/assets/images/profile/avatar_2.png"}
                     sx={{
-                      bgcolor: "black",
+                      width: { xs: "80px", lg: "160px" },
+                      height: { xs: "80px", lg: "160px" },
+                      mt: { xs: "-40px", lg: "0" },
+                      position: { xs: "relative", lg: "unset" },
+                      cursor: "pointer",
+                    }}
+                  />
+                  <Avatar
+                    alt="Remy Sharp"
+                    src="/assets/images/icon/ic_camera.png"
+                    sx={{
+                      width: "23.33px",
+                      height: "21px",
+                      opacity: 0.6,
                       position: "absolute",
                       display: { xs: "block", lg: "none" },
-                      bottom: 0,
-                      height: "25px",
-                      width: "25px",
-                      marginLeft: "-25px",
+                      mt: "10px",
                     }}
-                  >
-                    <Avatar
-                      alt="Remy Sharp"
-                      src="/assets/images/icon/ic_camera.png"
-                      sx={{
-                        width: "18px",
-                        height: "18px",
-                        position: "absolute",
-                        display: { xs: "block", lg: "none" },
-                        marginTop: "4px",
-                        marginLeft: "3px",
-                      }}
-                    />
-                  </Avatar>
+                  />
                   <Avatar
                     sx={{
                       bgcolor: { xs: "transparent", lg: theme.navy },
@@ -1263,7 +1108,7 @@ const ProfileSkillComponent = () => {
                     lineHeight: "23.17",
                     width: { xs: "100%", lg: "96px" },
                     height: { xs: "48px", lg: "40px" },
-                    display: { xs: "none", lg: "flex" },
+                    dispaly: "flex",
                     alignItems: "center",
                     borderRadius: { xs: "12px", lg: "4px" },
                     "&:hover": {
@@ -1388,7 +1233,7 @@ const ProfileSkillComponent = () => {
                           placeholder={t("profile:form.placeholder.discussion-topic")}
                           minRows={5}
                           onChangeValue={onChangeProfileRequest}
-                          error={errorValidates.discussion_topic}
+                          error={errorValidates.self_description}
                           value={discussionTopic}
                         />
                       </ContentTab>
@@ -1455,7 +1300,6 @@ const ProfileSkillComponent = () => {
                               <Box
                                 sx={{
                                   padding: "8px",
-                                  mt: 1,
                                   fontSize: 12,
                                   fontWeight: 500,
                                   color: "white",
@@ -1514,19 +1358,19 @@ const ProfileSkillComponent = () => {
                       </TitleContentTab>
                       {/* Languge */}
                       <ContentTab>
-                        {skillLanguageData?.map((option, key) => (
+                        {skillLanguageData.map((option, key) => (
                           <Box key={key} sx={{ mb: "15px" }}>
                             <Box sx={{ display: { xs: "block", lg: "flex" } }}>
                               <Box>
                                 <InputCustom
-                                  onChange={(e) => onChangeSkillLanguage(option?.key, e)}
+                                  onChange={(e) => onChangeSkillLanguage(option.key, e)}
                                   name="name"
                                   placeholder={t("profile:form.placeholder.language")}
-                                  sx={{ border: statusErrNameLanguage[key]?.status ? "solid 1px #FF9458" : "none" }}
-                                  value={option?.name}
+                                  sx={{ border: statusErrNameLaguage ? "solid 1px #FF9458" : "none" }}
+                                  value={option.name}
                                 />
                                 {messSkillLanguageErr?.map((item, keyItem) =>
-                                  item.key === `name_${option?.key}` ? (
+                                  item.key === `name_${option.key}` ? (
                                     <BoxTextValidate key={keyItem}>{item.mess}</BoxTextValidate>
                                   ) : null,
                                 )}
@@ -1537,14 +1381,12 @@ const ProfileSkillComponent = () => {
                                 >
                                   <Box sx={{ width: "80px" }}>
                                     <InputCustom
-                                      onChange={(e) => onChangeSkillLanguage(option?.key, e)}
+                                      onChange={(e) => onChangeSkillLanguage(option.key, e)}
                                       name="experience_year"
                                       placeholder={t("profile:form.placeholder.years-of-experience")}
                                       type="number"
-                                      sx={{
-                                        border: statusErrYearLanguage[key]?.status ? "solid 1px #FF9458" : "none",
-                                      }}
-                                      value={option?.experience_year}
+                                      sx={{ border: statusErrYearLaguage ? "solid 1px #FF9458" : "none" }}
+                                      value={option.experience_year}
                                     />
                                   </Box>
                                   <Typography fontSize={14} sx={{ m: "0 8px" }}>
@@ -1552,10 +1394,10 @@ const ProfileSkillComponent = () => {
                                   </Typography>
                                   <SelectCustom
                                     id="outlined-select-month"
-                                    onChange={(e) => onChangeSkillLanguage(option?.key, e)}
+                                    onChange={(e) => onChangeSkillLanguage(option.key, e)}
                                     sx={{ width: { xs: "80px", lg: "80px" } }}
-                                    name="experience_month"
-                                    value={option?.experience_month}
+                                    name="month"
+                                    value={option.experience_month ?? monthLanguage}
                                   >
                                     {MONTHS.map((monthOption) => (
                                       <MenuItem key={monthOption.value} value={monthOption.value}>
@@ -1568,7 +1410,7 @@ const ProfileSkillComponent = () => {
                                   </Typography>
                                 </Box>
                                 {messSkillLanguageErr?.map((item, keyItem) =>
-                                  item.key === `experience_year_${option?.key}` ? (
+                                  item.key === `experience_year_${option.key}` ? (
                                     <BoxTextValidate key={keyItem}>{item.mess}</BoxTextValidate>
                                   ) : null,
                                 )}
@@ -1577,8 +1419,8 @@ const ProfileSkillComponent = () => {
                                 <Box sx={{ width: { xs: "78%", lg: "241px" } }}>
                                   <SelectCustom
                                     id="outlined-select-level"
-                                    value={option?.level ?? levelLanguage}
-                                    onChange={(e) => onChangeSkillLanguage(option?.key, e)}
+                                    value={option.level ?? levelLanguage}
+                                    onChange={(e) => onChangeSkillLanguage(option.key, e)}
                                     sx={{ width: "100%" }}
                                     name="level"
                                   >
@@ -1601,7 +1443,7 @@ const ProfileSkillComponent = () => {
                                       fontSize: "14px",
                                       fontWeight: 700,
                                       lineHeight: "20.27px",
-                                      display: skillLanguageData?.length > 1 ? "block" : "none",
+                                      display: skillLanguageData.length > 1 ? "block" : "none",
                                       height: "32px",
                                       p: 0,
                                     }}
@@ -1635,7 +1477,7 @@ const ProfileSkillComponent = () => {
                               fontWeight: 700,
                               lineHeight: "20.27px",
                             }}
-                            onClick={addSkillLanguageClick(skillLanguageData?.[skillLanguageData?.length]?.key || 0)}
+                            onClick={addSkillLanguageClick(skillLanguageData[skillLanguageData.length - 1].key)}
                           >
                             {t("profile:form.to-add")}
                           </Button>
@@ -1654,7 +1496,7 @@ const ProfileSkillComponent = () => {
                         </BoxEstimatedStar>
                       </TitleContentTab>
                       <ContentTab>
-                        {skillFrameworkData?.map((option, key) => (
+                        {skillFrameworkData.map((option, key) => (
                           <Box key={key} sx={{ mb: "15px" }}>
                             <Box sx={{ display: { xs: "block", lg: "flex" } }}>
                               <Box>
@@ -1662,7 +1504,7 @@ const ProfileSkillComponent = () => {
                                   onChange={(e) => onChangeSkillFramework(option.key, e)}
                                   name="name"
                                   placeholder={t("profile:form.placeholder.language")}
-                                  sx={{ border: statusErrNameFramework[key]?.status ? "solid 1px #FF9458" : "none" }}
+                                  sx={{ border: statusErrNameFramework ? "solid 1px #FF9458" : "none" }}
                                   value={option.name}
                                 />
                                 {messSkillFrameworkErr?.map((item, keyItem) =>
@@ -1681,9 +1523,7 @@ const ProfileSkillComponent = () => {
                                       name="experience_year"
                                       placeholder={t("profile:form.placeholder.years-of-experience")}
                                       type="number"
-                                      sx={{
-                                        border: statusErrYearFramework[key]?.status ? "solid 1px #FF9458" : "none",
-                                      }}
+                                      sx={{ border: statusErrYearFramework ? "solid 1px #FF9458" : "none" }}
                                       value={option.experience_year}
                                     />
                                   </Box>
@@ -1695,7 +1535,7 @@ const ProfileSkillComponent = () => {
                                     value={option.experience_month ?? monthLanguage}
                                     onChange={(e) => onChangeSkillFramework(option.key, e)}
                                     sx={{ width: { xs: "80px", lg: "80px" } }}
-                                    name="experience_month"
+                                    name="month"
                                   >
                                     {MONTHS.map((monthOption) => (
                                       <MenuItem key={monthOption.value} value={monthOption.value}>
@@ -1741,7 +1581,7 @@ const ProfileSkillComponent = () => {
                                       fontSize: "14px",
                                       fontWeight: 700,
                                       lineHeight: "20.27px",
-                                      display: skillFrameworkData?.length > 1 ? "block" : "none",
+                                      display: skillFrameworkData.length > 1 ? "block" : "none",
                                       height: "32px",
                                       p: 0,
                                     }}
@@ -1775,7 +1615,7 @@ const ProfileSkillComponent = () => {
                               fontWeight: 700,
                               lineHeight: "20.27px",
                             }}
-                            onClick={addSkillFrameworkClick(skillFrameworkData?.[skillFrameworkData?.length]?.key || 0)}
+                            onClick={addSkillFrameworkClick(skillFrameworkData[skillFrameworkData.length - 1].key)}
                           >
                             {t("profile:form.to-add")}
                           </Button>
@@ -1793,7 +1633,7 @@ const ProfileSkillComponent = () => {
                         </BoxEstimatedStar>
                       </TitleContentTab>
                       <ContentTab>
-                        {skillInfrastructureData?.map((option, key) => (
+                        {skillInfrastructureData.map((option, key) => (
                           <Box key={key} sx={{ mb: "15px" }}>
                             <Box sx={{ display: { xs: "block", lg: "flex" } }}>
                               <Box>
@@ -1801,9 +1641,7 @@ const ProfileSkillComponent = () => {
                                   onChange={(e) => onChangeSkillInfrastructure(option.key, e)}
                                   name="name"
                                   placeholder={t("profile:form.placeholder.language")}
-                                  sx={{
-                                    border: statusErrNameInfrastructure[key]?.status ? "solid 1px #FF9458" : "none",
-                                  }}
+                                  sx={{ border: statusErrNameInfrastructure ? "solid 1px #FF9458" : "none" }}
                                   value={option.name}
                                 />
                                 {messSkillInfrastructureErr?.map((item, keyItem) =>
@@ -1822,9 +1660,7 @@ const ProfileSkillComponent = () => {
                                       name="experience_year"
                                       placeholder={t("profile:form.placeholder.years-of-experience")}
                                       type="number"
-                                      sx={{
-                                        border: statusErrYearInfrastructure[key]?.status ? "solid 1px #FF9458" : "none",
-                                      }}
+                                      sx={{ border: statusErrYearInfrastructure ? "solid 1px #FF9458" : "none" }}
                                       value={option.experience_year}
                                     />
                                   </Box>
@@ -1836,7 +1672,7 @@ const ProfileSkillComponent = () => {
                                     value={option.experience_month ?? monthLanguage}
                                     onChange={(e) => onChangeSkillInfrastructure(option.key, e)}
                                     sx={{ width: { xs: "80px", lg: "80px" } }}
-                                    name="experience_month"
+                                    name="month"
                                   >
                                     {MONTHS.map((monthOption) => (
                                       <MenuItem key={monthOption.value} value={monthOption.value}>
@@ -1882,7 +1718,7 @@ const ProfileSkillComponent = () => {
                                       fontSize: "14px",
                                       fontWeight: 700,
                                       lineHeight: "20.27px",
-                                      display: skillInfrastructureData?.length > 1 ? "block" : "none",
+                                      display: skillInfrastructureData.length > 1 ? "block" : "none",
                                       height: "32px",
                                       p: 0,
                                     }}
@@ -1916,9 +1752,7 @@ const ProfileSkillComponent = () => {
                               fontWeight: 700,
                               lineHeight: "20.27px",
                             }}
-                            onClick={addSkillInfrastructureClick(
-                              skillInfrastructureData?.[skillInfrastructureData?.length]?.key || 0,
-                            )}
+                            onClick={addSkillInfrastructureClick(skillInfrastructureData[0].key)}
                           >
                             {t("profile:form.to-add")}
                           </Button>

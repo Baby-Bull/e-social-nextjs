@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, TextareaAutosize, Backdrop, CircularProgress } from "@mui/material";
+import { Box, Typography, Backdrop, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
+import { MentionsInput, Mention } from "react-mentions";
+import GlobalStyles from "@mui/material/GlobalStyles";
 
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
@@ -16,6 +18,7 @@ import {
   createPostComment,
   getListComment,
   deleteCommunityPostComment,
+  CommunityMembers,
 } from "src/services/community";
 import { VALIDATE_FORM_COMMUNITY_POST } from "src/messages/validate";
 
@@ -24,25 +27,6 @@ const BoxTextValidate = styled(Box)({
   lineHeight: "20px",
   fontWeight: "400",
   fontSize: "14px",
-});
-
-export const TextareaAutosizeCustom = styled(TextareaAutosize)({
-  "&::-webkit-input-placeholder": {
-    color: theme.gray,
-  },
-  "@media (min-width: 768px)": {
-    fontSize: 16,
-  },
-  "&:focus-visible": {
-    border: `2px solid ${theme.blue}`,
-    outline: "none",
-  },
-  marginTop: "8px",
-  paddingTop: "8px",
-  paddingLeft: "8px",
-  width: "100%",
-  minHeight: "120px",
-  borderRadius: "12px",
 });
 
 const DetailPostComponent = () => {
@@ -83,12 +67,27 @@ const DetailPostComponent = () => {
   const [checkLoadingComment, setCheckLoadingComment] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [statusOrder, setStatusOrder] = useState("oldest");
+  const [member, setMember] = useState([]);
   const onChangeCommunityPostRequest = (key: string, valueInput: any) => {
     setContent(valueInput);
     setCommunityPostRequest({
       ...communityPostRequest,
       [key]: typeof valueInput === "string" ? valueInput.trim() : valueInput,
     });
+  };
+
+  const fetchMember = async () => {
+    const community = router.query;
+    const res = await CommunityMembers(community?.id, 5);
+    const users = [];
+    if (res) {
+      // eslint-disable-next-line array-callback-return
+      res?.items.map((value) => {
+        users.push({ id: value?.id, display: value?.username });
+      });
+      setMember(users);
+    }
+    return res;
   };
 
   const handleValidateFormCommunityPost = () => {
@@ -202,9 +201,63 @@ const DetailPostComponent = () => {
   useEffect(() => {
     fetchCommunity();
     fetchCommunityPost();
+    fetchMember();
   }, []);
+  const defaultStyle = {
+    control: {
+      backgroundColor: "#fff",
+      fontSize: 14,
+      fontWeight: "normal",
+    },
+
+    "&multiLine": {
+      control: {
+        minHeight: 130,
+      },
+      highlighter: {
+        padding: 12,
+        fontFamily: "Noto Sans JP,sans-serif !important",
+      },
+      input: {
+        padding: 9,
+        border: errorValidates.content
+          ? `2px solid ${theme.blue} !important`
+          : `2px solid ${theme.whiteGray} !important`,
+        borderRadius: "12px",
+        color: theme.navy,
+      },
+    },
+    suggestions: {
+      list: {
+        backgroundColor: "white",
+        border: "1px solid rgba(0,0,0,0.15)",
+        fontSize: 14,
+      },
+      item: {
+        padding: "5px 15px",
+        borderBottom: "1px solid rgba(0,0,0,0.15)",
+        "&focused": {
+          backgroundColor: "#cee4e5",
+        },
+      },
+    },
+  };
   return (
     <LayoutComponent>
+      <GlobalStyles
+        styles={{
+          ".mention-create__input": {
+            border: errorValidates.content ? `2px solid ${theme.blue}` : `2px solid ${theme.whiteGray}`,
+            "&::-webkit-input-placeholder": {
+              color: theme.gray,
+            },
+            "&:focus-visible": {
+              border: `2px solid ${theme.blue}`,
+              outline: "none",
+            },
+          },
+        }}
+      />
       {isLoading && (
         <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
           <CircularProgress color="inherit" />
@@ -273,13 +326,9 @@ const DetailPostComponent = () => {
                 >
                   {t("community:write-comment")}
                 </Typography>
-                <TextareaAutosizeCustom
-                  placeholder={t("community:place-holder")}
-                  onChange={(e) => onChangeCommunityPostRequest("content", e.target.value)}
+                <MentionsInput
                   value={content}
-                  sx={{
-                    border: errorValidates?.content ? `2px solid ${theme.orange}` : `2px solid ${theme.whiteGray}`,
-                  }}
+                  onChange={(e) => onChangeCommunityPostRequest("content", e.target.value)}
                   onKeyPress={(e) => {
                     if (e.shiftKey && (e.keyCode || e.which) === 13) {
                       return true;
@@ -290,7 +339,12 @@ const DetailPostComponent = () => {
                       return true;
                     }
                   }}
-                />
+                  className="mention-create"
+                  style={defaultStyle}
+                  placeholder={t("community:place-holder")}
+                >
+                  <Mention markup="^__display__^" trigger="@" data={member} style={{ backgroundColor: "#cee4e5" }} />
+                </MentionsInput>
                 {errorValidates?.content && <BoxTextValidate>{errorValidates?.content}</BoxTextValidate>}
                 <Box sx={{ textAlign: "right", cursor: "pointer" }}>
                   <ButtonComponent

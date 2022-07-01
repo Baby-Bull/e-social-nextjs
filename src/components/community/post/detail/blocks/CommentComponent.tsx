@@ -8,10 +8,11 @@ import { useSelector } from "react-redux";
 import "moment/locale/ja";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
+import { MentionsInput, Mention } from "react-mentions";
+import GlobalStyles from "@mui/material/GlobalStyles";
 
 import theme from "src/theme";
 import ButtonDropDownComponent from "src/components/community/post/detail/blocks/ButtonDropDownComponent";
-import { ShowTextArea } from "src/components/common/ShowTextAreaComponent";
 import { IStoreState } from "src/constants/interface";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import { VALIDATE_FORM_COMMUNITY_POST } from "src/messages/validate";
@@ -117,8 +118,60 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
     setContent(item?.content);
     setIsUpdateComment(status);
   };
+
+  const defaultStyle = {
+    control: {
+      backgroundColor: "#fff",
+      fontSize: 14,
+      fontWeight: "normal",
+    },
+
+    "&multiLine": {
+      control: {
+        minHeight: isUpdateComment ? 130 : 10,
+      },
+      highlighter: {
+        padding: 12,
+        fontFamily: "Noto Sans JP,sans-serif !important",
+      },
+      input: {
+        padding: 11,
+        border: errorValidates.content
+          ? `2px solid ${theme.blue} !important`
+          : `2px solid ${theme.whiteGray} !important`,
+        borderRadius: "12px",
+        color: theme.navy,
+      },
+    },
+    suggestions: {
+      list: {
+        backgroundColor: "white",
+        border: "1px solid rgba(0,0,0,0.15)",
+        fontSize: 14,
+      },
+      item: {
+        padding: "5px 15px",
+        borderBottom: "1px solid rgba(0,0,0,0.15)",
+        "&focused": {
+          backgroundColor: "#cee4e5",
+        },
+      },
+    },
+  };
+
   return (
     <Box>
+      <GlobalStyles
+        styles={{
+          ".mention-detail__input": {
+            border: "none",
+            "&:focus-visible": {
+              border: "none",
+              outline: "none",
+            },
+          },
+        }}
+      />
       {isLoading && (
         <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
           <CircularProgress color="inherit" />
@@ -225,7 +278,16 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
             </Box>
           </Box>
         ) : (
-          <ShowTextArea value={contentUpdateId === item?.id ? content : item?.content} />
+          <MentionsInput
+            value={contentUpdateId === item?.id ? content : item?.content}
+            className="mention-detail"
+            style={defaultStyle}
+            placeholder={t("community:place-holder")}
+            disabled
+          >
+            <Mention markup="^__display__^" trigger="@" style={{ backgroundColor: "#fff", color: "red !important" }} />
+          </MentionsInput>
+          // <ShowTextArea value={contentUpdateId === item?.id ? content : item?.content} />
         )}
       </Box>
     </Box>
