@@ -13,7 +13,7 @@ import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 
 import theme from "src/theme";
-import { USER_STATUS, JOBS } from "src/components/constants/constants";
+import { USER_STATUS, JOBS, EMPLOYEES } from "src/components/constants/constants";
 import { TEXT_ENGLISH_LEVEL_OPTIONS } from "src/constants/constants";
 
 interface IProfileDataProps {
@@ -190,7 +190,7 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:employment-status")}</TitleContentTab>
-                  <ContentTab>{data?.employment_status}</ContentTab>
+                  <ContentTab>{EMPLOYEES[data?.employment_status]?.label}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:discussion-topic")}</TitleContentTab>
