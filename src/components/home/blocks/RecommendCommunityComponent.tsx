@@ -108,7 +108,7 @@ const RecommendCommunityComponent: React.SFC<IRecommendCommunityProps> = ({ reco
 
   useEffect(() => {
     setRecommendCommunityItems(
-      recommendCommunity.map((item, index) => <RecommendCommunityItem data={item} key={index} />),
+      recommendCommunity?.map((item, index) => <RecommendCommunityItem data={item} key={index} />),
     );
   }, [recommendCommunity]);
   return (

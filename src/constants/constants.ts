@@ -212,7 +212,7 @@ export const STATUS_OPTIONS = [
 export const JOBS = [
   {
     label: "職種",
-    value: 0,
+    value: "",
   },
   {
     label: "フロントエンドエンジニア",
@@ -275,7 +275,7 @@ export const JOBS = [
 export const EMPLOYEE_STATUS = [
   {
     label: "雇用状態",
-    value: 0,
+    value: "",
   },
   {
     label: "正社員",
