@@ -96,20 +96,20 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
         >
           <ShowTextArea value={data?.description} />
         </Box>
-        {data?.admins?.length > 0 &&
-          data?.admins.map((value, index) => (
-            <Box>
-              <Typography
-                component="span"
-                sx={{
-                  mt: "22px",
-                  pb: "8px",
-                  fontSize: 18,
-                  fontWeight: 700,
-                }}
-              >
-                {t("community:intro.title.administrator")}
-              </Typography>
+        {data?.admins?.length > 0 && (
+          <Box>
+            <Typography
+              component="span"
+              sx={{
+                mt: "22px",
+                pb: "8px",
+                fontSize: 18,
+                fontWeight: 700,
+              }}
+            >
+              {t("community:intro.title.administrator")}
+            </Typography>
+            {data?.admins.map((value, index) => (
               <Box
                 display="flex"
                 key={index}
@@ -126,8 +126,9 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
                 />
                 {value?.username}
               </Box>
-            </Box>
-          ))}
+            ))}
+          </Box>
+        )}
         <Typography
           component="span"
           sx={{

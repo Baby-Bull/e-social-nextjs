@@ -63,6 +63,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
           sx={{
             background: ["#fff", `url(${data?.profile_image})` || `url("/assets/images/svg/php_bg.svg")`],
             backgroundSize: "cover !important",
+            backgroundPosition: "center !important",
             height: "100%",
             width: "100%",
             position: "absolute",

@@ -113,7 +113,7 @@ const MemberComponent: React.SFC<IMemberComponentProps> = ({ isAdmin }) => {
     setCommunityMembers(communityMembers.filter((_, index) => index !== indexMember));
     setCountItemsBlocked(countItemsBlocked + 1);
     setCountItemsBlock(countItemsBlock - 1);
-    if (communityMembers.length < 12 + (pageBlock - 1) * 10 && pageBlock > 1) {
+    if (communityMembers.length < 2 + (pageBlock - 1) * 10 && pageBlock > 1) {
       handleCallbackChangePaginationBlock("onClick", pageBlock - 1);
     }
   };

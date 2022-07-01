@@ -466,7 +466,6 @@ const UpdateComponent = () => {
       return res;
     }
   };
-
   return (
     <ContentComponent>
       {isLoading && (
@@ -727,25 +726,26 @@ const UpdateComponent = () => {
                             {selected.length !== 0 ? (
                               selected?.map(
                                 (valueOption) =>
-                                  valueOption &&
-                                  userId !== valueOption?.split(",")[0] && (
+                                  valueOption && (
                                     <Chip
                                       key={valueOption}
                                       label={valueOption?.split(",")[1]}
                                       clickable
                                       deleteIcon={
-                                        <Avatar
-                                          onMouseDown={(event) => event.stopPropagation()}
-                                          src="/assets/images/svg/delete_white.svg"
-                                          sx={{
-                                            width: "16px",
-                                            height: "16px",
-                                            backgroundColor: theme.blue,
-                                            "& img": {
-                                              p: "4px",
-                                            },
-                                          }}
-                                        />
+                                        userId !== valueOption?.split(",")[0] && (
+                                          <Avatar
+                                            onMouseDown={(event) => event.stopPropagation()}
+                                            src="/assets/images/svg/delete_white.svg"
+                                            sx={{
+                                              width: "16px",
+                                              height: "16px",
+                                              backgroundColor: theme.blue,
+                                              "& img": {
+                                                p: "4px",
+                                              },
+                                            }}
+                                          />
+                                        )
                                       }
                                       onDelete={(e) => handleDeleteChipAdmin(e, valueOption)}
                                       sx={{
