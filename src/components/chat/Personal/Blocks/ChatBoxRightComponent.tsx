@@ -111,7 +111,7 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
         <Typography className="time">{time}</Typography>
         <div
           className={`message-content ${isErrorMessage ? "error-message" : ""}`}
-          onClick={() => setShowOptionMessage(!showOptionMessage)}
+          // onClick={() => setShowOptionMessage(!showOptionMessage)}
         >
           <Linkify>{message}</Linkify>
         </div>
