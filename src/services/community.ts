@@ -328,3 +328,15 @@ export const leaveCommunity = async (communityId) => {
     return error;
   }
 };
+
+export const searchMemberCommunity = async (communityId, textName: string = "", limit: number = 10) => {
+  try {
+    const res = await api.get(`community/${communityId}/members/search?name=${textName}&limit=${limit}`);
+    if (!res.data.error_code) {
+      return res.data;
+    }
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};

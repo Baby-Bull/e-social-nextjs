@@ -50,9 +50,9 @@ export const VALIDATE_FORM_MATCHING_REQUEST = {
     required_date: "時間の入力が必要です",
   },
   meeting_link: {
-    required: "テキスト入力してください",
+    required: "リンクを入力してください。",
     invalid_url: "正しいURL形式を入力してください",
-  }
+  },
 };
 
 export const VALIDATE_FORM_USER_PORT = {
@@ -154,7 +154,7 @@ export const VALIDATE_FORM_COMMUNITY = {
   },
   gather_url: {
     format: "正しいURL形式を入力してください",
-  }
+  },
 };
 
 export const VALIDATE_FORM_COMMUNITY_POST = {

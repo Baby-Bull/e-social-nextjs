@@ -1023,10 +1023,10 @@ const ProfileSkillComponent = () => {
     if (handleValidateFormSocial()) {
       const res = await updateProfile(profileSocialRequest);
       if (res) {
-        const auth = JSON.parse(sessionStorage.getItem("auth"));
+        // const auth = JSON.parse(sessionStorage.getItem("auth"));
         setTimeout(() => router.push("/my-profile"), 500);
-        auth.user.profile.username = profileSocialRequest.username;
-        sessionStorage.setItem("auth", JSON.stringify(auth));
+        // auth.user.profile.username = profileSocialRequest.username;
+        // sessionStorage.setItem("auth", JSON.stringify(auth));
         return res;
       }
     }
@@ -1103,7 +1103,7 @@ const ProfileSkillComponent = () => {
           <Box
             sx={{
               background: { xs: "unset", lg: "#ffffff" },
-              p: { xs: "0", lg: "40px 80px 78px 80px" },
+              p: { xs: "70px 0 0 0", lg: "40px 80px 78px 80px" },
               m: { xs: "40px 0", lg: "0" },
               position: { xs: "unset", lg: "relative" },
             }}
@@ -1231,7 +1231,7 @@ const ProfileSkillComponent = () => {
                 sx={{
                   position: "absolute",
                   right: { xs: 0, lg: 22 },
-                  top: { xs: "-120px", lg: "20px" },
+                  top: { xs: "-35px", lg: "20px" },
                   width: { xs: "100%", lg: "96px" },
                 }}
               >
@@ -1443,6 +1443,7 @@ const ProfileSkillComponent = () => {
                                   borderRadius: "4px",
                                   display: "flex",
                                   alignItems: "center",
+                                  mb: "2px",
                                 }}
                                 onClick={() => removeSearchTag(index)}
                               >

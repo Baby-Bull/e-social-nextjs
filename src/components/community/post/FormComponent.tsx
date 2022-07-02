@@ -136,7 +136,9 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
     if (handleValidateFormCommunityPost()) {
       setIsLoading(true);
       const communityId = router.query;
-      communityPostRequest.tags = tags;
+      if (tags.length === 0) {
+        delete communityPostRequest.tags;
+      }
       if (editable) {
         const res = await updateCommunityPost(communityId?.id, communityId?.updateId, communityPostRequest);
         setIsLoading(false);
