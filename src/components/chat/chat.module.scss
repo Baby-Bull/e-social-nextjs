@@ -210,6 +210,16 @@
             font-size: 14px;
             color: #1a2944;
             max-width: 320px;
+
+            .theFirstMessage {
+              span {
+                font-weight: 700 !important;
+              }
+              p {
+                font-weight: 400;
+                margin-top: 0;
+              }
+            }
           }
 
           .avatar {
@@ -265,6 +275,15 @@
 
             &.error-message {
               background: #989ea8;
+            }
+            .theFirstMessage {
+              span {
+                font-weight: 700 !important;
+              }
+              p {
+                font-weight: 400;
+                margin-top: 0;
+              }
             }
           }
 

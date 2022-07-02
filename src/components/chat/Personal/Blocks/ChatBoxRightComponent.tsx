@@ -4,6 +4,8 @@ import crypto from "crypto";
 import React, { useEffect, useState, useRef } from "react";
 import { Box, Grid, IconButton, Paper, Typography, Avatar, Menu, MenuItem } from "@mui/material";
 import { useTranslation } from "next-i18next";
+import moment from "moment";
+import "moment/locale/ja";
 import InfiniteScroll from "react-infinite-scroll-component";
 // import InfiniteScroll from "react-infinite-scroller";
 import Linkify from "react-linkify";
@@ -17,19 +19,17 @@ import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupRevie
 import scrollEl from "src/helpers/scrollEl";
 import { getMessages } from "src/services/chat";
 import { formatChatDate, formatListMessages } from "src/helpers/helper";
-import { MESSAGE_CONTENT_TYPES } from "src/constants/constants";
+import { MESSAGE_CONTENT_TYPES, MATCHING_PURPOSE_OPTIONS } from "src/constants/constants";
 
 interface IBoxChatProps {
-  avatar?: string;
-  message: string;
+  allInfoMessage: any;
   time: string;
 }
 interface IBoxMyChatProps {
-  message: string;
+  allInfoMessage: any;
   time: string;
   isStartOfDay?: boolean;
   isErrorMessage?: boolean;
-  id: any;
   resendMessage?: Function;
   deleteErrorMessage?: Function;
 }
@@ -70,11 +70,10 @@ const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({ open, handleClose, an
 );
 
 const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
-  message,
+  allInfoMessage,
   time,
   isStartOfDay = false,
   isErrorMessage = false,
-  id,
   resendMessage,
   deleteErrorMessage,
 }) => {
@@ -113,7 +112,26 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
           className={`message-content ${isErrorMessage ? "error-message" : ""}`}
           // onClick={() => setShowOptionMessage(!showOptionMessage)}
         >
-          <Linkify>{message}</Linkify>
+          {allInfoMessage.content_type === "first-message" ? (
+            <Box className="theFirstMessage">
+              <Box>
+                <span>{t("chat:purpose-firstMessage")}</span>
+                <p>{MATCHING_PURPOSE_OPTIONS.find((item) => item?.value === allInfoMessage?.purpose)?.label ?? ""}</p>
+              </Box>
+              <Box>
+                <span>{t("chat:date-firstMessage")}</span>
+                <p>{moment(allInfoMessage?.created_at).format("lll").toString()}</p>
+              </Box>
+              <Box>
+                <span>{t("chat:content-firstMessage")}</span>
+                <p>
+                  <Linkify>{allInfoMessage?.content}</Linkify>
+                </p>
+              </Box>
+            </Box>
+          ) : (
+            <Linkify>{allInfoMessage?.content}</Linkify>
+          )}
         </div>
       </Box>
 
@@ -121,10 +139,14 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
         <div className={styles.errorMessage}>
           <div className="span-error-message">{t("chat:span-error-message")}</div>
           <div className="div-btn-action">
-            <a type="button" className="btn-action btn-resend" onClick={() => resendMessage(message, id)}>
+            <a
+              type="button"
+              className="btn-action btn-resend"
+              onClick={() => resendMessage(allInfoMessage?.content, allInfoMessage?.id)}
+            >
               {t("chat:btn-resend")}
             </a>
-            <a type="button" className="btn-action btn-delete" onClick={() => deleteErrorMessage(id)}>
+            <a type="button" className="btn-action btn-delete" onClick={() => deleteErrorMessage(allInfoMessage?.id)}>
               {t("chat:btn-delete")}
             </a>
           </div>
@@ -134,15 +156,41 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
   );
 };
 
-const BoxChatOthers: React.SFC<IBoxChatProps> = ({ avatar, message, time }) => (
-  <Box className={styles.itemMsgOther}>
-    <Avatar className="avatar" alt="Avatar" src={avatar} />
-    <div className="message-content">
-      <Linkify>{message}</Linkify>
-    </div>
-    <Typography className="time">{time}</Typography>
-  </Box>
-);
+const BoxChatOthers: React.SFC<IBoxChatProps> = ({ time, allInfoMessage }) => {
+  const { t } = useTranslation();
+  return (
+    <Box className={styles.itemMsgOther}>
+      <Avatar
+        className="avatar"
+        alt="Avatar"
+        src={allInfoMessage?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+      />
+      <div className="message-content">
+        {allInfoMessage.content_type === "first-message" ? (
+          <Box className="theFirstMessage">
+            <Box>
+              <span>{t("chat:purpose-firstMessage")}</span>
+              <p>{MATCHING_PURPOSE_OPTIONS.find((item) => item?.value === allInfoMessage?.purpose)?.label ?? ""}</p>
+            </Box>
+            <Box>
+              <span>{t("chat:date-firstMessage")}</span>
+              <p>{moment(allInfoMessage?.created_at).format("lll").toString()}</p>
+            </Box>
+            <Box>
+              <span>{t("chat:content-firstMessage")}</span>
+              <p>
+                <Linkify>{allInfoMessage?.content}</Linkify>
+              </p>
+            </Box>
+          </Box>
+        ) : (
+          <Linkify>{allInfoMessage?.content}</Linkify>
+        )}
+      </div>
+      <Typography className="time">{time}</Typography>
+    </Box>
+  );
+};
 
 const NameOfChatSP: React.SFC<INameOfChatSPProps> = ({ name, handleClick }) => (
   <React.Fragment>
@@ -328,18 +376,16 @@ const ChatBoxRightComponent = ({
                       message?.sender_id !== userId ? (
                         <BoxMyChat
                           key={index}
-                          message={message?.content}
+                          allInfoMessage={message}
                           time={formatChatDate(message?.created_at)}
                           isErrorMessage={!!message?.isErrorMessage}
                           resendMessage={resendMessage}
                           deleteErrorMessage={deletedMessageError}
-                          id={message?.id}
                         />
                       ) : (
                         <BoxChatOthers
                           key={index}
-                          avatar={message?.user?.profile_image || "/assets/images/svg/avatar.svg"}
-                          message={message?.content}
+                          allInfoMessage={message}
                           time={formatChatDate(message?.created_at)}
                         />
                       ),
