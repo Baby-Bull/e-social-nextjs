@@ -258,7 +258,11 @@ const CreateComponent = () => {
   };
 
   const handleSaveForm = async () => {
-    if (handleValidateFormCommunity() && !errorValidates.profile_image) {
+    if (
+      handleValidateFormCommunity() &&
+      !errorValidates.profile_image &&
+      (tagData.length === 0 || tagData.length > 1)
+    ) {
       const formData = new FormData();
       // eslint-disable-next-line array-callback-return
       Object.keys(communityRequest).filter((key) => {
@@ -596,12 +600,13 @@ const CreateComponent = () => {
               <GridTitle item xs={12} sm={3}>
                 <BoxTitle>{t("community:setting.form.tag")}</BoxTitle>
               </GridTitle>
-              <Grid item xs={12} sm={9}>
+              <GridContent item xs={12} sm={9}>
                 <InputCustom
                   sx={{
                     ml: 1,
                     flex: 1,
-                    border: tagDataValidate ? "1px solid #FF9458" : "none",
+                    border:
+                      tagDataValidate || (tagData.length > 0 && tagData.length < 2) ? "1px solid #FF9458" : "none",
                   }}
                   placeholder={t("community:setting.form.placeholder.tag")}
                   inputProps={{ "aria-label": t("community:setting.form.placeholder.tag") }}
@@ -609,11 +614,9 @@ const CreateComponent = () => {
                   onKeyPress={onKeyPress}
                 />
                 {tagDataValidate && <BoxTextValidate>{t("community:max_length_tag")}</BoxTextValidate>}
-
                 <Box>
                   <Paper
                     sx={{
-                      mt: "12px",
                       display: "flex",
                       flexWrap: "wrap",
                       listStyle: "none",
@@ -659,7 +662,10 @@ const CreateComponent = () => {
                     ))}
                   </Paper>
                 </Box>
-              </Grid>
+                {tagData.length > 0 && tagData.length < 2 && (
+                  <BoxTextValidate>{t("community:min_2_tag")}</BoxTextValidate>
+                )}
+              </GridContent>
               <GridTitle item xs={12} sm={3}>
                 <BoxTitle>{t("community:setting.form.virtual-room")}</BoxTitle>
               </GridTitle>
