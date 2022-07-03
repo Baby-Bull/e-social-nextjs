@@ -49,7 +49,7 @@ const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data 
     const res = await joinCommunity(data?.id);
     if (res) {
       if (statusJoin === 1) {
-        router.push(`community/${data?.id}`);
+        setTimeout(() => router.push(`community/${data?.id}`), 1000);
       }
       if (statusJoin === 3) {
         setStatusJoin(2);
@@ -72,7 +72,12 @@ const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data 
           <Avatar
             src={data?.profile_image}
             alt="community"
-            sx={{ width: "124px", height: "124px", border: "1px solid #eee" }}
+            sx={{
+              width: "124px",
+              height: "124px",
+              border: "1px solid #eee",
+              ".MuiAvatar-img": { objectFit: "contain !important" },
+            }}
           />
         </div>
         <div className="name">{data?.name}</div>

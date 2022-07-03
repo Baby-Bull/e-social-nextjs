@@ -424,7 +424,11 @@ const UpdateComponent = () => {
   };
 
   const handleSaveForm = async () => {
-    if (handleValidateFormCommunity() && !errorValidates.profile_image) {
+    if (
+      handleValidateFormCommunity() &&
+      !errorValidates.profile_image &&
+      (tagData.length === 0 || tagData.length > 1)
+    ) {
       setIsLoading(true);
       const formData = new FormData();
       // eslint-disable-next-line array-callback-return
@@ -466,7 +470,6 @@ const UpdateComponent = () => {
       return res;
     }
   };
-
   return (
     <ContentComponent>
       {isLoading && (
@@ -727,25 +730,26 @@ const UpdateComponent = () => {
                             {selected.length !== 0 ? (
                               selected?.map(
                                 (valueOption) =>
-                                  valueOption &&
-                                  userId !== valueOption?.split(",")[0] && (
+                                  valueOption && (
                                     <Chip
                                       key={valueOption}
                                       label={valueOption?.split(",")[1]}
                                       clickable
                                       deleteIcon={
-                                        <Avatar
-                                          onMouseDown={(event) => event.stopPropagation()}
-                                          src="/assets/images/svg/delete_white.svg"
-                                          sx={{
-                                            width: "16px",
-                                            height: "16px",
-                                            backgroundColor: theme.blue,
-                                            "& img": {
-                                              p: "4px",
-                                            },
-                                          }}
-                                        />
+                                        userId !== valueOption?.split(",")[0] && (
+                                          <Avatar
+                                            onMouseDown={(event) => event.stopPropagation()}
+                                            src="/assets/images/svg/delete_white.svg"
+                                            sx={{
+                                              width: "16px",
+                                              height: "16px",
+                                              backgroundColor: theme.blue,
+                                              "& img": {
+                                                p: "4px",
+                                              },
+                                            }}
+                                          />
+                                        )
                                       }
                                       onDelete={(e) => handleDeleteChipAdmin(e, valueOption)}
                                       sx={{
@@ -907,13 +911,14 @@ const UpdateComponent = () => {
                 <GridTitle item xs={12} sm={3}>
                   <BoxTitle>{t("community:setting.form.tag")}</BoxTitle>
                 </GridTitle>
-                <Grid item xs={12} sm={9}>
+                <GridContent item xs={12} sm={9}>
                   <InputCustom
                     sx={{
                       display: ["inherit", "inherit"],
                       ml: 1,
                       flex: 1,
-                      border: tagDataValidate ? "1px solid #FF9458" : "none",
+                      border:
+                        tagDataValidate || (tagData.length > 0 && tagData.length < 2) ? "1px solid #FF9458" : "none",
                     }}
                     placeholder={t("community:setting.form.placeholder.tag")}
                     inputProps={{ "aria-label": t("community:setting.form.placeholder.tag") }}
@@ -924,7 +929,6 @@ const UpdateComponent = () => {
                   <Box>
                     <Paper
                       sx={{
-                        mt: "12px",
                         display: "flex",
                         flexWrap: "wrap",
                         listStyle: "none",
@@ -970,7 +974,10 @@ const UpdateComponent = () => {
                       ))}
                     </Paper>
                   </Box>
-                </Grid>
+                  {tagData.length > 0 && tagData.length < 2 && (
+                    <BoxTextValidate>{t("community:min_2_tag")}</BoxTextValidate>
+                  )}
+                </GridContent>
                 <GridTitle item xs={12} sm={3}>
                   <BoxTitle>{t("community:setting.form.virtual-room")}</BoxTitle>
                 </GridTitle>

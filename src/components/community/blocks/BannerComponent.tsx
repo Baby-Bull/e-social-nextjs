@@ -63,6 +63,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
           sx={{
             background: ["#fff", `url(${data?.profile_image})` || `url("/assets/images/svg/php_bg.svg")`],
             backgroundSize: "cover !important",
+            backgroundPosition: "center !important",
             height: "100%",
             width: "100%",
             position: "absolute",
@@ -118,6 +119,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                 justifyContent: "space-around",
                 alignItems: "flex-start",
                 zIndex: "9999",
+                textShadow: "1px 1px #666666",
               }}
             >
               <Typography
@@ -188,6 +190,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                     flexWrap: "wrap",
                     listStyle: "none",
                     boxShadow: "none",
+                    textShadow: "none",
                   }}
                   component="ul"
                 >

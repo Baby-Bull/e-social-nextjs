@@ -173,7 +173,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
             id="meeting_link"
             required
             label={t("home:modal-matching.frequency")}
-            placeholder="https://url_link"
+            placeholder="https://www.〇〇.jp"
             editor="textbox"
             value={matchingRequest?.meeting_link}
             onChangeValue={onChangeMatchingRequest}

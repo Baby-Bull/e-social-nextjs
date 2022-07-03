@@ -1,15 +1,17 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { useCallback, useRef, useState } from "react";
-import { Box, Grid, Paper, Typography, IconButton, Menu, MenuItem } from "@mui/material";
+import { Box, Grid, Paper, Typography, IconButton, Menu, MenuItem, Tabs, Tab } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import _ from "lodash";
 import InfiniteScroll from "react-infinite-scroller";
 import { useRouter } from "next/router";
+import { styled } from "@mui/material/styles";
 
 import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
 import styles from "src/components/chat/chat.module.scss";
 import { formatChatDateRoom } from "src/helpers/helper";
+import theme from "src/theme";
 
 import PopupReviewComponent from "./PopupReviewComponent";
 
@@ -83,6 +85,30 @@ const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({
   </Menu>
 );
 
+export const TabsCustom = styled(Tabs)(() => ({
+  padding: 0,
+  color: "black",
+  fontSize: "20px",
+  fontWeight: 500,
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+
+  "& .MuiTab-root": {
+    fontSize: "20px",
+    fontWeight: 500,
+    whiteSpace: "nowrap",
+  },
+  "& .Mui-selected": {
+    color: theme.blue,
+  },
+  "& .MuiTabs-indicator": {
+    backgroundColor: theme.blue,
+  },
+}));
+
 const ChatBoxLeftComponent = ({
   listRooms,
   userId,
@@ -131,7 +157,10 @@ const ChatBoxLeftComponent = ({
   return (
     <Grid item className={styles.chatBoxLeft}>
       <Box className="box-title">
-        <Typography className="title">{t("chat:box-left-title")}</Typography>
+        <TabsCustom value={1} aria-label="chat-tab" variant="fullWidth">
+          <Tab label={t("chat:box-left-title")} value={1} />
+          <Tab label={t("chat:community-box-left-title")} value={2} onClick={() => router.push("/chat/community")} />
+        </TabsCustom>
       </Box>
       <Box className="box-search">
         <Paper className="input-search" sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}>
@@ -149,9 +178,8 @@ const ChatBoxLeftComponent = ({
         <ul className={styles.boxThreads}>
           <InfiniteScroll loadMore={loadMoreChatRooms} hasMore={hasMoreChatRoom.hasMore} loader="" useWindow={false}>
             {listRooms?.map((thread, index: number) => (
-              <React.Fragment>
+              <React.Fragment key={index}>
                 <li
-                  key={index}
                   onClick={() => {
                     router.push(
                       {

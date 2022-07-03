@@ -133,9 +133,12 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
   };
 
   const handleSaveForm = async () => {
-    if (handleValidateFormCommunityPost()) {
+    if (handleValidateFormCommunityPost() && (tags.length === 0 || tags.length > 1)) {
       setIsLoading(true);
       const communityId = router.query;
+      if (tags.length === 0) {
+        delete communityPostRequest.tags;
+      }
       communityPostRequest.tags = tags;
       if (editable) {
         const res = await updateCommunityPost(communityId?.id, communityId?.updateId, communityPostRequest);
@@ -317,7 +320,6 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
             <Box>
               <Paper
                 sx={{
-                  mt: "12px",
                   display: "flex",
                   flexWrap: "wrap",
                   listStyle: "none",
@@ -363,6 +365,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
                 ))}
               </Paper>
             </Box>
+            {tags.length > 0 && tags.length < 2 && <BoxTextValidate>{t("community:min_2_tag")}</BoxTextValidate>}
           </Grid>
         </Grid>
 

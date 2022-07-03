@@ -45,12 +45,12 @@ api.interceptors.response.use(
   async (err: any) => {
     if (err.response.status === 403) {
       toast.warning(FORBIDDEN);
-      window.location.href = "/";
+      // window.location.href = "/";
     }
 
     if (err.response.status === 404) {
       toast.warning(NOT_FOUND);
-      window.location.href = "/";
+      // window.location.href = "/";
     }
 
     if (err.response.status === 422) {
