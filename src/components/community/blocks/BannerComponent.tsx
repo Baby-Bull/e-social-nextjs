@@ -119,6 +119,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                 justifyContent: "space-around",
                 alignItems: "flex-start",
                 zIndex: "9999",
+                textShadow: "1px 1px #666666",
               }}
             >
               <Typography
@@ -189,6 +190,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                     flexWrap: "wrap",
                     listStyle: "none",
                     boxShadow: "none",
+                    textShadow: "none",
                   }}
                   component="ul"
                 >
