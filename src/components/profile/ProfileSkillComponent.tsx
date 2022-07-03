@@ -98,11 +98,11 @@ interface IRecommendMembersComponentProps {
 const ImgStar: React.SFC<IRecommendMembersComponentProps> = ({ countStar }) => {
   const rows = [];
   for (let i = 0; i < countStar; i++) {
-    rows.push("/assets/images/star.png");
+    rows.push("/assets/images/star.svg");
   }
 
   for (let i = 0; i < 5 - countStar; i++) {
-    rows.push("/assets/images/empty_star.png");
+    rows.push("/assets/images/empty_star.svg");
   }
   return (
     <Box sx={{ display: "flex" }}>

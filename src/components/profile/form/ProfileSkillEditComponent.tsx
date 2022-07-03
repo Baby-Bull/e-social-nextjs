@@ -737,15 +737,15 @@ const ProfileSkillComponent = () => {
           });
           arrStatusNameLanguageErrors[i].status = true;
         }
-        if (!REGEX_RULES.text_input.test(skillLanguageData[i]?.name)) {
-          isValidForm = false;
-          arrMessLanguageErrors.push({
-            key: `name_${skillLanguageData[i]?.key}`,
-            mess: VALIDATE_FORM_UPDATE_PROFILE.format,
-            type: "format",
-          });
-          arrStatusNameLanguageErrors[i].status = true;
-        }
+        // if (!REGEX_RULES.text_input.test(skillLanguageData[i]?.name)) {
+        //   isValidForm = false;
+        //   arrMessLanguageErrors.push({
+        //     key: `name_${skillLanguageData[i]?.key}`,
+        //     mess: VALIDATE_FORM_UPDATE_PROFILE.format,
+        //     type: "format",
+        //   });
+        //   arrStatusNameLanguageErrors[i].status = true;
+        // }
         // if (
         //   arrNameLanguage.includes(skillLanguageData[i + 1]?.name) &&
         //   skillLanguageData.length > 1 &&
@@ -812,15 +812,15 @@ const ProfileSkillComponent = () => {
           arrStatusNameFrameworkErrors[i].status = true;
         }
 
-        if (!REGEX_RULES.text_input.test(skillFrameworkData[i]?.name)) {
-          isValidForm = false;
-          arrMessFrameworkErrors.push({
-            key: `name_${skillFrameworkData[i]?.key}`,
-            mess: VALIDATE_FORM_UPDATE_PROFILE.format,
-            type: "format",
-          });
-          arrStatusNameFrameworkErrors[i].status = true;
-        }
+        // if (!REGEX_RULES.text_input.test(skillFrameworkData[i]?.name)) {
+        //   isValidForm = false;
+        //   arrMessFrameworkErrors.push({
+        //     key: `name_${skillFrameworkData[i]?.key}`,
+        //     mess: VALIDATE_FORM_UPDATE_PROFILE.format,
+        //     type: "format",
+        //   });
+        //   arrStatusNameFrameworkErrors[i].status = true;
+        // }
 
         // if (
         //   arrNameFramework.includes(skillFrameworkData[i + 1]?.name) &&
@@ -891,15 +891,15 @@ const ProfileSkillComponent = () => {
           arrStatusNameInfrastructureErrors[i].status = true;
         }
 
-        if (!REGEX_RULES.text_input.test(skillInfrastructureData[i]?.name)) {
-          isValidForm = false;
-          arrMessInfrastructureErrors.push({
-            key: `name_${skillInfrastructureData[i]?.key}`,
-            mess: VALIDATE_FORM_UPDATE_PROFILE.format,
-            type: "format",
-          });
-          arrStatusNameInfrastructureErrors[i].status = true;
-        }
+        // if (!REGEX_RULES.text_input.test(skillInfrastructureData[i]?.name)) {
+        //   isValidForm = false;
+        //   arrMessInfrastructureErrors.push({
+        //     key: `name_${skillInfrastructureData[i]?.key}`,
+        //     mess: VALIDATE_FORM_UPDATE_PROFILE.format,
+        //     type: "format",
+        //   });
+        //   arrStatusNameInfrastructureErrors[i].status = true;
+        // }
 
         // if (
         //   arrNameInfrastructure.includes(skillInfrastructureData[i + 1]?.name) &&
@@ -1542,7 +1542,7 @@ const ProfileSkillComponent = () => {
                                       </MenuItem>
                                     ))}
                                   </SelectCustom>
-                                  <Typography fontSize={14} sx={{ m: "0 8px" }}>
+                                  <Typography fontSize={14} sx={{ m: "0 8px", width: "30px" }}>
                                     {t("profile:month")}
                                   </Typography>
                                 </Box>
