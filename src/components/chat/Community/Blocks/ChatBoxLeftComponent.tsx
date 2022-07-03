@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { useCallback, useRef } from "react";
-import { Box, Grid, Paper, Typography, IconButton, Tabs, Tab } from "@mui/material";
+import { Box, Grid, Paper, Typography, IconButton, Tabs, Tab, MenuItem, Menu } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import _ from "lodash";
 import InfiniteScroll from "react-infinite-scroller";
@@ -36,6 +36,45 @@ export const TabsCustom = styled(Tabs)(() => ({
   },
 }));
 
+interface IThreadDropDownProps {
+  open: boolean;
+  anchorEl: any;
+  handleClose: () => void;
+  redirectToCommunity: () => void;
+}
+
+const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({ open, anchorEl, handleClose, redirectToCommunity }) => (
+  <Menu
+    open={open}
+    className="dropdown-option-thread"
+    anchorEl={anchorEl}
+    onClose={handleClose}
+    keepMounted
+    disablePortal
+    sx={{
+      top: "9px",
+      left: "-7em",
+      "& .MuiMenu-paper": {
+        borderRadius: "12px",
+      },
+      ".MuiMenuItem-root": {
+        fontSize: "12px",
+      },
+      img: {
+        height: "16px",
+        width: "16px",
+        marginRight: "7px",
+        filter: `invert(67%) sepia(61%) saturate(5498%) hue-rotate(152deg) brightness(103%) contrast(98%)`,
+      },
+    }}
+  >
+    <MenuItem onClick={redirectToCommunity}>
+      <img src="/assets/images/svg/user_chat.svg" alt="image_to_profile" />
+      コミュニティを見る
+    </MenuItem>
+  </Menu>
+);
+
 const ChatBoxLeftComponent = ({
   listRooms,
   communityId,
@@ -64,11 +103,25 @@ const ChatBoxLeftComponent = ({
     debounce(inputSearchRef.current.value);
   };
 
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const redirectToCommunity = (communityIdThread) => {
+    router.push(`/community/${communityIdThread}`);
+    handleClose();
+  };
+
   return (
     <Grid item className={styles.chatBoxLeft}>
       <Box className="box-title">
         <TabsCustom value={2} aria-label="chat-tab" variant="fullWidth">
-          <Tab label={t("chat:box-left-title")} value={1} />
+          <Tab label={t("chat:box-left-title")} value={1} onClick={() => router.push("/chat/personal")} />
           <Tab label={t("chat:community-box-left-title")} value={2} />
         </TabsCustom>
       </Box>
@@ -103,10 +156,13 @@ const ChatBoxLeftComponent = ({
                   }}
                 >
                   <div className={`thread-item ${thread?.community?.id === communityId ? "active" : ""}`}>
-                    <div className="avatar">
-                      <img alt="avatar" src={thread?.community?.profile_image || "/assets/images/svg/avatar.svg"} />
-                    </div>
-                    <div className="thread-content">
+                    <div
+                      className="avatar background"
+                      style={{
+                        backgroundImage: `url(${thread?.community?.profile_image})`,
+                      }}
+                    />
+                    <div className="thread-content" style={{ maxWidth: "70%" }}>
                       <Typography className="name">
                         {thread?.community?.name}({thread?.community?.member_count})
                       </Typography>
@@ -117,9 +173,15 @@ const ChatBoxLeftComponent = ({
                     </div>
                     {!isMobile && (
                       <div className="more-options">
-                        <IconButton aria-label="more" aria-haspopup="true">
+                        <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
                           <img alt="more-options" src="/assets/images/chat/more_options.svg" />
                         </IconButton>
+                        <ThreadDropdown
+                          open={open}
+                          handleClose={handleClose}
+                          anchorEl={anchorEl}
+                          redirectToCommunity={() => redirectToCommunity(thread?.id)}
+                        />
                       </div>
                     )}
                   </div>

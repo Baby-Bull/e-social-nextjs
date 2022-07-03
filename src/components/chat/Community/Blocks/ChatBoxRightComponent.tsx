@@ -303,24 +303,35 @@ const ChatBoxRightComponent = ({
       <Box className="box-title">
         <Typography className="username">
           {isMobile ? (
-            <NameOfChatSP name={roomSelect?.community?.name} handleClick={toggleRenderSide} />
+            <NameOfChatSP
+              name={`${roomSelect?.community?.name}(${roomSelect?.community?.member_count})`}
+              handleClick={toggleRenderSide}
+            />
           ) : (
             `${roomSelect?.community?.name}(${roomSelect?.community?.member_count})`
           )}
         </Typography>
       </Box>
       <Box className="box-content">
-        <Box className={styles.boxData} id="box-message" ref={boxMessageRef}>
+        <Box
+          className={styles.boxData}
+          id="box-message"
+          ref={boxMessageRef}
+          style={{
+            justifyContent: listMessages?.length === 0 ? "center" : "initial",
+            alignItems: listMessages?.length === 0 ? "center" : "initial",
+          }}
+        >
           {listMessages?.length ? (
             <InfiniteScroll
               loadMore={loadMoreData}
               hasMore={!!listMessages?.length && hasMoreParams.hasMore && !isFirstRender.current}
-              loader="loading..."
+              loader="読み込み中..."
               isReverse
               useWindow={false}
             >
               {Object.keys(listMessagesShow)?.map((dateText) => (
-                <Box key={dateText} sx={{ paddingBottom: "60px" }}>
+                <Box key={dateText}>
                   <div className={styles.spanStartOfDay}>
                     <span>{dateText}</span>
                   </div>
@@ -351,7 +362,9 @@ const ChatBoxRightComponent = ({
                 </Box>
               ))}
             </InfiniteScroll>
-          ) : null}
+          ) : (
+            <span>{t("chat:community-no-messages-start-chat")}</span>
+          )}
         </Box>
       </Box>
       <Box className={styles.boxChat}>

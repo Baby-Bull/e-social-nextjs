@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, Backdrop, Box, CircularProgress, TextareaAutosize, Typography } from "@mui/material";
 import moment from "moment";
 import { useRouter } from "next/router";
@@ -16,7 +16,7 @@ import ButtonDropDownComponent from "src/components/community/post/detail/blocks
 import { IStoreState } from "src/constants/interface";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import { VALIDATE_FORM_COMMUNITY_POST } from "src/messages/validate";
-import { updatePostComment } from "src/services/community";
+import { searchMemberCommunity, updatePostComment } from "src/services/community";
 
 interface ICommentComponentProps {
   item: any;
@@ -60,6 +60,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
   const [isUpdateComment, setIsUpdateComment] = useState(false);
   const [content, setContent] = useState("");
   const [contentUpdateId, setContentUpdateId] = useState("");
+  const [member, setMember] = useState([]);
   const [communityPostUpdateRequest, setCommunityPostUpdateRequest] = useState({
     content: "",
   });
@@ -69,6 +70,20 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
 
   const errorMessages = {
     content: null,
+  };
+
+  const fetchMember = async (text: string = "") => {
+    const community = router.query;
+    const res = await searchMemberCommunity(community?.id, text);
+    const users = [];
+    if (res) {
+      // eslint-disable-next-line array-callback-return
+      res?.items.map((value) => {
+        users.push({ id: value?.id, display: value?.username });
+      });
+      setMember(users);
+    }
+    return res;
   };
 
   const onChangeCommunityPostRequest = (key: string, valueInput: any) => {
@@ -102,6 +117,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
       setIsLoading(false);
       setIsUpdateComment(false);
       setContentUpdateId(item?.id);
+      setContent("");
       return response;
     }
   };
@@ -115,10 +131,13 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
   };
 
   const handleCallbackUpdateComment = (status) => {
-    setContent(item?.content);
+    setContent(content.length > 0 ? content : item?.content);
     setIsUpdateComment(status);
   };
 
+  useEffect(() => {
+    fetchMember();
+  }, []);
   const defaultStyle = {
     control: {
       backgroundColor: "#fff",
@@ -167,6 +186,16 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
             border: "none",
             "&:focus-visible": {
               border: "none",
+              outline: "none",
+            },
+          },
+          ".mention-update__input": {
+            border: errorValidates.content ? `2px solid ${theme.blue}` : `2px solid ${theme.whiteGray}`,
+            "&::-webkit-input-placeholder": {
+              color: theme.gray,
+            },
+            "&:focus-visible": {
+              border: `2px solid ${theme.blue}`,
               outline: "none",
             },
           },
@@ -241,13 +270,12 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
         </Box>
         {isUpdateComment ? (
           <Box>
-            <TextareaAutosizeCustom
+            <MentionsInput
+              value={content}
+              className="mention-update"
+              style={defaultStyle}
               placeholder={t("community:place-holder")}
               onChange={(e) => onChangeCommunityPostRequest("content", e.target.value)}
-              value={content}
-              sx={{
-                border: errorValidates?.content ? `2px solid ${theme.orange}` : `2px solid ${theme.whiteGray}`,
-              }}
               onKeyPress={(e) => {
                 if (e.shiftKey && (e.keyCode || e.which) === 13) {
                   return true;
@@ -258,7 +286,9 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
                   return true;
                 }
               }}
-            />
+            >
+              <Mention markup="^__display__^" trigger="@" data={member} style={{ backgroundColor: "#cee4e5" }} />
+            </MentionsInput>
             {errorValidates?.content && <BoxTextValidate>{errorValidates?.content}</BoxTextValidate>}
             <Box sx={{ textAlign: "right", cursor: "pointer" }}>
               <ButtonComponent
@@ -285,9 +315,8 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
             placeholder={t("community:place-holder")}
             disabled
           >
-            <Mention markup="^__display__^" trigger="@" style={{ backgroundColor: "#fff", color: "red !important" }} />
+            <Mention markup="^__display__^" trigger="@" style={{ backgroundColor: "#cee4e5" }} />
           </MentionsInput>
-          // <ShowTextArea value={contentUpdateId === item?.id ? content : item?.content} />
         )}
       </Box>
     </Box>

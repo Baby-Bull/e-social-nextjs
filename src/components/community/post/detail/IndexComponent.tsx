@@ -18,7 +18,7 @@ import {
   createPostComment,
   getListComment,
   deleteCommunityPostComment,
-  CommunityMembers,
+  searchMemberCommunity,
 } from "src/services/community";
 import { VALIDATE_FORM_COMMUNITY_POST } from "src/messages/validate";
 
@@ -76,9 +76,9 @@ const DetailPostComponent = () => {
     });
   };
 
-  const fetchMember = async () => {
+  const fetchMember = async (text: string = "") => {
     const community = router.query;
-    const res = await CommunityMembers(community?.id, 5);
+    const res = await searchMemberCommunity(community?.id, text);
     const users = [];
     if (res) {
       // eslint-disable-next-line array-callback-return

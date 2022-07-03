@@ -50,9 +50,9 @@ export const VALIDATE_FORM_MATCHING_REQUEST = {
     required_date: "時間の入力が必要です",
   },
   meeting_link: {
-    required: "テキスト入力してください",
+    required: "リンクを入力してください。",
     invalid_url: "正しいURL形式を入力してください",
-  }
+  },
 };
 
 export const VALIDATE_FORM_USER_PORT = {
@@ -132,7 +132,7 @@ export const VALIDATE_FORM_UPDATE_PROFILE = {
   },
   max_length_name_skill: "40文字以内で記入してください。",
   max_length_year_skill: "2文字以内で記入してください。",
-  required_name_skill: "この名前は既に存在します。",
+  required_name_skill: "Trường này k đc bỏ trống!",
   format: "ユーザ名は無効です。ひらがな、カタカナ、漢字、a-zのアルファベット、0-9の文字を入力してください。",
 };
 
@@ -154,7 +154,7 @@ export const VALIDATE_FORM_COMMUNITY = {
   },
   gather_url: {
     format: "正しいURL形式を入力してください",
-  }
+  },
 };
 
 export const VALIDATE_FORM_COMMUNITY_POST = {
