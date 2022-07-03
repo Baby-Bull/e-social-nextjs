@@ -123,7 +123,7 @@ export const USER_STATUS = {
   "need-consult": {
     label: "相談に乗って欲しいです",
     mode: "info",
-    bg: "rgb(255, 249, 229)",
-    color: "rgb(26, 41, 68)",
+    bg: "#03BCDB",
+    color: "#FFFFFF",
   },
 };

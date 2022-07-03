@@ -202,7 +202,7 @@ const SelectCustom = styled(Select)({
     fontSize: 16,
     padding: "9px 16px",
     borderRadius: 6,
-    fontFamily: "Noto Sans",
+    fontFamily: "Noto Sans JP",
     "@media (max-width: 1200px)": {
       fontSize: 14,
     },
@@ -242,6 +242,7 @@ const ProfileSkillComponent = () => {
   const auth = useSelector((state: IStoreState) => state.user);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [checkLoading, setCheckLoading] = useState(false);
   const [username, setUsername] = useState(null);
   const [hitokoto, setHitokoto] = useState(null);
   const [discussionTopic, setDiscussionTopic] = useState(null);
@@ -485,6 +486,7 @@ const ProfileSkillComponent = () => {
     if (arrInfrastructure.length > 0) {
       setSkillInfrastructure(arrInfrastructure);
     }
+    setCheckLoading(true);
     return data;
   };
 
@@ -731,7 +733,7 @@ const ProfileSkillComponent = () => {
           key: `experience_year_${skillLanguageData[i]?.key}`,
           status: false,
         });
-        if (!skillLanguageData[i]?.name?.length) {
+        if (!skillLanguageData[i]?.name.trim()?.length) {
           isValidForm = false;
           arrMessLanguageErrors.push({
             key: `name_${skillLanguageData[i]?.key}`,
@@ -740,7 +742,7 @@ const ProfileSkillComponent = () => {
           });
           arrStatusNameLanguageErrors[i].status = true;
         }
-        if (skillLanguageData[i]?.name?.length > 40) {
+        if (skillLanguageData[i]?.name.trim()?.length > 40) {
           isValidForm = false;
           arrMessLanguageErrors.push({
             key: `name_${skillLanguageData[i]?.key}`,
@@ -805,7 +807,7 @@ const ProfileSkillComponent = () => {
           status: false,
         });
         arrNameFramework.push(skillFrameworkData[i]?.name);
-        if (!skillFrameworkData[i]?.name?.length) {
+        if (!skillFrameworkData[i]?.name.trim()?.length) {
           isValidForm = false;
           arrMessFrameworkErrors.push({
             key: `name_${skillFrameworkData[i]?.key}`,
@@ -814,7 +816,7 @@ const ProfileSkillComponent = () => {
           });
           arrStatusNameFrameworkErrors[i].status = true;
         }
-        if (skillFrameworkData[i]?.name?.length > 40) {
+        if (skillFrameworkData[i]?.name.trim()?.length > 40) {
           isValidForm = false;
           arrMessFrameworkErrors.push({
             key: `name_${skillFrameworkData[i]?.key}`,
@@ -883,7 +885,7 @@ const ProfileSkillComponent = () => {
         });
         arrNameInfrastructure.push(skillInfrastructureData[i]?.name);
 
-        if (!skillInfrastructureData[i]?.name?.length) {
+        if (!skillInfrastructureData[i]?.name.trim()?.length) {
           isValidForm = false;
           arrMessInfrastructureErrors.push({
             key: `name_${skillInfrastructureData[i]?.key}`,
@@ -893,7 +895,7 @@ const ProfileSkillComponent = () => {
           arrStatusNameInfrastructureErrors[i].status = true;
         }
 
-        if (skillInfrastructureData[i]?.name?.length > 40) {
+        if (skillInfrastructureData[i]?.name.trim()?.length > 40) {
           isValidForm = false;
           arrMessInfrastructureErrors.push({
             key: `name_${skillInfrastructureData[i]?.key}`,
@@ -1116,9 +1118,17 @@ const ProfileSkillComponent = () => {
           p: { xs: "80px 20px", lg: "80px 120px" },
           marginTop: { xs: "90px", lg: "0" },
           background: "#F4FDFF",
+          minHeight: "calc(100vh - 200px)",
         }}
       >
-        <Grid item xs={12} sm={12} lg={12} xl={12} sx={{ position: { xs: "relative", lg: "unset" } }}>
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          lg={12}
+          xl={12}
+          sx={{ position: { xs: "relative", lg: "unset", display: checkLoading ? "block" : "none" } }}
+        >
           <Box
             sx={{
               background: { xs: "unset", lg: "#ffffff" },
@@ -1387,7 +1397,7 @@ const ProfileSkillComponent = () => {
                           placeholder={t("profile:form.placeholder.discussion-topic")}
                           minRows={5}
                           onChangeValue={onChangeProfileRequest}
-                          error={errorValidates.self_description}
+                          error={errorValidates.discussion_topic}
                           value={discussionTopic}
                         />
                       </ContentTab>
