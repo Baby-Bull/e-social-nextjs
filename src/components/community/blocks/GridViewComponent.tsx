@@ -9,6 +9,7 @@ import theme from "src/theme";
 import { IStoreState } from "src/constants/interface";
 
 import "moment/locale/ja";
+import styles from "./gridView.module.scss";
 
 export interface IData {
   profile_image: string;
@@ -92,22 +93,15 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) 
                       padding: "2px 9.5px",
                       borderRadius: "11px",
                       mr: "4px",
+                      width: "55px",
                     }}
                   >
                     {item.role === IS_OWNER ? "代表者" : "管理者"}
                   </Box>
                 ) : null}
-                <Typography
-                  component="span"
-                  sx={{
-                    fontWeight: 700,
-                    color: theme.navy,
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleRedirectToProfile(item?.id)}
-                >
+                <Box className={styles.showAdmin} onClick={() => handleRedirectToProfile(item?.id)}>
                   {item.username}
-                </Typography>
+                </Box>
               </Box>
               <Typography
                 component="span"

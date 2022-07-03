@@ -49,7 +49,7 @@ const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data 
     const res = await joinCommunity(data?.id);
     if (res) {
       if (statusJoin === 1) {
-        setTimeout(() => router.push(`community/${data?.id}`), 500);
+        setTimeout(() => router.push(`community/${data?.id}`), 1000);
       }
       if (statusJoin === 3) {
         setStatusJoin(2);
