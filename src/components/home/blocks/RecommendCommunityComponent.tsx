@@ -46,7 +46,7 @@ const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data 
   };
 
   const joinCummunityHome = async () => {
-    const res = await joinCommunity(data?.id);
+    const res = await joinCommunity(data?.id, data?.is_public);
     if (res) {
       if (statusJoin === 1) {
         setTimeout(() => router.push(`community/${data?.id}`), 1000);
@@ -128,7 +128,7 @@ const RecommendCommunityComponent: React.SFC<IRecommendCommunityProps> = ({ reco
       <div className="content">
         <SlickSliderRecommendComponent items={recommendCommunityItems} />
       </div>
-      <div style={{ textAlign: "center" }}>
+      <div style={{ textAlign: "center", width: "100%" }}>
         <Link className="link-see-more content-mobile" href="/search_community" underline="none">
           {t("home:see-more")}
         </Link>
