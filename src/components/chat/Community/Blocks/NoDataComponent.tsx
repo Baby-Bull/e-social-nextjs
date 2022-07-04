@@ -3,6 +3,7 @@ import { useTranslation } from "next-i18next";
 import { Box, Grid, IconButton, InputBase, Paper, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import classNames from "classnames";
+import Link from "next/link";
 
 import styles from "src/components/chat/chat.module.scss";
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
@@ -102,9 +103,11 @@ const BlockNoDataComponent = () => {
             <Typography className="title">{t("chat:box-right-no-data-mobile")}</Typography>
             <img alt="no-data" src="/assets/images/chat-no-data.png" width={137} />
 
-            <ButtonComponent className="btn-find" mode="gradient">
-              {t("chat:box-right-button-find")}
-            </ButtonComponent>
+            <Link href="/search_community">
+              <ButtonComponent className="btn-find" mode="gradient">
+                {t("chat:box-right-button-find")}
+              </ButtonComponent>
+            </Link>
           </Box>
         </Grid>
       </Grid>

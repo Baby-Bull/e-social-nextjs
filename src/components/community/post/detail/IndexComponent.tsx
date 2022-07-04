@@ -3,6 +3,7 @@ import { Box, Typography, Backdrop, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
+// @ts-ignore
 import { MentionsInput, Mention } from "react-mentions";
 import GlobalStyles from "@mui/material/GlobalStyles";
 

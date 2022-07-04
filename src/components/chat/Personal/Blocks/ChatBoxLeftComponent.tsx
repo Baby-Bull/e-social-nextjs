@@ -40,8 +40,8 @@ const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({
     keepMounted
     disablePortal
     sx={{
-      top: "9px",
-      left: "-7em",
+      top: { xs: "0", lg: "9px" },
+      left: { xs: "0em", lg: "-7em" },
       "& .MuiMenu-paper": {
         borderRadius: "12px",
       },
@@ -114,6 +114,7 @@ const ChatBoxLeftComponent = ({
   userId,
   user,
   onSelectRoom,
+  transferUserToLeftMobile,
   setSearchChatRoom,
   hasMoreChatRoom,
   loadMoreChatRooms,
@@ -221,7 +222,10 @@ const ChatBoxLeftComponent = ({
                 {isMobile && (
                   <div className="more-options-SP">
                     <IconButton
-                      onClick={handleClick}
+                      onClick={(event: React.MouseEvent<HTMLElement>) => {
+                        handleClick(event);
+                        transferUserToLeftMobile(index);
+                      }}
                       aria-label="more"
                       aria-haspopup="true"
                       sx={{

@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import "moment/locale/ja";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
+// @ts-ignore
 import { MentionsInput, Mention } from "react-mentions";
 import GlobalStyles from "@mui/material/GlobalStyles";
 
