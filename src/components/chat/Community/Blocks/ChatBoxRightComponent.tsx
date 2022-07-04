@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import crypto from "crypto";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Box, Grid, IconButton, Paper, Typography, Avatar, Menu, MenuItem } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import InfiniteScroll from "react-infinite-scroller";
@@ -174,19 +174,6 @@ const ChatBoxRightComponent = ({
   });
   const auth = useSelector((state: IStoreState) => state.user);
 
-  useEffect(() => {
-    boxMessageRef?.current?.scrollTo(0, boxMessageRef?.current?.scrollHeight);
-    if (
-      isFirstRender.current ||
-      boxMessageRef.current.offsetHeight + boxMessageRef.current.scrollTop + 100 >= boxMessageRef.current.scrollHeight
-    ) {
-      scrollEl(boxMessageRef.current);
-      if (listMessages?.length) {
-        isFirstRender.current = false;
-      }
-    }
-  }, [listMessages]);
-
   const { data: listMessageResQuery } = useQuery(
     [REACT_QUERY_KEYS.COMMUNITY_CHAT.LIST_MESSAGES, communityId],
     async () => {
@@ -215,6 +202,10 @@ const ChatBoxRightComponent = ({
     });
     isFirstRender.current = true;
     inputChatRef.current.focus();
+
+    setTimeout(() => {
+      scrollEl(boxMessageRef.current);
+    }, 1000);
   }, [listMessageResQuery]);
 
   const loadMoreData = async () => {
@@ -232,6 +223,9 @@ const ChatBoxRightComponent = ({
   useEffect(() => {
     if (newMessageOfRoom && newMessageOfRoom?.chat_room_id === roomSelect.id) {
       setListMessages([...listMessages, newMessageOfRoom]);
+      setTimeout(() => {
+        scrollEl(boxMessageRef.current);
+      }, 300);
     }
   }, [newMessageOfRoom]);
 
@@ -257,6 +251,9 @@ const ChatBoxRightComponent = ({
           isErrorMessage: !navigator.onLine,
         },
       ]);
+      setTimeout(() => {
+        scrollEl(boxMessageRef.current);
+      }, 300);
       inputChatRef.current.value = "";
     }
   };
@@ -292,6 +289,31 @@ const ChatBoxRightComponent = ({
     }
   };
 
+  const scrollUp = useCallback(
+    async (e) => {
+      const heightScroll = boxMessageRef?.current?.scrollHeight;
+      if (e.target.scrollTop === 0 && hasMoreParams?.cursor?.length && listMessages.length) {
+        const res = await getMessagesCommunity(communityId, hasMoreParams?.cursor);
+        setListMessages([...(res?.items?.reverse() || []), ...listMessages]);
+        setHasMoreParams({
+          cursor: res?.cursor,
+          hasMore: res?.hasMore,
+        });
+        const currentHeight = boxMessageRef?.current?.scrollHeight;
+        boxMessageRef?.current?.scroll({ top: currentHeight - heightScroll, left: 0 });
+      }
+    },
+    [listMessages, hasMoreParams],
+  );
+
+  useEffect(() => {
+    boxMessageRef?.current?.addEventListener("scroll", scrollUp);
+
+    return () => {
+      boxMessageRef?.current?.removeEventListener("scroll", scrollUp);
+    };
+  }, [listMessages, hasMoreParams]);
+
   return (
     <Grid
       item
@@ -318,6 +340,7 @@ const ChatBoxRightComponent = ({
           id="box-message"
           ref={boxMessageRef}
           style={{
+            display: listMessages?.length === 0 ? "flex" : "block",
             justifyContent: listMessages?.length === 0 ? "center" : "initial",
             alignItems: listMessages?.length === 0 ? "center" : "initial",
           }}
@@ -325,7 +348,8 @@ const ChatBoxRightComponent = ({
           {listMessages?.length ? (
             <InfiniteScroll
               loadMore={loadMoreData}
-              hasMore={!!listMessages?.length && hasMoreParams.hasMore && !isFirstRender.current}
+              // hasMore={!!listMessages?.length && hasMoreParams.hasMore && !isFirstRender.current}
+              hasMore={false}
               loader="読み込み中..."
               isReverse
               useWindow={false}
