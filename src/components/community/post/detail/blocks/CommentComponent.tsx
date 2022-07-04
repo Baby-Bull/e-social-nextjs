@@ -118,7 +118,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
       setIsLoading(false);
       setIsUpdateComment(false);
       setContentUpdateId(item?.id);
-      setContent("");
+      // setContent("");
       return response;
     }
   };
@@ -310,10 +310,9 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
           </Box>
         ) : (
           <MentionsInput
-            value={contentUpdateId === item?.id ? content : item?.content}
+            value={contentUpdateId === item?.id ? communityPostUpdateRequest?.content : item?.content}
             className="mention-detail"
             style={defaultStyle}
-            placeholder={t("community:place-holder")}
             disabled
           >
             <Mention markup="^__display__^" trigger="@" style={{ backgroundColor: "#cee4e5" }} />

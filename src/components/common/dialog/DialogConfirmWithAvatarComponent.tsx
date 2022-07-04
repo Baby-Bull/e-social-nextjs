@@ -51,6 +51,7 @@ const DialogConfirmWithAvatarComponent: React.SFC<IDialogConfirmWithAvatarProps>
       fullWidth={fullWidth}
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description"
+      sx={{ zIndex: 10001 }}
     >
       <DialogTitle
         id="scroll-dialog-title"

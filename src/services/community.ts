@@ -16,7 +16,7 @@ import {
   CREATE_COMMENT,
   JOIN_COMMUNITY,
   LEAVE_COMMUNITY,
-  UPDATE_COMMENT,
+  UPDATE_COMMENT, SEND_REQUEST_COMMUNITY,
 } from "src/messages/notification";
 import { api } from "src/helpers/api";
 
@@ -303,11 +303,15 @@ export const getListCommunityPost = async (
   }
 };
 
-export const joinCommunity = async (communityId) => {
+export const joinCommunity = async (communityId, isPulic = true) => {
   try {
     const res = await api.post(`community/${communityId}/join`);
     if (!res.data.error_code) {
-      toast.success(JOIN_COMMUNITY);
+      if (isPulic) {
+        toast.success(JOIN_COMMUNITY);
+      } else {
+        toast.success(SEND_REQUEST_COMMUNITY);
+      }
       return res.data;
     }
   } catch (error) {
