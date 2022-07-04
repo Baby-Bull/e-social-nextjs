@@ -8,17 +8,18 @@ import { useQuery } from "react-query";
 import styles from "src/components/chat/chat.module.scss";
 import useViewport from "src/helpers/useViewport";
 import { getListChatRoomsCommunity } from "src/services/chat";
-import { getToken } from "src/helpers/storage";
 import { REACT_QUERY_KEYS } from "src/constants/constants";
 import { sortListRoomChat } from "src/helpers/helper";
 import ChatBoxLeftComponent from "src/components/chat/Community/Blocks/ChatBoxLeftComponent";
+import socket from "src/helpers/socket";
 
 import ChatBoxRightComponent from "./ChatBoxRightComponent";
 import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
 
-const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS}${getToken()}`);
+const newSocket = socket();
 
 const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, setHasData }) => {
+  const ws = newSocket.init();
   const router = useRouter();
   const { room: roomQuery } = router.query;
   // Responsive
@@ -108,6 +109,13 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
         updateLastMessageOfListRooms(message);
       }
     });
+    ws.onclose = () => {
+      console.log("WebSocket is disconnected");
+      setTimeout(() => {
+        newSocket.init();
+        ws.onopen();
+      }, 1000);
+    };
   }, []);
 
   const { data: listRoomResQuery } = useQuery(

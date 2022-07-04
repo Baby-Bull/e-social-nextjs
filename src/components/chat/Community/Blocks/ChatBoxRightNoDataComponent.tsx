@@ -2,7 +2,7 @@
 import React from "react";
 import { Box, Grid, IconButton, Paper, Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import Link from "next/link";
+import { useRouter } from "next/router";
 
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
@@ -10,6 +10,11 @@ import ButtonComponent from "src/components/common/elements/ButtonComponent";
 
 const ChatBoxRightNoDataComponent = () => {
   const { t } = useTranslation();
+  const router = useRouter();
+
+  const redirectToSearchCommunity = () => {
+    router.push("/search_community");
+  };
 
   return (
     <Grid item className={styles.chatBoxRight}>
@@ -18,11 +23,10 @@ const ChatBoxRightNoDataComponent = () => {
         <Box className={styles.boxNoData}>
           <Typography className="title">{t("chat:box-right-no-data")}</Typography>
           <img alt="no-data" src="/assets/images/chat-no-data.png" width={245} />
-          <Link href="/search_community">
-            <ButtonComponent className="btn-find" mode="gradient">
-              {t("chat:box-right-button-find")}
-            </ButtonComponent>
-          </Link>
+
+          <ButtonComponent className="btn-find" mode="gradient" onClick={redirectToSearchCommunity}>
+            {t("chat:box-right-button-find-community")}
+          </ButtonComponent>
         </Box>
         <Box className="box-chat">
           <Paper

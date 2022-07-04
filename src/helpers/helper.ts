@@ -1,11 +1,13 @@
 /* eslint-disable no-param-reassign */
 export const sortListRoomChat = (listRooms: any) => {
-  listRooms.sort((a: any, b: any) => {
+  const listRoomSort = listRooms?.filter((item: any) => item.last_chat_message_at);
+  const listRoomNoSort = listRooms?.filter((item: any) => !item.last_chat_message_at);
+  listRoomSort.sort((a: any, b: any) => {
     const dateA = Date.parse(a.last_chat_message_at);
     const dateB = Date.parse(b.last_chat_message_at);
     return dateB - dateA > 0 ? 1 : -1;
   });
-  return listRooms;
+  return [...listRoomSort, ...listRoomNoSort];
 };
 
 const equalsYearMonthDate = (date1: Date, date2: Date) => {
@@ -26,7 +28,7 @@ export const formatChatDateRoom = (date: string) => {
 
 export const formatChatDate = (chatDate: string) => {
   const date = new Date(chatDate);
-  return `${date.getHours()}:${date.getMinutes()}`;
+  return `${date.getHours()}:${date.getMinutes().toString().padStart(2, "0")}`;
 };
 
 export const formatDateToText = (date: string) => {
