@@ -68,10 +68,7 @@ const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({ open, anchorEl, handl
       },
     }}
   >
-    <MenuItem onClick={redirectToCommunity}>
-      <img src="/assets/images/svg/user_chat.svg" alt="image_to_profile" />
-      コミュニティを見る
-    </MenuItem>
+    <MenuItem onClick={redirectToCommunity}>コミュニティを見る</MenuItem>
   </Menu>
 );
 
@@ -112,7 +109,7 @@ const ChatBoxLeftComponent = ({
     setAnchorEl(null);
   };
 
-  const redirectToCommunity = (communityIdThread) => {
+  const redirectToCommunity = (communityIdThread: string) => {
     router.push(`/community/${communityIdThread}`);
     handleClose();
   };
