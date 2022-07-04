@@ -82,6 +82,14 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
       setPerPageFavorite(perPageFavorite + 1);
     }
   };
+  const [pageCommunity, setPageCommunity] = useState(1);
+  const [perPageCommunity, setPerPageCommunity] = useState(10000);
+  const handleCallbackChangePaginationCommunity = (event, value) => {
+    setPageCommunity(value);
+    if (perPageCommunity <= value) {
+      setPerPageCommunity(perPageFavorite + 1);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -294,63 +302,81 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, setKeyRefetchData, 
                 flexWrap: "wrap",
               }}
             >
-              {data[4]?.data?.map((tab, tabIndex) => (
-                <React.Fragment key={tabIndex.toString()}>
-                  <Grid xs={6} md={3}>
-                    <Box
-                      onClick={() => handleRedirectCommunity(tab?.id)}
-                      sx={{
-                        cursor: "pointer",
-                        mt: [0, "40px"],
-                        mb: ["20px", 0],
-                        mx: [0, "20px"],
-                        // flex: ["0 0 50%", "0 0 25%"],
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Avatar
-                        variant="circular"
+              {data[4]?.data
+                ?.slice((pageCommunity - 1) * LIMITCOUNTPERPAGE, pageCommunity * LIMITCOUNTPERPAGE)
+                .map((tab, tabIndex) => (
+                  <React.Fragment key={tabIndex.toString()}>
+                    <Grid xs={6} md={3}>
+                      <Box
+                        onClick={() => handleRedirectCommunity(tab?.id)}
                         sx={{
-                          width: ["149px", "124px"],
-                          height: ["149px", "124px"],
-                          img: {
-                            objectFit: tab?.profile_image === "/assets/images/logo/logo.png" ? "contain" : "cover",
-                            border:
-                              tab?.profile_image === "/assets/images/logo/logo.png" ? "3px #e8ecf1 solid" : "none",
-                            borderRadius: "50%",
-                          },
+                          cursor: "pointer",
+                          mt: [0, "40px"],
+                          mb: ["20px", 0],
+                          mx: [0, "20px"],
+                          // flex: ["0 0 50%", "0 0 25%"],
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
                         }}
-                        src={tab?.profile_image}
-                      />
+                      >
+                        <Avatar
+                          variant="circular"
+                          sx={{
+                            width: ["149px", "124px"],
+                            height: ["149px", "124px"],
+                            img: {
+                              objectFit: tab?.profile_image === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                              border:
+                                tab?.profile_image === "/assets/images/logo/logo.png" ? "3px #e8ecf1 solid" : "none",
+                              borderRadius: "50%",
+                            },
+                          }}
+                          src={tab?.profile_image}
+                        />
 
-                      <Typography
-                        component="span"
-                        pt="10px"
-                        sx={{
-                          fontSize: 14,
-                          fontWeight: 700,
-                          color: "black",
-                          textAlign: "center",
-                        }}
-                      >
-                        {tab?.name}
-                      </Typography>
-                      <Typography
-                        component="span"
-                        pt="8px"
-                        sx={{
-                          fontSize: [10, 14],
-                          color: theme.gray,
-                        }}
-                      >
-                        {t("matching:count-member")} {tab?.member_count} 人
-                      </Typography>
-                    </Box>
-                  </Grid>
-                </React.Fragment>
-              ))}
+                        <Typography
+                          component="span"
+                          pt="10px"
+                          sx={{
+                            fontSize: 14,
+                            fontWeight: 700,
+                            color: "black",
+                            textAlign: "center",
+                          }}
+                        >
+                          {tab?.name}
+                        </Typography>
+                        <Typography
+                          component="span"
+                          pt="8px"
+                          sx={{
+                            fontSize: [10, 14],
+                            color: theme.gray,
+                          }}
+                        >
+                          {t("matching:count-member")} {tab?.member_count} 人
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  </React.Fragment>
+                ))}
+              <Box
+                sx={{
+                  py: "40px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {data[4]?.data?.length > LIMITCOUNTPERPAGE && (
+                  <PaginationCustomComponent
+                    handleCallbackChangePagination={handleCallbackChangePaginationCommunity}
+                    page={pageCommunity}
+                    perPage={perPageCommunity}
+                    totalPage={Math.ceil(data[4]?.data?.length > 0 ? data[4].data.length / LIMITCOUNTPERPAGE : 1)}
+                  />
+                )}
+              </Box>
             </Box>
           </Grid>
         ) : (

@@ -213,11 +213,22 @@
             font-size: 14px;
             color: #1a2944;
             max-width: 320px;
+
+            .theFirstMessage {
+              span {
+                font-weight: 700 !important;
+              }
+              p {
+                font-weight: 400;
+                margin-top: 0;
+              }
+            }
           }
 
           .avatar {
             width: 40px;
             margin-top: auto;
+            margin-right: 20px;
           }
           .time {
             color: #989ea8;
@@ -268,6 +279,15 @@
 
             &.error-message {
               background: #989ea8;
+            }
+            .theFirstMessage {
+              span {
+                font-weight: 700 !important;
+              }
+              p {
+                font-weight: 400;
+                margin-top: 0;
+              }
             }
           }
 
@@ -440,6 +460,7 @@
         background-size: 100%;
         background-repeat: no-repeat;
         margin-right: 16px;
+        border-radius: 50%;
       }
 
       .thread-content {
