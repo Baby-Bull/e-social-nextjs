@@ -3,6 +3,7 @@ import { Box, Typography, Avatar, Chip, Paper } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
+import GlobalStyles from "@mui/material/GlobalStyles";
 
 import { infoCommunitySetting } from "src/components/community/mockData";
 import theme from "src/theme";
@@ -34,7 +35,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
     const community = router.query;
     const res = await leaveCommunity(community?.id);
     if (res) {
-      router.reload();
+      setTimeout(() => router.reload(), 1000);
       setOpen(false);
     }
     return res;
@@ -42,14 +43,24 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
 
   const handleJoinCommunity = async () => {
     const community = router.query;
-    const res = await joinCommunity(community?.id);
+    const res = await joinCommunity(community?.id, data?.is_public);
     if (res) {
-      router.reload();
+      setTimeout(() => router.reload(), 1000);
     }
     return res;
   };
   return (
     <React.Fragment>
+      <GlobalStyles
+        styles={{
+          header: {
+            zIndex: "10000 !important",
+          },
+          ":root": {
+            "--toastify-z-index": "10001 !important",
+          },
+        }}
+      />
       <Box
         sx={{
           mt: "20px",

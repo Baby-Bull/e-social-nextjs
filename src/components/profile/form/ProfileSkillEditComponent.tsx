@@ -72,15 +72,15 @@ const TitleContentTab = styled(Box)`
 `;
 
 const ContentTab = styled(Box)`
-  width: 680px;
+  width: 740px;
   ${(props) => props.theme.breakpoints.up("xs")} {
     font-size: 14px;
     width: 100%;
   }
 
-  ${(props) => props.theme.breakpoints.up("lg")} {
+  ${(props) => props.theme.breakpoints.up("xl")} {
     font-size: 16px;
-    width: 73%;
+    width: 76%;
   }
 `;
 
@@ -571,7 +571,7 @@ const ProfileSkillComponent = () => {
         Number(el.key) === Number(key)
           ? {
               ...el,
-              [name]: value,
+              [name]: value?.trim(),
             }
           : el,
       ),
@@ -586,7 +586,7 @@ const ProfileSkillComponent = () => {
         Number(el.key) === Number(key)
           ? {
               ...el,
-              [name]: value,
+              [name]: value.trim(),
             }
           : el,
       ),
@@ -601,7 +601,7 @@ const ProfileSkillComponent = () => {
         Number(el.key) === Number(key)
           ? {
               ...el,
-              [name]: value,
+              [name]: value.trim(),
             }
           : el,
       ),
@@ -733,7 +733,7 @@ const ProfileSkillComponent = () => {
           key: `experience_year_${skillLanguageData[i]?.key}`,
           status: false,
         });
-        if (!skillLanguageData[i]?.name.trim()?.length) {
+        if (!skillLanguageData[i]?.name?.trim()?.length) {
           isValidForm = false;
           arrMessLanguageErrors.push({
             key: `name_${skillLanguageData[i]?.key}`,
@@ -742,7 +742,7 @@ const ProfileSkillComponent = () => {
           });
           arrStatusNameLanguageErrors[i].status = true;
         }
-        if (skillLanguageData[i]?.name.trim()?.length > 40) {
+        if (skillLanguageData[i]?.name?.trim()?.length > 40) {
           isValidForm = false;
           arrMessLanguageErrors.push({
             key: `name_${skillLanguageData[i]?.key}`,
@@ -807,7 +807,7 @@ const ProfileSkillComponent = () => {
           status: false,
         });
         arrNameFramework.push(skillFrameworkData[i]?.name);
-        if (!skillFrameworkData[i]?.name.trim()?.length) {
+        if (!skillFrameworkData[i]?.name?.trim()?.length) {
           isValidForm = false;
           arrMessFrameworkErrors.push({
             key: `name_${skillFrameworkData[i]?.key}`,
@@ -816,7 +816,7 @@ const ProfileSkillComponent = () => {
           });
           arrStatusNameFrameworkErrors[i].status = true;
         }
-        if (skillFrameworkData[i]?.name.trim()?.length > 40) {
+        if (skillFrameworkData[i]?.name?.trim()?.length > 40) {
           isValidForm = false;
           arrMessFrameworkErrors.push({
             key: `name_${skillFrameworkData[i]?.key}`,
@@ -885,7 +885,7 @@ const ProfileSkillComponent = () => {
         });
         arrNameInfrastructure.push(skillInfrastructureData[i]?.name);
 
-        if (!skillInfrastructureData[i]?.name.trim()?.length) {
+        if (!skillInfrastructureData[i]?.name?.trim()?.length) {
           isValidForm = false;
           arrMessInfrastructureErrors.push({
             key: `name_${skillInfrastructureData[i]?.key}`,
@@ -895,7 +895,7 @@ const ProfileSkillComponent = () => {
           arrStatusNameInfrastructureErrors[i].status = true;
         }
 
-        if (skillInfrastructureData[i]?.name.trim()?.length > 40) {
+        if (skillInfrastructureData[i]?.name?.trim()?.length > 40) {
           isValidForm = false;
           arrMessInfrastructureErrors.push({
             key: `name_${skillInfrastructureData[i]?.key}`,
@@ -1115,7 +1115,11 @@ const ProfileSkillComponent = () => {
       )}
       <Box
         sx={{
-          p: { xs: "80px 20px", lg: "80px 120px" },
+          "@media (max-width: 1350px)": {
+            fontSize: 14,
+            p: "80px 20px",
+          },
+          p: "80px 120px",
           marginTop: { xs: "90px", lg: "0" },
           background: "#F4FDFF",
           minHeight: "calc(100vh - 200px)",
