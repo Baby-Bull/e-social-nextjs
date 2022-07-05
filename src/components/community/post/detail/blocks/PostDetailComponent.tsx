@@ -27,17 +27,7 @@ interface ICommunityPostDataProps {
 }
 
 const BoxInfo: React.SFC<IBoxInfoProps> = ({ title, text, textColor, fontWeight }) => (
-  <Box
-    sx={{
-      border: `1px solid ${theme.blue}`,
-      borderRadius: "12px",
-      display: "flex",
-      alignItems: "center",
-      height: ["32px", "40px"],
-      lineHeight: ["32px", "40px"],
-      mb: ["8px", "7px"],
-    }}
-  >
+  <Box sx={{ display: "flex", width: "100%", minHeight: "32px" }}>
     <Box
       sx={{
         backgroundColor: theme.blue,
@@ -46,22 +36,37 @@ const BoxInfo: React.SFC<IBoxInfoProps> = ({ title, text, textColor, fontWeight 
         fontWeight: 700,
         fontSize: [10, 14],
         width: ["48px", "80px"],
-        textAlign: "center",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       {title}
     </Box>
-
-    <Typography
+    <Box
       sx={{
-        ml: "20px",
-        color: textColor || "black",
-        fontSize: [10, 14],
-        fontWeight,
+        border: `1px solid ${theme.blue}`,
+        borderTopRightRadius: "12px",
+        borderBottomRightRadius: "12px",
+        display: "flex",
+        alignItems: "center",
+        lineHeight: ["32px", "40px"],
+        width: "100%",
       }}
     >
-      {text}
-    </Typography>
+      <Typography
+        sx={{
+          m: "5px",
+          color: textColor || "black",
+          fontSize: [10, 14],
+          fontWeight,
+          width: ["100%", "100%"],
+          wordBreak: "break-word",
+        }}
+      >
+        {text}
+      </Typography>
+    </Box>
   </Box>
 );
 
