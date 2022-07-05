@@ -7,7 +7,7 @@ import theme from "src/theme";
 export const TextareaAutosizeCustom = styled(TextareaAutosize)({
   backgroundColor: theme.whiteBlue,
   width: "100%",
-  // resize: "none",
+  resize: "vertical",
   minHeight: "80px",
   border: `2px solid transparent`,
   borderRadius: "6px",
