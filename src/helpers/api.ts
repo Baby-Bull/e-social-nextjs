@@ -45,22 +45,24 @@ api.interceptors.response.use(
   async (err: any) => {
     if (err.response.status === 403) {
       toast.warning(FORBIDDEN);
-      // window.location.href = "/";
+      window.location.href = "/";
     }
 
     if (err.response.status === 404) {
       toast.warning(NOT_FOUND);
-      // window.location.href = "/";
+      window.location.href = "/";
     }
 
     if (err.response.status === 422) {
-      toast.error(SERVER_ERROR);
+      if (!err?.response?.data?.message?.email) {
+        toast.error(SERVER_ERROR);
+      }
       // window.location.href = "/";
     }
     const originalRequest = err.config;
     if (originalRequest.url !== "/auth/tokens") {
       if (err.response.status === 401 && !originalRequest._retry) {
-        toast.error("401 Authentication");
+        toast.error("セッションの有効期限が切れました。");
         if (isRefreshing) {
           return new Promise((resolve, reject) => {
             failedQueue.push({ resolve, reject });
