@@ -47,7 +47,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
   const [hint, setHint] = useState(false);
   const [hintMobile, setHintMobile] = useState(false);
   const [showPopupAnalysis, setShowPopupAnalysis] = useState(false);
-  const urlProfile = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${auth?.id}`;
+  const urlProfile = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${user?.id}`;
 
   useEffect(() => {
     setLiked(user?.is_favorite);

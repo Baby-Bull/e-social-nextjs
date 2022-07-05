@@ -111,7 +111,7 @@ export const JAPAN_PROVINCE_OPTIONS = [
 export const PROFILE_JAPAN_PROVINCE_OPTIONS = [
   {
     label: "選択してください",
-    value: 0,
+    value: "",
   },
   ...JAPAN_PROVINCES.map((item) => ({
     label: item,
@@ -193,8 +193,23 @@ export const REACT_QUERY_KEYS = {
 export const STATUS_OPTIONS = [
   {
     label: "選択してください",
-    value: 0,
+    value: "",
   },
+  {
+    label: "今すぐ話せます",
+    value: "can-talk",
+  },
+  {
+    label: "友達募集しています",
+    value: "looking-for-friend",
+  },
+  {
+    label: "相談に乗って欲しいです",
+    value: "need-consult",
+  },
+];
+
+export const MY_PROFILE_STATUS_OPTIONS = [
   {
     label: "今すぐ話せます",
     value: "can-talk",
@@ -341,7 +356,7 @@ export const LEVELS = [
 export const ENGLISH_LEVEL_OPTIONS = [
   {
     label: "選択してください",
-    value: 0,
+    value: "",
   },
   {
     label: "ネイティブ ",

@@ -126,10 +126,10 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
       value: "エンジニア",
       label: "エンジニア",
     },
-    {
-      value: "コミュニティ",
-      label: "コミュニティ",
-    },
+    // {
+    //   value: "コミュニティ",
+    //   label: "コミュニティ",
+    // },
   ];
 
   // const [mess] = useState(9);

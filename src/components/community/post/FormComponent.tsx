@@ -136,9 +136,6 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
     if (handleValidateFormCommunityPost() && (tags.length === 0 || tags.length > 1)) {
       setIsLoading(true);
       const communityId = router.query;
-      if (tags.length === 0) {
-        delete communityPostRequest.tags;
-      }
       communityPostRequest.tags = tags;
       if (editable) {
         const res = await updateCommunityPost(communityId?.id, communityId?.updateId, communityPostRequest);
@@ -308,7 +305,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
               sx={{
                 ml: 1,
                 flex: 1,
-                border: tagDataValidate ? "1px solid #FF9458" : "none",
+                border: tagDataValidate || (tags.length > 0 && tags.length < 2) ? "1px solid #FF9458" : "none",
               }}
               placeholder={t("community:setting.form.placeholder.tag")}
               inputProps={{ "aria-label": t("community:setting.form.placeholder.tag") }}
