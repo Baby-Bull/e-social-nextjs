@@ -132,7 +132,7 @@ export const VALIDATE_FORM_UPDATE_PROFILE = {
   },
   max_length_name_skill: "40文字以内で記入してください。",
   max_length_year_skill: "2文字以内で記入してください。",
-  required_name_skill: "Trường này k đc bỏ trống!",
+  required_name_skill: "入力してください。",
   format: "ユーザ名は無効です。ひらがな、カタカナ、漢字、a-zのアルファベット、0-9の文字を入力してください。",
 };
 

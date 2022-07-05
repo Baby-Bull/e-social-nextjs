@@ -143,13 +143,13 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
       if (editable) {
         const res = await updateCommunityPost(communityId?.id, communityId?.updateId, communityPostRequest);
         setIsLoading(false);
-        setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${res?.slug}`), 200);
+        setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${res?.slug}`), 1000);
         return res;
       }
       const res = await createCommunityPost(communityId?.id, communityPostRequest);
       setIsLoading(false);
       if (res) {
-        setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${res?.slug}`), 200);
+        setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${res?.slug}`), 1000);
         return res;
       }
     }
