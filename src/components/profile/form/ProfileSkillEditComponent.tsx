@@ -1482,7 +1482,9 @@ const ProfileSkillComponent = () => {
                                       sx={{
                                         border: statusErrYearLanguage[key]?.status ? "solid 1px #FF9458" : "none",
                                       }}
-                                      value={option.experience_year}
+                                      value={
+                                        option.experience_year < 0 ? -option.experience_year : option.experience_year
+                                      }
                                     />
                                   </Box>
                                   <Typography fontSize={14} sx={{ m: "0 8px" }}>
@@ -1622,7 +1624,9 @@ const ProfileSkillComponent = () => {
                                       sx={{
                                         border: statusErrYearFramework[key]?.status ? "solid 1px #FF9458" : "none",
                                       }}
-                                      value={option.experience_year}
+                                      value={
+                                        option.experience_year < 0 ? -option.experience_year : option.experience_year
+                                      }
                                     />
                                   </Box>
                                   <Typography fontSize={14} sx={{ m: "0 8px" }}>
@@ -1763,7 +1767,9 @@ const ProfileSkillComponent = () => {
                                       sx={{
                                         border: statusErrYearInfrastructure[key]?.status ? "solid 1px #FF9458" : "none",
                                       }}
-                                      value={option.experience_year}
+                                      value={
+                                        option.experience_year < 0 ? -option.experience_year : option.experience_year
+                                      }
                                     />
                                   </Box>
                                   <Typography fontSize={14} sx={{ m: "0 8px" }}>
