@@ -192,11 +192,6 @@ const MatchingComponent = () => {
               getMatchingRequestReceived(LIMIT, "", "confirmed"),
               getMatchingRequestReceived(LIMIT, "", "rejected"),
             ];
-            setCheckLoadingReceived(true);
-            // setCheckLoadingMatched(false);
-            // setCheckLoadingCommunity(false);
-            // setCheckLoadingFavorite(false);
-            // setCheckLoadingSend(false);
             break;
           case TAB_VALUE_BY_KEY.sent:
             dataRefetch = [
@@ -204,11 +199,6 @@ const MatchingComponent = () => {
               getMatchingRequestSent(LIMIT, "", "confirmed"),
               getMatchingRequestSent(LIMIT, "", "rejected"),
             ];
-            setCheckLoadingSend(true);
-            // setCheckLoadingReceived(false);
-            // setCheckLoadingMatched(false);
-            // setCheckLoadingCommunity(false);
-            // setCheckLoadingFavorite(false);
             break;
           case TAB_VALUE_BY_KEY.favorite: {
             const res = await getUserFavorite(LIMIT, "");
@@ -216,10 +206,6 @@ const MatchingComponent = () => {
             tabTemp.isFetched = true;
             setTabs(tabs.map((item) => (item?.tabValue === tabValue ? tabTemp : item)));
             setCheckLoadingFavorite(true);
-            // setCheckLoadingSend(false);
-            // setCheckLoadingReceived(false);
-            // setCheckLoadingMatched(false);
-            // setCheckLoadingCommunity(false);
             break;
           }
           case TAB_VALUE_BY_KEY.community: {
@@ -228,10 +214,6 @@ const MatchingComponent = () => {
             tabTemp.isFetched = true;
             setTabs(tabs.map((item) => (item?.tabValue === tabValue ? tabTemp : item)));
             setCheckLoadingCommunity(true);
-            // setCheckLoadingFavorite(false);
-            // setCheckLoadingSend(false);
-            // setCheckLoadingReceived(false);
-            // setCheckLoadingMatched(false);
             break;
           }
           default:
@@ -245,6 +227,16 @@ const MatchingComponent = () => {
             count: result[index]?.items?.length,
           }));
           tabTemp.isFetched = true;
+          switch (tabValue) {
+            case TAB_VALUE_BY_KEY.received:
+              setCheckLoadingReceived(true);
+              break;
+            case TAB_VALUE_BY_KEY.sent:
+              setCheckLoadingSend(true);
+              break;
+            default:
+              break;
+          }
           setTabs(tabs.map((item) => (item?.tabValue === tabValue ? tabTemp : item)));
         }
       }

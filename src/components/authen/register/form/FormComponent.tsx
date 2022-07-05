@@ -17,8 +17,6 @@ import {
   Chip,
   Backdrop,
   CircularProgress,
-  Snackbar,
-  Alert,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
@@ -48,8 +46,6 @@ const FormRegisterComponents = () => {
   const [fullWidth] = React.useState(true);
   const [isTutorialDone, setStep] = React.useState(false);
   const [hasAgree, setHasAgree] = useState(false);
-
-  const [openError, setOpenError] = React.useState(false);
 
   const [userInfo, setUserInfo] = useState({
     username: null,
@@ -113,13 +109,6 @@ const FormRegisterComponents = () => {
 
   const onChangeCheckbox = () => {
     setHasAgree(!hasAgree);
-  };
-
-  const handleCloseError = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenError(false);
   };
 
   const handleValidateForm = () => {
@@ -208,26 +197,12 @@ const FormRegisterComponents = () => {
       setIsLoading(false);
       if (resUpdate && !resUpdate?.error_code) {
         handleClickOpen();
-      } else if (resUpdate?.message?.email) {
-        if (resUpdate?.message?.email[0]?.message !== "email is not unique") {
-          setOpenError(true);
-        }
       }
     }
   };
 
   return (
     <React.Fragment>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        open={openError}
-        autoHideDuration={6000}
-        onClose={handleCloseError}
-      >
-        <Alert onClose={handleCloseError} severity="error" sx={{ width: "100%" }}>
-          Update profile fail!
-        </Alert>
-      </Snackbar>
       <ContentComponent authPage>
         {isLoading && (
           <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
