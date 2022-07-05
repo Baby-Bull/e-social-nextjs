@@ -122,7 +122,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
         >
           {dataChild[0]?.data?.length ? (
             <React.Fragment>
-              {dataChild[1]?.data
+              {dataChild[0]?.data
                 ?.slice((pagePagination.pagePending - 1) * LIMIT, pagePagination.pagePending * LIMIT)
                 .map((tab, index) => (
                   <React.Fragment key={index.toString()}>
@@ -153,7 +153,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
                   justifyContent: "center",
                 }}
               >
-                {dataChild[2]?.data?.length > LIMIT && (
+                {dataChild[0]?.data?.length > LIMIT && (
                   <PaginationCustomComponent
                     handleCallbackChangePagination={handleCallbackChangePaginationPending}
                     page={pagePagination?.pagePending}
@@ -217,7 +217,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
                   justifyContent: "center",
                 }}
               >
-                {dataChild[2]?.data?.length > LIMIT && (
+                {dataChild[1]?.data?.length > LIMIT && (
                   <PaginationCustomComponent
                     handleCallbackChangePagination={handleCallbackChangePaginationConfirmed}
                     page={pagePagination?.pageConfirmed}
