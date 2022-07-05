@@ -53,6 +53,7 @@ const SlickSliderRecommendComponent: React.SFC<ISlickSliderRecommendComponentPro
           arrows: false,
           slidesToShow: 1,
           slidesToScroll: 1,
+          infinite: true,
         },
       },
     ],
