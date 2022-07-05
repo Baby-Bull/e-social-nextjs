@@ -24,6 +24,7 @@ import { addUserFavorite } from "src/services/user";
 import { TYPE } from "src/constants/matching";
 import { IStoreState } from "src/constants/interface";
 import actionTypes from "src/store/actionTypes";
+import { JOBS } from "src/constants/constants";
 
 const ThreadTitle = styled(Typography)({
   paddingLeft: "20px",
@@ -316,7 +317,9 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                     color: theme.gray,
                   }}
                 >
-                  {(type === "favorite" || type === "matched" ? data?.job : data?.user?.job) ?? "情報なし"}
+                  {(type === "favorite" || type === "matched"
+                    ? JOBS.find((item) => item?.value === data?.job)?.label
+                    : JOBS.find((item) => item?.value === data?.user?.job)?.label) ?? "情報なし"}
                 </Typography>
 
                 <Typography

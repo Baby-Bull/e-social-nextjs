@@ -37,12 +37,48 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
     setValueChildTab(newValue);
   };
 
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(10000);
-  const handleCallbackChangePagination = (event, value) => {
-    setPage(value);
-    if (perPage <= value) {
-      setPerPage(perPage + 1);
+  const [pagePagination, setPagePagination] = useState({
+    pagePending: 1,
+    perPagePending: 10000,
+    pageConfirmed: 1,
+    perPageConfirmed: 10000,
+    pageRejected: 1,
+    perPageRejected: 10000,
+  });
+  const handleCallbackChangePaginationPending = (event, value) => {
+    setPagePagination({
+      ...pagePagination,
+      pagePending: value,
+    });
+    if (pagePagination.perPagePending <= value) {
+      setPagePagination({
+        ...pagePagination,
+        perPagePending: pagePagination.perPagePending + 1,
+      });
+    }
+  };
+  const handleCallbackChangePaginationConfirmed = (event, value) => {
+    setPagePagination({
+      ...pagePagination,
+      pageConfirmed: value,
+    });
+    if (pagePagination.perPageConfirmed <= value) {
+      setPagePagination({
+        ...pagePagination,
+        perPageConfirmed: pagePagination.perPageConfirmed + 1,
+      });
+    }
+  };
+  const handleCallbackChangePaginationRejected = (event, value) => {
+    setPagePagination({
+      ...pagePagination,
+      pageRejected: value,
+    });
+    if (pagePagination.perPageRejected <= value) {
+      setPagePagination({
+        ...pagePagination,
+        perPageRejected: pagePagination.perPageRejected + 1,
+      });
     }
   };
 
@@ -86,28 +122,48 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
           }}
         >
           {dataChild[0]?.data?.length ? (
-            dataChild[0]?.data.map((tab, index) => (
-              <React.Fragment key={index.toString()}>
-                <Box
-                  sx={{
-                    mx: [0, "45px"],
-                    "&:first-of-type": {
-                      paddingTop: ["20px", "27px"],
-                    },
-                    "&:last-of-type": {
-                      borderBottom: { sm: `2px solid ${theme.lightGray}` },
-                    },
-                  }}
-                >
-                  <ThreadComponent
-                    data={tab}
-                    type="unConfirm"
-                    dataType={dataType}
-                    setKeyRefetchData={setKeyRefetchData}
+            <React.Fragment>
+              {dataChild[1]?.data
+                ?.slice((pagePagination.pagePending - 1) * LIMIT, pagePagination.pagePending * LIMIT)
+                .map((tab, index) => (
+                  <React.Fragment key={index.toString()}>
+                    <Box
+                      sx={{
+                        mx: [0, "45px"],
+                        "&:first-of-type": {
+                          paddingTop: ["20px", "27px"],
+                        },
+                        "&:last-of-type": {
+                          borderBottom: { sm: `2px solid ${theme.lightGray}` },
+                        },
+                      }}
+                    >
+                      <ThreadComponent
+                        data={tab}
+                        type="unConfirm"
+                        dataType={dataType}
+                        setKeyRefetchData={setKeyRefetchData}
+                      />
+                    </Box>
+                  </React.Fragment>
+                ))}
+              <Box
+                sx={{
+                  py: "40px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {dataChild[2]?.data?.length > LIMIT && (
+                  <PaginationCustomComponent
+                    handleCallbackChangePagination={handleCallbackChangePaginationPending}
+                    page={pagePagination?.pagePending}
+                    perPage={pagePagination?.perPagePending}
+                    totalPage={Math.ceil(dataChild[1]?.data?.length > 0 ? dataChild[1].data.length / LIMIT : 1)}
                   />
-                </Box>
-              </React.Fragment>
-            ))
+                )}
+              </Box>
+            </React.Fragment>
           ) : (
             <Box
               sx={{
@@ -130,28 +186,48 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
           }}
         >
           {dataChild[1]?.data?.length ? (
-            dataChild[1]?.data.map((tab, index) => (
-              <React.Fragment key={index.toString()}>
-                <Box
-                  sx={{
-                    mx: [0, "45px"],
-                    "&:first-of-type": {
-                      paddingTop: ["20px", "27px"],
-                    },
-                    "&:last-of-type": {
-                      borderBottom: { sm: `2px solid ${theme.lightGray}` },
-                    },
-                  }}
-                >
-                  <ThreadComponent
-                    data={tab}
-                    type="confirm"
-                    dataType={dataType}
-                    setKeyRefetchData={setKeyRefetchData}
+            <React.Fragment>
+              {dataChild[1]?.data
+                ?.slice((pagePagination.pageConfirmed - 1) * LIMIT, pagePagination.pageConfirmed * LIMIT)
+                .map((tab, index) => (
+                  <React.Fragment key={index.toString()}>
+                    <Box
+                      sx={{
+                        mx: [0, "45px"],
+                        "&:first-of-type": {
+                          paddingTop: ["20px", "27px"],
+                        },
+                        "&:last-of-type": {
+                          borderBottom: { sm: `2px solid ${theme.lightGray}` },
+                        },
+                      }}
+                    >
+                      <ThreadComponent
+                        data={tab}
+                        type="confirm"
+                        dataType={dataType}
+                        setKeyRefetchData={setKeyRefetchData}
+                      />
+                    </Box>
+                  </React.Fragment>
+                ))}
+              <Box
+                sx={{
+                  py: "40px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {dataChild[2]?.data?.length > LIMIT && (
+                  <PaginationCustomComponent
+                    handleCallbackChangePagination={handleCallbackChangePaginationConfirmed}
+                    page={pagePagination?.pageConfirmed}
+                    perPage={pagePagination?.perPageConfirmed}
+                    totalPage={Math.ceil(dataChild[1]?.data?.length > 0 ? dataChild[1].data.length / LIMIT : 1)}
                   />
-                </Box>
-              </React.Fragment>
-            ))
+                )}
+              </Box>
+            </React.Fragment>
           ) : (
             <Box
               sx={{
@@ -175,25 +251,27 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
         >
           {dataChild[2]?.data?.length ? (
             <React.Fragment>
-              {dataChild[2]?.data?.slice((page - 1) * LIMIT, page * LIMIT).map((tab, index) => (
-                <React.Fragment key={index.toString()}>
-                  <Box
-                    sx={{
-                      mx: [0, "45px"],
-                      "&:first-of-type": {
-                        paddingTop: ["20px", "27px"],
-                      },
-                    }}
-                  >
-                    <ThreadComponent
-                      data={tab}
-                      type="reject"
-                      dataType={dataType}
-                      setKeyRefetchData={setKeyRefetchData}
-                    />
-                  </Box>
-                </React.Fragment>
-              ))}
+              {dataChild[2]?.data
+                ?.slice((pagePagination.pageRejected - 1) * LIMIT, pagePagination.pageRejected * LIMIT)
+                .map((tab, index) => (
+                  <React.Fragment key={index.toString()}>
+                    <Box
+                      sx={{
+                        mx: [0, "45px"],
+                        "&:first-of-type": {
+                          paddingTop: ["20px", "27px"],
+                        },
+                      }}
+                    >
+                      <ThreadComponent
+                        data={tab}
+                        type="reject"
+                        dataType={dataType}
+                        setKeyRefetchData={setKeyRefetchData}
+                      />
+                    </Box>
+                  </React.Fragment>
+                ))}
               <Box
                 sx={{
                   py: "40px",
@@ -203,9 +281,9 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
               >
                 {dataChild[2]?.data?.length > LIMIT && (
                   <PaginationCustomComponent
-                    handleCallbackChangePagination={handleCallbackChangePagination}
-                    page={page}
-                    perPage={perPage}
+                    handleCallbackChangePagination={handleCallbackChangePaginationRejected}
+                    page={pagePagination?.pageRejected}
+                    perPage={pagePagination?.perPageRejected}
                     totalPage={Math.ceil(dataChild[2]?.data?.length > 0 ? dataChild[2].data.length / LIMIT : 1)}
                   />
                 )}
