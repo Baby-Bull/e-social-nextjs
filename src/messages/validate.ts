@@ -67,7 +67,7 @@ export const VALIDATE_FORM_USER_PORT = {
 
 export const VALIDATE_FORM_USER_REVIEW = {
   comment: {
-    max_length: "1タグにつき400文字以内で入力してください",
+    max_length: "400文字以内で入力してください。",
     required: "レビューメッセージを入力してください",
   },
 };
