@@ -20,7 +20,7 @@ interface IMatchingItemProps {
 
 interface IMatchingItemMobileProps {
   icon: string;
-  data: number;
+  // data: number;
   label: string;
   link: string;
 }
@@ -47,7 +47,7 @@ const MatchingItem: React.SFC<IMatchingItemProps> = ({ label, data, unit, link }
   );
 };
 
-const MatchingItemMobile: React.SFC<IMatchingItemMobileProps> = ({ label, data, icon, link }) => {
+const MatchingItemMobile: React.SFC<IMatchingItemMobileProps> = ({ label, icon, link }) => {
   const router = useRouter();
   const handleRedirectMatching = (type: string) => {
     router.push({
@@ -59,7 +59,7 @@ const MatchingItemMobile: React.SFC<IMatchingItemMobileProps> = ({ label, data, 
     <Box className={styles.boxMatchingMobile} onClick={() => handleRedirectMatching(link)}>
       <img src={icon} alt="icon" />
       <span className="label-type">{label}</span>
-      {data ? <span className="span-has-data" /> : ""}
+      {/* {data ? <span className="span-has-data" /> : ""} */}
     </Box>
   );
 };
@@ -230,7 +230,7 @@ const MatchingComponent = () => {
             <MatchingItemMobile
               label={dataMatchingMobile[key]?.label}
               icon={dataMatchingMobile[key]?.icon}
-              data={dataMatchingMobile[key]?.data}
+              // data={dataMatchingMobile[key]?.data}
               link={dataMatchingMobile[key]?.link}
             />
           </Grid>

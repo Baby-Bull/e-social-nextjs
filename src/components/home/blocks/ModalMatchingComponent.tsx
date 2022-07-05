@@ -99,10 +99,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
     // }
 
     // validate meeting_link
-    if (!matchingRequest?.meeting_link || matchingRequest?.meeting_link?.length === 0) {
-      isValidForm = false;
-      errorMessages.meeting_link = VALIDATE_FORM_MATCHING_REQUEST.meeting_link.required;
-    } else if (!REGEX_RULES.url.test(matchingRequest?.meeting_link)) {
+    if (matchingRequest?.meeting_link?.length > 0 && !REGEX_RULES.url.test(matchingRequest?.meeting_link)) {
       isValidForm = false;
       errorMessages.meeting_link = VALIDATE_FORM_MATCHING_REQUEST.meeting_link.invalid_url;
     }
@@ -171,7 +168,6 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
 
           <Field
             id="meeting_link"
-            required
             label={t("home:modal-matching.frequency")}
             placeholder="https://www.〇〇.jp"
             editor="textbox"

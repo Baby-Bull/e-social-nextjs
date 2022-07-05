@@ -57,28 +57,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     },
   );
 
-  useEffect(() => {
-    setListRooms(sortListRoomChat(listRoomResQuery?.items || []));
-    if (!roomSelect?.id) {
-      const roomQuerySelect = listRoomResQuery?.items?.find(
-        (item: any) => item.id === roomQuery || item?.user?.id === roomQuery,
-      );
-      if (roomQuerySelect) {
-        setRoomSelect(roomQuerySelect);
-        setUserId(roomQuerySelect?.user?.id);
-        setUser(roomQuerySelect?.user);
-      } else {
-        setRoomSelect(listRoomResQuery?.items?.[0] || {});
-        setUserId(listRoomResQuery?.items?.[0]?.user?.id);
-        setUser(listRoomResQuery?.items?.[0]?.user);
-      }
-    }
-    setHasMoreChatRoom({
-      cursor: listRoomResQuery?.cursor,
-      hasMore: listRoomResQuery?.hasMore,
-    });
-  }, [listRoomResQuery, roomSelect?.id]);
-
   const updateLastMessageOfListRooms = async (message: any) => {
     let hasChatRoomExist = false;
     setListRooms(
@@ -120,7 +98,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
 
   useEffect(() => {
     chatRoomIdRef.current = roomSelect?.id || null;
-  }, [roomSelect]);
+  }, [userId, roomSelect]);
 
   useEffect(() => {
     if (isMobile) {
@@ -143,6 +121,33 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
       }
     });
   }, []);
+
+  useEffect(() => {
+    const listRoomSort = sortListRoomChat(listRoomResQuery?.items || []);
+    setListRooms(listRoomSort);
+  }, [listRoomResQuery]);
+
+  useEffect(() => {
+    // setListRooms(sortListRoomChat(listRoomResQuery?.items || []));
+    if (!roomSelect?.id) {
+      const roomQuerySelect = listRoomResQuery?.items?.find(
+        (item: any) => item.id === roomQuery || item?.user?.id === roomQuery,
+      );
+      if (roomQuerySelect) {
+        setRoomSelect(roomQuerySelect);
+        setUserId(roomQuerySelect?.user?.id);
+        setUser(roomQuerySelect?.user);
+      } else {
+        setRoomSelect(listRoomResQuery?.items?.[0] || {});
+        setUserId(listRoomResQuery?.items?.[0]?.user?.id);
+        setUser(listRoomResQuery?.items?.[0]?.user);
+      }
+    }
+    setHasMoreChatRoom({
+      cursor: listRoomResQuery?.cursor,
+      hasMore: listRoomResQuery?.hasMore,
+    });
+  }, [listRoomResQuery, roomSelect?.id]);
 
   const loadMoreChatRooms = async () => {
     if (hasMoreChatRoom.cursor?.length) {
@@ -182,7 +187,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
 
   const transferUserToLeftMobile = (index: number) => {
     if (listRooms[index]?.user?.id !== userId) {
-      // setRoomSelect(listRooms[index]);
       setUserId(listRooms[index]?.user?.id);
       setUser(listRooms[index]?.user);
     }
@@ -192,7 +196,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
 
   return (
     <Grid container className={classNames(styles.chatContainerPC)}>
-      {!isMobile || (isMobile && !isRenderRightSide) ? (
+      {!isMobile || (isMobile && !isRenderRightSide && hasData) ? (
         <ChatBoxLeftComponent
           listRooms={listRooms}
           userId={userId}

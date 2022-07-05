@@ -339,8 +339,6 @@ const ChatBoxRightComponent = ({
           id="scrollableDiv"
           style={{
             height: "calc(100vh - 176px)",
-            overflow: "auto",
-            paddingRight: "20px",
             flexDirection: "column-reverse",
           }}
           className={styles.boxData}

@@ -50,7 +50,7 @@ const NotificationComponent = () => {
       content: (
         <span>
           goodhub2へようこそ！まずは
-          <a style={{ color: "#FF9458" }} href="#">
+          <a style={{ color: "#FF9458" }} href="my-profile">
             プロフィール詳細を記入
           </a>
           してみると、マッチング率がUPします☆
