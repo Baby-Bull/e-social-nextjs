@@ -175,6 +175,10 @@ const MatchingComponent = () => {
   ]);
   const [keyRefetchData, setKeyRefetchData] = useState(null);
   const [tabValue, setTabValue] = useState(TAB_VALUE_BY_KEY[typeQuery] || TAB_VALUE_BY_KEY.received);
+  const [checkLoadingReceived, setCheckLoadingReceived] = useState(false);
+  const [checkLoadingSend, setCheckLoadingSend] = useState(false);
+  const [checkLoadingFavorite, setCheckLoadingFavorite] = useState(false);
+  const [checkLoadingCommunity, setCheckLoadingCommunity] = useState(false);
 
   useEffect(() => {
     const refetchData = async () => {
@@ -188,7 +192,11 @@ const MatchingComponent = () => {
               getMatchingRequestReceived(LIMIT, "", "confirmed"),
               getMatchingRequestReceived(LIMIT, "", "rejected"),
             ];
-
+            setCheckLoadingReceived(true);
+            // setCheckLoadingMatched(false);
+            // setCheckLoadingCommunity(false);
+            // setCheckLoadingFavorite(false);
+            // setCheckLoadingSend(false);
             break;
           case TAB_VALUE_BY_KEY.sent:
             dataRefetch = [
@@ -196,12 +204,22 @@ const MatchingComponent = () => {
               getMatchingRequestSent(LIMIT, "", "confirmed"),
               getMatchingRequestSent(LIMIT, "", "rejected"),
             ];
+            setCheckLoadingSend(true);
+            // setCheckLoadingReceived(false);
+            // setCheckLoadingMatched(false);
+            // setCheckLoadingCommunity(false);
+            // setCheckLoadingFavorite(false);
             break;
           case TAB_VALUE_BY_KEY.favorite: {
             const res = await getUserFavorite(LIMIT, "");
             tabTemp.data = res.items || [];
             tabTemp.isFetched = true;
             setTabs(tabs.map((item) => (item?.tabValue === tabValue ? tabTemp : item)));
+            setCheckLoadingFavorite(true);
+            // setCheckLoadingSend(false);
+            // setCheckLoadingReceived(false);
+            // setCheckLoadingMatched(false);
+            // setCheckLoadingCommunity(false);
             break;
           }
           case TAB_VALUE_BY_KEY.community: {
@@ -209,6 +227,11 @@ const MatchingComponent = () => {
             tabTemp.data = res.items || [];
             tabTemp.isFetched = true;
             setTabs(tabs.map((item) => (item?.tabValue === tabValue ? tabTemp : item)));
+            setCheckLoadingCommunity(true);
+            // setCheckLoadingFavorite(false);
+            // setCheckLoadingSend(false);
+            // setCheckLoadingReceived(false);
+            // setCheckLoadingMatched(false);
             break;
           }
           default:
@@ -240,7 +263,16 @@ const MatchingComponent = () => {
           mb: ["0", "114px"],
         }}
       >
-        <TabComponent tabValue={tabValue} setTabValue={setTabValue} data={tabs} setKeyRefetchData={setKeyRefetchData} />
+        <TabComponent
+          tabValue={tabValue}
+          setTabValue={setTabValue}
+          data={tabs}
+          setKeyRefetchData={setKeyRefetchData}
+          checkLoadingFavorite={checkLoadingFavorite}
+          checkLoadingCommunity={checkLoadingCommunity}
+          checkLoadingReceived={checkLoadingReceived}
+          checkLoadingSend={checkLoadingSend}
+        />
       </Box>
     </ContentComponent>
   );
