@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import React, { useEffect, useState } from "react";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 // import { styled } from "@mui/material/styles";
 
 import styles from "src/components/searchCommunity/search_community.module.scss";
@@ -72,7 +72,7 @@ import BoxItemUserComponent from "./BoxItemCommunityComponent";
 
 const SearchCommunityComponent = () => {
   const { t } = useTranslation();
-  // const router = useRouter();
+  const router = useRouter();
 
   // Responsive
   const viewPort = useViewport();
@@ -155,10 +155,24 @@ const SearchCommunityComponent = () => {
           <Box className={styles.boxResultSearch} sx={{ padding: { xs: "0", xl: "0 13.6%" } }}>
             <Grid container className={styles.titleResultSearch}>
               <Grid item md={6} xs={12}>
-                <Typography className="title-search">
-                  {t("community-search:title")}
-                  <span className="item-total-result">{isMobile && <br />} 全200件</span>
-                </Typography>
+                <Button
+                  fullWidth
+                  onClick={() => router.push("/community/create")}
+                  sx={{
+                    background: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)",
+                    width: ["100%", "410px"],
+                    color: "#fff",
+                    "&:hover": {
+                      background: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)",
+                    },
+                  }}
+                >
+                  {t("community-search:btn-create-community")}
+                </Button>
+                {/* <Typography className="title-search"> */}
+                {/*  {t("community-search:title")} */}
+                {/*  <span className="item-total-result">{isMobile && <br />} 全200件</span> */}
+                {/* </Typography> */}
               </Grid>
               {!isMobile && (
                 <Grid item xs={6} className="sort-by-block">

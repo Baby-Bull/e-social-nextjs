@@ -54,6 +54,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
   checkLoadingFavorite,
   checkLoadingCommunity,
   checkLoadingSend,
+  checkLoadingReceived,
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -184,7 +185,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
         ))}
       </Tabs>
 
-      {checkLoadingSend && (
+      {checkLoadingReceived && (
         <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.received}>
           <ChildTabComponent
             dataId={1}

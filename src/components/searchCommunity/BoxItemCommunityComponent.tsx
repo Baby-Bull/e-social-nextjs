@@ -67,7 +67,7 @@ const BoxItemCommunityComponent: React.SFC<IBoxItemCommunityComponentProps> = ({
           </div>
           <p className="name">{data?.name}</p>
           <Typography className="number-of-participant">
-            {replaceLabelByTranslate(t("community-search:box-item.number-of-participant"), data?.member_count ?? 0)}
+            {replaceLabelByTranslate(t("home:box-community-recommend.number-of-members"), data?.member_count ?? 0)}
           </Typography>
           <div className="tags">
             <ul>

@@ -81,7 +81,6 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
       });
     }
   };
-
   return (
     <React.Fragment>
       <Tabs
