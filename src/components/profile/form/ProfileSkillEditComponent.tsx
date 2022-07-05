@@ -32,13 +32,13 @@ import { Field } from "src/components/profile/form/InputProfileComponent";
 import { FieldArea } from "src/components/profile/form/TextAreaComponent";
 import { FieldSelect } from "src/components/profile/form/SelectComponent";
 import {
-  STATUS_OPTIONS,
   JOBS,
   EMPLOYEE_STATUS,
   PROFILE_JAPAN_PROVINCE_OPTIONS,
   MONTHS,
   LEVELS,
   ENGLISH_LEVEL_OPTIONS,
+  MY_PROFILE_STATUS_OPTIONS,
 } from "src/constants/constants";
 // eslint-disable-next-line import/no-duplicates
 import { getUserProfile, updateProfile } from "src/services/user";
@@ -250,7 +250,7 @@ const ProfileSkillComponent = () => {
   const [facebookUrl, setFacebookUrl] = useState(null);
   const [githubUrl, setGithubUrl] = useState(null);
   const [selfDescription, setSelfDescription] = useState(null);
-  const [status, setStatus] = useState(STATUS_OPTIONS[0].value);
+  const [status, setStatus] = useState(MY_PROFILE_STATUS_OPTIONS[0].value);
   const [englishLevel, setEnglishLevel] = useState(ENGLISH_LEVEL_OPTIONS[0].value);
   const [job, setJob] = useState(JOBS[0].value);
   const [jobPosition, setJobPosition] = useState(null);
@@ -407,7 +407,7 @@ const ProfileSkillComponent = () => {
     setJobPosition(data.job_position);
     setDiscussionTopic(data.discussion_topic);
     setSelfDescription(data.self_description);
-    setStatus(data.status ? data.status : STATUS_OPTIONS[0].value);
+    setStatus(data.status ? data.status : MY_PROFILE_STATUS_OPTIONS[0].value);
     setJob(data.job ? data.job : JOBS[0].value);
     setInputTags(data.tags ? data.tags : []);
     setEmployeeStatus(data.employment_status ? data.employment_status : EMPLOYEE_STATUS[0].value);
@@ -431,7 +431,7 @@ const ProfileSkillComponent = () => {
     setProfileRequest({
       hitokoto: data.hitokoto,
       self_description: data.self_description,
-      status: data.status ? data.status : STATUS_OPTIONS[0].value,
+      status: data.status ? data.status : MY_PROFILE_STATUS_OPTIONS[0].value,
       job: data.job ? data.job : JOBS[0].value,
       job_position: data.job_position,
       employment_status: data.employment_status ? data.employment_status : EMPLOYEE_STATUS[0].value,
@@ -571,7 +571,7 @@ const ProfileSkillComponent = () => {
         Number(el.key) === Number(key)
           ? {
               ...el,
-              [name]: value?.trim(),
+              [name]: typeof value === "string" ? value.trim() : value,
             }
           : el,
       ),
@@ -586,7 +586,7 @@ const ProfileSkillComponent = () => {
         Number(el.key) === Number(key)
           ? {
               ...el,
-              [name]: value.trim(),
+              [name]: typeof value === "string" ? value.trim() : value,
             }
           : el,
       ),
@@ -601,7 +601,7 @@ const ProfileSkillComponent = () => {
         Number(el.key) === Number(key)
           ? {
               ...el,
-              [name]: value.trim(),
+              [name]: typeof value === "string" ? value.trim() : value,
             }
           : el,
       ),
@@ -733,15 +733,6 @@ const ProfileSkillComponent = () => {
           key: `experience_year_${skillLanguageData[i]?.key}`,
           status: false,
         });
-        if (!skillLanguageData[i]?.name?.trim()?.length) {
-          isValidForm = false;
-          arrMessLanguageErrors.push({
-            key: `name_${skillLanguageData[i]?.key}`,
-            mess: VALIDATE_FORM_UPDATE_PROFILE.required_name_skill,
-            type: "required",
-          });
-          arrStatusNameLanguageErrors[i].status = true;
-        }
         if (skillLanguageData[i]?.name?.trim()?.length > 40) {
           isValidForm = false;
           arrMessLanguageErrors.push({
@@ -751,29 +742,6 @@ const ProfileSkillComponent = () => {
           });
           arrStatusNameLanguageErrors[i].status = true;
         }
-        // if (!REGEX_RULES.text_input.test(skillLanguageData[i]?.name)) {
-        //   isValidForm = false;
-        //   arrMessLanguageErrors.push({
-        //     key: `name_${skillLanguageData[i]?.key}`,
-        //     mess: VALIDATE_FORM_UPDATE_PROFILE.format,
-        //     type: "format",
-        //   });
-        //   arrStatusNameLanguageErrors[i].status = true;
-        // }
-        // if (
-        //   arrNameLanguage.includes(skillLanguageData[i + 1]?.name) &&
-        //   skillLanguageData.length > 1 &&
-        //   skillLanguageData[i + 1]?.name?.length > 0
-        // ) {
-        //   isValidForm = false;
-        //   arrMessLanguageErrors.push({
-        //     key: `name_${skillLanguageData[i + 1]?.key}`,
-        //     mess: VALIDATE_FORM_UPDATE_PROFILE.required_name_skill,
-        //     type: "required",
-        //   });
-        //
-        //   arrStatusNameLanguageErrors[i].status = true;
-        // }
 
         // @ts-ignore
         if (skillLanguageData[i]?.experience_year?.length > 2) {
@@ -807,15 +775,7 @@ const ProfileSkillComponent = () => {
           status: false,
         });
         arrNameFramework.push(skillFrameworkData[i]?.name);
-        if (!skillFrameworkData[i]?.name?.trim()?.length) {
-          isValidForm = false;
-          arrMessFrameworkErrors.push({
-            key: `name_${skillFrameworkData[i]?.key}`,
-            mess: VALIDATE_FORM_UPDATE_PROFILE.required_name_skill,
-            type: "required",
-          });
-          arrStatusNameFrameworkErrors[i].status = true;
-        }
+
         if (skillFrameworkData[i]?.name?.trim()?.length > 40) {
           isValidForm = false;
           arrMessFrameworkErrors.push({
@@ -825,30 +785,6 @@ const ProfileSkillComponent = () => {
           });
           arrStatusNameFrameworkErrors[i].status = true;
         }
-
-        // if (!REGEX_RULES.text_input.test(skillFrameworkData[i]?.name)) {
-        //   isValidForm = false;
-        //   arrMessFrameworkErrors.push({
-        //     key: `name_${skillFrameworkData[i]?.key}`,
-        //     mess: VALIDATE_FORM_UPDATE_PROFILE.format,
-        //     type: "format",
-        //   });
-        //   arrStatusNameFrameworkErrors[i].status = true;
-        // }
-
-        // if (
-        //   arrNameFramework.includes(skillFrameworkData[i + 1]?.name) &&
-        //   skillFrameworkData.length > 1 &&
-        //   skillFrameworkData[i + 1]?.name.length > 1
-        // ) {
-        //   isValidForm = false;
-        //   arrMessFrameworkErrors.push({
-        //     key: `name_${skillFrameworkData[i + 1]?.key}`,
-        //     mess: VALIDATE_FORM_UPDATE_PROFILE.required_name_skill,
-        //     type: "required",
-        //   });
-        //   arrStatusNameFrameworkErrors[i].status = true;
-        // }
 
         // @ts-ignore
         if (skillFrameworkData[i]?.experience_year?.length > 2) {
@@ -885,16 +821,6 @@ const ProfileSkillComponent = () => {
         });
         arrNameInfrastructure.push(skillInfrastructureData[i]?.name);
 
-        if (!skillInfrastructureData[i]?.name?.trim()?.length) {
-          isValidForm = false;
-          arrMessInfrastructureErrors.push({
-            key: `name_${skillInfrastructureData[i]?.key}`,
-            mess: VALIDATE_FORM_UPDATE_PROFILE.required_name_skill,
-            type: "required",
-          });
-          arrStatusNameInfrastructureErrors[i].status = true;
-        }
-
         if (skillInfrastructureData[i]?.name?.trim()?.length > 40) {
           isValidForm = false;
           arrMessInfrastructureErrors.push({
@@ -904,30 +830,6 @@ const ProfileSkillComponent = () => {
           });
           arrStatusNameInfrastructureErrors[i].status = true;
         }
-
-        // if (!REGEX_RULES.text_input.test(skillInfrastructureData[i]?.name)) {
-        //   isValidForm = false;
-        //   arrMessInfrastructureErrors.push({
-        //     key: `name_${skillInfrastructureData[i]?.key}`,
-        //     mess: VALIDATE_FORM_UPDATE_PROFILE.format,
-        //     type: "format",
-        //   });
-        //   arrStatusNameInfrastructureErrors[i].status = true;
-        // }
-
-        // if (
-        //   arrNameInfrastructure.includes(skillInfrastructureData[i + 1]?.name) &&
-        //   skillInfrastructureData.length > 1 &&
-        //   skillInfrastructureData[i + 1]?.name?.length > 1
-        // ) {
-        //   isValidForm = false;
-        //   arrMessInfrastructureErrors.push({
-        //     key: `name_${skillInfrastructureData[i + 1]?.key}`,
-        //     mess: VALIDATE_FORM_UPDATE_PROFILE.required_name_skill,
-        //     type: "required",
-        //   });
-        //   arrStatusNameInfrastructureErrors[i].status = true;
-        // }
 
         // @ts-ignore
         if (skillInfrastructureData[i]?.experience_year?.length > 2) {
@@ -956,10 +858,10 @@ const ProfileSkillComponent = () => {
         errorMessages.upstream_process = VALIDATE_FORM_UPDATE_PROFILE.upstream_process.max_length;
       }
 
-      if (!skillRequest?.english_level) {
-        isValidForm = false;
-        errorMessages.english_level = VALIDATE_FORM_UPDATE_PROFILE.english_level.select;
-      }
+      // if (!skillRequest?.english_level) {
+      //   isValidForm = false;
+      //   errorMessages.english_level = VALIDATE_FORM_UPDATE_PROFILE.english_level.select;
+      // }
 
       if (skillRequest?.other_language_level?.length > 200) {
         isValidForm = false;
@@ -988,16 +890,16 @@ const ProfileSkillComponent = () => {
       }
 
       // validate status
-      if (!profileRequest?.status) {
-        isValidForm = false;
-        errorMessages.status = VALIDATE_FORM_UPDATE_PROFILE.status.select;
-      }
+      // if (!profileRequest?.status) {
+      //   isValidForm = false;
+      //   errorMessages.status = VALIDATE_FORM_UPDATE_PROFILE.status.select;
+      // }
 
       // validate job
-      if (!profileRequest?.job) {
-        isValidForm = false;
-        errorMessages.job = VALIDATE_FORM_UPDATE_PROFILE.job.select;
-      }
+      // if (!profileRequest?.job) {
+      //   isValidForm = false;
+      //   errorMessages.job = VALIDATE_FORM_UPDATE_PROFILE.job.select;
+      // }
 
       // validate job_position
       if (profileRequest?.job_position?.length > 1000) {
@@ -1006,10 +908,10 @@ const ProfileSkillComponent = () => {
       }
 
       // validate employment_status
-      if (!profileRequest?.employment_status) {
-        isValidForm = false;
-        errorMessages.employment_status = VALIDATE_FORM_UPDATE_PROFILE.employment_status.select;
-      }
+      // if (!profileRequest?.employment_status) {
+      //   isValidForm = false;
+      //   errorMessages.employment_status = VALIDATE_FORM_UPDATE_PROFILE.employment_status.select;
+      // }
 
       // validate discussion_topic
       if (profileRequest?.discussion_topic?.length > 100) {
@@ -1018,12 +920,12 @@ const ProfileSkillComponent = () => {
       }
 
       // validate address
-      if (!profileRequest?.address) {
-        isValidForm = false;
-        errorMessages.address = VALIDATE_FORM_UPDATE_PROFILE.address.select;
-      }
+      // if (!profileRequest?.address) {
+      //   isValidForm = false;
+      //   errorMessages.address = VALIDATE_FORM_UPDATE_PROFILE.address.select;
+      // }
 
-      if (inputTags?.length < 2) {
+      if (inputTags?.length > 1 && inputTags?.length < 2) {
         isValidForm = false;
         errorMessages.tags = VALIDATE_FORM_UPDATE_PROFILE.tags.min_tag;
       }
@@ -1049,10 +951,28 @@ const ProfileSkillComponent = () => {
   // submit profile form
   const submitUserProfileRequest = async () => {
     if (handleValidateForm()) {
-      setIsLoading(true);
+      // setIsLoading(true);
+      const paramSkillLanguageData = [];
+      const paramSkillFrameworkData = [];
+      const paramSkillInfrastructureData = [];
       if (isSkillProfile) {
+        for (let i = 0; i < skillLanguageData.length; i++) {
+          if (skillLanguageData[i]?.name?.length > 0) {
+            paramSkillLanguageData.push(skillLanguageData[i]);
+          }
+        }
+        for (let i = 0; i < skillFrameworkData.length; i++) {
+          if (skillFrameworkData[i]?.name?.length > 0) {
+            paramSkillFrameworkData.push(skillFrameworkData[i]);
+          }
+        }
+        for (let i = 0; i < skillInfrastructureData.length; i++) {
+          if (skillInfrastructureData[i]?.name?.length > 0) {
+            paramSkillInfrastructureData.push(skillInfrastructureData[i]);
+          }
+        }
         const dataUpdate = {
-          code_skills: [...skillLanguageData, ...skillFrameworkData, ...skillInfrastructureData],
+          code_skills: [...paramSkillLanguageData, ...paramSkillFrameworkData, ...paramSkillInfrastructureData],
           upstream_process: skillRequest.upstream_process,
           english_level: skillRequest.english_level,
           other_language_level: skillRequest.other_language_level,
@@ -1068,6 +988,7 @@ const ProfileSkillComponent = () => {
         });
         const tags = { tags: inputTags };
         const res = await updateProfile({ ...profileRequest, ...tags });
+
         setIsLoading(false);
         setTimeout(() => router.push("/my-profile"), 1000);
         return res.data;
@@ -1325,7 +1246,7 @@ const ProfileSkillComponent = () => {
                       <ContentTab>
                         <FieldSelect
                           id="status"
-                          options={STATUS_OPTIONS}
+                          options={MY_PROFILE_STATUS_OPTIONS}
                           onChangeValue={onChangeProfileRequest}
                           error={errorValidates.status}
                           value={status}
@@ -1430,7 +1351,10 @@ const ProfileSkillComponent = () => {
                             flex: 1,
                             width: "100%",
                             borderRadius: "6px",
-                            border: tagDataValidate ? "solid 2px #FF9458" : "none",
+                            border:
+                              tagDataValidate || (inputTags.length > 0 && inputTags.length < 2)
+                                ? "solid 2px #FF9458"
+                                : "none",
                             "& fieldset": {
                               border: "none",
                             },
