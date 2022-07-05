@@ -16,7 +16,8 @@ import {
   CREATE_COMMENT,
   JOIN_COMMUNITY,
   LEAVE_COMMUNITY,
-  UPDATE_COMMENT, SEND_REQUEST_COMMUNITY,
+  UPDATE_COMMENT,
+  SEND_REQUEST_COMMUNITY,
 } from "src/messages/notification";
 import { api } from "src/helpers/api";
 
@@ -31,7 +32,7 @@ export const getListCommunities = async (limit: number, cursor: string) => {
   }
 };
 
-export const getListCommunityHome = async (limit: number, cursor: string) => {
+export const getListCommunityHome = async (limit: number = 10, cursor: string = "") => {
   try {
     const res = await api.get(`/community?limit=${limit}&cursor=${cursor}`);
     return res.data;
@@ -339,6 +340,20 @@ export const searchMemberCommunity = async (communityId, textName: string = "", 
     if (!res.data.error_code) {
       return res.data;
     }
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const getListCommunitySearch = async (
+  limit: number = 10,
+  cursor: string = "",
+  order: string = "recommended",
+) => {
+  try {
+    const res = await api.get(`/community/search?limit=${limit}&cursor=${cursor}&sort_order=${order}`);
+    return res.data;
   } catch (error) {
     toast.error(SERVER_ERROR);
     return error;
