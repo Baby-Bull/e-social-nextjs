@@ -12,6 +12,10 @@ export const HOMEPAGE_RECOMMEND_COMMUNITY_STATUS = {
     label: "参加申請を送る",
     mode: "orange",
   },
+  4: {
+    label: "コミュニティに参加した",
+    mode: "info",
+  },
 };
 
 export const HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS = {

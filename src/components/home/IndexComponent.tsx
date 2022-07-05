@@ -61,6 +61,12 @@ const HomeIndexComponents = () => {
   ]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const getCommunity = async (cursor: string = "") => {
+    const res = await getListCommunityHome(LIMIT, cursor);
+    setRecommendCommunity(res?.items);
+    return res;
+  };
+
   const {
     data: userProvinceData,
     refetch: refetchUserProvince,
@@ -121,6 +127,9 @@ const HomeIndexComponents = () => {
       refetchOnWindowFocus: false,
     },
   );
+  useEffect(() => {
+    getCommunity();
+  }, []);
 
   useEffect(() => {
     setIsLoading(false);
@@ -186,16 +195,6 @@ const HomeIndexComponents = () => {
     setUserRequestMatching(userMatching);
     indexRefetch.current = index;
   };
-
-  const getCommunity = async (cursor: string = "") => {
-    const res = await getListCommunityHome(LIMIT, cursor);
-    setRecommendCommunity(res?.items);
-    return res;
-  };
-
-  useEffect(() => {
-    getCommunity();
-  }, []);
 
   return (
     <ContentComponent>

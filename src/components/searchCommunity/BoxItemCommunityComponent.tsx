@@ -33,8 +33,11 @@ const BoxItemCommunityComponent: React.SFC<IBoxItemCommunityComponentProps> = ({
     // eslint-disable-next-line no-nested-ternary
     data?.is_public ? 1 : !data?.is_public && data?.join_status === "pending" ? 2 : 3,
   );
-
+  const IS_MEMBER = data?.join_status === "member";
   const joinCommunitySearch = async () => {
+    if (IS_MEMBER || statusJoin === 2) {
+      return false;
+    }
     const res = await joinCommunity(data?.id, data?.is_public);
     if (res) {
       if (statusJoin === 1) {
@@ -81,11 +84,11 @@ const BoxItemCommunityComponent: React.SFC<IBoxItemCommunityComponentProps> = ({
         </Box>
         <div className="button">
           <ButtonComponent
-            mode={HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[statusJoin]?.mode}
+            mode={HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[IS_MEMBER ? 4 : statusJoin]?.mode}
             fullWidth
             onClick={joinCommunitySearch}
           >
-            {HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[statusJoin]?.label}
+            {HOMEPAGE_RECOMMEND_COMMUNITY_STATUS[IS_MEMBER ? 4 : statusJoin]?.label}
           </ButtonComponent>
         </div>
       </Box>

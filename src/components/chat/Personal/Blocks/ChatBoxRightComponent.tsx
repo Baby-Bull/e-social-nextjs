@@ -123,7 +123,7 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
                 <span>{t("chat:date-firstMessage")}</span>
                 <p>{moment(allInfoMessage?.created_at).format("lll").toString()}</p>
               </Box>
-              <Box>
+              <Box sx={{ display: allInfoMessage?.content?.length > 0 ? "block" : "none" }}>
                 <span>{t("chat:content-firstMessage")}</span>
                 <p>
                   <Linkify>{allInfoMessage?.content}</Linkify>
