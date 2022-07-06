@@ -8,15 +8,13 @@ import { useQuery } from "react-query";
 import styles from "src/components/chat/chat.module.scss";
 import useViewport from "src/helpers/useViewport";
 import { getListChatRooms } from "src/services/chat";
-import { getToken } from "src/helpers/storage";
 import { REACT_QUERY_KEYS } from "src/constants/constants";
 import { sortListRoomChat } from "src/helpers/helper";
 import ChatBoxLeftComponent from "src/components/chat/Personal/Blocks/ChatBoxLeftComponent";
+import websocket from "src/helpers/socket";
 
 import ChatBoxRightComponent from "./ChatBoxRightComponent";
 import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
-
-const ws = new WebSocket(`${process.env.NEXT_PUBLIC_WS}${getToken()}`);
 
 const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, setHasData }) => {
   const router = useRouter();
@@ -105,20 +103,12 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
       setIsRenderRightSide(true);
     }
 
-    ws.onopen = () => {
-      console.log("WebSocket is connected");
-    };
-
-    ws.addEventListener("message", (e: any) => {
-      const messageReceived = JSON.parse(e.data);
-      if (messageReceived["get.chatRoom.message"]) {
-        const message = messageReceived["get.chatRoom.message"];
-        if (chatRoomIdRef.current === message.chat_room_id) {
-          setNewMessageOfRoom(message);
-        }
-
-        updateLastMessageOfListRooms(message);
+    websocket.on("get.chatRoom.message", (message) => {
+      if (chatRoomIdRef.current === message.chat_room_id) {
+        setNewMessageOfRoom(message);
       }
+
+      updateLastMessageOfListRooms(message);
     });
   }, []);
 
@@ -163,12 +153,11 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   const sendTextMessage = (message: string) => {
     if (message) {
       const payload = {
-        event: "chatRoom.message",
         chatRoomId: roomSelect?.id,
         content: message,
         content_type: "text",
       };
-      ws.send(JSON.stringify(payload));
+      websocket.emit("chatRoom.message", payload);
       updateLastMessageOfListRooms({
         content: message,
         chat_room_id: roomSelect.id,
