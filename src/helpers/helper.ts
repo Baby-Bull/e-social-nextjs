@@ -21,7 +21,7 @@ const equalsYearMonthDate = (date1: Date, date2: Date) => {
 export const formatChatDateRoom = (date: string) => {
   const chatRoomDate = new Date(date);
   if (equalsYearMonthDate(new Date(), chatRoomDate)) {
-    return `${chatRoomDate.getHours()}:${chatRoomDate.getMinutes()}`;
+    return `${chatRoomDate.getHours()}:${chatRoomDate.getMinutes().toString().padStart(2, "0")}`;
   }
   return `${chatRoomDate.getFullYear()}/${chatRoomDate.getMonth() + 1}/${chatRoomDate.getDate()}`;
 };
