@@ -147,7 +147,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({ data, dataCommunityDetail
       <TabPanel value={valueParentTab} index={1}>
         <EmptyComponent
           hiddenButton={checkIsMember}
-          handleClick={() => router.push("/chat/community")}
+          handleClick={() => router.push(`/chat/community?room=${dataCommunityDetail?.id}`)}
           textButton={t("community:button.empty.talk-to-community")}
           mtButton={{
             md: "40px",
