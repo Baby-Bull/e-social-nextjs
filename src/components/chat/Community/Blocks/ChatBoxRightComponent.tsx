@@ -205,7 +205,7 @@ const ChatBoxRightComponent = ({
 
     setTimeout(() => {
       scrollEl(boxMessageRef.current);
-    }, 1000);
+    }, 0);
   }, [listMessageResQuery]);
 
   const loadMoreData = async () => {

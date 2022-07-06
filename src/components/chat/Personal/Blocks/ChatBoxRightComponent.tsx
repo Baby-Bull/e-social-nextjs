@@ -257,7 +257,7 @@ const ChatBoxRightComponent = ({
     inputChatRef.current.focus();
     setTimeout(() => {
       scrollEl(boxMessageRef.current);
-    }, 1000);
+    }, 0);
   }, [listMessageResQuery]);
 
   const fetchData = async () => {
