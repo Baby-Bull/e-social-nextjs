@@ -557,7 +557,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 <ThreadContent>
                   {type === "confirm" || type === "reject"
                     ? moment(data?.updated_at).format("lll").toString()
-                    : moment(data?.desired_match_date).format("lll").toString()}
+                    : data?.meeting_link}
                 </ThreadContent>
               </Box>
               <Box
