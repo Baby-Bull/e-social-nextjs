@@ -554,11 +554,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 }}
               >
                 <ThreadTitle>{t("thread:date-interview")}</ThreadTitle>
-                <ThreadContent>
-                  {type === "confirm" || type === "reject"
-                    ? moment(data?.updated_at).format("lll").toString()
-                    : data?.meeting_link}
-                </ThreadContent>
+                <ThreadContent>{data?.meeting_link?.length > 0 ? data?.meeting_link : t("no_info")}</ThreadContent>
               </Box>
               <Box
                 sx={{
@@ -568,7 +564,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 }}
               >
                 <ThreadTitle>{t("thread:message")}</ThreadTitle>
-                <ThreadContent>{data?.message}</ThreadContent>
+                <ThreadContent>{data?.message?.length > 0 ? data?.message : t("no_info")}</ThreadContent>
               </Box>
             </Box>
           </Box>

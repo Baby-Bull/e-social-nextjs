@@ -4,7 +4,6 @@ import crypto from "crypto";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Box, Grid, IconButton, Paper, Typography, Avatar, Menu, MenuItem } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import moment from "moment";
 import "moment/locale/ja";
 import { useQuery } from "react-query";
 // import InfiniteScroll from "react-infinite-scroll-component";
@@ -121,12 +120,12 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
               </Box>
               <Box>
                 <span>{t("chat:date-firstMessage")}</span>
-                <p>{moment(allInfoMessage?.created_at).format("lll").toString()}</p>
+                <p>{allInfoMessage?.meeting_link?.length > 0 ? allInfoMessage?.meeting_link : t("no_info")}</p>
               </Box>
-              <Box sx={{ display: allInfoMessage?.content?.length > 0 ? "block" : "none" }}>
+              <Box>
                 <span>{t("chat:content-firstMessage")}</span>
                 <p>
-                  <Linkify>{allInfoMessage?.content}</Linkify>
+                  <Linkify>{allInfoMessage?.content?.length > 0 ? allInfoMessage?.content : t("no_info")}</Linkify>
                 </p>
               </Box>
             </Box>
@@ -175,12 +174,12 @@ const BoxChatOthers: React.SFC<IBoxChatProps> = ({ time, allInfoMessage }) => {
             </Box>
             <Box>
               <span>{t("chat:date-firstMessage")}</span>
-              <p>{moment(allInfoMessage?.created_at).format("lll").toString()}</p>
+              <p>{allInfoMessage?.meeting_link?.length > 0 ? allInfoMessage?.meeting_link : t("no_info")}</p>
             </Box>
-            <Box sx={{ display: allInfoMessage?.content?.length > 0 ? "block" : "none" }}>
+            <Box>
               <span>{t("chat:content-firstMessage")}</span>
               <p>
-                <Linkify>{allInfoMessage?.content}</Linkify>
+                <Linkify>{allInfoMessage?.content?.length > 0 ? allInfoMessage?.content : t("no_info")}</Linkify>
               </p>
             </Box>
           </Box>
