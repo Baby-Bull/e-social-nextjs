@@ -94,7 +94,14 @@ const CommunityComponent = () => {
   return (
     <LayoutComponent>
       {checkLoading && (
-        <Box sx={{ pt: ["20px", "80px"] }}>
+        <Box
+          sx={{
+            pt: ["20px", "80px"],
+            "@media (min-width: 600px)": {
+              mx: "-30px",
+            },
+          }}
+        >
           <Box textAlign={["center", "right"]}>
             <ButtonComponent
               variant="outlined"
@@ -131,7 +138,10 @@ const CommunityComponent = () => {
           >
             <Box
               sx={{
-                width: { md: "20%" },
+                width: "240px !important",
+                "@media (max-width: 900px)": {
+                  mr: "25px !important",
+                },
               }}
             >
               <IntroCommunityComponent data={dataCommunityDetail} />
@@ -212,6 +222,9 @@ const CommunityComponent = () => {
                 ml: { md: "25px" },
                 mb: ["40px", 0],
                 width: { md: "80%" },
+                "@media (max-width: 900px)": {
+                  width: "90% !important",
+                },
                 borderRadius: "12px",
                 display:
                   !dataCommunityDetail?.is_public &&

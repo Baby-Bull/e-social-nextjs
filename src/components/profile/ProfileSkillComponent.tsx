@@ -16,6 +16,8 @@ import theme from "src/theme";
 import { USER_STATUS, JOBS, EMPLOYEES } from "src/components/constants/constants";
 import { TEXT_ENGLISH_LEVEL_OPTIONS } from "src/constants/constants";
 
+import { ShowTextArea } from "../common/ShowTextAreaComponent";
+
 interface IProfileDataProps {
   data: any;
 }
@@ -178,7 +180,9 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:self-introduction")}</TitleContentTab>
-                  <ContentTab>{data?.self_description}</ContentTab>
+                  <ContentTab>
+                    <ShowTextArea value={data?.self_description} />
+                  </ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:occupation")}</TitleContentTab>
@@ -195,8 +199,12 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:discussion-topic")}</TitleContentTab>
                   <ContentTab>
-                    {data?.discussion_topic ??
-                      "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
+                    <ShowTextArea
+                      value={
+                        data?.discussion_topic ??
+                        "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"
+                      }
+                    />
                   </ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
