@@ -138,7 +138,11 @@ const ButtonDropDownComponent: React.SFC<IButtonDropDownComponentProps> = ({
       </Menu>
 
       <DialogConfirmComponent
-        title={comment ? t("community:detail.comment.delete-community") : t("community:dialog.confirm-delete-title")}
+        title={
+          comment
+            ? t("community:detail.comment.delete-community")
+            : data.title + t("community:dialog.confirm-delete-title")
+        }
         content={comment ? t("community:detail.comment.delete-content") : t("community:dialog.note-delete-title")}
         btnLeft={t("community:button.dialog.cancel")}
         btnRight={t("community:button.dialog.delete-comment")}
