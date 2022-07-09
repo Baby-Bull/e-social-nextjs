@@ -35,11 +35,6 @@ const HomeIndexComponents = () => {
       title: t("home:register-newest"),
       data: [],
     },
-    // Newest
-    {
-      title: t("home:register-newest"),
-      data: [],
-    },
 
     // recent-login-member
     {

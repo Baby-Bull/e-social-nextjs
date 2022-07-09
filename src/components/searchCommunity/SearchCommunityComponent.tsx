@@ -184,88 +184,90 @@ const SearchCommunityComponent = () => {
         }}
       >
         <Grid className={styles.boxContainer}>
-          <Box className={styles.boxSearchLeft}>
-            <div className={styles.blockInputTag}>
-              <Paper
-                className="paper-search-tag"
-                sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: { sm: "100%", md: 240 } }}
-              >
-                <IconButton sx={{ p: "10px" }} aria-label="menu">
-                  <img src="/assets/images/svg/ic_search_blue.svg" alt="ic_search" width="18px" height="22px" />
-                </IconButton>
-                <InputBase
-                  className="input-search-tag"
-                  id="input_search_tag"
-                  onKeyPress={onKeyPress}
-                  sx={{ flex: 1 }}
-                  placeholder={t("community-search:input-tag-placeholder")}
-                />
-              </Paper>
-              <div className="tags">
-                <ul>
-                  {inputTags?.map((tag, index) => (
-                    <li key={index}>
-                      {tag}{" "}
-                      <IconButton className="button-remove-icon" onClick={() => removeSearchTag(index)}>
-                        <img src="/assets/images/svg/delete-x-white.svg" alt="ic_delete" width="8px" height="8px" />
-                      </IconButton>
-                    </li>
-                  ))}
-                </ul>
+          <Box>
+            <Box className={styles.boxSearchLeft}>
+              <div className={styles.blockInputTag}>
+                <Paper
+                  className="paper-search-tag"
+                  sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: { sm: "100%", md: 240 } }}
+                >
+                  <IconButton sx={{ p: "10px" }} aria-label="menu">
+                    <img src="/assets/images/svg/ic_search_blue.svg" alt="ic_search" width="18px" height="22px" />
+                  </IconButton>
+                  <InputBase
+                    className="input-search-tag"
+                    id="input_search_tag"
+                    onKeyPress={onKeyPress}
+                    sx={{ flex: 1 }}
+                    placeholder={t("community-search:input-tag-placeholder")}
+                  />
+                </Paper>
+                <div className="tags">
+                  <ul>
+                    {inputTags?.map((tag, index) => (
+                      <li key={index}>
+                        {tag}{" "}
+                        <IconButton className="button-remove-icon" onClick={() => removeSearchTag(index)}>
+                          <img src="/assets/images/svg/delete-x-white.svg" alt="ic_delete" width="8px" height="8px" />
+                        </IconButton>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-            </div>
-            {/* numberOfLogin */}
-            <SelectCustom value={countLogin} onChange={(e) => handleChangeInputSearch(e, "login_count")}>
-              {numberOfLogins.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </SelectCustom>
+              {/* numberOfLogin */}
+              <SelectCustom value={countLogin} onChange={(e) => handleChangeInputSearch(e, "login_count")}>
+                {numberOfLogins.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </SelectCustom>
 
-            {/* numberOfParticipant */}
-            <SelectCustom value={countMember} onChange={(e) => handleChangeInputSearch(e, "member_count")}>
-              {numberOfParticipants.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </SelectCustom>
+              {/* numberOfParticipant */}
+              <SelectCustom value={countMember} onChange={(e) => handleChangeInputSearch(e, "member_count")}>
+                {numberOfParticipants.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </SelectCustom>
 
-            <FormControlLabelCustom
-              control={
-                <Checkbox
-                  checked={formSearch?.excludejoinedCommunities}
-                  onChange={() =>
-                    setFormSearch({
-                      ...formSearch,
-                      excludejoinedCommunities: !formSearch?.excludejoinedCommunities,
-                    })
-                  }
-                />
-              }
-              label={t("community-search:label-checkbox-1").toString()}
-            />
+              <FormControlLabelCustom
+                control={
+                  <Checkbox
+                    checked={formSearch?.excludejoinedCommunities}
+                    onChange={() =>
+                      setFormSearch({
+                        ...formSearch,
+                        excludejoinedCommunities: !formSearch?.excludejoinedCommunities,
+                      })
+                    }
+                  />
+                }
+                label={t("community-search:label-checkbox-1").toString()}
+              />
 
-            <Button className="btn-user-search btn-search" fullWidth onClick={handleSearch}>
-              {t("community-search:btn-search")}
-            </Button>
-            <Button className="btn-user-search btn-clear" fullWidth onClick={handleClearSearch}>
-              {t("community-search:btn-clear-condition")}
-            </Button>
-
-            <div className="box-btn-create-community">
-              <Typography className="span-direction">
-                {t("community-search:span-create-community-direction")}
-              </Typography>
-              <Button
-                className="btn-user-search btn-create-community"
-                fullWidth
-                onClick={() => router.push("/community/create")}
-              >
-                {t("community-search:btn-create-community")}
+              <Button className="btn-user-search btn-search" fullWidth onClick={handleSearch}>
+                {t("community-search:btn-search")}
               </Button>
-            </div>
+              <Button className="btn-user-search btn-clear" fullWidth onClick={handleClearSearch}>
+                {t("community-search:btn-clear-condition")}
+              </Button>
+
+              <div className="box-btn-create-community">
+                <Typography className="span-direction">
+                  {t("community-search:span-create-community-direction")}
+                </Typography>
+                <Button
+                  className="btn-user-search btn-create-community"
+                  fullWidth
+                  onClick={() => router.push("/community/create")}
+                >
+                  {t("community-search:btn-create-community")}
+                </Button>
+              </div>
+            </Box>
           </Box>
           <Box className={styles.boxResultSearch}>
             <Grid container className={styles.titleResultSearch}>
