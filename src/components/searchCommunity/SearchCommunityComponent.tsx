@@ -3,72 +3,69 @@ import {
   Box,
   Button,
   CircularProgress,
-  // Button,
-  // Checkbox,
+  Checkbox,
   Divider,
-  // FormControlLabel,
+  FormControlLabel,
   Grid,
-  // IconButton,
-  // InputBase,
-  // MenuItem,
-  // Paper,
-  // Select,
+  IconButton,
+  InputBase,
+  MenuItem,
+  Paper,
+  Select,
   Typography,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-// import { styled } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 
 import styles from "src/components/searchCommunity/search_community.module.scss";
 import ContentComponent from "src/components/layouts/ContentComponent";
-// import theme from "src/theme";
+import theme from "src/theme";
 // eslint-disable-next-line import/order
 import useViewport from "src/helpers/useViewport";
-// import { numberOfLogins, numberOfParticipants } from "src/constants/searchCommunityConstants";
-
+import { numberOfLogins, numberOfParticipants } from "src/constants/searchCommunityConstants";
 import { getListCommunitySearch } from "src/services/community";
-import theme from "src/theme";
 
 import BoxItemUserComponent from "./BoxItemCommunityComponent";
 
-// const SelectCustom = styled(Select)({
-//   borderRadius: 6,
-//   width: "100%",
-//   height: "40px",
-//   color: theme.gray,
-//   marginBottom: "20px",
-//   "&:hover": {
-//     borderRadius: 6,
-//   },
-//   "& .MuiSelect-select": {
-//     position: "relative",
-//     fontSize: 14,
-//     padding: "10px 11px",
-//     borderRadius: "12px",
-//     fontFamily: "Noto Sans",
-//     background: "white",
-//   },
-//   "& .MuiOutlinedInput-notchedOutline": {
-//     border: "1px solid #989EA8",
-//   },
-// });
+const SelectCustom = styled(Select)({
+  borderRadius: 6,
+  width: "100%",
+  height: "40px",
+  color: theme.gray,
+  marginBottom: "20px",
+  "&:hover": {
+    borderRadius: 6,
+  },
+  "& .MuiSelect-select": {
+    position: "relative",
+    fontSize: 14,
+    padding: "10px 11px",
+    borderRadius: "12px",
+    fontFamily: "Noto Sans",
+    background: "white",
+  },
+  "& .MuiOutlinedInput-notchedOutline": {
+    border: "1px solid #989EA8",
+  },
+});
 
-// const FormControlLabelCustom = styled(FormControlLabel)({
-//   "& .MuiCheckbox-root": {
-//     padding: "0 8px 0 9px",
-//     color: "#989EA8",
-//   },
-//   "& .MuiButtonBase-root-MuiCheckbox-root": {
-//     color: theme.gray,
-//   },
-//   "& .Mui-checked": {
-//     color: "#03BCDB !important",
-//   },
-//   "& .MuiTypography-root": {
-//     fontSize: "14px",
-//   },
-// });
+const FormControlLabelCustom = styled(FormControlLabel)({
+  "& .MuiCheckbox-root": {
+    padding: "0 8px 0 9px",
+    color: "#989EA8",
+  },
+  "& .MuiButtonBase-root-MuiCheckbox-root": {
+    color: theme.gray,
+  },
+  "& .Mui-checked": {
+    color: "#03BCDB !important",
+  },
+  "& .MuiTypography-root": {
+    fontSize: "14px",
+  },
+});
 
 const SearchCommunityComponent = () => {
   const { t } = useTranslation();
@@ -81,22 +78,25 @@ const SearchCommunityComponent = () => {
   const RECOMMENDED = "recommended";
   const LATEST = "latest";
 
-  // const [inputTags, setInputTags] = useState(["デザイナー", "エンジニア"]);
-  // const [formSearch, setFormSearch] = useState({
-  //   numberOfLogin: numberOfLogins[0]?.value,
-  //   numberOfParticipant: numberOfParticipants[0]?.value,
-  //   checkBox1: true,
-  // });
+  const [inputTags, setInputTags] = useState([]);
+  const [formSearch, setFormSearch] = useState({
+    login_count: numberOfLogins[0]?.value,
+    member_count: numberOfParticipants[0]?.value,
+    excludejoinedCommunities: true,
+  });
   const [resultSearch, setResultSearch] = useState([]);
   const [hasMore, setHasMore] = useState(false);
   const [cursorValue, setCursor] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [statusOrder, setStatusOrder] = useState(RECOMMENDED);
   const [orderRes, setOrderRes] = useState(RECOMMENDED);
-
+  const [countLogin, setCountLogin] = useState(numberOfLogins[0]?.value);
+  const [countMember, setCountMember] = useState(numberOfParticipants[0]?.value);
+  const [isSearch, setIsSearch] = useState(false);
+  const [fullText, setFullText] = useState(router.query?.fulltext);
   const fetchCommunity = async (cursor: string = "", order: string = statusOrder) => {
     setIsLoading(true);
-    const res = await getListCommunitySearch(LIMIT, cursor, order);
+    const res = await getListCommunitySearch(LIMIT, cursor, order, formSearch, inputTags, fullText);
     // eslint-disable-next-line no-unsafe-optional-chaining
     setResultSearch([...resultSearch, ...res?.items]);
     setCursor(res?.cursor);
@@ -118,25 +118,57 @@ const SearchCommunityComponent = () => {
 
   useEffect(() => {
     fetchCommunity();
-  }, [statusOrder]);
+    setIsSearch(false);
+    setFullText("");
+  }, [statusOrder, isSearch]);
 
-  // const removeSearchTag = (indexRemove) => {
-  //   setInputTags(inputTags.filter((_, index) => index !== indexRemove));
-  // };
-  //
-  // const onKeyPress = (e) => {
-  //   if (e.key === "Enter" && e.target.value) {
-  //     setInputTags([...inputTags, e.target.value]);
-  //     (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
-  //   }
-  // };
-  //
-  // const handleChangeInputSearch = (e, key) => {
-  //   setFormSearch({
-  //     ...formSearch,
-  //     [key]: e.target.value,
-  //   });
-  // };
+  const removeSearchTag = (indexRemove) => {
+    setInputTags(inputTags.filter((_, index) => index !== indexRemove));
+  };
+
+  const onKeyPress = (e) => {
+    if (e.key === "Enter" && e.target.value) {
+      setInputTags([...inputTags, e.target.value]);
+      (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
+    }
+  };
+
+  const handleChangeInputSearch = (e, key) => {
+    if (key === "login_count") {
+      setCountLogin(e.target.value);
+    }
+    if (key === "member_count") {
+      setCountMember(e.target.value);
+    }
+    setFormSearch({
+      ...formSearch,
+      [key]: e.target.value,
+    });
+  };
+
+  const handleSearch = () => {
+    setResultSearch([]);
+    setCursor("");
+    setHasMore(false);
+    setOrderRes(RECOMMENDED);
+    setIsSearch(true);
+  };
+
+  const handleClearSearch = () => {
+    setIsSearch(true);
+    setResultSearch([]);
+    setCursor("");
+    setHasMore(false);
+    setInputTags([]);
+    setCountLogin(numberOfLogins[0]?.value);
+    setCountMember(numberOfParticipants[0]?.value);
+    setFormSearch({
+      login_count: numberOfLogins[0]?.value,
+      member_count: numberOfParticipants[0]?.value,
+      excludejoinedCommunities: true,
+    });
+    setOrderRes(RECOMMENDED);
+  };
 
   return (
     <ContentComponent>
@@ -152,27 +184,98 @@ const SearchCommunityComponent = () => {
         }}
       >
         <Grid className={styles.boxContainer}>
-          <Box className={styles.boxResultSearch} sx={{ padding: { xs: "0", xl: "0 13.6%" } }}>
-            <Grid container className={styles.titleResultSearch}>
-              <Grid item md={6} xs={12}>
+          <Box>
+            <Box className={styles.boxSearchLeft}>
+              <div className={styles.blockInputTag}>
+                <Paper
+                  className="paper-search-tag"
+                  sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: { sm: "100%", md: 240 } }}
+                >
+                  <IconButton sx={{ p: "10px" }} aria-label="menu">
+                    <img src="/assets/images/svg/ic_search_blue.svg" alt="ic_search" width="18px" height="22px" />
+                  </IconButton>
+                  <InputBase
+                    className="input-search-tag"
+                    id="input_search_tag"
+                    onKeyPress={onKeyPress}
+                    sx={{ flex: 1 }}
+                    placeholder={t("community-search:input-tag-placeholder")}
+                  />
+                </Paper>
+                <div className="tags">
+                  <ul>
+                    {inputTags?.map((tag, index) => (
+                      <li key={index}>
+                        {tag}{" "}
+                        <IconButton className="button-remove-icon" onClick={() => removeSearchTag(index)}>
+                          <img src="/assets/images/svg/delete-x-white.svg" alt="ic_delete" width="8px" height="8px" />
+                        </IconButton>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              {/* numberOfLogin */}
+              <SelectCustom value={countLogin} onChange={(e) => handleChangeInputSearch(e, "login_count")}>
+                {numberOfLogins.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </SelectCustom>
+
+              {/* numberOfParticipant */}
+              <SelectCustom value={countMember} onChange={(e) => handleChangeInputSearch(e, "member_count")}>
+                {numberOfParticipants.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </SelectCustom>
+
+              <FormControlLabelCustom
+                control={
+                  <Checkbox
+                    checked={formSearch?.excludejoinedCommunities}
+                    onChange={() =>
+                      setFormSearch({
+                        ...formSearch,
+                        excludejoinedCommunities: !formSearch?.excludejoinedCommunities,
+                      })
+                    }
+                  />
+                }
+                label={t("community-search:label-checkbox-1").toString()}
+              />
+
+              <Button className="btn-user-search btn-search" fullWidth onClick={handleSearch}>
+                {t("community-search:btn-search")}
+              </Button>
+              <Button className="btn-user-search btn-clear" fullWidth onClick={handleClearSearch}>
+                {t("community-search:btn-clear-condition")}
+              </Button>
+
+              <div className="box-btn-create-community">
+                <Typography className="span-direction">
+                  {t("community-search:span-create-community-direction")}
+                </Typography>
                 <Button
+                  className="btn-user-search btn-create-community"
                   fullWidth
                   onClick={() => router.push("/community/create")}
-                  sx={{
-                    background: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)",
-                    width: ["100%", "410px"],
-                    color: "#fff",
-                    "&:hover": {
-                      background: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)",
-                    },
-                  }}
                 >
                   {t("community-search:btn-create-community")}
                 </Button>
-                {/* <Typography className="title-search"> */}
-                {/*  {t("community-search:title")} */}
-                {/*  <span className="item-total-result">{isMobile && <br />} 全200件</span> */}
-                {/* </Typography> */}
+              </div>
+            </Box>
+          </Box>
+          <Box className={styles.boxResultSearch}>
+            <Grid container className={styles.titleResultSearch}>
+              <Grid item md={6} xs={12}>
+                <Typography className="title-search">
+                  {t("community-search:title")}
+                  <span className="item-total-result">{isMobile && <br />} 全200件</span>
+                </Typography>
               </Grid>
               {!isMobile && (
                 <Grid item xs={6} className="sort-by-block">

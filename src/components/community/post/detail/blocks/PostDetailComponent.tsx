@@ -89,6 +89,10 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
       router.push(`/profile/${data?.user?.id}`);
     }
   };
+
+  const redirectReferenceUrl = (page) => {
+    window.open(page);
+  };
   return (
     <Box
       sx={{
@@ -203,8 +207,11 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
 
       <React.Fragment>
         {data?.reference_url && (
-          <BoxInfo title={t("community:url")} text={data?.reference_url} textColor={theme.blue} fontWeight={500} />
+          <Box onClick={() => redirectReferenceUrl(data?.reference_url)} sx={{ cursor: "pointer" }}>
+            <BoxInfo title={t("community:url")} text={data?.reference_url} textColor={theme.blue} fontWeight={500} />
+          </Box>
         )}
+
         {data?.address && <BoxInfo title={t("community:address")} text={data?.address} fontWeight={400} />}
       </React.Fragment>
 
