@@ -126,10 +126,10 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
       value: "エンジニア",
       label: "エンジニア",
     },
-    // {
-    //   value: "コミュニティ",
-    //   label: "コミュニティ",
-    // },
+    {
+      value: "コミュニティ",
+      label: "コミュニティ",
+    },
   ];
 
   // const [mess] = useState(9);
@@ -187,6 +187,12 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
       if (typeSearch === typeSearchs[0].value) {
         router.push({
           pathname: "/search_user",
+          query: { fulltext: e.target.value },
+        });
+      }
+      if (typeSearch === typeSearchs[1].value) {
+        router.push({
+          pathname: "/search_community",
           query: { fulltext: e.target.value },
         });
       }
