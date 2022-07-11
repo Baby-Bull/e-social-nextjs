@@ -68,8 +68,18 @@ const WebsocketClient = ({
       eventHandlers.set(event, handlers?.length ? [...handlers, handler] : [handler]);
     },
 
-    off(event) {
-      eventHandlers.delete(event);
+    off(event, fnRef = null) {
+      if (fnRef) {
+        const handlers = eventHandlers.get(event);
+        if (handlers?.length) {
+          eventHandlers.set(
+            event,
+            handlers.filter((handler) => handler !== fnRef),
+          );
+        }
+      } else {
+        eventHandlers.delete(event);
+      }
     },
 
     close() {

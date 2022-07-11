@@ -90,13 +90,20 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     if (isMobile) {
       setIsRenderRightSide(true);
     }
-    websocket.on("get.community.chatRoom.message", (message) => {
+
+    const wsHandler = (message) => {
       if (chatRoomIdRef.current === message.chat_room_id) {
         setNewMessageOfRoom(message);
       }
 
       updateLastMessageOfListRooms(message);
-    });
+    };
+
+    websocket.on("get.community.chatRoom.message", wsHandler);
+
+    return () => {
+      websocket.off("get.chatRoom.message", wsHandler);
+    };
   }, []);
 
   const { data: listRoomResQuery } = useQuery(
