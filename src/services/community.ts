@@ -377,7 +377,7 @@ export const getListCommunitySearch = async (
     query += params?.member_count === typeCountMember.more_than_30 ? `&member_count[]=30&member_count[]=""` : "";
     // Query tags
     for (let i = 0; i < inputTags.length; i++) {
-      query += `&tags[]=${inputTags[i]}`;
+      query += `&search_tags[]=${inputTags[i]}`;
     }
 
     const res = await api.get(query);
