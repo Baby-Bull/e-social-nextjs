@@ -4,7 +4,6 @@ import crypto from "crypto";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Box, Grid, IconButton, Paper, Typography, Avatar, Menu, MenuItem } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import "moment/locale/ja";
 import { useQuery } from "react-query";
 // import InfiniteScroll from "react-infinite-scroll-component";
 import Linkify from "react-linkify";

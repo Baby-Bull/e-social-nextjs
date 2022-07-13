@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Avatar, Backdrop, Box, CircularProgress, TextareaAutosize, Typography } from "@mui/material";
-import moment from "moment";
+import dayjs from "dayjs";
+import "dayjs/locale/ja";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import { useRouter } from "next/router";
 // eslint-disable-next-line import/order
 import { useSelector } from "react-redux";
-
-import "moment/locale/ja";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 // @ts-ignore
@@ -18,6 +18,9 @@ import { IStoreState } from "src/constants/interface";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import { VALIDATE_FORM_COMMUNITY_POST } from "src/messages/validate";
 import { searchMemberCommunity, updatePostComment } from "src/services/community";
+
+dayjs.extend(localizedFormat);
+dayjs.locale("ja");
 
 interface ICommentComponentProps {
   item: any;
@@ -254,7 +257,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
                 fontSize: [10, 14],
               }}
             >
-              {moment(item?.created_at).format("LLL")}
+              {dayjs(item?.created_at).format("LLL")}
             </Typography>
             <Typography
               sx={{

@@ -2,20 +2,21 @@ import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import moment from "moment";
+import dayjs from "dayjs";
+import "dayjs/locale/ja";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import { useSelector } from "react-redux";
 import GlobalStyles from "@mui/material/GlobalStyles";
 
 import { IStoreState } from "src/constants/interface";
 import theme from "src/theme";
-// eslint-disable-next-line import/order
 import ButtonComponent from "src/components/common/ButtonComponent";
-
-import "moment/locale/ja";
-
 import { ShowTextArea } from "src/components/common/ShowTextAreaComponent";
 
 import { textRolesCreatePost } from "../mockData";
+
+dayjs.extend(localizedFormat);
+dayjs.locale("ja");
 
 interface ICommunityDataProps {
   data?: any;
@@ -139,7 +140,7 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
         >
           {t("community:intro.title.open-date")}
         </Typography>
-        <Typography component="span">{moment(data?.created_at).format("LL")}</Typography>
+        <Typography component="span">{dayjs(data?.created_at).format("LL")}</Typography>
 
         <Typography
           component="span"
