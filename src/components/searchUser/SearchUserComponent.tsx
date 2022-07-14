@@ -88,7 +88,6 @@ const SearchUserComponent = () => {
     statusLookingForFriend: false,
     statusNeedConsult: false,
   });
-  const [triggerClear, setTriggerClear] = useState(false);
   const fullText = router.query?.fulltext;
 
   const fetchData = async (typeSort: string = "", arrayResult: Array<any> = [], cursor: string = "") => {
@@ -114,14 +113,12 @@ const SearchUserComponent = () => {
 
   const onKeyPress = (e: any) => {
     if (e.key === "Enter" && e.target.value) {
-      setTriggerClear(false);
       setInputTags([...inputTags, e.target.value]);
       (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
     }
   };
 
   const handleChangeInputSearch = (e, key) => {
-    setTriggerClear(false);
     setFormSearch({
       ...formSearch,
       [key]: e.target.value,
@@ -129,7 +126,6 @@ const SearchUserComponent = () => {
   };
 
   const clearFormSearch = async () => {
-    setTriggerClear(true);
     setFormSearch({
       job: jobs[0]?.value,
       employeeStatus: employeeStatus[0]?.value,
@@ -266,7 +262,6 @@ const SearchUserComponent = () => {
                     value="can-talk"
                     checked={formSearch?.statusCanTalk}
                     onChange={() => {
-                      setTriggerClear(false);
                       setFormSearch({ ...formSearch, statusCanTalk: !formSearch?.statusCanTalk });
                     }}
                   />
@@ -279,7 +274,6 @@ const SearchUserComponent = () => {
                     checked={formSearch?.statusLookingForFriend}
                     value="looking-for-friend"
                     onChange={() => {
-                      setTriggerClear(false);
                       setFormSearch({ ...formSearch, statusLookingForFriend: !formSearch?.statusLookingForFriend });
                     }}
                   />
@@ -292,7 +286,6 @@ const SearchUserComponent = () => {
                     checked={formSearch?.statusNeedConsult}
                     value="needConsult"
                     onChange={() => {
-                      setTriggerClear(false);
                       setFormSearch({ ...formSearch, statusNeedConsult: !formSearch?.statusNeedConsult });
                     }}
                   />
@@ -401,13 +394,14 @@ const SearchUserComponent = () => {
         </Grid>
       </Box>
       <PopupSearchUser
+        isSort={isSort}
+        inputTags={inputTags}
+        formSearch={formSearch}
         showPopup={showPopupSearchUser}
+        fetchData={fetchData}
         setShowPopup={setShowPopupSearchUser}
-        setResultSearch={setResultSearch}
-        setShowMore={setShowMore}
-        setIsLoading={setIsLoading}
-        setTriggerClear={setTriggerClear}
-        triggerClear={triggerClear}
+        setInputTags={setInputTags}
+        setFormSearch={setFormSearch}
       />
     </ContentComponent>
   );
