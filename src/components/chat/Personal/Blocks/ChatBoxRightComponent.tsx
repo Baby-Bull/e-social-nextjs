@@ -2,13 +2,25 @@
 import crypto from "crypto";
 
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { Box, Grid, IconButton, Paper, Typography, Avatar, Menu, MenuItem } from "@mui/material";
+import {
+  Box,
+  Grid,
+  IconButton,
+  Paper,
+  Typography,
+  Avatar,
+  Menu,
+  MenuItem,
+  CircularProgress,
+  Dialog,
+} from "@mui/material";
 import { useTranslation } from "next-i18next";
 import "moment/locale/ja";
 import { useQuery } from "react-query";
 // import InfiniteScroll from "react-infinite-scroll-component";
 import Linkify from "react-linkify";
 import InfiniteScroll from "react-infinite-scroller";
+import Lightbox from "react-image-lightbox";
 
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
@@ -17,9 +29,10 @@ import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
 import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupReviewComponent";
 import scrollEl from "src/helpers/scrollEl";
-import { getMessages } from "src/services/chat";
+import { getMessages, uploadFile } from "src/services/chat";
 import { formatChatDate, formatListMessages } from "src/helpers/helper";
 import { MESSAGE_CONTENT_TYPES, MATCHING_PURPOSE_OPTIONS, REACT_QUERY_KEYS } from "src/constants/constants";
+import "react-image-lightbox/style.css";
 
 interface IBoxChatProps {
   allInfoMessage: any;
@@ -69,6 +82,18 @@ const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({ open, handleClose, an
   </Menu>
 );
 
+interface IThreadShowMessErrProps {
+  open: boolean;
+  handleClose: () => void;
+  textMessageErr?: string;
+}
+
+const PopupShowMassageErr: React.SFC<IThreadShowMessErrProps> = ({ open, handleClose, textMessageErr }) => (
+  <Dialog onClose={handleClose} open={open}>
+    <Box sx={{ p: 5 }}>{textMessageErr}</Box>
+  </Dialog>
+);
+
 const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
   allInfoMessage,
   time,
@@ -81,6 +106,7 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [showOptionMessage, setShowOptionMessage] = useState(false);
   const open = Boolean(anchorEl);
+  const [openPopupImage, setOpenPopupImage] = useState(false);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -108,31 +134,44 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
         </IconButton>
         <ThreadDropdown open={open} anchorEl={anchorEl} handleClose={handleClose} />
         <Typography className="time">{time}</Typography>
-        <div
-          className={`message-content ${isErrorMessage ? "error-message" : ""}`}
-          // onClick={() => setShowOptionMessage(!showOptionMessage)}
-        >
-          {allInfoMessage.content_type === "first-message" ? (
-            <Box className="theFirstMessage">
-              <Box>
-                <span>{t("chat:purpose-firstMessage")}</span>
-                <p>{MATCHING_PURPOSE_OPTIONS.find((item) => item?.value === allInfoMessage?.purpose)?.label ?? ""}</p>
+        {allInfoMessage?.content_type !== "image" && (
+          <div
+            className={`message-content ${isErrorMessage ? "error-message" : ""}`}
+            // onClick={() => setShowOptionMessage(!showOptionMessage)}
+          >
+            {allInfoMessage.content_type === "first-message" ? (
+              <Box className="theFirstMessage">
+                <Box>
+                  <span>{t("chat:purpose-firstMessage")}</span>
+                  <p>{MATCHING_PURPOSE_OPTIONS.find((item) => item?.value === allInfoMessage?.purpose)?.label ?? ""}</p>
+                </Box>
+                <Box>
+                  <span>{t("chat:date-firstMessage")}</span>
+                  <p>{allInfoMessage?.meeting_link?.length > 0 ? allInfoMessage?.meeting_link : t("no_info")}</p>
+                </Box>
+                <Box>
+                  <span>{t("chat:content-firstMessage")}</span>
+                  <p>
+                    <Linkify>{allInfoMessage?.content?.length > 0 ? allInfoMessage?.content : t("no_info")}</Linkify>
+                  </p>
+                </Box>
               </Box>
-              <Box>
-                <span>{t("chat:date-firstMessage")}</span>
-                <p>{allInfoMessage?.meeting_link?.length > 0 ? allInfoMessage?.meeting_link : t("no_info")}</p>
-              </Box>
-              <Box>
-                <span>{t("chat:content-firstMessage")}</span>
-                <p>
-                  <Linkify>{allInfoMessage?.content?.length > 0 ? allInfoMessage?.content : t("no_info")}</Linkify>
-                </p>
-              </Box>
-            </Box>
-          ) : (
-            <Linkify>{allInfoMessage?.content}</Linkify>
-          )}
-        </div>
+            ) : (
+              allInfoMessage?.content_type !== "image" && <Linkify>{allInfoMessage?.content}</Linkify>
+            )}
+          </div>
+        )}
+        {allInfoMessage.content_type !== "first-message" && allInfoMessage?.content_type === "image" && (
+          <Avatar
+            src={allInfoMessage?.content}
+            variant="square"
+            sx={{ width: "200px", height: "200px" }}
+            onClick={() => setOpenPopupImage(true)}
+          />
+        )}
+        {openPopupImage && (
+          <Lightbox mainSrc={allInfoMessage?.content} onCloseRequest={() => setOpenPopupImage(false)} />
+        )}
       </Box>
 
       {isErrorMessage ? (
@@ -158,6 +197,7 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
 
 const BoxChatOthers: React.SFC<IBoxChatProps> = ({ time, allInfoMessage }) => {
   const { t } = useTranslation();
+  const [openPopupImage, setOpenPopupImage] = useState(false);
   return (
     <Box className={styles.itemMsgOther}>
       <Avatar
@@ -165,28 +205,39 @@ const BoxChatOthers: React.SFC<IBoxChatProps> = ({ time, allInfoMessage }) => {
         alt="Avatar"
         src={allInfoMessage?.user?.profile_image || "/assets/images/svg/avatar.svg"}
       />
-      <div className="message-content">
-        {allInfoMessage.content_type === "first-message" ? (
-          <Box className="theFirstMessage">
-            <Box>
-              <span>{t("chat:purpose-firstMessage")}</span>
-              <p>{MATCHING_PURPOSE_OPTIONS.find((item) => item?.value === allInfoMessage?.purpose)?.label ?? ""}</p>
+      {allInfoMessage?.content_type !== "image" && (
+        <div className="message-content">
+          {allInfoMessage.content_type === "first-message" ? (
+            <Box className="theFirstMessage">
+              <Box>
+                <span>{t("chat:purpose-firstMessage")}</span>
+                <p>{MATCHING_PURPOSE_OPTIONS.find((item) => item?.value === allInfoMessage?.purpose)?.label ?? ""}</p>
+              </Box>
+              <Box>
+                <span>{t("chat:date-firstMessage")}</span>
+                <p>{allInfoMessage?.meeting_link?.length > 0 ? allInfoMessage?.meeting_link : t("no_info")}</p>
+              </Box>
+              <Box>
+                <span>{t("chat:content-firstMessage")}</span>
+                <p>
+                  <Linkify>{allInfoMessage?.content?.length > 0 ? allInfoMessage?.content : t("no_info")}</Linkify>
+                </p>
+              </Box>
             </Box>
-            <Box>
-              <span>{t("chat:date-firstMessage")}</span>
-              <p>{allInfoMessage?.meeting_link?.length > 0 ? allInfoMessage?.meeting_link : t("no_info")}</p>
-            </Box>
-            <Box>
-              <span>{t("chat:content-firstMessage")}</span>
-              <p>
-                <Linkify>{allInfoMessage?.content?.length > 0 ? allInfoMessage?.content : t("no_info")}</Linkify>
-              </p>
-            </Box>
-          </Box>
-        ) : (
-          <Linkify>{allInfoMessage?.content}</Linkify>
-        )}
-      </div>
+          ) : (
+            <Linkify>{allInfoMessage?.content}</Linkify>
+          )}
+        </div>
+      )}
+      {allInfoMessage.content_type !== "first-message" && allInfoMessage?.content_type === "image" && (
+        <Avatar
+          src={allInfoMessage?.content}
+          variant="square"
+          sx={{ width: "200px", height: "200px" }}
+          onClick={() => setOpenPopupImage(true)}
+        />
+      )}
+      {openPopupImage && <Lightbox mainSrc={allInfoMessage?.content} onCloseRequest={() => setOpenPopupImage(false)} />}
       <Typography className="time">{time}</Typography>
     </Box>
   );
@@ -206,7 +257,7 @@ const ChatBoxRightComponent = ({
   toggleRenderSide,
   userId,
   roomSelect,
-  sendTextMessage,
+  sendMessage,
   newMessageOfRoom,
   user,
 }) => {
@@ -215,11 +266,14 @@ const ChatBoxRightComponent = ({
   const boxMessageRef = useRef(null);
   // const isFirstRender = useRef(true);
   const [showPopup, setShowPopup] = useState(false);
+  const [showPopupErr, setShowPopupErr] = useState(false);
+  const [textMessageErr, setTextMessageErr] = useState("");
   const handleShow = () => setShowPopup(true);
   const [showPopupReview, setShowPopupReview] = useState(false);
   const handleShowReview = () => setShowPopupReview(true);
 
   const [listMessages, setListMessages] = useState([]);
+  const [sendFile, setSendFile] = useState(false);
   const [listMessagesShow, setListMessagesShow] = useState([]);
 
   const [hasMoreParams, setHasMoreParams] = useState({
@@ -287,7 +341,7 @@ const ChatBoxRightComponent = ({
   const handleSendTextMessage = () => {
     const message = inputChatRef.current.value.trim();
     if (message) {
-      sendTextMessage(message);
+      sendMessage(message);
       setListMessages([
         ...listMessages,
         {
@@ -319,7 +373,7 @@ const ChatBoxRightComponent = ({
   const resendMessage = (message: string, id: any) => {
     const listMessagesTmp = listMessages.filter((item) => item?.id !== id);
     if (message) {
-      sendTextMessage(message);
+      sendMessage(message);
       setListMessages([
         ...listMessagesTmp,
         {
@@ -359,6 +413,58 @@ const ChatBoxRightComponent = ({
     };
   }, [listMessages, hasMoreParams]);
 
+  const uploadImage = async (e) => {
+    setSendFile(true);
+    const file = e.currentTarget.files[0];
+    if (file.size > 2097152) {
+      setShowPopupErr(true);
+      setTextMessageErr("2MB以下のファイルを選択してください。");
+      setSendFile(false);
+      return false;
+    }
+    if (
+      e.currentTarget.files[0].type === "image/jpg" ||
+      e.currentTarget.files[0].type === "image/png" ||
+      e.currentTarget.files[0].type === "image/jpeg"
+    ) {
+      // setSrcProfileImage(URL.createObjectURL(file));
+      // user: {
+      //   id: auth?.id,
+      // },
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await uploadFile(formData)
+        .then((data) => {
+          const contentFile = {
+            content: data?.url,
+            content_type: MESSAGE_CONTENT_TYPES.IMAGE,
+            created_at: new Date().toISOString(),
+            id: crypto.randomBytes(16).toString("hex"),
+            sender_id: "123",
+            isErrorMessage: !navigator.onLine,
+          };
+          setListMessages([...listMessages, contentFile]);
+          sendMessage(data?.url, MESSAGE_CONTENT_TYPES.IMAGE);
+          setSendFile(false);
+          setTimeout(() => {
+            scrollEl(boxMessageRef.current);
+          }, 200);
+          return data;
+        })
+        .catch((err) => {
+          setTimeout(() => {
+            setSendFile(false);
+            setShowPopupErr(true);
+            setTextMessageErr("エラーが発生しました。");
+          }, 2000);
+          return err;
+        });
+
+      // listMessages.unshift(contentFile);
+      return res;
+    }
+  };
+
   return (
     <Grid
       item
@@ -394,7 +500,7 @@ const ChatBoxRightComponent = ({
           {listMessages?.length ? (
             <InfiniteScroll loadMore={fetchData} hasMore={false} loader="読み込み中..." isReverse useWindow={false}>
               {Object.keys(listMessagesShow)?.map((dateText) => (
-                <Box key={dateText} sx={{ paddingBottom: "60px" }}>
+                <Box key={dateText}>
                   <div className={styles.spanStartOfDay}>
                     <span>{dateText}</span>
                   </div>
@@ -416,6 +522,20 @@ const ChatBoxRightComponent = ({
               ))}
             </InfiniteScroll>
           ) : null}
+          <Box sx={{ display: sendFile ? "flex" : "none", justifyContent: "end" }}>
+            <Box
+              sx={{
+                width: "200px",
+                height: "200px",
+                background: "#eee",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <CircularProgress sx={{ color: "#03BCDB" }} />
+            </Box>
+          </Box>
         </Box>
       </Box>
       <Box className={styles.boxChat}>
@@ -430,7 +550,7 @@ const ChatBoxRightComponent = ({
             inputProps={{ "aria-label": t("chat:input-chat-placeholder") }}
             onKeyUp={onKeyUpMessageText}
           />
-          <input accept="image/*" hidden id="icon-button-file" type="file" />
+          <input accept="image/*" hidden id="icon-button-file" type="file" onChange={uploadImage} />
           <label htmlFor="icon-button-file">
             <IconButton color="primary" sx={{ p: "10px" }} aria-label="directions" component="span">
               <img alt="search" src="/assets/images/svg/ic_attachment.svg" />
@@ -443,6 +563,11 @@ const ChatBoxRightComponent = ({
       </Box>
       <PopupReportUser showPopup={showPopup} setShowPopup={setShowPopup} user={user} />
       <PopupReviewComponent showPopup={showPopupReview} setShowPopup={setShowPopupReview} user={user} />
+      <PopupShowMassageErr
+        open={showPopupErr}
+        handleClose={() => setShowPopupErr(!showPopupErr)}
+        textMessageErr={textMessageErr}
+      />
     </Grid>
   );
 };

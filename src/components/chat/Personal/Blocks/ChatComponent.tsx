@@ -66,6 +66,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
               ...item,
               last_chat_message_at: new Date().toISOString(),
               last_chat_message_received: message.content,
+              last_message_content_type: message.last_message_content_type,
             };
           }
           return item;
@@ -153,17 +154,18 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     }
   };
 
-  const sendTextMessage = (message: string) => {
+  const sendMessage = (message: string, type: string = "text") => {
     if (message) {
       const payload = {
         chatRoomId: roomSelect?.id,
         content: message,
-        content_type: "text",
+        content_type: type,
       };
       websocket.emit("chatRoom.message", payload);
       updateLastMessageOfListRooms({
         content: message,
         chat_room_id: roomSelect.id,
+        last_message_content_type: type,
       });
     }
   };
@@ -209,7 +211,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
           userId={userId}
           user={user}
           roomSelect={roomSelect}
-          sendTextMessage={sendTextMessage}
+          sendMessage={sendMessage}
           newMessageOfRoom={newMessageOfRoom}
         />
       ) : null}
