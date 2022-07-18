@@ -68,3 +68,12 @@ export const getMessagesCommunity = async (
     return error;
   }
 };
+
+export const uploadFile = async (body) => {
+  try {
+    const res = await api.post(`/user/upload`, body);
+    return res.data;
+  } catch (error) {
+    return error;
+  }
+};

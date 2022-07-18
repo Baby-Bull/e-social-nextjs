@@ -199,7 +199,11 @@ const ChatBoxLeftComponent = ({
                     </div>
                     <div className="thread-content">
                       <Typography className="name">{thread?.user?.username}</Typography>
-                      <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
+                      {thread?.last_message_content_type === "text" ? (
+                        <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
+                      ) : (
+                        <Typography className="message-hide">添付ファイル</Typography>
+                      )}
                     </div>
                     <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
                     {!isMobile && (
