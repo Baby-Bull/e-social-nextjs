@@ -39,14 +39,13 @@ interface IUserItemProps {
 
 interface IBoxUserComponentProps {
   data: IUserItemProps;
-  callbackHandleIsRefresh: any;
-  isRefresh: boolean;
 }
 
-const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbackHandleIsRefresh, isRefresh }) => {
+const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [showModalMatching, setModalMatching] = React.useState(false);
+  const [statusMatching, setStatusMatching] = React.useState(false);
   const [liked, setLiked] = useState(data?.is_favorite);
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
@@ -64,7 +63,8 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
     const res = await sendMatchingRequest(data?.id, matchingRequest);
     await addUserFavorite(data?.id);
     setModalMatching(false);
-    callbackHandleIsRefresh(!isRefresh);
+    setStatusMatching(true);
+    // callbackHandleIsRefresh(!isRefresh);
     return res;
   };
 
@@ -165,9 +165,23 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
               <ButtonComponent
                 fullWidth
                 onClick={() => handleShowModalMatching(data?.match_status)}
-                mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.mode}
+                mode={
+                  HOMEPAGE_RECOMMEND_MEMBER_STATUS[
+                    handleMapMatchingStatus(statusMatching ? "pending" : data?.match_status)
+                  ]?.mode
+                }
+                disabled={(data?.match_status === "pending" || statusMatching) && true}
+                sx={{
+                  ":disabled:": {
+                    color: "red !important",
+                  },
+                }}
               >
-                {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.label}
+                {
+                  HOMEPAGE_RECOMMEND_MEMBER_STATUS[
+                    handleMapMatchingStatus(statusMatching ? "pending" : data?.match_status)
+                  ]?.label
+                }
               </ButtonComponent>
             </React.Fragment>
           )}

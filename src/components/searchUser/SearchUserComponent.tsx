@@ -76,7 +76,7 @@ const SearchUserComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [inputTags, setInputTags] = useState([]);
   const [resultSearch, setResultSearch] = useState([]);
-  const [isRefresh, setIsRefresh] = useState(false);
+  // const [isRefresh, setIsRefresh] = useState(false);
   const [isSort, setIsSort] = useState("recommended");
   const [showMore, setShowMore] = useState({ cursor: "", hasMore: false });
   const [formSearch, setFormSearch] = useState({
@@ -105,7 +105,7 @@ const SearchUserComponent = () => {
 
   useEffect(() => {
     fetchData();
-  }, [isRefresh, fullText]);
+  }, [fullText]);
 
   const removeSearchTag = (indexRemove) => {
     setInputTags(inputTags.filter((_, index) => index !== indexRemove));
@@ -164,10 +164,6 @@ const SearchUserComponent = () => {
       undefined,
       { shallow: false },
     );
-  };
-
-  const callbackHandleIsRefresh = (status: any) => {
-    setIsRefresh(status);
   };
 
   const [showPopupSearchUser, setShowPopupSearchUser] = useState(false);
@@ -372,11 +368,7 @@ const SearchUserComponent = () => {
             >
               {resultSearch?.map((item, key) => (
                 <Grid item key={key} md={4} xs={12} sm={12}>
-                  <BoxItemUserComponent
-                    data={item}
-                    isRefresh={isRefresh}
-                    callbackHandleIsRefresh={callbackHandleIsRefresh}
-                  />
+                  <BoxItemUserComponent data={item} />
                 </Grid>
               ))}
             </Grid>
