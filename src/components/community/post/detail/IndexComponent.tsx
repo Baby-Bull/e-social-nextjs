@@ -216,8 +216,10 @@ const DetailPostComponent = () => {
         minHeight: 130,
       },
       highlighter: {
-        padding: 12,
+        padding: 9.3,
         fontFamily: "Noto Sans JP,sans-serif !important",
+        color: theme.blue,
+        zIndex: "1",
       },
       input: {
         padding: 9,
@@ -225,20 +227,25 @@ const DetailPostComponent = () => {
           ? `2px solid ${theme.blue} !important`
           : `2px solid ${theme.whiteGray} !important`,
         borderRadius: "12px",
-        color: theme.navy,
       },
     },
     suggestions: {
       list: {
-        backgroundColor: "white",
-        border: "1px solid rgba(0,0,0,0.15)",
+        backgroundColor: "#fff",
         fontSize: 14,
+        width: "300px",
+        color: theme.blue,
+        border: `1px solid ${theme.blue}`,
+        borderRadius: "5px",
+        maxHeight: "200px",
+        overflowY: "auto",
       },
       item: {
         padding: "5px 15px",
-        borderBottom: "1px solid rgba(0,0,0,0.15)",
         "&focused": {
-          backgroundColor: "#cee4e5",
+          backgroundColor: theme.blue,
+          color: "#fff",
+          borderRadius: "5px",
         },
       },
     },
@@ -328,6 +335,7 @@ const DetailPostComponent = () => {
                   {t("community:write-comment")}
                 </Typography>
                 <MentionsInput
+                  trigger="@"
                   value={content}
                   onChange={(e) => onChangeCommunityPostRequest("content", e.target.value)}
                   onKeyPress={(e) => {
@@ -344,7 +352,7 @@ const DetailPostComponent = () => {
                   style={defaultStyle}
                   placeholder={t("community:place-holder")}
                 >
-                  <Mention markup="^__display__^" trigger="@" data={member} style={{ backgroundColor: "#cee4e5" }} />
+                  <Mention markup="^__display__^" data={member} style={{ backgroundColor: "#fff" }} />
                 </MentionsInput>
                 {errorValidates?.content && <BoxTextValidate>{errorValidates?.content}</BoxTextValidate>}
                 <Box sx={{ textAlign: "right", cursor: "pointer" }}>

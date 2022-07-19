@@ -8,7 +8,7 @@
   }
 
   .boxSearchLeft {
-    @media screen and (min-width: 993px) {
+    @media screen and (min-width: 992px) {
       margin-right: 45px;
       width: 240px;
       position: -webkit-sticky;
@@ -19,7 +19,7 @@
     .blockInputTag {
       :global {
         .paper-search-tag {
-          border: 1px solid #03BCDB;
+          border: 1px solid #03bcdb;
           background: white;
           border-radius: 40px;
           padding: 9px 39px 9px 0;
@@ -27,15 +27,15 @@
           box-shadow: none;
 
           .input-search-tag {
-            color: #989EA8;
+            color: #989ea8;
             font-size: 16px;
             font-weight: 400;
 
             .MuiInputBase-input {
-              color: #989EA8;
+              color: #989ea8;
 
               &::placeholder {
-                color: #989EA8;
+                color: #989ea8;
                 opacity: 1;
               }
             }
@@ -53,7 +53,7 @@
               white-space: nowrap;
               text-overflow: ellipsis;
               overflow: hidden;
-              background: #03BCDB;
+              background: #03bcdb;
               padding: 5px 8px;
               font-size: 12px;
               font-weight: 500;
@@ -85,25 +85,28 @@
 
         &.btn-search {
           color: white;
-          background: #03BCDB;
+          background: #03bcdb;
           margin-top: 20px;
         }
 
         &.btn-clear {
-          color: #1A2944;
-          background: #DADADA;
+          color: #1a2944;
+          background: #dadada;
           margin-top: 16px;
         }
 
         &.btn-create-community {
           color: white;
-          background: #FF9458;
+          background: #ff9458;
           margin-top: 16px;
         }
       }
 
       .box-btn-create-community {
         margin-top: 80px;
+        @media screen and (max-width: 992px) {
+          margin-top: 30px;
+        }
 
         .span-direction {
           font-size: 14px;
@@ -125,7 +128,6 @@
         margin-bottom: 20px;
       }
 
-
       :global {
         .title-search {
           font-size: 20px;
@@ -139,7 +141,7 @@
           .item-total-result {
             font-size: 14px;
             font-weight: 400;
-            color: #262A30;
+            color: #262a30;
             margin-left: 8px;
           }
         }
@@ -150,14 +152,13 @@
           font-size: 15px;
 
           .sort-by-label {
-            color: #989EA8;
+            color: #989ea8;
             margin-right: 20px;
-
           }
 
           .sort-link {
             font-size: 14px;
-            color: #1A2944;
+            color: #1a2944;
             margin-left: 20px;
             margin-right: 20px;
             font-weight: 700;
@@ -165,7 +166,7 @@
             cursor: pointer;
 
             &.active {
-              color: #03BCDB;
+              color: #03bcdb;
               font-weight: 400;
             }
           }
@@ -178,12 +179,12 @@
           .sort-link {
             width: 50%;
             font-size: 14px;
-            color: #1A2944;
+            color: #1a2944;
             font-weight: 400;
             text-decoration: none;
             cursor: pointer;
             text-align: center;
-            background: #F5F5F5;
+            background: #f5f5f5;
             border-radius: 4px;
             padding-top: 10px;
             padding-bottom: 10px;
@@ -197,17 +198,16 @@
             }
 
             &.active {
-              color: #03BCDB;
+              color: #03bcdb;
               font-weight: 400;
               background: white;
-              border: 1px solid #D8D8D8;
+              border: 1px solid #d8d8d8;
             }
           }
         }
       }
     }
   }
-
 
   .boxCommunity {
     background: white;
@@ -228,7 +228,7 @@
       .label-number-of-register {
         font-size: 10px;
         font-weight: 500;
-        color: #989EA8;
+        color: #989ea8;
         margin-bottom: 5px;
 
         &::before {
@@ -236,7 +236,7 @@
           display: inline-block;
           width: 8px;
           height: 8px;
-          background: #1BD0B0;
+          background: #1bd0b0;
           border-radius: 50%;
           margin-right: 4px;
         }
@@ -272,7 +272,7 @@
       .number-of-participant {
         font-size: 14px;
         font-weight: 400;
-        color: #989EA8;
+        color: #989ea8;
         text-align: center;
       }
 
