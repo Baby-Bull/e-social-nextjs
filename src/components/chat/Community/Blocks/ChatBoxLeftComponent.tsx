@@ -163,7 +163,11 @@ const ChatBoxLeftComponent = ({
                       <Typography className="name">
                         {thread?.community?.name}({thread?.community?.member_count})
                       </Typography>
-                      <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
+                      {thread?.last_message_content_type === "text" ? (
+                        <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
+                      ) : (
+                        <Typography className="message-hide">添付ファイル</Typography>
+                      )}
                     </div>
                     <div className="thread-last-time">
                       {thread?.last_chat_message_at ? formatChatDateRoom(thread?.last_chat_message_at) : ""}
