@@ -1,12 +1,13 @@
 import React from "react";
 import { Box, Typography, Avatar } from "@mui/material";
 import { useRouter } from "next/router";
-import moment from "moment";
+import dayjs from "dayjs";
+import "dayjs/locale/ja";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { useSelector } from "react-redux";
 
 import theme from "src/theme";
 import { IStoreState } from "src/constants/interface";
-import "moment/locale/ja";
 
 export interface IData {
   id?: string;
@@ -23,6 +24,9 @@ interface IListViewComponentProps {
     pr?: string[];
   };
 }
+
+dayjs.extend(relativeTime);
+dayjs.locale("ja");
 
 const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) => {
   const router = useRouter();
@@ -120,7 +124,7 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
                 color: theme.gray,
               }}
             >
-              {moment(data?.updated_at).toNow().replace("後", "前")}
+              {dayjs(data?.updated_at).toNow().replace("後", "前")}
             </Typography>
 
             <img src="/assets/images/svg/message.svg" alt="message" />

@@ -2,10 +2,9 @@ import { Box, Grid } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import React, { useState } from "react";
-// eslint-disable-next-line import/order
-import moment from "moment";
-
-import "moment/locale/ja";
+import dayjs from "dayjs";
+import "dayjs/locale/ja";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -19,6 +18,9 @@ import { sendMatchingRequest } from "src/services/matching";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
 import { IStoreState } from "src/constants/interface";
+
+dayjs.extend(relativeTime);
+dayjs.locale("ja");
 
 interface IUserItemProps {
   id: string;
@@ -115,7 +117,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
                 {data?.last_login_at
                   ? replaceLabelByTranslate(
                       t("home:box-member-recommend.last-login"),
-                      moment(data?.last_login_at).fromNow(),
+                      dayjs(data?.last_login_at).fromNow(),
                     )
                   : t("home:box-member-recommend.no-login")}
               </span>

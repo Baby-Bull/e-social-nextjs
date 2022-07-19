@@ -2,7 +2,10 @@ import { Box, Button, Avatar, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
-import moment from "moment";
+import dayjs from "dayjs";
+import "dayjs/locale/ja";
+import relativeTime from "dayjs/plugin/relativeTime";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import { toast } from "react-toastify";
 import copy from "copy-to-clipboard";
 import { FacebookShareButton, TwitterShareButton } from "react-share";
@@ -14,9 +17,12 @@ import PopupChartProfileComponent from "src/components/profile/PopupChartProfile
 import theme from "src/theme";
 import styles from "src/components/profile/profile.module.scss";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
-import "moment/locale/ja";
 import actionTypes from "src/store/actionTypes";
 import { IStoreState } from "src/constants/interface";
+
+dayjs.extend(relativeTime);
+dayjs.extend(localizedFormat);
+dayjs.locale("ja");
 
 interface TopProfileComponentProps {
   user: any;
@@ -289,7 +295,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                       mt: "11px",
                     }}
                   >
-                    {t("profile:login")}：{moment(user?.last_login_at).fromNow()}
+                    {t("profile:login")}：{dayjs(user?.last_login_at).fromNow()}
                   </Box>
                   <Box
                     sx={{
@@ -597,7 +603,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   fontSize: "10px",
                 }}
               >
-                {t("profile:login")}：{moment(user?.last_login_at).fromNow()} {t("profile:minutes-ago")}
+                {t("profile:login")}：{dayjs(user?.last_login_at).fromNow()} {t("profile:minutes-ago")}
               </Box>
 
               <Box

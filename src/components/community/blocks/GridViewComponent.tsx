@@ -2,13 +2,14 @@ import React from "react";
 import { Avatar, Box, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
-import moment from "moment";
+import dayjs from "dayjs";
+import "dayjs/locale/ja";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 import { JOBS } from "src/components/constants/constants";
 import theme from "src/theme";
 import { IStoreState } from "src/constants/interface";
 
-import "moment/locale/ja";
 import styles from "./gridView.module.scss";
 
 export interface IData {
@@ -24,6 +25,9 @@ interface IGridViewComponentProps {
   title?: string;
   data: IData[];
 }
+
+dayjs.extend(relativeTime);
+dayjs.locale("ja");
 
 const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) => {
   const IS_OWNER = "owner";
@@ -122,7 +126,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) 
                   color: theme.gray,
                 }}
               >
-                {moment(item.last_login_at).fromNow()}
+                {dayjs(item.last_login_at).fromNow()}
               </Typography>
             </Box>
           </React.Fragment>

@@ -3,13 +3,17 @@ import { Box, Typography, Avatar, Backdrop, CircularProgress } from "@mui/materi
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
-import moment from "moment";
+import dayjs from "dayjs";
+import "dayjs/locale/ja";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 
 import { IStoreState } from "src/constants/interface";
-import "moment/locale/ja";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import { MemberApprove, MemberReject } from "src/services/community";
+
+dayjs.extend(localizedFormat);
+dayjs.locale("ja");
 
 interface IGridViewComponentProps {
   data: any;
@@ -83,7 +87,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
 
       {/* Info user (avatar, ...) */}
       <Box sx={{ mb: 1, color: theme.gray, fontSize: "12px", lineHeight: "17.38px", display: ["block", "none"] }}>
-        {moment(data?.created_at).format("LLL")} {t("community:request")}
+        {dayjs(data?.created_at).format("LLL")} {t("community:request")}
       </Box>
       <Box
         sx={{
@@ -126,7 +130,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
                 color: theme.gray,
               }}
             >
-              {moment(data?.created_at).format("LLL")} {t("community:request")}
+              {dayjs(data?.created_at).format("LLL")} {t("community:request")}
             </Typography>
 
             <Typography
