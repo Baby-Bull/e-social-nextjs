@@ -263,7 +263,7 @@ const SearchCommunityComponent = () => {
                         }
                       />
                     }
-                    label={t("community-search:btn-search").toString()}
+                    label={t("community-search:label-checkbox-1").toString()}
                   />
                 </React.Fragment>
               )}

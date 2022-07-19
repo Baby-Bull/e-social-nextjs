@@ -119,7 +119,7 @@
   "setting": {
     "title": "管理者メニュー",
     "form": {
-      "text-upload": "ミュニティの画像を設定してください。",
+      "text-upload": "コミュニティの画像を設定してください。",
       "max-upload": "推奨サイズ 1200×1200px",
       "name": "コミュニティ名",
       "virtual-room": "仮想部屋へのリンク",
