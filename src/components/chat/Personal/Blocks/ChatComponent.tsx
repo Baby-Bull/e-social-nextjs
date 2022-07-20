@@ -154,18 +154,26 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     }
   };
 
-  const sendMessage = (message: string, type: string = "text") => {
+  const sendMessage = (message: string, type: string = "text", fileName: string = "", fileSize: any = "") => {
     if (message) {
       const payload = {
         chatRoomId: roomSelect?.id,
         content: message,
         content_type: type,
+        meta: {
+          filename: fileName,
+          size: fileSize,
+        },
       };
       websocket.emit("chatRoom.message", payload);
       updateLastMessageOfListRooms({
         content: message,
         chat_room_id: roomSelect.id,
         last_message_content_type: type,
+        meta: {
+          filename: fileName,
+          size: fileSize,
+        },
       });
     }
   };
