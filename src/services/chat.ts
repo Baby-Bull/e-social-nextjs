@@ -71,7 +71,7 @@ export const getMessagesCommunity = async (
 
 export const uploadFile = async (body) => {
   try {
-    const res = await api.post(`/user/upload`, body);
+    const res = await api.post(`/storage/upload`, body);
     return res.data;
   } catch (error) {
     return error;
