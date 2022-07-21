@@ -46,13 +46,11 @@ const SplashScreen = () => (
 const MyApp = (props: MyAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps, pathname } = props;
   const [queryClient] = React.useState(() => new QueryClient());
-
   React.useEffect(() => {
     const cookies = parseCookies();
     if (!AUTH_PAGE_PATHS.includes(pathname) && !cookies[USER_TOKEN]) {
       Router.push("/login");
     }
-
     if (!AUTH_PAGE_PATHS.includes(pathname) && cookies[USER_TOKEN]) {
       const now = new Date();
       const expiresIn = parseInt(cookies.EXPIRES_IN, 10) || now.getTime();
@@ -69,7 +67,6 @@ const MyApp = (props: MyAppProps) => {
 
   const store = useStore(pageProps.initialReduxState);
   const persistor = persistStore(store);
-
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>

@@ -411,6 +411,9 @@ const ChatBoxRightComponent = ({
             id: crypto.randomBytes(16).toString("hex"),
             sender_id: "123",
             isErrorMessage: !navigator.onLine,
+            user: {
+              id: auth?.id,
+            },
           };
           type = MESSAGE_CONTENT_TYPES.IMAGE;
         } else {
@@ -421,6 +424,9 @@ const ChatBoxRightComponent = ({
             id: crypto.randomBytes(16).toString("hex"),
             sender_id: "123",
             isErrorMessage: !navigator.onLine,
+            user: {
+              id: auth?.id,
+            },
             meta: {
               filename: file.name,
               size: file.size,
@@ -492,7 +498,7 @@ const ChatBoxRightComponent = ({
                     <span>{dateText}</span>
                   </div>
                   {listMessagesShow[dateText]?.map((message: any, index: number) =>
-                    message?.user?.id !== auth?.id ? (
+                    message?.user?.id === auth?.id ? (
                       <BoxMyChat
                         key={index}
                         message={message}

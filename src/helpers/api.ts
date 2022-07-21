@@ -10,6 +10,7 @@ import {
   getToken,
   getRefreshToken,
   setRefreshToken,
+  setIsProfileEdited,
 } from "./storage";
 
 let isRefreshing = false;
@@ -82,7 +83,7 @@ api.interceptors.response.use(
           if (res?.data?.access_token) {
             setToken(res?.data?.access_token, res?.data?.access_token_expires_in_seconds);
             setRefreshToken(res?.data?.refresh_token);
-
+            setIsProfileEdited(res?.data?.user?.is_profile_edited);
             api.defaults.headers.common.Authorization = `Bearer ${res.data?.access_token}`;
             originalRequest.headers.Authorization = `Bearer ${res.data?.access_token}`;
             processQueue(null, res.data.access_token);
@@ -93,6 +94,7 @@ api.interceptors.response.use(
           processQueue(_error, null);
           setToken("");
           setRefreshToken("");
+          setIsProfileEdited("");
           if (typeof window !== "undefined") {
             window.location.href = "/login";
           }
@@ -104,6 +106,7 @@ api.interceptors.response.use(
     if (err.response.status === 401) {
       setToken("");
       setRefreshToken("");
+      setIsProfileEdited("");
       if (typeof window !== "undefined") {
         window.location.href = "/login";
       }

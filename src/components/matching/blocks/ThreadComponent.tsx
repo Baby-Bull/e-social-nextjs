@@ -69,9 +69,6 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
   const auth = useSelector((state: IStoreState) => state.user);
   const isOnline = "online";
 
-  console.log(dayjs(data?.matchRequest?.match_date).format("lll").toString());
-  console.log(dayjs(data?.updated_at).format("llll").toString());
-
   const isShowThread = type === "unConfirm" || type === "reject";
   const isConfirmOrFavoriteOrMatched = type === "confirm" || type === "favorite" || type === "matched";
 
@@ -133,7 +130,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
   const handleFormatTime = (tempValue: string) => {
     if (tempValue === "favorite") return "";
     if (tempValue === "matched")
-      return dayjs(data?.matchRequest?.match_date).format("lll").toString() + t("thread:request");
+      return `${dayjs(data?.matchRequest?.match_date).format("lll").toString()}分にマッチング`;
     if (tempValue === "reject") return `${dayjs(data?.updated_at).format("lll").toString()}に否承認`;
     if (tempValue === "confirm") return `${dayjs(data?.updated_at).format("lll").toString()}にマッチング`;
     return dayjs(data?.updated_at).format("lll").toString() + t("thread:request");

@@ -263,7 +263,7 @@ const SearchCommunityComponent = () => {
                         }
                       />
                     }
-                    label={t("community-search:btn-search").toString()}
+                    label="参加中のコミュニティを除外"
                   />
                 </React.Fragment>
               )}
