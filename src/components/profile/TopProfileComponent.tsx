@@ -330,6 +330,8 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                       sx={{
                         ml: "24px",
                         display: "flex",
+                        alignItems: "center",
+                        mt: "9px",
                       }}
                     >
                       <Box onClick={() => redirect(user?.twitter_url)} sx={{ cursor: "pointer" }}>
@@ -603,7 +605,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   fontSize: "10px",
                 }}
               >
-                {t("profile:login")}：{dayjs(user?.last_login_at).fromNow()} {t("profile:minutes-ago")}
+                {t("profile:login")}：{dayjs(user?.last_login_at).fromNow()}
               </Box>
 
               <Box

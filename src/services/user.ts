@@ -15,6 +15,7 @@ import {
   EMAIL_EXISTS,
 } from "src/messages/notification";
 import { typeTimeLogin, typeReview } from "src/constants/searchUserConstants";
+import {setIsProfileEdited} from "../helpers/storage";
 
 dayjs.extend(relativeTime)
 dayjs.extend(localizedFormat)
@@ -291,6 +292,7 @@ export const updateProfile = async (body: any) => {
     } else if (res?.data?.message?.email[0]?.message === "email is not unique") {
       toast.error(EMAIL_EXISTS);
     } else {
+      setIsProfileEdited("true");
       toast.success(UPDATE_PROFILE);
     }
     return res.data;

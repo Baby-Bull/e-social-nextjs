@@ -2,7 +2,7 @@
 import base64 from "base-64";
 
 import { api, setToken } from "src/helpers/api";
-import { getRefreshToken, getToken, setRefreshToken } from "src/helpers/storage";
+import { getRefreshToken, getToken, setIsProfileEdited, setRefreshToken } from "src/helpers/storage";
 
 const PREVENT_CORS_URL: string = "https://cors.bridged.cc";
 
@@ -50,6 +50,7 @@ export const authWithProvider = async (provider: string, accessToken: string) =>
     if (res?.data?.access_token) {
       setToken(res?.data?.access_token, res?.data?.access_token_expires_in_seconds);
       setRefreshToken(res?.data?.refresh_token);
+      setIsProfileEdited(res?.data?.user?.is_profile_edited);
     }
     return res;
   } catch (error) {
@@ -61,6 +62,7 @@ export const logout = async () => {
   try {
     const res = await api.post("/auth/logout");
     setToken("");
+    setIsProfileEdited("");
     return res;
   } catch (error) {
     return error;

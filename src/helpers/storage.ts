@@ -4,6 +4,7 @@ import cookie from "cookie";
 export const USER_TOKEN = "USER_TOKEN";
 export const REFRESH_TOKEN = "REFRESH_TOKEN";
 export const EXPIRES_IN = "EXPIRES_IN";
+export const IS_PROFILE_EDITED = "IS_PROFILE_EDITED";
 
 export const setItem = (key: string, value: any) => {
   setCookie(null, key, value, {
@@ -28,10 +29,15 @@ export const setRefreshToken = (value: string) => {
   setItem(REFRESH_TOKEN, value);
 };
 
+export const setIsProfileEdited = (value: string) => {
+  setItem(IS_PROFILE_EDITED, value);
+};
+
 export const clearToken = () => setToken("");
 
 export const getToken = () => getItem(USER_TOKEN);
 
 export const getRefreshToken = () => getItem(REFRESH_TOKEN);
+export const getIsProfileEdited = () => getItem(IS_PROFILE_EDITED);
 
 export const getExpireIn = () => getItem(EXPIRES_IN);
