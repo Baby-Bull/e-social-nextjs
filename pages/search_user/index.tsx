@@ -11,7 +11,7 @@ const SearchUserPage: NextPage = () => <SearchUserComponent />;
 export const getServerSideProps = async (ctx) => {
   const { locale } = ctx;
   const cookies = parseCookies(ctx);
-  if (cookies[IS_PROFILE_EDITED] !== "true") {
+  if (cookies[IS_PROFILE_EDITED] === "false") {
     return {
       redirect: {
         destination: "/register/form",
