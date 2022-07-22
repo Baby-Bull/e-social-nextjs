@@ -12,4 +12,5 @@ export type TypeCrossFunction = {
 };
 
 export { default as LoginSocialGithub } from "./LoginSocialGithub";
-export { default as LoginSocialTwitter } from "./LoginSocialTwitter";
+export { default as LoginSocialTwitterV1 } from "./twitter/LoginSocialTwitterV1";
+export { default as LoginSocialTwitterV2 } from "./twitter/LoginSocialTwitterV2";

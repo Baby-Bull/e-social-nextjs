@@ -13,7 +13,7 @@ import GridLeftComponent from "src/components/authen/register/GridLeftComponent"
 import { authWithProvider } from "src/services/auth";
 import { login } from "src/store/store";
 
-import { LoginSocialTwitter } from "../loginSocial";
+import { LoginSocialTwitterV1 } from "../loginSocial";
 
 const RegisterComponents = () => {
   const { t } = useTranslation();
@@ -93,10 +93,8 @@ const RegisterComponents = () => {
               </Typography>
 
               <Box pt="63px">
-                <LoginSocialTwitter
+                <LoginSocialTwitterV1
                   ref={githubRef}
-                  client_id={process.env.NEXT_PUBLIC_TWITTER_API_KEY || ""}
-                  client_secret={process.env.NEXT_PUBLIC_TWITTER_API_KEY_SECRET || ""}
                   redirect_uri={process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER}
                   onResolve={({ provider: twitterProvider, data }: IResolveParams) => {
                     console.log(provider, data);
@@ -109,7 +107,7 @@ const RegisterComponents = () => {
                   }}
                 >
                   <ButtonComponent props={{ mode: "twitter" }}>{t("register:register-twitter")}</ButtonComponent>
-                </LoginSocialTwitter>
+                </LoginSocialTwitterV1>
               </Box>
               <Box pt="48px">
                 <LoginSocialGoogle
