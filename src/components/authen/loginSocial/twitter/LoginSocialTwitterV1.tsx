@@ -27,6 +27,11 @@ interface Props {
   onResolve: ({ provider, data }: IResolveParams) => void;
 }
 
+type TwitterAuthData = {
+  oauth_token: string;
+  oauth_verifier: string;
+};
+
 export const LoginSocialTwitterV1 = forwardRef(
   (
     {
@@ -44,50 +49,64 @@ export const LoginSocialTwitterV1 = forwardRef(
   ) => {
     const [isLogged, setIsLogged] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
+    const twitterCredentials = useRef(null);
 
     useEffect(() => {
       const popupWindowURL = new URL(window.location.href);
       const oauthToken = popupWindowURL.searchParams.get("oauth_token");
       const oauthVerifier = popupWindowURL.searchParams.get("oauth_verifier");
-      const twitterAuth = localStorage.getItem("twitter");
-      console.log("HERE", twitterAuth, oauthToken, twitterAuth);
-      if (oauthToken && oauthVerifier && twitterAuth) {
-        const cachedTwitterTokens = JSON.parse(twitterAuth);
-        console.log(cachedTwitterTokens, oauthToken, oauthVerifier);
-        localStorage.setItem(
-          "twitter",
-          JSON.stringify({
-            ...cachedTwitterTokens,
-            oauth_token: oauthToken,
-            oauth_verifier: oauthVerifier,
-          }),
-        );
+      const isPopupWindow = window.opener;
+      if (isPopupWindow) {
+        window.opener.postMessage({
+          oauth_token: oauthToken,
+          oauth_verifier: oauthVerifier,
+        });
         window.close();
       }
     }, []);
 
-    const getAccessToken = useCallback(
-      (code: any) => {
-        console.log("HERE");
-        setIsProcessing(false);
-        setIsLogged(true);
-        onResolve({ provider: "twitter", data: code });
-      },
-      [onReject, redirect_uri, state],
-    );
+    const getAccessToken = (code: any) => {
+      setIsProcessing(false);
+      setIsLogged(true);
+      onResolve({
+        provider: "twitter",
+        data: {
+          access_token: code,
+        },
+      });
+    };
 
-    const handlePostMessage = useCallback(
-      async ({ type, code, provider }) => type === "code" && provider === "twitter" && code && getAccessToken(code),
-      [getAccessToken],
-    );
-    const onChangeLocalStorage = useCallback(() => {
-      // window.removeEventListener("storage", onChangeLocalStorage, false);
-      const twitterAuth = localStorage.getItem("twitter");
-      console.log("DADA");
-      setIsProcessing(true);
-      handlePostMessage({ provider: "twitter", type: "code", code: JSON.parse(twitterAuth) });
-      localStorage.removeItem("twitter");
-    }, [handlePostMessage]);
+    const handlePostMessage = async ({ type, code, provider }) =>
+      type === "code" && provider === "twitter" && code && getAccessToken(code);
+
+    // add parent - child window communication event
+    useEffect(() => {
+      // if this window is the parent and there is cached twitter credentials
+      if (window.opener === null) {
+        const eventHandler = (event) => {
+          if (twitterCredentials.current) {
+            const twitterAuthData = event.data as TwitterAuthData;
+            setIsProcessing(true);
+            handlePostMessage({
+              provider: "twitter",
+              type: "code",
+              code: {
+                ...twitterCredentials.current,
+                ...twitterAuthData,
+              },
+            });
+          }
+        };
+        window.addEventListener("message", eventHandler);
+        return () => window.removeEventListener("message", eventHandler);
+      }
+    }, []);
+    // const onChangeLocalStorage = useCallback(() => {
+    //   // window.removeEventListener("storage", onChangeLocalStorage, false);
+    //   const twitterAuth = localStorage.getItem("twitter");
+    //   console.log("DADA");
+    //   localStorage.removeItem("twitter");
+    // }, [handlePostMessage]);
 
     const onLogin = useCallback(() => {
       if (!isProcessing) {
@@ -101,19 +120,20 @@ export const LoginSocialTwitterV1 = forwardRef(
           "Twitter",
           `menubar=no,location=no,resizable=no,scrollbars=no,status=no, width=${width}, height=${height}, top=${top}, left=${left}`,
         ); // fix bug on safari, window.open must not be in async function
-        getAuthUrlTwitter(redirect_uri).then((authLinks) => {
-          localStorage.setItem(
-            "twitter",
-            JSON.stringify({
-              oauth_verifier: authLinks.oauth_verifier,
+        getAuthUrlTwitter(redirect_uri)
+          .then((authLinks) => {
+            twitterCredentials.current = {
+              oauth_token: authLinks.oauth_token,
               oauth_token_secret: authLinks.oauth_token_secret,
-            }),
-          );
-          window.addEventListener("storage", onChangeLocalStorage, false);
-          twitterPopup.location = authLinks.url;
-        });
+            };
+            twitterPopup.location = authLinks.url;
+          })
+          .catch((err) => {
+            twitterPopup.close();
+            onReject(err);
+          });
       }
-    }, [isProcessing, onLoginStart, onChangeLocalStorage, scope, state, redirect_uri]);
+    }, [isProcessing, onLoginStart, onReject, scope, state, redirect_uri]);
 
     useImperativeHandle(ref, () => ({
       onLogout: () => {

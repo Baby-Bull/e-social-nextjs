@@ -33,7 +33,7 @@ const LoginComponent = () => {
   const onLogoutFailure = () => {};
 
   useEffect(() => {
-    const registerAccount = async (providerAuth: string, accessToken: string) => {
+    const registerAccount = async (providerAuth: string, accessToken: any) => {
       setIsLoading(true);
       const resAuth = await authWithProvider(providerAuth, accessToken);
       if (resAuth?.data?.access_token) {
