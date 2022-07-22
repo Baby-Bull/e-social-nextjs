@@ -54,6 +54,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
   const [hintMobile, setHintMobile] = useState(false);
   const [showPopupAnalysis, setShowPopupAnalysis] = useState(false);
   const urlProfile = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${user?.id}`;
+  // const urlProfile = `https://www.youtube.com/watch?v=zorx-DGH1MA`;
 
   useEffect(() => {
     setLiked(user?.is_favorite);
@@ -867,7 +868,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     height: "40px",
                   }}
                 >
-                  <TwitterShareButton url={urlProfile}>
+                  <TwitterShareButton url={urlProfile} title="avcc">
                     <Box
                       sx={{
                         display: "flex",
