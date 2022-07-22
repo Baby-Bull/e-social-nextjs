@@ -101,12 +101,6 @@ export const LoginSocialTwitterV1 = forwardRef(
         return () => window.removeEventListener("message", eventHandler);
       }
     }, []);
-    // const onChangeLocalStorage = useCallback(() => {
-    //   // window.removeEventListener("storage", onChangeLocalStorage, false);
-    //   const twitterAuth = localStorage.getItem("twitter");
-    //   console.log("DADA");
-    //   localStorage.removeItem("twitter");
-    // }, [handlePostMessage]);
 
     const onLogin = useCallback(() => {
       if (!isProcessing) {
