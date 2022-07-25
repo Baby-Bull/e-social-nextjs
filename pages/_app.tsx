@@ -75,17 +75,20 @@ const MyApp = (props: MyAppProps) => {
             <Head>
               <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1" />
               <meta name="theme-color" content={theme.palette.primary.main} />
-              <meta name="twitter:card" content="Goodhub" />
-              <meta name="twitter:site" content="@Goodhub" />
-              <meta name="twitter:creator" content="@Goodhub" />
               <meta property="og:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} />
-              <meta property="og:title" content="A Twitter for Goodhub" />
-              <meta
-                property="og:description"
-                content="In the early days, Twitter grew so quickly that it was almost impossible to add new features."
-              />
+              <meta property="og:title" content="GOODHUB | GOODHUB-JP | GOODHUB-VN" />
               <meta
                 property="og:image"
+                content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/home_2.svg`}
+              />
+              <meta property="og:description" content="GOODHUB Phần mềm dành cho kỹ sư " />
+              <meta property="al:web:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} />
+              <meta name="twitter:card" content="summary_large_image" />
+              <meta name="twitter:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} />
+              <meta name="twitter:title" content="THÍCH THÌ ĐẾN | LÊ BẢO BÌNH | OFFICIAL MUSIC VIDEO" />
+              <meta name="twitter:description" content="GOODHUB Phần mềm dành cho kỹ sư " />
+              <meta
+                name="twitter:image"
                 content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/home_2.svg`}
               />
             </Head>
