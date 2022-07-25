@@ -9,7 +9,7 @@
  * LoginSocialGithub
  *
  */
-import React, { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useState } from "react";
+import React, { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 
 import { IResolveParams, objectType, TypeCrossFunction } from ".";
 
@@ -28,6 +28,10 @@ interface Props {
   onResolve: ({ provider, data }: IResolveParams) => void;
 }
 
+type GithubAuthData = {
+  code: string;
+};
+
 const GITHUB_URL: string = "https://github.com";
 const GITHUB_API_URL: string = "https://api.github.com/";
 const PREVENT_CORS_URL: string = "https://cors.bridged.cc";
@@ -36,7 +40,7 @@ export const LoginSocialGithub = forwardRef(
   (
     {
       state = "",
-      scope = "repo,gist",
+      scope = "user:email",
       client_id,
       client_secret,
       className = "",
@@ -57,8 +61,12 @@ export const LoginSocialGithub = forwardRef(
       const popupWindowURL = new URL(window.location.href);
       const code = popupWindowURL.searchParams.get("code");
       const stateItem = popupWindowURL.searchParams.get("state");
-      if (stateItem?.includes("_github") && code) {
-        localStorage.setItem("github", code);
+      const isPopupWindow = window.opener;
+      if (isPopupWindow && stateItem?.includes("_github") && code) {
+        window.opener.postMessage({
+          code,
+        });
+        window.close();
       }
     }, []);
 
@@ -84,7 +92,6 @@ export const LoginSocialGithub = forwardRef(
           .then((response) => response.text())
           .then((response) => {
             setIsProcessing(false);
-            window.close();
             const data: objectType = {};
             const searchParams: any = new URLSearchParams(response);
             for (const p of searchParams) {
@@ -112,18 +119,29 @@ export const LoginSocialGithub = forwardRef(
       [getAccessToken],
     );
 
-    const onChangeLocalStorage = useCallback(() => {
-      // window.removeEventListener("storage", onChangeLocalStorage, false);
-      const code = localStorage.getItem("github");
-      setIsProcessing(true);
-      handlePostMessage({ provider: "github", type: "code", code });
-      localStorage.removeItem("github");
-    }, [handlePostMessage]);
+    // add parent - child window communication event
+    useEffect(() => {
+      // if this window is the parent and there is cached twitter credentials
+      if (window.opener === null) {
+        const eventHandler = (event) => {
+          const githubAuthData = event.data as GithubAuthData;
+          if (githubAuthData?.code) {
+            setIsProcessing(true);
+            handlePostMessage({
+              provider: "github",
+              type: "code",
+              code: githubAuthData.code,
+            });
+          }
+        };
+        window.addEventListener("message", eventHandler);
+        return () => window.removeEventListener("message", eventHandler);
+      }
+    }, []);
 
     const onLogin = useCallback(() => {
       if (!isProcessing) {
         onLoginStart && onLoginStart();
-        window.addEventListener("storage", onChangeLocalStorage, false);
         const oauthUrl = `${GITHUB_URL}/login/oauth/authorize?client_id=${client_id}&scope=${scope}&state=${`${state}_github`}&redirect_uri=${redirect_uri}&allow_signup=${allow_signup}`;
         const width = 450;
         const height = 730;
@@ -135,7 +153,7 @@ export const LoginSocialGithub = forwardRef(
           `menubar=no,location=no,resizable=no,scrollbars=no,status=no, width=${width}, height=${height}, top=${top}, left=${left}`,
         );
       }
-    }, [isProcessing, onLoginStart, onChangeLocalStorage, client_id, scope, state, redirect_uri, allow_signup]);
+    }, [isProcessing, onLoginStart, client_id, scope, state, redirect_uri, allow_signup]);
 
     useImperativeHandle(ref, () => ({
       onLogout: () => {

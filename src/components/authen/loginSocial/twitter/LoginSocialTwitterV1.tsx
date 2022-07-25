@@ -36,7 +36,7 @@ export const LoginSocialTwitterV1 = forwardRef(
   (
     {
       state = "",
-      scope = "repo,gist",
+      scope = "",
       className = "",
       redirect_uri,
       children,
@@ -56,7 +56,7 @@ export const LoginSocialTwitterV1 = forwardRef(
       const oauthToken = popupWindowURL.searchParams.get("oauth_token");
       const oauthVerifier = popupWindowURL.searchParams.get("oauth_verifier");
       const isPopupWindow = window.opener;
-      if (isPopupWindow) {
+      if (isPopupWindow && oauthVerifier && oauthToken) {
         window.opener.postMessage({
           oauth_token: oauthToken,
           oauth_verifier: oauthVerifier,
