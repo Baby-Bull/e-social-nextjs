@@ -78,13 +78,16 @@ const MyApp = (props: MyAppProps) => {
               <meta name="twitter:card" content="Goodhub" />
               <meta name="twitter:site" content="@Goodhub" />
               <meta name="twitter:creator" content="@Goodhub" />
-              <meta property="og:url" content="http://goodhub-test.kiaidev.com/" />
+              <meta property="og:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} />
               <meta property="og:title" content="A Twitter for Goodhub" />
               <meta
                 property="og:description"
                 content="In the early days, Twitter grew so quickly that it was almost impossible to add new features."
               />
-              <meta property="og:image" content="/assets/images/home_page/home_2.svg" />
+              <meta
+                property="og:image"
+                content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/home_2.svg`}
+              />
             </Head>
             <ThemeProvider theme={theme}>
               {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
