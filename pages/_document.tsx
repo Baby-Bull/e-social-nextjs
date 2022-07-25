@@ -23,6 +23,22 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap"
             rel="stylesheet"
           />
+          <meta property="og:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} />
+          <meta property="og:title" content="GOODHUB | GOODHUB-JP | GOODHUB-VN" />
+          <meta
+            property="og:image"
+            content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/home_2.svg`}
+          />
+          <meta property="og:description" content="GOODHUB Phần mềm dành cho kỹ sư" />
+          <meta property="al:web:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} />
+          <meta name="twitter:title" content="GOODHUB Phần mềm dành cho kỹ sư" />
+          <meta name="twitter:description" content="GOODHUB Phần mềm dành cho kỹ sư " />
+          <meta
+            name="twitter:image"
+            content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/home_2.svg`}
+          />
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
           {(this.props as any).emotionStyleTags}
         </Head>

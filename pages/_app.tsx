@@ -75,22 +75,6 @@ const MyApp = (props: MyAppProps) => {
             <Head>
               <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1" />
               <meta name="theme-color" content={theme.palette.primary.main} />
-              <meta property="og:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} />
-              <meta property="og:title" content="GOODHUB | GOODHUB-JP | GOODHUB-VN" />
-              <meta
-                property="og:image"
-                content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/home_2.svg`}
-              />
-              <meta property="og:description" content="GOODHUB Phần mềm dành cho kỹ sư " />
-              <meta property="al:web:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} />
-              <meta name="twitter:card" content="summary_large_image" />
-              <meta name="twitter:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} />
-              <meta name="twitter:title" content="THÍCH THÌ ĐẾN | LÊ BẢO BÌNH | OFFICIAL MUSIC VIDEO" />
-              <meta name="twitter:description" content="GOODHUB Phần mềm dành cho kỹ sư " />
-              <meta
-                name="twitter:image"
-                content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/home_2.svg`}
-              />
             </Head>
             <ThemeProvider theme={theme}>
               {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
