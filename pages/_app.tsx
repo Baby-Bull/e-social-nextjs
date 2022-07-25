@@ -75,21 +75,16 @@ const MyApp = (props: MyAppProps) => {
             <Head>
               <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1" />
               <meta name="theme-color" content={theme.palette.primary.main} />
-              <meta name="twitter:card" content="summary" />
-              <meta name="twitter:site" content="@nytimesbits" />
-              <meta name="twitter:creator" content="@nickbilton" />
-              <meta property="og:url" content="http://bits.blogs.nytimes.com/2011/12/08/a-twitter-for-my-sister/" />
-              <meta property="og:title" content="A Twitter for My Sister" />
+              <meta name="twitter:card" content="Goodhub" />
+              <meta name="twitter:site" content="@Goodhub" />
+              <meta name="twitter:creator" content="@Goodhub" />
+              <meta property="og:url" content="http://goodhub-test.kiaidev.com/" />
+              <meta property="og:title" content="A Twitter for Goodhub" />
               <meta
                 property="og:description"
-                content="In the early days, Twitter grew so quickly that it was almost impossible to add new features
-            because engineers spent their time trying to keep the rocket ship from stalling."
+                content="In the early days, Twitter grew so quickly that it was almost impossible to add new features."
               />
-              <meta
-                property="og:image"
-                content="http://graphics8.nytimes.com/images/2011/12/08
-            /technology/bits-newtwitter/bits-newtwitter-tmagArticle.jpg"
-              />
+              <meta property="og:image" content="/assets/images/home_page/home_2.svg" />
             </Head>
             <ThemeProvider theme={theme}>
               {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
