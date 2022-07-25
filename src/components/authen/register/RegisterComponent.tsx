@@ -3,7 +3,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { Box, Grid, Typography, Link } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import { LoginSocialGoogle, LoginSocialGithub, IResolveParams, TypeCrossFunction } from "reactjs-social-login";
+import { LoginSocialGoogle, IResolveParams, TypeCrossFunction } from "reactjs-social-login";
 import { useDispatch } from "react-redux";
 
 import theme from "src/theme";
@@ -12,8 +12,9 @@ import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 import { authWithProvider } from "src/services/auth";
 import { login } from "src/store/store";
+import SplashScreen from "src/components/common/SplashScreen";
 
-import { LoginSocialTwitterV1 } from "../loginSocial";
+import { LoginSocialTwitterV1, LoginSocialGithub } from "../loginSocial";
 
 const RegisterComponents = () => {
   const { t } = useTranslation();
@@ -27,7 +28,6 @@ const RegisterComponents = () => {
   const googleRef = useRef<TypeCrossFunction>(null!);
 
   const onLoginStart = () => {
-    setIsLoading(true);
     console.log(isLoading);
   };
 
@@ -39,7 +39,6 @@ const RegisterComponents = () => {
     const registerAccount = async (providerAuth: string, accessToken: string) => {
       setIsLoading(true);
       const resAuth = await authWithProvider(providerAuth, accessToken);
-      setIsLoading(false);
       if (resAuth?.data?.access_token) {
         dispatch(login(resAuth?.data?.user));
         if (resAuth?.data?.user?.is_profile_edited) {
@@ -47,6 +46,8 @@ const RegisterComponents = () => {
         } else {
           router.push("/register/form");
         }
+      } else {
+        setIsLoading(false);
       }
       return resAuth;
     };
@@ -55,7 +56,9 @@ const RegisterComponents = () => {
     }
   }, [profile]);
 
-  return (
+  return isLoading ? (
+    <SplashScreen />
+  ) : (
     <ContentComponent authPage>
       <Box sx={{ marginTop: "55px" }}>
         <Grid container>
@@ -97,7 +100,6 @@ const RegisterComponents = () => {
                   ref={githubRef}
                   redirect_uri={process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER}
                   onResolve={({ provider: twitterProvider, data }: IResolveParams) => {
-                    console.log(provider, data);
                     setProvider(twitterProvider);
                     setProfile(data);
                   }}
