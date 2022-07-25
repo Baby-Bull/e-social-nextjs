@@ -3,7 +3,8 @@ import type { NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { parseCookies } from "nookies";
 
-import { IS_PROFILE_EDITED, USER_TOKEN } from "src/helpers/storage";
+import { IS_PROFILE_EDITED } from "src/helpers/storage";
+// import { IS_PROFILE_EDITED, USER_TOKEN } from "src/helpers/storage";
 
 import ProfileComponent from "../../src/components/profile/ProfileComponent";
 
@@ -22,14 +23,14 @@ export const getServerSideProps = async (ctx) => {
       },
     };
   }
-  if (!cookies[USER_TOKEN]) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
+  // if (!cookies[USER_TOKEN]) {
+  //   return {
+  //     redirect: {
+  //       destination: "/login",
+  //       permanent: false,
+  //     },
+  //   };
+  // }
 
   return {
     props: {
