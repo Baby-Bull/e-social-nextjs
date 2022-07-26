@@ -23,29 +23,29 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap"
             rel="stylesheet"
           />
-          <meta property="og:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} />
-          <meta property="og:title" content="GOODHUB | GOODHUB-JP | GOODHUB-VN" />
+          <meta property="og:image:width" content="600" />
+          <meta property="og:image:height" content="315" />
+          <meta name="title" content="GOODHUB | GOODHUB-JP | GOODHUB-VN" />
+          <meta name="description" content="GOODHUB Phần mềm dành cho kỹ sư" />
+          <meta name="keywords" content="GOODHUB" />
+          <meta property="og:type" content="website" key="og-type" />
+          <meta property="og:title" content="GOODHUB | GOODHUB-JP | GOODHUB-VN" key="og-title" />
+          <meta property="og:description" content="GOODHUB Phần mềm dành cho kỹ sư" key="og-description" />
+          <meta property="og:url" content={`${process.env.NEXT_PUBLIC_URL_PROFILE}`} key="og-url" />
           <meta
             property="og:image"
             content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/222203821.png`}
+            key="og-img"
           />
-          <meta
-            property="og:description"
-            content={`GOODHUB Phần mềm dành cho kỹ sư\n GOODHUB Phần mềm dành cho kỹ sư1`}
-          />
-          <meta property="og:type" content="website" />
-          <meta property="og:image:width" content="480" />
-          <meta property="og:image:height" content="480" />
-          <meta property="fb:app_id" content="730210088240389" />
-          <meta property="al:web:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} />
+          <meta property="og:site_name" content="GOODHUB Phần mềm dành cho kỹ sư" key="og-type" />
           <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} />
-          <meta name="twitter:title" content="GOODHUB Phần mềm dành cho kỹ sư" />
-          <meta name="twitter:description" content="GOODHUB Phần mềm dành cho kỹ sư " />
+          <meta name="twitter:url" content={`${process.env.NEXT_PUBLIC_URL_PROFILE}`} />
           <meta
             name="twitter:image"
-            content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/home_2.png`}
+            content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/222203821.png`}
           />
+          <meta name="twitter:title" content="GOODHUB | GOODHUB-JP | GOODHUB-VN" />
+          <meta name="twitter:description" content="GOODHUB Phần mềm dành cho kỹ sư" />
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
           {(this.props as any).emotionStyleTags}
         </Head>

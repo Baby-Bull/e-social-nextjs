@@ -54,7 +54,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
   const [hintMobile, setHintMobile] = useState(false);
   const [showPopupAnalysis, setShowPopupAnalysis] = useState(false);
   const urlProfile = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${user?.id}`;
-  // const urlProfile = `https://www.facebook.com/`;
+  // const urlProfile = `https://www.tiktok.com/discover/c%C3%A1c-c%E1%BA%ADu-idol`;
 
   useEffect(() => {
     setLiked(user?.is_favorite);
