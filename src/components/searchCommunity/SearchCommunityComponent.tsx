@@ -83,7 +83,7 @@ const SearchCommunityComponent = () => {
   const [formSearch, setFormSearch] = useState({
     login_count: numberOfLogins[0]?.value,
     member_count: numberOfParticipants[0]?.value,
-    excludejoinedCommunities: true,
+    excludejoinedCommunities: false,
   });
   const [resultSearch, setResultSearch] = useState([]);
   const [showMore, setShowMore] = useState({ cursor: "", hasMore: false });
