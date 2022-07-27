@@ -86,9 +86,6 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
     }
   }, [optionSelected, tabValue]);
 
-  const handleDisplayReddot = (tabType: number, countUnconfirmed: number) =>
-    (tabType === 1 || tabType === 2) && countUnconfirmed > 0;
-
   const handleRedirectCommunity = (idComm: string) => {
     router.push(`/community/${idComm}`);
   };
@@ -169,16 +166,6 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
               backgroundColor: "white",
               "@media (max-width: 768px)": {
                 whiteSpace: "pre-line",
-              },
-              "&:before": handleDisplayReddot(tab?.type, tab?.children?.[0]?.count) && {
-                content: `url("/assets/images/svg/red_dot.svg")`,
-                position: "absolute",
-                top: "-5px",
-                right: "10px",
-                "@media (max-width: 768px)": {
-                  top: "5px",
-                  right: "5px",
-                },
               },
             }}
           />
