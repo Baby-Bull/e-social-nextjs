@@ -46,13 +46,11 @@ const SplashScreen = () => (
 const MyApp = (props: MyAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps, pathname } = props;
   const [queryClient] = React.useState(() => new QueryClient());
-
   React.useEffect(() => {
     const cookies = parseCookies();
     if (!AUTH_PAGE_PATHS.includes(pathname) && !cookies[USER_TOKEN]) {
       Router.push("/login");
     }
-
     if (!AUTH_PAGE_PATHS.includes(pathname) && cookies[USER_TOKEN]) {
       const now = new Date();
       const expiresIn = parseInt(cookies.EXPIRES_IN, 10) || now.getTime();
@@ -69,7 +67,6 @@ const MyApp = (props: MyAppProps) => {
 
   const store = useStore(pageProps.initialReduxState);
   const persistor = persistStore(store);
-
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
@@ -77,6 +74,7 @@ const MyApp = (props: MyAppProps) => {
           <CacheProvider value={emotionCache}>
             <Head>
               <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1" />
+              <meta name="theme-color" content={theme.palette.primary.main} />
             </Head>
             <ThemeProvider theme={theme}>
               {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}

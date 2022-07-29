@@ -2,10 +2,9 @@ import { Box, Grid } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import React, { useState } from "react";
-// eslint-disable-next-line import/order
-import moment from "moment";
-
-import "moment/locale/ja";
+import dayjs from "dayjs";
+import "dayjs/locale/ja";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -19,6 +18,9 @@ import { sendMatchingRequest } from "src/services/matching";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
 import { IStoreState } from "src/constants/interface";
+
+dayjs.extend(relativeTime);
+dayjs.locale("ja");
 
 interface IUserItemProps {
   id: string;
@@ -39,14 +41,13 @@ interface IUserItemProps {
 
 interface IBoxUserComponentProps {
   data: IUserItemProps;
-  callbackHandleIsRefresh: any;
-  isRefresh: boolean;
 }
 
-const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbackHandleIsRefresh, isRefresh }) => {
+const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [showModalMatching, setModalMatching] = React.useState(false);
+  const [statusMatching, setStatusMatching] = React.useState(false);
   const [liked, setLiked] = useState(data?.is_favorite);
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
@@ -64,7 +65,8 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
     const res = await sendMatchingRequest(data?.id, matchingRequest);
     await addUserFavorite(data?.id);
     setModalMatching(false);
-    callbackHandleIsRefresh(!isRefresh);
+    setStatusMatching(true);
+    // callbackHandleIsRefresh(!isRefresh);
     return res;
   };
 
@@ -115,7 +117,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
                 {data?.last_login_at
                   ? replaceLabelByTranslate(
                       t("home:box-member-recommend.last-login"),
-                      moment(data?.last_login_at).fromNow(),
+                      dayjs(data?.last_login_at).fromNow(),
                     )
                   : t("home:box-member-recommend.no-login")}
               </span>
@@ -165,9 +167,23 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
               <ButtonComponent
                 fullWidth
                 onClick={() => handleShowModalMatching(data?.match_status)}
-                mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.mode}
+                mode={
+                  HOMEPAGE_RECOMMEND_MEMBER_STATUS[
+                    handleMapMatchingStatus(statusMatching ? "pending" : data?.match_status)
+                  ]?.mode
+                }
+                disabled={(data?.match_status === "pending" || statusMatching) && true}
+                sx={{
+                  ":disabled:": {
+                    color: "red !important",
+                  },
+                }}
               >
-                {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.label}
+                {
+                  HOMEPAGE_RECOMMEND_MEMBER_STATUS[
+                    handleMapMatchingStatus(statusMatching ? "pending" : data?.match_status)
+                  ]?.label
+                }
               </ButtonComponent>
             </React.Fragment>
           )}

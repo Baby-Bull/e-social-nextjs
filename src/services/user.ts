@@ -1,5 +1,8 @@
 import { toast } from "react-toastify";
-import moment from "moment";
+import dayjs from 'dayjs';
+import 'dayjs/locale/ja';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 
 import { api } from "src/helpers/api";
 import {
@@ -12,6 +15,11 @@ import {
   EMAIL_EXISTS,
 } from "src/messages/notification";
 import { typeTimeLogin, typeReview } from "src/constants/searchUserConstants";
+import {setIsProfileEdited} from "../helpers/storage";
+
+dayjs.extend(relativeTime)
+dayjs.extend(localizedFormat)
+dayjs.locale('ja');
 
 export const getUserFavorite = async (limit: number, cursor: string) => {
   try {
@@ -172,38 +180,38 @@ export const UserSearch = async (
 
   query +=
     params?.lastLogin === typeTimeLogin.one_hour
-      ? `&last_login[]=${moment().subtract(1, "hours").toISOString()}&last_login[]=${moment().toISOString()}`
+      ? `&last_login[]=${dayjs().subtract(1, "hours").toISOString()}&last_login[]=${dayjs().toISOString()}`
       : "";
 
   query +=
     params?.lastLogin === typeTimeLogin.one_day
-      ? `&last_login[]=${moment().subtract(1, "days").toISOString()}&last_login[]=${moment().toISOString()}`
+      ? `&last_login[]=${dayjs().subtract(1, "days").toISOString()}&last_login[]=${dayjs().toISOString()}`
       : "";
 
   query +=
     params?.lastLogin === typeTimeLogin.on_day_to_week
-      ? `&last_login[]=${moment().subtract(1, "weeks").toISOString()}&last_login[]=${moment()
+      ? `&last_login[]=${dayjs().subtract(1, "weeks").toISOString()}&last_login[]=${dayjs()
         .subtract(1, "days")
         .toISOString()}`
       : "";
 
   query +=
     params?.lastLogin === typeTimeLogin.week_to_two_week
-      ? `&last_login[]=${moment().subtract(2, "weeks").toISOString()}&last_login[]=${moment()
+      ? `&last_login[]=${dayjs().subtract(2, "weeks").toISOString()}&last_login[]=${dayjs()
         .subtract(1, "weeks")
         .toISOString()}`
       : "";
 
   query +=
     params?.lastLogin === typeTimeLogin.two_week_to_month
-      ? `&last_login[]=${moment().subtract(1, "months").toISOString()}&last_login[]=${moment()
+      ? `&last_login[]=${dayjs().subtract(1, "months").toISOString()}&last_login[]=${dayjs()
         .subtract(2, "weeks")
         .toISOString()}`
       : "";
 
   query +=
     params?.lastLogin === typeTimeLogin.month_or_than
-      ? `&last_login[]=&last_login[]=${moment().subtract(1, "months").toISOString()}`
+      ? `&last_login[]=&last_login[]=${dayjs().subtract(1, "months").toISOString()}`
       : "";
   // Query count review
   query += params?.review === typeReview.no_0 ? `&review_count[]=1&review_count[]=` : "";
@@ -284,6 +292,7 @@ export const updateProfile = async (body: any) => {
     } else if (res?.data?.message?.email[0]?.message === "email is not unique") {
       toast.error(EMAIL_EXISTS);
     } else {
+      setIsProfileEdited("true");
       toast.success(UPDATE_PROFILE);
     }
     return res.data;

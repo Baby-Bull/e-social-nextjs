@@ -122,11 +122,40 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({ message, time, isStartOfDay = f
           <Avatar
             src={message?.content}
             variant="square"
-            sx={{ width: "200px", height: "200px" }}
+            sx={{ width: "200px", height: "200px", cursor: "pointer" }}
             onClick={() => setOpenPopupImage(true)}
           />
         )}
         {openPopupImage && <Lightbox mainSrc={message?.content} onCloseRequest={() => setOpenPopupImage(false)} />}
+        {message?.content_type === "file" && (
+          <Box
+            sx={{
+              width: "200px",
+              height: "80px",
+              cursor: "pointer",
+              backgroundColor: "#ccc",
+              padding: "10px",
+              borderRadius: "10px",
+              fontSize: "12px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <Avatar
+              src="/assets/images/icon/icon_file.jpg"
+              variant="square"
+              sx={{ width: "30px", height: "30px", cursor: "pointer", mr: "10px" }}
+            />
+            <Box>
+              <a href={message?.content} download className={styles.tagDownload}>
+                <Box className={styles.boxChatFile}>
+                  <Box>{message?.meta?.filename}</Box>
+                </Box>
+                <Box>{((message?.meta?.size ?? 0) / 1024).toFixed(2)} kb</Box>
+              </a>
+            </Box>
+          </Box>
+        )}
       </Box>
       {/* {isErrorMessage ? ( */}
       {/*  <div className={styles.errorMessage}> */}
@@ -152,7 +181,7 @@ const BoxChatOthers: React.SFC<IBoxChatProps> = ({ avatar, message, time, showAv
       {showAvatar ? <Avatar className="avatar" alt="Avatar" src={avatar} /> : <div className="avatar" />}
       {message?.content_type === "text" && (
         <div className="message-content">
-          <Linkify>{message}</Linkify>
+          <Linkify>{message?.content}</Linkify>
         </div>
       )}
 
@@ -160,11 +189,40 @@ const BoxChatOthers: React.SFC<IBoxChatProps> = ({ avatar, message, time, showAv
         <Avatar
           src={message?.content}
           variant="square"
-          sx={{ width: "200px", height: "200px" }}
+          sx={{ width: "200px", height: "200px", cursor: "pointer" }}
           onClick={() => setOpenPopupImage(true)}
         />
       )}
       {openPopupImage && <Lightbox mainSrc={message?.content} onCloseRequest={() => setOpenPopupImage(false)} />}
+      {message?.content_type === "file" && (
+        <Box
+          sx={{
+            width: "200px",
+            height: "80px",
+            cursor: "pointer",
+            backgroundColor: "#ccc",
+            padding: "10px",
+            borderRadius: "10px",
+            fontSize: "12px",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Avatar
+            src="/assets/images/icon/icon_file.jpg"
+            variant="square"
+            sx={{ width: "30px", height: "30px", cursor: "pointer", mr: "10px" }}
+          />
+          <Box>
+            <a href={message?.content} download className={styles.tagDownload}>
+              <Box className={styles.boxChatFile}>
+                <Box>{message?.meta?.filename}</Box>
+              </Box>
+              <Box>{((message?.meta?.size ?? 0) / 1024).toFixed(2)} kb</Box>
+            </a>
+          </Box>
+        </Box>
+      )}
       <Typography className="time">{time}</Typography>
     </Box>
   );
@@ -330,7 +388,7 @@ const ChatBoxRightComponent = ({
     };
   }, [listMessages, hasMoreParams]);
 
-  const uploadImage = async (e) => {
+  const sendFileOnMess = async (e) => {
     setSendFile(true);
     const file = e.currentTarget.files[0];
     if (file.size > 2097152) {
@@ -339,47 +397,60 @@ const ChatBoxRightComponent = ({
       setSendFile(false);
       return false;
     }
-    if (
-      e.currentTarget.files[0].type === "image/jpg" ||
-      e.currentTarget.files[0].type === "image/png" ||
-      e.currentTarget.files[0].type === "image/jpeg"
-    ) {
-      // setSrcProfileImage(URL.createObjectURL(file));
-      // user: {
-      //   id: auth?.id,
-      // },
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await uploadFile(formData)
-        .then((data) => {
-          const contentFile = {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await uploadFile(formData)
+      .then((data) => {
+        let contentFile = {};
+        let type = MESSAGE_CONTENT_TYPES.IMAGE;
+        if (data?.mimetype === "image/jpg" || data?.mimetype === "image/png" || data?.mimetype === "image/jpeg") {
+          contentFile = {
             content: data?.url,
             content_type: MESSAGE_CONTENT_TYPES.IMAGE,
             created_at: new Date().toISOString(),
             id: crypto.randomBytes(16).toString("hex"),
             sender_id: "123",
             isErrorMessage: !navigator.onLine,
+            user: {
+              id: auth?.id,
+            },
           };
-          setListMessages([...listMessages, contentFile]);
-          sendMessage(data?.url, MESSAGE_CONTENT_TYPES.IMAGE);
+          type = MESSAGE_CONTENT_TYPES.IMAGE;
+        } else {
+          contentFile = {
+            content: data?.url,
+            content_type: MESSAGE_CONTENT_TYPES.FILE,
+            created_at: new Date().toISOString(),
+            id: crypto.randomBytes(16).toString("hex"),
+            sender_id: "123",
+            isErrorMessage: !navigator.onLine,
+            user: {
+              id: auth?.id,
+            },
+            meta: {
+              filename: file.name,
+              size: file.size,
+            },
+          };
+          type = MESSAGE_CONTENT_TYPES.FILE;
+        }
+        setListMessages([...listMessages, contentFile]);
+        sendMessage(data?.url, type, file.name, file.size);
+        setSendFile(false);
+        setTimeout(() => {
+          scrollEl(boxMessageRef.current);
+        }, 200);
+        return data;
+      })
+      .catch((err) => {
+        setTimeout(() => {
           setSendFile(false);
-          setTimeout(() => {
-            scrollEl(boxMessageRef.current);
-          }, 200);
-          return data;
-        })
-        .catch((err) => {
-          setTimeout(() => {
-            setSendFile(false);
-            setShowPopupErr(true);
-            setTextMessageErr("エラーが発生しました。");
-          }, 2000);
-          return err;
-        });
-
-      // listMessages.unshift(contentFile);
-      return res;
-    }
+          setShowPopupErr(true);
+          setTextMessageErr("エラーが発生しました。");
+        }, 2000);
+        return err;
+      });
+    return res;
   };
   return (
     <Grid
@@ -424,10 +495,10 @@ const ChatBoxRightComponent = ({
               {Object.keys(listMessagesShow)?.map((dateText) => (
                 <Box key={dateText}>
                   <div className={styles.spanStartOfDay}>
-                    <span>{dateText}</span> - {auth?.id}
+                    <span>{dateText}</span>
                   </div>
                   {listMessagesShow[dateText]?.map((message: any, index: number) =>
-                    message?.user?.id !== auth?.id ? (
+                    message?.user?.id === auth?.id ? (
                       <BoxMyChat
                         key={index}
                         message={message}
@@ -481,7 +552,7 @@ const ChatBoxRightComponent = ({
             inputProps={{ "aria-label": t("chat:input-chat-placeholder") }}
             onKeyUp={onKeyUpMessageText}
           />
-          <input accept="image/*" hidden id="icon-button-file" type="file" onChange={uploadImage} />
+          <input hidden id="icon-button-file" type="file" onChange={sendFileOnMess} />
           <label htmlFor="icon-button-file">
             <IconButton color="primary" sx={{ p: "10px" }} aria-label="directions" component="span">
               <img alt="search" src="/assets/images/svg/ic_attachment.svg" />

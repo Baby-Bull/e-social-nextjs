@@ -14,7 +14,7 @@ import SplashScreen from "src/components/common/SplashScreen";
 import { authWithProvider } from "src/services/auth";
 import { login } from "src/store/store";
 
-import { LoginSocialGithub, LoginSocialTwitter } from "../loginSocial";
+import { LoginSocialGithub, LoginSocialTwitterV1 } from "../loginSocial";
 
 const LoginComponent = () => {
   const { t } = useTranslation();
@@ -33,7 +33,7 @@ const LoginComponent = () => {
   const onLogoutFailure = () => {};
 
   useEffect(() => {
-    const registerAccount = async (providerAuth: string, accessToken: string) => {
+    const registerAccount = async (providerAuth: string, accessToken: any) => {
       setIsLoading(true);
       const resAuth = await authWithProvider(providerAuth, accessToken);
       if (resAuth?.data?.access_token) {
@@ -85,10 +85,8 @@ const LoginComponent = () => {
                     {t("login:right.title")}
                   </Typography>
                   <Box pt="68px">
-                    <LoginSocialTwitter
+                    <LoginSocialTwitterV1
                       ref={githubRef}
-                      client_id={process.env.NEXT_PUBLIC_TWITTER_API_KEY || ""}
-                      client_secret={process.env.NEXT_PUBLIC_TWITTER_API_KEY_SECRET || ""}
                       redirect_uri={process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER}
                       onResolve={({ provider: twitterProvider, data }: IResolveParams) => {
                         setProvider(twitterProvider);
@@ -98,7 +96,7 @@ const LoginComponent = () => {
                       onReject={() => {}}
                     >
                       <ButtonComponent props={{ mode: "twitter" }}>{t("login:right.register-twitter")}</ButtonComponent>
-                    </LoginSocialTwitter>
+                    </LoginSocialTwitterV1>
                   </Box>
                   <Box pt="48px">
                     <LoginSocialGoogle

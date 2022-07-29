@@ -3,8 +3,10 @@ import { Box, Typography, Avatar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import moment from "moment";
-import "moment/locale/ja";
+import dayjs from "dayjs";
+import "dayjs/locale/ja";
+import relativeTime from "dayjs/plugin/relativeTime";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 
@@ -25,6 +27,10 @@ import { TYPE } from "src/constants/matching";
 import { IStoreState } from "src/constants/interface";
 import actionTypes from "src/store/actionTypes";
 import { JOBS } from "src/constants/constants";
+
+dayjs.extend(relativeTime);
+dayjs.extend(localizedFormat);
+dayjs.locale("ja");
 
 const ThreadTitle = styled(Typography)({
   paddingLeft: "20px",
@@ -124,11 +130,10 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
   const handleFormatTime = (tempValue: string) => {
     if (tempValue === "favorite") return "";
     if (tempValue === "matched")
-      return moment(data?.matchRequest?.match_date).format("lll").toString() + t("thread:request");
-    if (tempValue === "reject") return `${moment(data?.matchRequest?.match_date).format("lll").toString()}に否承認`;
-    if (tempValue === "confirm")
-      return `${moment(data?.matchRequest?.match_date).format("lll").toString()}にマッチング`;
-    return moment(data?.updated_at).format("lll").toString() + t("thread:request");
+      return `${dayjs(data?.matchRequest?.match_date).format("lll").toString()}分にマッチング`;
+    if (tempValue === "reject") return `${dayjs(data?.updated_at).format("lll").toString()}に否承認`;
+    if (tempValue === "confirm") return `${dayjs(data?.updated_at).format("lll").toString()}にマッチング`;
+    return dayjs(data?.updated_at).format("lll").toString() + t("thread:request");
   };
 
   return (
@@ -153,8 +158,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
           }}
         >
           {type === "confirm" || type === "reject"
-            ? moment(data?.updated_at).format("lll").toString()
-            : moment(data?.desired_match_date).format("lll").toString()}
+            ? dayjs(data?.updated_at).format("lll").toString()
+            : dayjs(data?.desired_match_date).format("lll").toString()}
         </Typography>
 
         {/* Info user (avatar, ...) */}
@@ -261,7 +266,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   mt: "9px",
                 }}
               >
-                {data?.activity_status === isOnline ? "ログイン中" : moment(data?.last_login_at).fromNow()}
+                {data?.activity_status === isOnline ? "ログイン中" : dayjs(data?.last_login_at).fromNow()}
               </Typography>
               {/* End Title bottom Avatar tab favorite */}
             </Box>
@@ -521,7 +526,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 mt: "9px",
               }}
             >
-              {data?.user?.activity_status === isOnline ? "ログイン中" : moment(data?.user?.last_login_at).fromNow()}
+              {data?.user?.activity_status === isOnline ? "ログイン中" : dayjs(data?.user?.last_login_at).fromNow()}
             </Typography>
 
             <Box
