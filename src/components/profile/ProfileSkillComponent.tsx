@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Avatar } from "@mui/material";
 import React from "react";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import TabsUnstyled from "@mui/base/TabsUnstyled";
@@ -110,7 +110,17 @@ const ImgStar: React.SFC<IRecommendMembersComponentProps> = ({ countStar }) => {
     <Box sx={{ display: "flex" }}>
       {rows?.map((value, key) => (
         <Box key={key}>
-          <img src={value} alt="star" />
+          <Avatar
+            variant="square"
+            src={value}
+            alt="star"
+            sx={{
+              width: value === "/assets/images/star.svg" ? "16px" : "20px",
+              height: value === "/assets/images/star.svg" ? "16px" : "20px",
+              mt: value === "/assets/images/star.svg" ? "1px" : "0",
+              mr: value === "/assets/images/star.svg" ? "2px" : "0",
+            }}
+          />
         </Box>
       ))}
     </Box>
