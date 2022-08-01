@@ -558,8 +558,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   flexDirection: ["column", "row"],
                 }}
               >
-                <ThreadTitle>{t("thread:date-interview")}</ThreadTitle>
-                <ThreadContent>{data?.meeting_link?.length > 0 ? data?.meeting_link : t("no_info")}</ThreadContent>
+                {/* <ThreadTitle>{t("thread:date-interview")}</ThreadTitle> */}
+                {/* <ThreadContent>{data?.meeting_link?.length > 0 ? data?.meeting_link : t("no_info")}</ThreadContent> */}
               </Box>
               <Box
                 sx={{

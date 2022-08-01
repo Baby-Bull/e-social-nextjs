@@ -9,6 +9,7 @@ import { Chart as ChartJS, RadialLinearScale, PointElement, LineElement, Filler,
 import { Radar } from "react-chartjs-2";
 import { useTranslation } from "next-i18next";
 
+import styles from "src/components/profile/profile.module.scss";
 import theme from "src/theme";
 import { labels, dataChart, config } from "src/mockDataChartProfile";
 
@@ -26,6 +27,7 @@ const DialogChartProfile = styled(Dialog)({
     maxWidth: "100%",
   },
   "& .MuiDialog-paper": {
+    justifyContent: "center",
     backgroundColor: `${theme.blue}`,
     borderRadius: "12px",
     width: "640px",
@@ -59,13 +61,21 @@ const PopupChartProfileComponent: React.SFC<IReportUserProps> = ({ showPopup, se
   const options = config;
 
   return (
-    <Box sx={{ background: "red" }}>
+    <Box
+      sx={{
+        background: "red",
+      }}
+    >
       <DialogChartProfile
         open={showPopup}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
+        {/* Delete this element after completing the profile chart feature. */}
+        <Box className={styles.commingSoon}>
+          <span className={styles.commingSoonTitle}>comming soon ...</span>
+        </Box>
         <Box
           sx={{
             display: "flex",
