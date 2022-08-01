@@ -50,7 +50,8 @@
       "delete-comment": "削除する"
     },
     "detail": {
-      "submit-post": "投稿する"
+      "submit-post": "投稿する",
+      "cancel-edit": "キャンセル"
     },
     "setting": {
       "save": "保存する",
@@ -119,6 +120,7 @@
   "setting": {
     "title": "管理者メニュー",
     "form": {
+      "back-detail-community": "コミュニティページ",
       "text-upload": "コミュニティの画像を設定してください。",
       "max-upload": "推奨サイズ 1200×1200px",
       "name": "コミュニティ名",
@@ -183,7 +185,7 @@
   "min_2_tag": "2種類以上設定してください。",
   "tooltip_update": "管理者はコミュニティの削除以外の管理を全て行うことができます。",
   "virtual-room": "バーチャルルーム入室",
-  "post" : {
+  "post": {
     "no-data": "まだコメントがありません。"
   }
 }

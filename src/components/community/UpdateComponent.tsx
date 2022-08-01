@@ -101,6 +101,7 @@ const BoxTextValidate = styled(Box)({
 const UpdateComponent = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const communityId = router.query;
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const LIMIT = 10;
@@ -167,7 +168,6 @@ const UpdateComponent = () => {
   const fetchData = async () => {
     const admins = [];
     const adminIds = [];
-    const communityId = router.query;
     const data = await getCommunity(communityId?.indexId);
     for (let i = 0; i < data?.admins?.length; i++) {
       admins.push(`${data?.admins[i].id},${data?.admins[i].username}`);
@@ -195,7 +195,6 @@ const UpdateComponent = () => {
   };
 
   const fetchDataUsers = async () => {
-    const communityId = router.query;
     if (hasMore) {
       setIsLoading(true);
       const data = await CommunityMembers(communityId?.indexId, LIMIT, valueCursor);
@@ -209,7 +208,6 @@ const UpdateComponent = () => {
   };
 
   const checkRoleMemberCommunity = async () => {
-    const communityId = router.query;
     const data = await checkMemberCommunity(communityId?.indexId, userId);
     if (data?.id && data?.role !== IS_MEMBER) {
       setMySelf(data);
@@ -280,7 +278,6 @@ const UpdateComponent = () => {
     setOpen(false);
   };
   const handleDeleteCommunity = async () => {
-    const communityId = router.query;
     const res = await deleteCommunity(communityId?.indexId);
     if (!res?.error_code) {
       setTimeout(() => router.push(`/search_community`), 1000);
@@ -289,10 +286,9 @@ const UpdateComponent = () => {
   };
 
   const handleLeaveCommunity = async () => {
-    const community = router.query;
-    const res = await leaveCommunity(community?.indexId);
+    const res = await leaveCommunity(communityId?.indexId);
     if (res) {
-      setTimeout(() => router.push(`/community/${community?.indexId}`), 1000);
+      setTimeout(() => router.push(`/community/${communityId?.indexId}`), 1000);
       setOpen(false);
     }
     return res;
@@ -463,7 +459,6 @@ const UpdateComponent = () => {
         formData.append("profile_image", infoCommunitySetting.avatar);
       }
 
-      const communityId = router.query;
       const res = await updateCommunity(communityId?.indexId, formData);
       setDisableBtnSubmit(true);
       setIsLoading(false);
@@ -534,6 +529,12 @@ const UpdateComponent = () => {
                 />
               ))}
             </Tabs>
+            <Typography
+              className={styles.linkToDetail}
+              onClick={() => router.push(`/community/${communityId?.indexId}`)}
+            >
+              {t("community:setting.form.back-detail-community")}
+            </Typography>
           </Box>
 
           <TabPanel value={value} index={0}>
