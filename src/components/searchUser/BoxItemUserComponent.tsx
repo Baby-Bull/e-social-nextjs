@@ -14,7 +14,7 @@ import { HOMEPAGE_RECOMMEND_MEMBER_STATUS, USER_SEARCH_STATUS } from "src/compon
 import { JOBS } from "src/constants/constants";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
-import { sendMatchingRequest } from "src/services/matching";
+import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
 import { IStoreState } from "src/constants/interface";
@@ -37,6 +37,7 @@ interface IUserItemProps {
   chatStatus: number;
   is_favorite: boolean;
   match_status?: string;
+  match_request?: any;
 }
 
 interface IBoxUserComponentProps {
@@ -51,16 +52,20 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
   const [liked, setLiked] = useState(data?.is_favorite);
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
-  const handleShowModalMatching = (matchStatus) => {
-    // handleShowModalMatching
+
+  const handleShowModalMatching = async (matchStatus) => {
     if (!matchStatus) {
       setModalMatching(true);
     } else if (matchStatus === "confirmed") {
       router.push("/chat/personal");
+    } else if (matchStatus === "received_pending") {
+      await acceptMatchingRequestReceived(data?.match_request?.id);
+      // callbackHandleIsRefresh(!isRefresh);
     } else {
       return 1;
     }
   };
+
   const handleSendMatchingRequest = async (matchingRequest) => {
     const res = await sendMatchingRequest(data?.id, matchingRequest);
     await addUserFavorite(data?.id);
@@ -72,11 +77,11 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
 
   const handleMapMatchingStatus = (statusMatchingTemp: string) => {
     switch (statusMatchingTemp) {
-      case "pending":
+      case "sent_pending":
         return 1;
       case "confirmed":
         return 2;
-      case "rejected":
+      case "received_pending":
         return 3;
       default:
         return 4;
