@@ -95,22 +95,8 @@ const WebsocketClient = ({
   };
 };
 
-const socket = WebsocketClient({
+const socket = (typeof window !== 'undefined') ? WebsocketClient({
   url: getWsEndpoint,
-});
-
-if (process.env.NODE_ENV === "development") {
-  socket.on("connected", () => {
-    console.log("WS connected");
-  });
-
-  socket.on("disconnected", () => {
-    console.log("WS disconnected");
-  });
-
-  socket.on("reconnected", () => {
-    console.log("WS RECONNECTED");
-  });
-}
+}) : null;
 
 export default socket;

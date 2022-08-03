@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -20,9 +20,9 @@ import { logout } from "src/services/auth";
 // import styles from "src/components/home/home.module.scss";
 // eslint-disable-next-line import/order
 import theme from "src/theme";
-
 import "react-toastify/dist/ReactToastify.css";
 import { IStoreState } from "src/constants/interface";
+import websocket from "src/helpers/socket";
 
 // eslint-disable-next-line import/order
 // import InfiniteScroll from "react-infinite-scroll-component";
@@ -122,6 +122,34 @@ const TypoLabel = styled(Typography)({
 });
 
 const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false }) => {
+  useEffect(() => {
+    function notify(title, body) {
+      // eslint-disable-next-line no-new
+      new Notification(title, {
+        body,
+        icon: "/assets/images/logo/logo_footer.png",
+      });
+    }
+
+    if (Notification.permission === "granted") {
+      const wsHandler = (message) => {
+        notify("Goodhub Notification", `${message.content}`);
+        // call dispatch function here to update list noti_s in the store redux
+      };
+      websocket.on("get.chatRoom.message", wsHandler);
+      return () => {
+        websocket.off("get.chatRoom.message", wsHandler);
+      };
+    }
+    if (Notification.permission === "denied") {
+      window.alert("You denied permission. Please change your browser settings for this page to view notifications");
+    } else {
+      Notification.requestPermission((status) => {
+        if (status === "granted") notify("Goodhub Notification", "Thank you for granting permission");
+      });
+    }
+  }, []);
+
   const { t } = useTranslation();
   const router = useRouter();
   const fullText = router.query?.fulltext;
