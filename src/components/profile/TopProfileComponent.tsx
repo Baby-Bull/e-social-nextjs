@@ -560,7 +560,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                 }}
               >
                 <Avatar
-                  alt="Remy Sharp"
+                  alt={user?.username}
                   src={user?.profile_image}
                   sx={{
                     width: "80px",
