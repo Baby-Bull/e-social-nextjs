@@ -46,6 +46,22 @@ const reducer = (state, action: any) => {
           match_request_count: (state?.user?.match_request_count || 0) + 1,
         },
       };
+    case actionTypes.ADD_MATCH_REQUEST_PENDING_COUNT:
+      return {
+        ...state,
+        user: {
+          ...state?.user,
+          match_request_pending_count: (state?.user?.match_request_pending_count || 0) + 1,
+        },
+      };
+    case actionTypes.REMOVE_MATCH_REQUEST_PENDING_COUNT:
+      return {
+        ...state,
+        user: {
+          ...state?.user,
+          match_request_pending_count: (state?.user?.match_request_pending_count || 0) - 1,
+        },
+      };
     case actionTypes.REMOVE_MATCH_REQUEST_COUNT:
       return {
         ...state,
