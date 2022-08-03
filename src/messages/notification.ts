@@ -1,5 +1,5 @@
 export const USER_REPORT = "運営に通報が送信されました。";
-export const USER_REVIEW = "リビューを投稿しました。";
+export const USER_REVIEW = "レビューを投稿しました。";
 export const SETTING_EMAIL = "メールアドレスを変更しました。";
 export const SETTING_NOTIFICATION = "通知を変更しました。";
 export const ACCEPT_MATCHING = "マッチングリクエストを承認しました。";

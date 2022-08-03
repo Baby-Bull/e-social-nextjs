@@ -36,11 +36,186 @@ export const notificationMockData = {
 //   },
 // ];
 
+export const menuNotificationsData2 = [
+  {
+    data: {
+      items_count: 10,
+      unread_count: 2,
+      items: [
+        {
+          id: "string10",
+          notification_type: "new_matching_request",
+          content: "〇〇さんからマッチングリクエストが届きました。",
+          metadata: {
+            match_request_id: "match request id",
+            user: {
+              id: "user id",
+              username: "name",
+              profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+            },
+          },
+          is_read: true,
+          read_at: "2022-03-17T11:57:56.451Z",
+          created_at: "2022-03-17T11:57:56.451Z",
+        },
+        {
+          id: "string9",
+          notification_type: "new_matching_request",
+          content: "コミュニティ名の参加が承認されました。",
+          metadata: {
+            match_request_id: "match request id",
+            user: {
+              id: "user id",
+              username: "name",
+              profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+            },
+          },
+          is_read: true,
+          read_at: "2022-03-17T11:57:56.451Z",
+          created_at: "2022-03-17T11:57:56.451Z",
+        },
+        {
+          id: "string8",
+          notification_type: "new_matching_request",
+          content: "コミュニティ名の参加が承認されませんでした。",
+          metadata: {
+            match_request_id: "match request id",
+            user: {
+              id: "user id",
+              username: "name",
+              profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+            },
+          },
+          is_read: true,
+          read_at: "2022-03-17T11:57:56.451Z",
+          created_at: "2022-03-17T11:57:56.451Z",
+        },
+        {
+          id: "string7",
+          notification_type: "new_matching_request",
+          content:
+            "運営からのお知らせ内容が入ります。運営からのお知らせ内容が入ります。運営からのお知らせ内容が入ります。運営からのお知らせ内容が入ります。",
+          metadata: {
+            match_request_id: "match request id",
+            user: {
+              id: "user id",
+              username: "name",
+              profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+            },
+          },
+          is_read: false,
+          read_at: "2022-03-17T11:57:56.451Z",
+          created_at: "2022-03-17T11:57:56.451Z",
+        },
+        {
+          id: "string6",
+          notification_type: "new_matching_request",
+          content: "〇〇さんからメッセージが届きました。",
+          metadata: {
+            match_request_id: "match request id",
+            user: {
+              id: "user id",
+              username: "name",
+              profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+            },
+          },
+          is_read: true,
+          read_at: "2022-03-17T11:57:56.451Z",
+          created_at: "2022-03-17T11:57:56.451Z",
+        },
+        {
+          id: "string5",
+          notification_type: "new_matching_request",
+          content: "コミュニティ名のグループメッセージが届きました。",
+          metadata: {
+            match_request_id: "match request id",
+            user: {
+              id: "user id",
+              username: "name",
+              profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+            },
+          },
+          is_read: true,
+          read_at: "2022-03-17T11:57:56.451Z",
+          created_at: "2022-03-17T11:57:56.451Z",
+        },
+        {
+          id: "string4",
+          notification_type: "new_matching_request",
+          content: "〇〇さんがログインしました。",
+          metadata: {
+            match_request_id: "match request id",
+            user: {
+              id: "user id",
+              username: "name",
+              profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+            },
+          },
+          is_read: false,
+          read_at: "2022-03-17T11:57:56.451Z",
+          created_at: "2022-03-17T11:57:56.451Z",
+        },
+        {
+          id: "string3",
+          notification_type: "new_matching_request",
+          content: "The standard Lorem Ipsum passage, used since the 1500s",
+          metadata: {
+            match_request_id: "match request id",
+            user: {
+              id: "user id",
+              username: "name",
+              profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+            },
+          },
+          is_read: true,
+          read_at: "2022-03-17T11:57:56.451Z",
+          created_at: "2022-03-17T11:57:56.451Z",
+        },
+        {
+          id: "string2",
+          notification_type: "new_matching_request",
+          content: "Section 1.10.32 of de Finibus Bonorum et Malorum, written by Cicero in 45 BC",
+          metadata: {
+            match_request_id: "match request id",
+            user: {
+              id: "user id",
+              username: "name",
+              profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+            },
+          },
+          is_read: true,
+          read_at: "2022-03-17T11:57:56.451Z",
+          created_at: "2022-03-17T11:57:56.451Z",
+        },
+        {
+          id: "string1",
+          notification_type: "new_matching_request",
+          content:
+            "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti",
+          metadata: {
+            match_request_id: "match request id",
+            user: {
+              id: "user id",
+              username: "name",
+              profile_image: "https://lh3.googleusercontent.com/a/AATXAJxXt_axpFjhAx37_Ay_Q5-s7_lSJvo0uJ0fxBfk=s96-c",
+            },
+          },
+          is_read: true,
+          read_at: "2022-03-17T11:57:56.451Z",
+          created_at: "2022-03-17T11:57:56.451Z",
+        },
+      ],
+      cursor: "622aaf62bf651184a757675a",
+      hasMore: true,
+    },
+    message: "list user notifications",
+  },
+];
 export const menuNotificationsData = [
   {
     id: 1,
     image: "/assets/images/avatar_user.png",
-    content: "●●さんからマッチングリクエストが届きました。",
+    content: "〇〇さんからマッチングリクエストが届きました。",
     important: false,
     createdTime: "6:16",
   },
@@ -61,21 +236,22 @@ export const menuNotificationsData = [
   {
     id: 4,
     image: "/assets/images/rectangle.png",
-    content: "運営からのお知らせ内容が入ります。",
+    content:
+      "運営からのお知らせ内容が入ります。運営からのお知らせ内容が入ります。運営からのお知らせ内容が入ります。運営からのお知らせ内容が入ります。",
     important: true,
     createdTime: "6:16",
   },
   {
     id: 5,
     image: "/assets/images/avatar_user.png",
-    content: "●●さんからメッセージが届きました。",
+    content: "コミュニティ名のグループメッセージが届きました。",
     important: false,
     createdTime: "6:16",
   },
   {
     id: 6,
     image: "/assets/images/avatar_user.png",
-    content: "コミュニティ名のグループメッセージが届きました。",
+    content: "〇〇さんがログインしました。",
     important: false,
     createdTime: "6:16",
   },

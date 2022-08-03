@@ -1,7 +1,9 @@
 import React from "react";
 import { Box, Typography, Avatar, Divider, Paper, ListItem, Chip } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import moment from "moment";
+import dayjs from "dayjs";
+import "dayjs/locale/ja";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
@@ -10,10 +12,11 @@ import theme from "src/theme";
 import ButtonDropDownComponent from "src/components/community/post/detail/blocks/ButtonDropDownComponent";
 // eslint-disable-next-line import/order
 import { IStoreState } from "src/constants/interface";
-
-import "moment/locale/ja";
 import { deleteCommunityPost } from "src/services/community";
 import { ShowTextArea } from "src/components/common/ShowTextAreaComponent";
+
+dayjs.extend(localizedFormat);
+dayjs.locale("ja");
 
 interface IBoxInfoProps {
   title: string;
@@ -89,6 +92,10 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
       router.push(`/profile/${data?.user?.id}`);
     }
   };
+
+  const redirectReferenceUrl = (page) => {
+    window.open(page);
+  };
   return (
     <Box
       sx={{
@@ -146,7 +153,7 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
               fontSize: [10, 14],
             }}
           >
-            {moment(data?.created_at).format("LLL")}
+            {dayjs(data?.created_at).format("LLL")}
           </Typography>
           <Typography
             component="div"
@@ -203,8 +210,11 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
 
       <React.Fragment>
         {data?.reference_url && (
-          <BoxInfo title={t("community:url")} text={data?.reference_url} textColor={theme.blue} fontWeight={500} />
+          <Box onClick={() => redirectReferenceUrl(data?.reference_url)} sx={{ cursor: "pointer" }}>
+            <BoxInfo title={t("community:url")} text={data?.reference_url} textColor={theme.blue} fontWeight={500} />
+          </Box>
         )}
+
         {data?.address && <BoxInfo title={t("community:address")} text={data?.address} fontWeight={400} />}
       </React.Fragment>
 

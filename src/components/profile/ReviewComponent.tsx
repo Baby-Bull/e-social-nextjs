@@ -1,12 +1,15 @@
 import React from "react";
 import { Box } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import moment from "moment";
+import dayjs from "dayjs";
+import "dayjs/locale/ja";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import { useSelector } from "react-redux";
 
 import { IStoreState } from "src/constants/interface";
 
-import "moment/locale/ja";
+dayjs.extend(localizedFormat);
+dayjs.locale("ja");
 
 interface reviewProps {
   user: any;
@@ -204,7 +207,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, hideReviewer, rating, c
                   fontWeight: 400,
                 }}
               >
-                {moment(createdAt).format("LL")}にレビュー
+                {dayjs(createdAt).format("LL")}にレビュー
               </Box>
             </Box>
             <Box

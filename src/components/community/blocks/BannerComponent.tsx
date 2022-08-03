@@ -84,12 +84,13 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
         />
         <Box
           sx={{
-            mt: "20px",
+            mt: [0, "20px"],
             py: ["18px", "40px"],
-            px: ["17px", "40px"],
+            px: ["18px", "40px"],
             display: "flex",
             justifyContent: "space-between",
             zIndex: "1",
+            position: ["relative", "unset"],
           }}
         >
           <Box
@@ -232,7 +233,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
               </Box>
             </Box>
           </Box>
-          <Box sx={{ marginTop: "22px" }}>
+          <Box sx={{ marginTop: "22px", position: "absolute", top: "22px", right: "16px" }}>
             {!data?.is_public && (!data?.community_role || data?.community_role === PENDING) ? (
               <Box>
                 <ButtonComponent

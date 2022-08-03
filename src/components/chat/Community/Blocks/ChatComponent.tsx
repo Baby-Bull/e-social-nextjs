@@ -11,15 +11,12 @@ import { getListChatRoomsCommunity } from "src/services/chat";
 import { REACT_QUERY_KEYS } from "src/constants/constants";
 import { sortListRoomChat } from "src/helpers/helper";
 import ChatBoxLeftComponent from "src/components/chat/Community/Blocks/ChatBoxLeftComponent";
-import socket from "src/helpers/socket";
+import websocket from "src/helpers/socket";
 
 import ChatBoxRightComponent from "./ChatBoxRightComponent";
 import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
 
-const newSocket = socket();
-
 const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, setHasData }) => {
-  const ws = newSocket.init();
   const router = useRouter();
   const { room: roomQuery } = router.query;
   // Responsive
@@ -57,6 +54,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
               ...item,
               last_chat_message_at: new Date().toISOString(),
               last_chat_message_received: message.content,
+              last_message_content_type: message.last_message_content_type,
             };
           }
           return item;
@@ -94,27 +92,18 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
       setIsRenderRightSide(true);
     }
 
-    ws.onopen = () => {
-      console.log("WebSocket is connected");
+    const wsHandler = (message) => {
+      if (chatRoomIdRef.current === message.chat_room_id) {
+        setNewMessageOfRoom(message);
+      }
+
+      updateLastMessageOfListRooms(message);
     };
 
-    ws.addEventListener("message", (e: any) => {
-      const messageReceived = JSON.parse(e.data);
-      if (messageReceived["get.community.chatRoom.message"]) {
-        const message = messageReceived["get.community.chatRoom.message"];
-        if (chatRoomIdRef.current === message.chat_room_id) {
-          setNewMessageOfRoom(message);
-        }
+    websocket.on("get.community.chatRoom.message", wsHandler);
 
-        updateLastMessageOfListRooms(message);
-      }
-    });
-    ws.onclose = () => {
-      console.log("WebSocket is disconnected");
-      setTimeout(() => {
-        newSocket.init();
-        ws.onopen();
-      }, 1000);
+    return () => {
+      websocket.off("get.chatRoom.message", wsHandler);
     };
   }, []);
 
@@ -172,18 +161,26 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     }
   };
 
-  const sendTextMessage = (message: string) => {
+  const sendMessage = (message: string, type: string = "text", fileName: string = "", fileSize: any = "") => {
     if (message) {
       const payload = {
-        event: "community.chatRoom.message",
         chatRoomId: roomSelect?.id,
         content: message,
-        content_type: "text",
+        content_type: type,
+        meta: {
+          filename: fileName,
+          size: fileSize,
+        },
       };
-      ws.send(JSON.stringify(payload));
+      websocket.emit("community.chatRoom.message", payload);
       updateLastMessageOfListRooms({
         content: message,
         chat_room_id: roomSelect.id,
+        content_type: type,
+        meta: {
+          filename: fileName,
+          size: fileSize,
+        },
       });
     }
   };
@@ -217,7 +214,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
           toggleRenderSide={toggleRenderSide}
           communityId={communityId}
           roomSelect={roomSelect}
-          sendTextMessage={sendTextMessage}
+          sendMessage={sendMessage}
           newMessageOfRoom={newMessageOfRoom}
         />
       ) : null}

@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Avatar } from "@mui/material";
 import React from "react";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import TabsUnstyled from "@mui/base/TabsUnstyled";
@@ -15,6 +15,8 @@ import { styled } from "@mui/material/styles";
 import theme from "src/theme";
 import { USER_STATUS, JOBS, EMPLOYEES } from "src/components/constants/constants";
 import { TEXT_ENGLISH_LEVEL_OPTIONS } from "src/constants/constants";
+
+import { ShowTextArea } from "../common/ShowTextAreaComponent";
 
 interface IProfileDataProps {
   data: any;
@@ -108,7 +110,17 @@ const ImgStar: React.SFC<IRecommendMembersComponentProps> = ({ countStar }) => {
     <Box sx={{ display: "flex" }}>
       {rows?.map((value, key) => (
         <Box key={key}>
-          <img src={value} alt="star" />
+          <Avatar
+            variant="square"
+            src={value}
+            alt="star"
+            sx={{
+              width: value === "/assets/images/star.svg" ? "16px" : "20px",
+              height: value === "/assets/images/star.svg" ? "16px" : "20px",
+              mt: value === "/assets/images/star.svg" ? "1px" : "0",
+              mr: value === "/assets/images/star.svg" ? "2px" : "0",
+            }}
+          />
         </Box>
       ))}
     </Box>
@@ -178,7 +190,9 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:self-introduction")}</TitleContentTab>
-                  <ContentTab>{data?.self_description}</ContentTab>
+                  <ContentTab>
+                    <ShowTextArea value={data?.self_description} />
+                  </ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:occupation")}</TitleContentTab>
@@ -195,8 +209,12 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:discussion-topic")}</TitleContentTab>
                   <ContentTab>
-                    {data?.discussion_topic ??
-                      "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
+                    <ShowTextArea
+                      value={
+                        data?.discussion_topic ??
+                        "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"
+                      }
+                    />
                   </ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
