@@ -20,6 +20,7 @@ import {
   SEND_REQUEST_COMMUNITY,
 } from "src/messages/notification";
 import { api } from "src/helpers/api";
+import { typeCountLogin, typeCountMember } from "src/constants/searchCommunityConstants";
 
 // eslint-disable-next-line import/prefer-default-export
 export const getListCommunities = async (limit: number, cursor: string) => {
@@ -346,13 +347,40 @@ export const searchMemberCommunity = async (communityId, textName: string = "", 
   }
 };
 
+// @ts-ignore
 export const getListCommunitySearch = async (
-  limit: number = 10,
-  cursor: string = "",
-  order: string = "recommended",
+  limit: number,
+  cursor: string,
+  // eslint-disable-next-line default-param-last
+  order: string,
+  params?: any,
+  inputTags?: any,
+  fullText?: string | string[],
 ) => {
   try {
-    const res = await api.get(`/community/search?limit=${limit}&cursor=${cursor}&sort_order=${order}`);
+    let query = `/community/search?limit=${limit}&cursor=${cursor}&sort_order=${order}`;
+    // Query full text
+    query += fullText ? `&fulltext=${fullText}` : "";
+    // Query exclude joined communities
+    query += params?.excludejoinedCommunities ? `&exclude_joined_communities=${params?.excludejoinedCommunities}` : "";
+    // Query login count
+    query += params?.login_count === typeCountLogin.no_0 ? `&login_count[]=""&login_count[]=""` : "";
+    query += params?.login_count === typeCountLogin.less_than_5 ? `&login_count[]=0&login_count[]=5` : "";
+    query += params?.login_count === typeCountLogin.less_than_10 ? `&login_count[]=0&login_count[]=10` : "";
+    query += params?.login_count === typeCountLogin.less_than_15 ? `&login_count[]=0&login_count[]=15` : "";
+    query += params?.login_count === typeCountLogin.more_than_20 ? `&login_count[]=20&login_count[]=""` : "";
+    // Query member count
+    query += params?.member_count === typeCountMember.no_0 ? `&member_count[]=""&member_count[]=""` : "";
+    query += params?.member_count === typeCountMember.less_than_5 ? `&member_count[]=0&member_count[]=5` : "";
+    query += params?.member_count === typeCountMember.less_than_10 ? `&member_count[]=0&member_count[]=10` : "";
+    query += params?.member_count === typeCountMember.less_than_20 ? `&member_count[]=0&member_count[]=20` : "";
+    query += params?.member_count === typeCountMember.more_than_30 ? `&member_count[]=30&member_count[]=""` : "";
+    // Query tags
+    for (let i = 0; i < inputTags.length; i++) {
+      query += `&search_tags[]=${inputTags[i]}`;
+    }
+
+    const res = await api.get(query);
     return res.data;
   } catch (error) {
     toast.error(SERVER_ERROR);

@@ -31,12 +31,6 @@ const MatchingComponent = () => {
           key: "pending",
         },
         {
-          text: "承認済みリクエスト",
-          data: [],
-          count: 0,
-          key: "confirmed",
-        },
-        {
           text: "否承認リクエスト",
           data: [],
           count: 0,
@@ -56,12 +50,6 @@ const MatchingComponent = () => {
           data: [],
           count: 0,
           key: "pending",
-        },
-        {
-          text: "マッチング済み",
-          data: [],
-          count: 0,
-          key: "confirmed",
         },
         {
           text: "否承認",
@@ -189,14 +177,14 @@ const MatchingComponent = () => {
           case TAB_VALUE_BY_KEY.received:
             dataRefetch = [
               getMatchingRequestReceived(LIMIT, "", "pending"),
-              getMatchingRequestReceived(LIMIT, "", "confirmed"),
+              // getMatchingRequestReceived(LIMIT, "", "confirmed"),
               getMatchingRequestReceived(LIMIT, "", "rejected"),
             ];
             break;
           case TAB_VALUE_BY_KEY.sent:
             dataRefetch = [
               getMatchingRequestSent(LIMIT, "", "pending"),
-              getMatchingRequestSent(LIMIT, "", "confirmed"),
+              // getMatchingRequestSent(LIMIT, "", "confirmed"),
               getMatchingRequestSent(LIMIT, "", "rejected"),
             ];
             break;

@@ -187,7 +187,6 @@ const SelectCustom = styled(Select)({
   "& fieldset": {
     border: "none",
   },
-  borderColor: theme.whiteBlue,
   "&:hover": {
     borderRadius: 6,
     borderColor: theme.whiteBlue,
@@ -195,6 +194,7 @@ const SelectCustom = styled(Select)({
   "@media (max-width: 1200px)": {
     width: "100%",
   },
+  backgroundColor: `${theme.whiteBlue}`,
   "& .MuiSelect-select": {
     position: "relative",
     backgroundColor: `${theme.whiteBlue}`,
@@ -542,7 +542,7 @@ const ProfileSkillComponent = () => {
       { key: key + 1, name: null, experience_year: 0, experience_month: 1, level: 1, category: "framework" },
     ]);
   };
-  //
+  // ?.trim()
   const addSkillInfrastructureClick = (key) => () => {
     // @ts-ignore
     setSkillInfrastructure([
@@ -571,7 +571,7 @@ const ProfileSkillComponent = () => {
         Number(el.key) === Number(key)
           ? {
               ...el,
-              [name]: typeof value === "string" ? value.trim() : value,
+              [name]: typeof value === "string" ? value : value,
             }
           : el,
       ),
@@ -586,7 +586,7 @@ const ProfileSkillComponent = () => {
         Number(el.key) === Number(key)
           ? {
               ...el,
-              [name]: typeof value === "string" ? value.trim() : value,
+              [name]: typeof value === "string" ? value : value,
             }
           : el,
       ),
@@ -955,39 +955,60 @@ const ProfileSkillComponent = () => {
       const paramSkillLanguageData = [];
       const paramSkillFrameworkData = [];
       const paramSkillInfrastructureData = [];
-      if (isSkillProfile) {
-        for (let i = 0; i < skillLanguageData.length; i++) {
-          if (skillLanguageData[i]?.name?.length > 0) {
-            paramSkillLanguageData.push(skillLanguageData[i]);
-          }
-        }
-        for (let i = 0; i < skillFrameworkData.length; i++) {
-          if (skillFrameworkData[i]?.name?.length > 0) {
-            paramSkillFrameworkData.push(skillFrameworkData[i]);
-          }
-        }
-        for (let i = 0; i < skillInfrastructureData.length; i++) {
-          if (skillInfrastructureData[i]?.name?.length > 0) {
-            paramSkillInfrastructureData.push(skillInfrastructureData[i]);
-          }
-        }
-        const dataUpdate = {
-          code_skills: [...paramSkillLanguageData, ...paramSkillFrameworkData, ...paramSkillInfrastructureData],
-          upstream_process: skillRequest.upstream_process,
-          english_level: skillRequest.english_level,
-          other_language_level: skillRequest.other_language_level,
-        };
-        const res = await updateProfile({ skills: dataUpdate });
-        setIsLoading(false);
-        setTimeout(() => router.push("/my-profile"), 1000);
-        return res;
-      }
       if (inputTags.length === 0 || inputTags.length > 1) {
         setProfileRequest({
           ...profileRequest,
         });
+        for (let i = 0; i < skillLanguageData.length; i++) {
+          if (skillLanguageData[i]?.name?.trim()?.length > 0) {
+            paramSkillLanguageData.push({
+              category: skillLanguageData[i]?.category,
+              name: skillLanguageData[i]?.name.trim(),
+              experience_month: skillLanguageData[i]?.experience_month,
+              experience_year:
+                // @ts-ignore
+                skillLanguageData[i]?.experience_year?.length > 0 ? skillLanguageData[i]?.experience_year : 0,
+              level: skillLanguageData[i]?.level,
+            });
+          }
+        }
+        for (let i = 0; i < skillFrameworkData.length; i++) {
+          if (skillFrameworkData[i]?.name?.trim()?.length > 0) {
+            paramSkillFrameworkData.push({
+              category: skillFrameworkData[i]?.category,
+              name: skillFrameworkData[i]?.name.trim(),
+              experience_month: skillFrameworkData[i]?.experience_month,
+              experience_year:
+                // @ts-ignore
+                skillFrameworkData[i]?.experience_year?.length > 0 ? skillFrameworkData[i]?.experience_year : 0,
+              level: skillFrameworkData[i]?.level,
+            });
+          }
+        }
+        for (let i = 0; i < skillInfrastructureData.length; i++) {
+          if (skillInfrastructureData[i]?.name?.trim()?.length > 0) {
+            paramSkillInfrastructureData.push({
+              category: skillInfrastructureData[i]?.category,
+              name: skillInfrastructureData[i]?.name.trim(),
+              experience_month: skillInfrastructureData[i]?.experience_month,
+              experience_year:
+                // @ts-ignore
+                skillInfrastructureData[i]?.experience_year?.length > 0
+                  ? skillInfrastructureData[i]?.experience_year
+                  : 0,
+              level: skillInfrastructureData[i]?.level,
+            });
+          }
+        }
+        const dataUpdate = {
+          code_skills: [...paramSkillLanguageData, ...paramSkillFrameworkData, ...paramSkillInfrastructureData],
+          upstream_process: skillRequest.upstream_process?.trim(),
+          english_level: skillRequest.english_level,
+          other_language_level: skillRequest.other_language_level?.trim(),
+        };
+        const skills = { skills: dataUpdate };
         const tags = { tags: inputTags };
-        const res = await updateProfile({ ...profileRequest, ...tags });
+        const res = await updateProfile({ ...profileRequest, ...tags, ...skills });
 
         setIsLoading(false);
         setTimeout(() => router.push("/my-profile"), 1000);
@@ -1485,6 +1506,16 @@ const ProfileSkillComponent = () => {
                                       value={
                                         option.experience_year < 0 ? -option.experience_year : option.experience_year
                                       }
+                                      onKeyPress={(e) => {
+                                        if (
+                                          (e.keyCode || e.which) === 45 ||
+                                          (e.keyCode || e.which) === 45 ||
+                                          // @ts-ignore
+                                          option.experience_year?.length > 1
+                                        ) {
+                                          return e.preventDefault();
+                                        }
+                                      }}
                                     />
                                   </Box>
                                   <Typography fontSize={14} sx={{ m: "0 8px" }}>
@@ -1627,6 +1658,16 @@ const ProfileSkillComponent = () => {
                                       value={
                                         option.experience_year < 0 ? -option.experience_year : option.experience_year
                                       }
+                                      onKeyPress={(e) => {
+                                        if (
+                                          (e.keyCode || e.which) === 45 ||
+                                          (e.keyCode || e.which) === 45 ||
+                                          // @ts-ignore
+                                          option.experience_year?.length > 1
+                                        ) {
+                                          return e.preventDefault();
+                                        }
+                                      }}
                                     />
                                   </Box>
                                   <Typography fontSize={14} sx={{ m: "0 8px" }}>
@@ -1770,6 +1811,16 @@ const ProfileSkillComponent = () => {
                                       value={
                                         option.experience_year < 0 ? -option.experience_year : option.experience_year
                                       }
+                                      onKeyPress={(e) => {
+                                        if (
+                                          (e.keyCode || e.which) === 45 ||
+                                          (e.keyCode || e.which) === 45 ||
+                                          // @ts-ignore
+                                          option.experience_year?.length > 1
+                                        ) {
+                                          return e.preventDefault();
+                                        }
+                                      }}
                                     />
                                   </Box>
                                   <Typography fontSize={14} sx={{ m: "0 8px" }}>

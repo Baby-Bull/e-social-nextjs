@@ -57,18 +57,6 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
       });
     }
   };
-  const handleCallbackChangePaginationConfirmed = (event, value) => {
-    setPagePagination({
-      ...pagePagination,
-      pageConfirmed: value,
-    });
-    if (pagePagination.perPageConfirmed <= value) {
-      setPagePagination({
-        ...pagePagination,
-        perPageConfirmed: pagePagination.perPageConfirmed + 1,
-      });
-    }
-  };
   const handleCallbackChangePaginationRejected = (event, value) => {
     setPagePagination({
       ...pagePagination,
@@ -178,70 +166,6 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
         </Box>
       </TabPanel>
       <TabPanel value={valueChildTab} index={1}>
-        <Box
-          sx={{
-            pb: ["120px", "98px"],
-            backgroundColor: [theme.whiteBlue, "white"],
-          }}
-        >
-          {dataChild[1]?.data?.length ? (
-            <React.Fragment>
-              {dataChild[1]?.data
-                ?.slice((pagePagination.pageConfirmed - 1) * LIMIT, pagePagination.pageConfirmed * LIMIT)
-                .map((tab, index) => (
-                  <React.Fragment key={index.toString()}>
-                    <Box
-                      sx={{
-                        mx: [0, "45px"],
-                        "&:first-of-type": {
-                          paddingTop: ["20px", "27px"],
-                        },
-                        "&:last-of-type": {
-                          borderBottom: { sm: `2px solid ${theme.lightGray}` },
-                        },
-                      }}
-                    >
-                      <ThreadComponent
-                        data={tab}
-                        type="confirm"
-                        dataType={dataType}
-                        setKeyRefetchData={setKeyRefetchData}
-                      />
-                    </Box>
-                  </React.Fragment>
-                ))}
-              <Box
-                sx={{
-                  py: "40px",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                {dataChild[1]?.data?.length > LIMIT && (
-                  <PaginationCustomComponent
-                    handleCallbackChangePagination={handleCallbackChangePaginationConfirmed}
-                    page={pagePagination?.pageConfirmed}
-                    perPage={pagePagination?.perPageConfirmed}
-                    totalPage={Math.ceil(dataChild[1]?.data?.length > 0 ? dataChild[1].data.length / LIMIT : 1)}
-                  />
-                )}
-              </Box>
-            </React.Fragment>
-          ) : (
-            <Box
-              sx={{
-                mx: [0, "45px"],
-                paddingTop: ["20px", "27px"],
-              }}
-            >
-              <EmptyMatchingComponent
-                text={dataId === 1 ? t("matching:text-empty.tab-1.2") : t("matching:text-empty.tab-2.2")}
-              />
-            </Box>
-          )}
-        </Box>
-      </TabPanel>
-      <TabPanel value={valueChildTab} index={2}>
         <Box
           sx={{
             pb: ["120px", "98px"],

@@ -32,5 +32,6 @@
   },
   "showMore": "もっと見る",
   "required": "必須",
-  "not_have_access": "アクセス権がありません。"
+  "not_have_access": "アクセス権がありません。",
+  "no_info": "情報なし"
 }

@@ -97,7 +97,7 @@ const MatchingComponent = () => {
     },
     application: {
       label: t("home:matching.application"),
-      data: auth?.match_request_count ?? 0,
+      data: auth?.match_request_pending_count ?? 0,
       unit: t("home:matching.application-unit"),
       link: "sent",
     },
@@ -124,7 +124,7 @@ const MatchingComponent = () => {
     },
     application: {
       label: t("home:matching.application"),
-      data: auth?.match_request_count ?? 0,
+      data: auth?.match_request_pending_count ?? 0,
       icon: "/assets/images/home_page/ic_hand.svg",
       link: "type=sent",
     },
@@ -152,13 +152,13 @@ const MatchingComponent = () => {
     setDataMatching({
       request: {
         label: t("home:matching.request"),
-        data: auth?.match_application_count ?? 0,
+        data: auth?.match_application_pending_count ?? 0,
         unit: t("home:matching.request-unit"),
         link: "received",
       },
       application: {
         label: t("home:matching.application"),
-        data: auth?.match_request_count ?? 0,
+        data: auth?.match_request_pending_count ?? 0,
         unit: t("home:matching.application-unit"),
         link: "sent",
       },
@@ -185,7 +185,7 @@ const MatchingComponent = () => {
       },
       application: {
         label: t("home:matching.application"),
-        data: auth?.match_request_count ?? 0,
+        data: auth?.match_request_pending_count ?? 0,
         icon: "/assets/images/home_page/ic_hand.svg",
         link: "sent",
       },

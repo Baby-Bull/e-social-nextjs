@@ -113,9 +113,35 @@
 }
 .notificationMenu {
   margin-top: 46px;
-  border-radius: 12px;
   width: 360px;
   height: 704px;
+  ul {
+    padding: 0;
+  }
+  /* width */
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #fff;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #C4C4C4;
+    border-radius: 20px;
+  }
+
+  ::-webkit-scrollbar-button {
+    height: 10px;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #C4C4C4;
+  }
 }
 
 .notificationMenuHeader {
@@ -125,17 +151,25 @@
   color: #1a2944;
   font-weight: 500;
   border-bottom: 2px solid #e4e6eb;
+  position: fixed;
+  background: #fff;
+  width: 328px;
+  z-index: 1;
+  border-top-left-radius: 12px !important;
+  border-top-right-radius: 12px !important;
 }
 
 .notificationMenuItem {
   border-bottom: 1px solid #e4e6eb;
+  align-items: unset;
 }
 
 .notificationContents {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  width: 224px;
+  white-space: normal;
+  font-size: 14px;
 }
 
 .notificationContent {
@@ -144,6 +178,11 @@
 
 .notificationImage {
   margin-right: 16px;
+  img {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+  }
 }
 
 .createdTime {
@@ -449,7 +488,6 @@
       img {
         width: 56px;
         height: 56px;
-        margin-right: 13px;
         object-fit: cover;
         border-radius: 74px;
         border: 1px solid rgba(156, 172, 194, 0.3);

@@ -46,7 +46,6 @@ const SplashScreen = () => (
 const MyApp = (props: MyAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps, pathname } = props;
   const [queryClient] = React.useState(() => new QueryClient());
-
   React.useEffect(() => {
     const handleRouteChange = (url) => {
       gtag.pageview(url);
@@ -64,7 +63,6 @@ const MyApp = (props: MyAppProps) => {
     if (!AUTH_PAGE_PATHS.includes(pathname) && !cookies[USER_TOKEN]) {
       Router.push("/login");
     }
-
     if (!AUTH_PAGE_PATHS.includes(pathname) && cookies[USER_TOKEN]) {
       const now = new Date();
       const expiresIn = parseInt(cookies.EXPIRES_IN, 10) || now.getTime();
@@ -81,7 +79,6 @@ const MyApp = (props: MyAppProps) => {
 
   const store = useStore(pageProps.initialReduxState);
   const persistor = persistStore(store);
-
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
@@ -89,6 +86,7 @@ const MyApp = (props: MyAppProps) => {
           <CacheProvider value={emotionCache}>
             <Head>
               <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1" />
+              <meta name="theme-color" content={theme.palette.primary.main} />
               <script async src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`} />
               <script
                 dangerouslySetInnerHTML={{

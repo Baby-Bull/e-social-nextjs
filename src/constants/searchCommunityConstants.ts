@@ -43,3 +43,19 @@ export const numberOfParticipants = [
     value: 4,
   },
 ];
+
+export const typeCountLogin = {
+  no_0: 0,
+  less_than_5: 1,
+  less_than_10: 2,
+  less_than_15: 3,
+  more_than_20: 4,
+};
+
+export const typeCountMember = {
+  no_0: 0,
+  less_than_5: 1,
+  less_than_10: 2,
+  less_than_20: 3,
+  more_than_30: 4,
+};

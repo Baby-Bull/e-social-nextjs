@@ -170,6 +170,7 @@ export const LIMIT_PER_PAGE = 20;
 export const MESSAGE_CONTENT_TYPES = {
   TEXT: "text",
   IMAGE: "image",
+  FILE: "file",
 };
 
 export const REACT_QUERY_KEYS = {

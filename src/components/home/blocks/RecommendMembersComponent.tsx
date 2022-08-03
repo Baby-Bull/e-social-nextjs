@@ -1,10 +1,11 @@
-import { Box, Grid } from "@mui/material";
+import { Avatar, Box, Grid } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import moment from "moment";
-import "moment/locale/ja";
+import dayjs from "dayjs";
+import "dayjs/locale/ja";
+import relativeTime from "dayjs/plugin/relativeTime";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -21,6 +22,9 @@ import { IStoreState } from "src/constants/interface";
 import actionTypes from "src/store/actionTypes";
 
 import SlickSliderRecommendComponent from "./SlickSliderRecommendComponent";
+
+dayjs.extend(relativeTime);
+dayjs.locale("ja");
 
 interface IRecommendDataItem {
   id: string;
@@ -124,19 +128,20 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
                 {data?.activity_status !== isOnline
                   ? replaceLabelByTranslate(
                       t("home:box-member-recommend.last-login"),
-                      moment(data?.last_login_at).fromNow(),
+                      dayjs(data?.last_login_at).fromNow(),
                     )
                   : t("home:box-member-recommend.no-login")}
               </span>
             </div>
 
             <div className="info-summary">
-              <img
+              <Avatar
                 src={
                   data?.profile_image ??
                   "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
                 }
-                alt="img-member"
+                alt={data?.username}
+                sx={{ width: "56px", height: "56px", mr: "13px" }}
               />
               <div className="member-info">
                 <div className="name">{data?.username}</div>

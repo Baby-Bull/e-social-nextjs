@@ -12,32 +12,30 @@ import {
   InputBase,
   Paper,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
 
 import { jobs, employeeStatus, lastLogins, reviews } from "src/constants/searchUserConstants";
 import styles from "src/components/searchUser/search_user.module.scss";
-import { UserSearch } from "src/services/user";
 import theme from "src/theme";
 
 interface ISearchUserProps {
+  inputTags: any;
+  formSearch: any;
+  isSort: string;
   showPopup: boolean;
-  triggerClear: boolean;
   // eslint-disable-next-line no-unused-vars
   setShowPopup: (status: boolean) => void;
   // eslint-disable-next-line no-unused-vars
-  setResultSearch: (resultChild: any) => void;
+  setFormSearch: Function;
   // eslint-disable-next-line no-unused-vars
-  setShowMore: (showMore: any) => void;
+  setInputTags: Function;
   // eslint-disable-next-line no-unused-vars
-  setIsLoading: (loading: boolean) => void;
-  // eslint-disable-next-line no-unused-vars
-  setTriggerClear: (isClear: boolean) => void;
+  fetchData: Function;
 }
 
 /* event change select option */
@@ -99,38 +97,20 @@ const FormControlLabelCustom = styled(FormControlLabel)({
 });
 
 const PopupSearchUser: React.SFC<ISearchUserProps> = ({
+  inputTags,
+  formSearch,
+  isSort,
   showPopup,
-  triggerClear,
+  fetchData,
   setShowPopup,
-  setResultSearch,
-  setShowMore,
-  setIsLoading,
-  setTriggerClear,
+  setInputTags,
+  setFormSearch,
 }) => {
   const { t } = useTranslation();
-  const router = useRouter();
 
-  const LIMIT = 6;
-  const [inputTags, setInputTags] = useState([]);
-  const showMore = { cursor: "", hasMore: false };
-  const [formSearch, setFormSearch] = useState({
-    job: jobs[0]?.value,
-    employeeStatus: employeeStatus[0]?.value,
-    lastLogin: lastLogins[0]?.value,
-    review: reviews[0]?.value,
-    statusCanTalk: false,
-    statusLookingForFriend: false,
-    statusNeedConsult: false,
-  });
-  const fullText = router.query?.fulltext;
-
-  const fetchData = async (typeSort: string = "") => {
+  const handleFetchdata = async () => {
+    fetchData(isSort, [], "");
     setShowPopup(false);
-    setIsLoading(true);
-    const res = await UserSearch(formSearch, inputTags, fullText, typeSort, LIMIT, showMore.cursor);
-    setResultSearch(res?.items);
-    setShowMore({ cursor: res?.cursor, hasMore: res?.hasMore });
-    setIsLoading(false);
   };
 
   const removeSearchTag = (indexRemove: any) => {
@@ -139,34 +119,17 @@ const PopupSearchUser: React.SFC<ISearchUserProps> = ({
 
   const onKeyPress = (e) => {
     if (e.key === "Enter" && e.target.value) {
-      setTriggerClear(false);
       setInputTags([...inputTags, e.target.value]);
       (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
     }
   };
 
   const handleChangeInputSearch = (e: any, key: any) => {
-    setTriggerClear(false);
     setFormSearch({
       ...formSearch,
       [key]: e.target.value,
     });
   };
-
-  useEffect(() => {
-    if (triggerClear) {
-      setFormSearch({
-        job: jobs[0]?.value,
-        employeeStatus: employeeStatus[0]?.value,
-        lastLogin: lastLogins[0]?.value,
-        review: reviews[0]?.value,
-        statusCanTalk: false,
-        statusLookingForFriend: false,
-        statusNeedConsult: false,
-      });
-      setInputTags([]);
-    }
-  }, [triggerClear]);
 
   // @ts-ignore
   return (
@@ -280,7 +243,6 @@ const PopupSearchUser: React.SFC<ISearchUserProps> = ({
                     value="can-talk"
                     checked={formSearch?.statusCanTalk}
                     onChange={() => {
-                      setTriggerClear(false);
                       setFormSearch({ ...formSearch, statusCanTalk: !formSearch?.statusCanTalk });
                     }}
                   />
@@ -293,7 +255,6 @@ const PopupSearchUser: React.SFC<ISearchUserProps> = ({
                     checked={formSearch?.statusLookingForFriend}
                     value="looking-for-friend"
                     onChange={() => {
-                      setTriggerClear(false);
                       setFormSearch({ ...formSearch, statusLookingForFriend: !formSearch?.statusLookingForFriend });
                     }}
                   />
@@ -306,14 +267,13 @@ const PopupSearchUser: React.SFC<ISearchUserProps> = ({
                     checked={formSearch?.statusNeedConsult}
                     value="needConsult"
                     onChange={() => {
-                      setTriggerClear(false);
                       setFormSearch({ ...formSearch, statusNeedConsult: !formSearch?.statusNeedConsult });
                     }}
                   />
                 }
                 label={t("user-search:label-checkbox-3").toString()}
               />
-              <Button className="btn-user-search btn-search" fullWidth onClick={() => fetchData()}>
+              <Button className="btn-user-search btn-search" fullWidth onClick={handleFetchdata}>
                 {t("user-search:btn-search")}
               </Button>
             </Box>
