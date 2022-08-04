@@ -124,6 +124,7 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
                     height: "32px",
                   }}
                   src={value?.profile_image || "/assets/images/svg/dog.svg"}
+                  alt={value?.username}
                 />
                 {value?.username}
               </Box>

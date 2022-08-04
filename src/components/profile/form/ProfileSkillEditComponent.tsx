@@ -1100,7 +1100,7 @@ const ProfileSkillComponent = () => {
               >
                 <label htmlFor="avatar">
                   <Avatar
-                    alt="Remy Sharp"
+                    alt={username}
                     src={profileImage || "/assets/images/profile/avatar_2.png"}
                     sx={{
                       width: { xs: "80px", lg: "160px" },
@@ -1111,7 +1111,7 @@ const ProfileSkillComponent = () => {
                     }}
                   />
                   <Avatar
-                    alt="Remy Sharp"
+                    alt="camera"
                     src="/assets/images/icon/ic_camera.png"
                     sx={{
                       width: "23.33px",
@@ -1132,7 +1132,7 @@ const ProfileSkillComponent = () => {
                     }}
                   >
                     <Avatar
-                      alt="Remy Sharp"
+                      alt="camera"
                       src="/assets/images/icon/ic_camera.png"
                       sx={{
                         width: "20px",
