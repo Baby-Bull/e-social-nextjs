@@ -128,7 +128,11 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
             </div>
 
             <div className="info-summary">
-              <Avatar src={data?.profile_image} alt={data?.username} />
+              <Avatar
+                src={data?.profile_image}
+                alt={data?.username}
+                sx={{ width: "56px", height: "56px", mr: "13px" }}
+              />
               <div className="member-info">
                 <p className="name">{data?.username}</p>
                 <p className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? "情報なし"}</p>

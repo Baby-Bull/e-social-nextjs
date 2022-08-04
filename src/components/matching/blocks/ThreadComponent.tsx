@@ -239,8 +239,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                         width: ["15px", "24px"],
                         height: ["15px", "24px"],
                       }}
-                      src={auth?.user?.profile?.profile_image}
-                      alt={auth?.user?.profile?.username}
+                      src={auth?.profile_image}
+                      alt={auth?.username}
                     />
                     <Box
                       sx={{
