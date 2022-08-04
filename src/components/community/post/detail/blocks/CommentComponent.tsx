@@ -232,6 +232,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
             }}
             onClick={redirectProfile}
             src={item?.user?.profile_image}
+            alt={item?.user?.username}
           />
           <Box
             sx={{

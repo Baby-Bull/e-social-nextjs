@@ -82,7 +82,8 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) 
                   width: "149px",
                   height: "149px",
                 }}
-                src={item.profile_image}
+                src={item?.profile_image}
+                alt={item?.username}
               />
 
               <Box sx={{ display: "flex", alignItems: "center", pt: "10px" }}>

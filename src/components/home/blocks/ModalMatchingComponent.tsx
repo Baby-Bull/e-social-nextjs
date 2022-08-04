@@ -147,7 +147,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
         </Button>
         <div className="title-modal" id="modal-modal-title">
           <Avatar
-            alt="avatar"
+            alt={userRequestMatching?.username}
             src={userRequestMatching?.profile_image || "/assets/images/home_page/ic_avatar_modal.svg"}
             sx={{ width: 52, height: 52 }}
           />

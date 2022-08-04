@@ -136,6 +136,7 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
             cursor: "pointer",
           }}
           src={data?.user?.profile_image}
+          alt={data?.user?.username}
           onClick={redirectProfile}
         />
 

@@ -499,6 +499,7 @@ const CreateComponent = () => {
                       height: "32px",
                     }}
                     src={auth?.profile_image}
+                    alt={auth?.username}
                   />
 
                   <Box

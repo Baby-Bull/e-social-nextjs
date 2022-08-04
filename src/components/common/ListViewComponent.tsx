@@ -79,6 +79,7 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
           }}
           onClick={redirectProfile}
           src={data?.user?.profile_image}
+          alt={data?.user?.username}
         />
 
         {/* Grid right Info */}

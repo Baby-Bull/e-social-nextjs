@@ -396,6 +396,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
                                 },
                               }}
                               src={tab?.profile_image}
+                              alt={tab?.username}
                             />
 
                             <Typography
