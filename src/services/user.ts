@@ -301,3 +301,12 @@ export const updateProfile = async (body: any) => {
     return error;
   }
 };
+
+export const getListnotifications = async () => {
+  try {
+    const res = await api.get(`/user/notifications`);
+    return res?.data;
+  } catch (error) {
+    return error;
+  }
+};

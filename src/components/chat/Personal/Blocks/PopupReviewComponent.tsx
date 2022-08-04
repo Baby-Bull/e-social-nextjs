@@ -285,7 +285,7 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
         </Box>
         <DialogTitle sx={{ p: isCheck ? "40px 0 40px 0" : "0 0 40px 0" }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Avatar src={user?.profile_image} />
+            <Avatar src={user?.profile_image} alt={user?.username} />
             <Typography
               sx={{
                 fontSize: "20px",

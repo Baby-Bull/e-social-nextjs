@@ -121,6 +121,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
         message: null,
       });
       dispatch({ type: actionTypes.ADD_MATCH_REQUEST_COUNT, payload: auth });
+      dispatch({ type: actionTypes.ADD_MATCH_REQUEST_PENDING_COUNT, payload: auth });
       dispatch({ type: actionTypes.ADD_FAVORITE, payload: auth });
     }
   };
@@ -149,7 +150,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
         </Button>
         <div className="title-modal" id="modal-modal-title">
           <Avatar
-            alt="avatar"
+            alt={userRequestMatching?.username}
             src={userRequestMatching?.profile_image || "/assets/images/home_page/ic_avatar_modal.svg"}
             sx={{ width: 52, height: 52 }}
           />

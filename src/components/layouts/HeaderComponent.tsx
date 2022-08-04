@@ -14,15 +14,21 @@ import { useTranslation } from "next-i18next";
 import { ToastContainer } from "react-toastify";
 import Link from "next/link";
 import { useSelector } from "react-redux";
+// import CircularProgress from "@mui/material/CircularProgress";
 
 import { logout } from "src/services/auth";
-import { menuNotificationsData } from "src/components/home/mockData/mockData";
-import styles from "src/components/home/home.module.scss";
+// import styles from "src/components/home/home.module.scss";
 // eslint-disable-next-line import/order
 import theme from "src/theme";
 
 import "react-toastify/dist/ReactToastify.css";
 import { IStoreState } from "src/constants/interface";
+
+// eslint-disable-next-line import/order
+// import InfiniteScroll from "react-infinite-scroll-component";
+// eslint-disable-next-line import/order
+// import dayjs from "dayjs";
+// import { getListnotifications } from "src/services/user";
 
 interface IHeaderComponentProps {
   authPage?: boolean;
@@ -132,17 +138,18 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     },
   ];
 
-  // const [mess] = useState(9);
-  // const [notify] = useState("99+");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const [notifyAnchorEl, setNotifyAnchorEl] = React.useState(null);
+  // const [notifyAnchorEl, setNotifyAnchorEl] = React.useState(null);
   const [typeSearch, setTypeSearch] = React.useState(typeSearchs[0].label);
   const [valueSearch, setValueSearch] = useState(fullText);
-
+  // const [notifications, setNotifications] = useState([]);
+  // const [countUnreadReadNotifications, setCountUnreadReadNotifications] = useState(0);
+  // const [hasMoreScroll, setHasMoreScroll] = useState(true);
+  // const [statusNotify, setStatusNotify] = useState(false);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const isNotifyMenuOpen = Boolean(notifyAnchorEl);
+  // const isNotifyMenuOpen = Boolean(notifyAnchorEl);
 
   const handleChange = (event) => {
     setTypeSearch(event.target.value);
@@ -154,9 +161,10 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     setAnchorEl(null);
     handleMobileMenuClose();
   };
-  const handleNotifyMenuClose = () => {
-    setNotifyAnchorEl(null);
-  };
+  // const handleNotifyMenuClose = () => {
+  //   setNotifyAnchorEl(null);
+  //   setStatusNotify(false);
+  // };
 
   const handleRedirectMatching = (type: string) => {
     router.push({
@@ -165,6 +173,21 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     });
   };
 
+  // const getNotifications = async () => {
+  //   const res = await getListnotifications();
+  //   setStatusNotify(true);
+  //   setNotifications(res?.items);
+  //   setCountUnreadReadNotifications(res?.unread_count ?? 0);
+  //   setHasMoreScroll(res?.hasMore);
+  // };
+
+  // const loadMoreNotificaitons = async () => {
+  //   const res = await getListnotifications();
+  //   // eslint-disable-next-line no-unsafe-optional-chaining
+  //   setNotifications([...notifications, ...res?.items]);
+  //   setCountUnreadReadNotifications(res?.unread_count ?? 0);
+  //   setHasMoreScroll(res?.hasMore);
+  // };
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -173,6 +196,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   };
   // const handleNotifyOpenMenu = (event) => {
   //   setNotifyAnchorEl(event.currentTarget);
+  //   getNotifications();
   // };
 
   const handleLogout = async () => {
@@ -237,7 +261,11 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     >
       <Box sx={{ p: "22px 0 22px 12px", borderBottom: "1px solid #D8D8D8" }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Avatar src={auth?.profile_image} sx={{ width: "20px", height: "20px", mr: "4px", borderRadius: "50%" }} />
+          <Avatar
+            src={auth?.profile_image}
+            alt={auth?.username}
+            sx={{ width: "20px", height: "20px", mr: "4px", borderRadius: "50%" }}
+          />
           <Typography fontWeight={500} fontSize={12} lineHeight="17.38px">
             マイプロフィール
           </Typography>
@@ -314,42 +342,78 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
       </Box>
     </Menu>
   );
-  const notifyMenuId = "primary-search-account-menu-notification";
-  const renderNotificationMenu = (
-    <Menu
-      className={styles.notificationMenu}
-      anchorEl={notifyAnchorEl}
-      anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-      id={notifyMenuId}
-      keepMounted
-      open={isNotifyMenuOpen}
-      onClose={handleNotifyMenuClose}
-      transformOrigin={{
-        vertical: "top",
-        horizontal: "right",
-      }}
-    >
-      <div className={styles.notificationMenuHeader}>お知らせ</div>
-      {menuNotificationsData.map((data) => (
-        <MenuItem key={data.id} className={styles.notificationMenuItem}>
-          <div className={styles.notificationImage}>
-            <img alt="" src={data.image} />
-          </div>
-          <div className={styles.notficationContents}>
-            {data.important ? (
-              <div className={styles.notificationContent}>{data.content}</div>
-            ) : (
-              <div>{data.content}</div>
-            )}
-            <div className={styles.createdTime}>{data.createdTime}</div>
-          </div>
-        </MenuItem>
-      ))}
-    </Menu>
-  );
+  // const notifyMenuId = "primary-search-account-menu-notification";
+  // const renderNotificationMenu = (
+  //   <Box>
+  //     {statusNotify && (
+  //       <Menu
+  //         className={styles.notificationMenu}
+  //         anchorEl={notifyAnchorEl}
+  //         anchorOrigin={{
+  //           vertical: "top",
+  //           horizontal: "right",
+  //         }}
+  //         id={notifyMenuId}
+  //         keepMounted
+  //         open={isNotifyMenuOpen}
+  //         onClose={handleNotifyMenuClose}
+  //         transformOrigin={{
+  //           vertical: "top",
+  //           horizontal: "right",
+  //         }}
+  //         sx={{
+  //           ".MuiPaper-root": {
+  //             borderRadius: "12px !important",
+  //           },
+  //         }}
+  //       >
+  //         <InfiniteScroll
+  //           dataLength={notifications?.length}
+  //           next={loadMoreNotificaitons}
+  //           hasMore={hasMoreScroll}
+  //           height={650}
+  //           loader={
+  //             <Box sx={{ display: "flex", py: "15px", justifyContent: "center" }}>
+  //               <CircularProgress sx={{ color: theme.blue }} size={30} />
+  //             </Box>
+  //           }
+  //           endMessage={
+  //             <Box
+  //               sx={{
+  //                 width: "328px",
+  //                 display: "flex",
+  //                 height: "550px",
+  //                 justifyContent: "center",
+  //                 alignItems: "center",
+  //               }}
+  //             >
+  //               <b>通知はありません。</b>
+  //             </Box>
+  //           }
+  //         >
+  //           <div className={styles.notificationMenuHeader}>お知らせ</div>
+  //           <Box sx={{ paddingTop: "50px" }}>
+  //             {notifications?.map((dataMap) => (
+  //               <MenuItem key={dataMap.id} className={styles.notificationMenuItem}>
+  //                 <div className={styles.notificationImage}>
+  //                   <img alt="" src={dataMap?.metadata?.user?.profile_image} />
+  //                 </div>
+  //                 <div className={styles.notificationContents}>
+  //                   {!dataMap.is_read ? (
+  //                     <div className={styles.notificationContent}>{dataMap.content}</div>
+  //                   ) : (
+  //                     <div>{dataMap.content}</div>
+  //                   )}
+  //                   <div className={styles.createdTime}>{dayjs(dataMap.created_at).format("H:s")}</div>
+  //                 </div>
+  //               </MenuItem>
+  //             ))}
+  //           </Box>
+  //         </InfiniteScroll>
+  //       </Menu>
+  //     )}
+  //   </Box>
+  // );
   return (
     <Box sx={{ flexGrow: 1 }}>
       <ToastContainer
@@ -448,18 +512,17 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 </Badge> */}
                 </IconButton>
               </Link>
-              {/* <IconButton
-                size="large"
-                aria-label="show 17 new notifications"
-                color="inherit"
-                sx={{ p: "12px 16px" }}
-                onClick={handleNotifyOpenMenu}
-              >
-                <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
-                <Badge badgeContent={notify} color="error">
-                  <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
-                </Badge>
-              </IconButton> */}
+              {/* <IconButton */}
+              {/*  size="large" */}
+              {/*  aria-label="show 17 new notifications" */}
+              {/*  color="inherit" */}
+              {/*  sx={{ p: "12px 16px" }} */}
+              {/*  onClick={handleNotifyOpenMenu} */}
+              {/* > */}
+              {/*  <Badge badgeContent={countUnreadReadNotifications} color="error"> */}
+              {/*    <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" /> */}
+              {/*  </Badge> */}
+              {/* </IconButton> */}
               <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <IconButton
                   onClick={handleOpenMenu}
@@ -470,12 +533,12 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                     height: "100%",
                   }}
                 >
-                  <img
+                  <Avatar
                     src={auth?.profile_image || "/assets/images/svg/avatar.svg"}
-                    alt="avatar"
-                    width="40"
-                    height="40"
-                    style={{
+                    alt={auth?.username}
+                    sx={{
+                      width: "40px",
+                      height: "40px",
                       borderRadius: "50%",
                       objectFit: "cover",
                     }}
@@ -492,17 +555,16 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 </Badge> */}
                 </IconButton>
               </Link>
-              {/* <IconButton
-                size="large"
-                aria-label="show 17 new notifications"
-                color="inherit"
-                onClick={handleNotifyOpenMenu}
-              >
-                <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
-                <Badge badgeContent={notify} color="error">
-                  <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
-                </Badge>
-              </IconButton> */}
+              {/* <IconButton */}
+              {/*  size="large" */}
+              {/*  aria-label="show 17 new notifications" */}
+              {/*  color="inherit" */}
+              {/*  onClick={handleNotifyOpenMenu} */}
+              {/* > */}
+              {/*  <Badge badgeContent={countUnreadReadNotifications} color="error"> */}
+              {/*    <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" /> */}
+              {/*  </Badge> */}
+              {/* </IconButton> */}
               <IconButton
                 size="large"
                 aria-label="show more"
@@ -511,12 +573,14 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 onClick={handleMobileMenuOpen}
                 sx={{ p: 0, ml: "33px" }}
               >
-                <img
+                <Avatar
                   src={auth?.profile_image || "/assets/images/svg/avatar.svg"}
-                  alt="avatar"
-                  width="28"
-                  height="28"
-                  style={{ borderRadius: "50%" }}
+                  alt={auth?.username}
+                  sx={{
+                    borderRadius: "50%",
+                    width: "28px",
+                    height: "28px",
+                  }}
                 />
               </IconButton>
             </Box>
@@ -548,7 +612,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
-      {renderNotificationMenu}
+      {/* {renderNotificationMenu} */}
     </Box>
   );
 };

@@ -199,7 +199,11 @@ const CommunityComponent = () => {
                         flex: "0 0 24%",
                       }}
                     >
-                      <Avatar sx={{ width: "72px", height: "72px" }} src={member.profile_image} />
+                      <Avatar
+                        sx={{ width: "72px", height: "72px" }}
+                        src={member?.profile_image}
+                        alt={member?.username}
+                      />
 
                       <Typography
                         sx={{
@@ -207,7 +211,7 @@ const CommunityComponent = () => {
                           fontWeight: 500,
                         }}
                       >
-                        {member.username}
+                        {member?.username}
                       </Typography>
                     </Box>
                   </React.Fragment>

@@ -232,7 +232,7 @@ const BoxChatOthers: React.SFC<IBoxChatProps> = ({ time, allInfoMessage }) => {
     <Box className={styles.itemMsgOther}>
       <Avatar
         className="avatar"
-        alt="Avatar"
+        alt={allInfoMessage?.user?.username}
         src={allInfoMessage?.user?.profile_image || "/assets/images/svg/avatar.svg"}
       />
       {allInfoMessage?.content_type !== "image" && allInfoMessage?.content_type !== "file" && (

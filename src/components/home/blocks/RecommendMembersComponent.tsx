@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material";
+import { Avatar, Box, Grid } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -146,12 +146,13 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
             </div>
 
             <div className="info-summary">
-              <img
+              <Avatar
                 src={
                   data?.profile_image ??
                   "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
                 }
-                alt="img-member"
+                alt={data?.username}
+                sx={{ width: "56px", height: "56px", mr: "13px" }}
               />
               <div className="member-info">
                 <div className="name">{data?.username}</div>
