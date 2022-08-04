@@ -690,6 +690,7 @@ const UpdateComponent = () => {
                         height: "32px",
                       }}
                       src={owner?.profile_image}
+                      alt={owner?.username}
                     />
 
                     <Box
@@ -794,6 +795,7 @@ const UpdateComponent = () => {
                               >
                                 <Avatar
                                   src={nameOption?.profile_image}
+                                  alt={nameOption?.username}
                                   sx={{
                                     width: "24px",
                                     height: "24px",

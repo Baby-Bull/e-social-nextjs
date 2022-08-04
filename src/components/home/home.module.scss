@@ -130,7 +130,7 @@
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #C4C4C4;
+    background: #c4c4c4;
     border-radius: 20px;
   }
 
@@ -140,7 +140,7 @@
 
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: #C4C4C4;
+    background: #c4c4c4;
   }
 }
 
@@ -296,6 +296,7 @@
   :global {
     .div-title {
       margin-bottom: 33px;
+      margin-left: 0.7em;
       @media screen and (max-width: 992px) {
         width: 100%;
         text-align: center;

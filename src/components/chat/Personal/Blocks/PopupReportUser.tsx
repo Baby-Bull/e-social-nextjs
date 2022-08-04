@@ -202,7 +202,7 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup,
         </Box>
         <DialogTitle sx={{ p: 0, mb: "32px", display: report ? "none" : "block" }}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
-            <Avatar src={user?.profile_image} />
+            <Avatar src={user?.profile_image} alt={user?.username} />
             <Typography
               component="span"
               sx={{
