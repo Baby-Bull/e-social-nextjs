@@ -71,7 +71,7 @@ const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data 
         <div className="image-community">
           <Avatar
             src={data?.profile_image}
-            alt="community"
+            alt={data?.name}
             sx={{
               width: "124px",
               height: "124px",

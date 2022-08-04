@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Avatar } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import React, { useState } from "react";
@@ -124,7 +124,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
             </div>
 
             <div className="info-summary">
-              <img src={data?.profile_image} alt="img-member" />
+              <Avatar src={data?.profile_image} alt={data?.username} />
               <div className="member-info">
                 <p className="name">{data?.username}</p>
                 {/* <p className="career">{JOBS[data?.job_position]?.label}</p> */}

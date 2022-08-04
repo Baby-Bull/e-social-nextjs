@@ -87,7 +87,7 @@ const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({
                     },
                   }}
                   src={item?.profile_image}
-                  alt="Image Community"
+                  alt={item?.name}
                 />
               </Box>
               <Typography

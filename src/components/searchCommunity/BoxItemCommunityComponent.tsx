@@ -66,7 +66,7 @@ const BoxItemCommunityComponent: React.SFC<IBoxItemCommunityComponentProps> = ({
         </Grid>
         <Box onClick={() => redirectToComunnity()} sx={{ cursor: "pointer" }}>
           <div className="image-community">
-            <img className="image" src={data?.profile_image ?? "/assets/images/logo/logo.png"} alt="community" />
+            <img className="image" src={data?.profile_image ?? "/assets/images/logo/logo.png"} alt={data?.name} />
           </div>
           <p className="name">{data?.name}</p>
           <Typography className="number-of-participant">

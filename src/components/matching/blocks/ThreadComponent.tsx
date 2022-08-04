@@ -225,6 +225,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                         height: "100%",
                       }}
                       src={type === "favorite" || type === "matched" ? data?.profile_image : data?.user?.profile_image}
+                      alt={type === "favorite" || type === "matched" ? data?.username : data?.user?.username}
                     />
 
                     <Avatar
@@ -239,6 +240,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                         height: ["15px", "24px"],
                       }}
                       src={auth?.user?.profile?.profile_image}
+                      alt={auth?.user?.profile?.username}
                     />
                     <Box
                       sx={{

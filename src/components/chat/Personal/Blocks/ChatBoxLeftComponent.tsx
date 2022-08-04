@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { useCallback, useRef, useState } from "react";
-import { Box, Grid, Paper, Typography, IconButton, Menu, MenuItem, Tabs, Tab } from "@mui/material";
+import { Box, Grid, Paper, Typography, IconButton, Menu, MenuItem, Tabs, Tab, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import _ from "lodash";
 import InfiniteScroll from "react-infinite-scroller";
@@ -195,7 +195,10 @@ const ChatBoxLeftComponent = ({
                 >
                   <div className={`thread-item ${thread?.user?.id === userId ? "active" : ""}`}>
                     <div className="avatar">
-                      <img alt="avatar" src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"} />
+                      <Avatar
+                        alt={thread?.user?.username}
+                        src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+                      />
                     </div>
                     <div className="thread-content">
                       <Typography className="name">{thread?.user?.username}</Typography>

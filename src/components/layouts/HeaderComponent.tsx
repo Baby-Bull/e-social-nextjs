@@ -261,7 +261,11 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     >
       <Box sx={{ p: "22px 0 22px 12px", borderBottom: "1px solid #D8D8D8" }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Avatar src={auth?.profile_image} sx={{ width: "20px", height: "20px", mr: "4px", borderRadius: "50%" }} />
+          <Avatar
+            src={auth?.profile_image}
+            alt={auth?.username}
+            sx={{ width: "20px", height: "20px", mr: "4px", borderRadius: "50%" }}
+          />
           <Typography fontWeight={500} fontSize={12} lineHeight="17.38px">
             マイプロフィール
           </Typography>
@@ -529,12 +533,12 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                     height: "100%",
                   }}
                 >
-                  <img
+                  <Avatar
                     src={auth?.profile_image || "/assets/images/svg/avatar.svg"}
-                    alt="avatar"
-                    width="40"
-                    height="40"
-                    style={{
+                    alt={auth?.username}
+                    sx={{
+                      width: "40px",
+                      height: "40px",
                       borderRadius: "50%",
                       objectFit: "cover",
                     }}
@@ -569,12 +573,14 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 onClick={handleMobileMenuOpen}
                 sx={{ p: 0, ml: "33px" }}
               >
-                <img
+                <Avatar
                   src={auth?.profile_image || "/assets/images/svg/avatar.svg"}
-                  alt="avatar"
-                  width="28"
-                  height="28"
-                  style={{ borderRadius: "50%" }}
+                  alt={auth?.username}
+                  sx={{
+                    borderRadius: "50%",
+                    width: "28px",
+                    height: "28px",
+                  }}
                 />
               </IconButton>
             </Box>
