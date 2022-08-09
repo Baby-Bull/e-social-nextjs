@@ -47,6 +47,7 @@ interface IRecommendItemProps {
   data: IRecommendDataItem;
   indexKey?: number;
   handleOpenMatchingModal: Function;
+  handleAcceptMatchingRequestReceived: Function;
 }
 
 interface IRecommendMembersComponentProps {
@@ -54,6 +55,7 @@ interface IRecommendMembersComponentProps {
   title: string;
   dataRecommends: Array<IRecommendDataItem>;
   handleOpenMatchingModal: Function;
+  handleAcceptMatchingRequestReceived: Function;
 }
 
 const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
@@ -75,18 +77,25 @@ const handleMapChatStatus = (statusChatTemp: string) => {
 };
 const handleMapMatchingStatus = (statusMatchingTemp: string) => {
   switch (statusMatchingTemp) {
-    case "pending":
+    case "sent_pending":
       return 1;
     case "confirmed":
       return 2;
-    case "rejected":
+    // case "rejected":
+    //   return 3;
+    case "received_pending":
       return 3;
     default:
       return 4;
   }
 };
 
-const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchingModal, indexKey }) => {
+const RecommendItem: React.SFC<IRecommendItemProps> = ({
+  data,
+  handleOpenMatchingModal,
+  handleAcceptMatchingRequestReceived,
+  indexKey,
+}) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [liked, setLiked] = useState(data?.is_favorite);
@@ -101,6 +110,8 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({ data, handleOpenMatchin
   const handleClickButtonModal = (tempValue: any) => {
     if (tempValue === "rejected" || !tempValue) {
       handleOpenMatchingModal(data, indexKey);
+    } else if (tempValue === "received_pending") {
+      handleAcceptMatchingRequestReceived(data, indexKey);
     } else router.push("/chat/personal");
   };
 
@@ -199,6 +210,7 @@ const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
   dataRecommends,
   indexFetch,
   handleOpenMatchingModal,
+  handleAcceptMatchingRequestReceived,
 }) => {
   const { t } = useTranslation();
   const [dataElements, setDataElements] = useState([]);
@@ -210,6 +222,7 @@ const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
           data={item}
           key={index}
           handleOpenMatchingModal={handleOpenMatchingModal}
+          handleAcceptMatchingRequestReceived={handleAcceptMatchingRequestReceived}
           indexKey={indexFetch}
         />
       )),

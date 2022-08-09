@@ -131,7 +131,7 @@ const ListCommentComponent: React.SFC<IListCommentProps> = ({
               >
                 {comments?.map((item, index) => (
                   <CommentComponent
-                    item={item}
+                    itemData={item}
                     index={index}
                     key={index.toString()}
                     handleCallbackRemove={handleCallbackRemove}

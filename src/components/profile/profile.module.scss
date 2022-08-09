@@ -37,7 +37,7 @@
       img {
         width: 56px;
         height: 56px;
-        margin-right: 13px;
+        //margin-right: 13px;
         object-fit: cover;
         border-radius: 74px;
         border: 1px solid rgba(156, 172, 194, 0.3);
@@ -227,4 +227,31 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.commingSoon {
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0px 4px 48px rgba(0, 0, 0, 0.15), inset 2px 2px 4px rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  border-radius: 12px;
+  z-index: 2;
+  margin-left: 2em;
+
+  .commingSoonTitle {
+    font-family: "Noto Sans JP";
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 35px;
+    margin-top: 45%;
+    margin-left: 35%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #1a2944;
+    text-shadow: 0px 4px 4px rgba(255, 255, 255, 0.25);
+  }
 }

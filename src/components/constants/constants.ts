@@ -43,7 +43,7 @@ export const HOMEPAGE_RECOMMEND_MEMBER_STATUS = {
     mode: "info",
   },
   3: {
-    label: "レビューをする",
+    label: "承認する",
     mode: "orange",
   },
   4: {
