@@ -451,7 +451,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                     height: { xs: "20px", lg: "42px" },
                   }}
                   alt="avatar"
-                  src="/assets/images/logo/logo.png"
+                  src="/assets/images/logo/logo2.png"
                 />
               </a>
             </Link>
