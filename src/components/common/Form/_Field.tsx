@@ -127,7 +127,7 @@ export const Field: React.SFC<FieldProps> = ({
         {editor!.toLowerCase() === "textarea" && (
           <FormControl variant="standard" fullWidth>
             <Grid container>
-              <Grid item md={3} xs={12} sx={{ height: "40px" }}>
+              <Grid item md={12} xs={12} sx={{ height: "40px" }}>
                 <InputLabel shrink htmlFor={id} sx={labelStyle}>
                   <Box display="flex">
                     {label}
@@ -135,7 +135,7 @@ export const Field: React.SFC<FieldProps> = ({
                   </Box>
                 </InputLabel>
               </Grid>
-              <Grid item md={9} xs={12}>
+              <Grid item md={12} xs={12}>
                 <InputCustom
                   multiline
                   rows={10}
@@ -153,7 +153,7 @@ export const Field: React.SFC<FieldProps> = ({
         {editor!.toLowerCase() === "dropdown" && (
           <FormControl variant="standard" fullWidth>
             <Grid container>
-              <Grid item md={3} xs={12} sx={{ height: "40px" }}>
+              <Grid item md={12} xs={12} sx={{ height: "40px" }}>
                 <InputLabel shrink htmlFor={id} sx={labelStyle}>
                   <Box display="flex">
                     {label}
@@ -161,7 +161,7 @@ export const Field: React.SFC<FieldProps> = ({
                   </Box>
                 </InputLabel>
               </Grid>
-              <Grid item md={9} xs={12}>
+              <Grid item md={12} xs={12}>
                 <SelectCustom
                   autoWidth={false}
                   value={value}
