@@ -218,7 +218,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
       const res = await getListnotifications(10, "");
       dispatch({ type: actionTypes.UPDATE_NOTIFICATIONS, payload: res });
     }
-    getNotis();
+    !notifications?.items_count && getNotis();
   }, [])
   const handleNotifyMenuClose = () => {
     setNotifyAnchorEl(null);
@@ -514,31 +514,48 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
           >
             <div className={styles.notificationMenuHeader}>お知らせ</div>
             <Box sx={{ paddingTop: "50px" }}>
-              {notifications?.items?.map((dataMap: any) => (
-                <MenuItem key={dataMap.id} className={styles.notificationMenuItem}>
-                  <div className={styles.notificationImage}>
-                    <img alt="" src={dataMap?.metadata?.user?.profile_image || dataMap?.metadata?.community?.profile_image} />
-                  </div>
-                  <div className={styles.notificationContents}>
-                    {!dataMap.is_read ? (
-                      <div className={styles.notificationContent}>{
-                        // eslint-disable-next-line no-unsafe-optional-chaining
-                        dataMap?.metadata?.user?.username +
-                        // eslint-disable-next-line no-unsafe-optional-chaining
-                        CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label
-                      }</div>
-                    ) : (
-                      <div>{
-                        // eslint-disable-next-line no-unsafe-optional-chaining
-                        dataMap?.metadata?.user?.username +
-                        // eslint-disable-next-line no-unsafe-optional-chaining
-                        CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label
-                      }</div>
-                    )}
-                    <div className={styles.createdTime}>{dayjs(dataMap.created_at).format("H:s")}</div>
-                  </div>
-                </MenuItem>
-              ))}
+              {
+                notifications?.items?.length ?
+                  notifications?.items?.map((dataMap: any) => (
+                    <MenuItem key={dataMap.id} className={styles.notificationMenuItem}>
+                      <div className={styles.notificationImage}>
+                        <img alt="" src={dataMap?.metadata?.user?.profile_image || dataMap?.metadata?.community?.profile_image} />
+                      </div>
+                      <div className={styles.notificationContents}>
+                        {!dataMap.is_read ? (
+                          <div className={styles.notificationContent}>{
+                            // eslint-disable-next-line no-unsafe-optional-chaining
+                            dataMap?.metadata?.user?.username +
+                            // eslint-disable-next-line no-unsafe-optional-chaining
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label
+                          }</div>
+                        ) : (
+                          <div>{
+                            // eslint-disable-next-line no-unsafe-optional-chaining
+                            dataMap?.metadata?.user?.username +
+                            // eslint-disable-next-line no-unsafe-optional-chaining
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label
+                          }</div>
+                        )}
+                        <div className={styles.createdTime}>{dayjs(dataMap.created_at).format("H:s")}</div>
+                      </div>
+                    </MenuItem>
+                  ))
+                  :
+                  <Box
+                    sx={{
+                      width: "328px",
+                      display: "flex",
+                      height: "550px",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <b>通知はありません。</b>
+                  </Box>
+
+              }
+
             </Box>
           </InfiniteScroll>
         </Menu>
