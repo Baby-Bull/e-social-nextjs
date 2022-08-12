@@ -225,6 +225,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                         height: "100%",
                       }}
                       src={type === "favorite" || type === "matched" ? data?.profile_image : data?.user?.profile_image}
+                      alt={type === "favorite" || type === "matched" ? data?.username : data?.user?.username}
                     />
 
                     <Avatar
@@ -238,7 +239,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                         width: ["15px", "24px"],
                         height: ["15px", "24px"],
                       }}
-                      src={auth?.user?.profile?.profile_image}
+                      src={auth?.profile_image}
+                      alt={auth?.username}
                     />
                     <Box
                       sx={{
@@ -543,7 +545,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
             >
               <Box
                 sx={{
-                  mb: "15px",
+                  mb: "10px",
                   display: "flex",
                   flexDirection: ["column", "row"],
                 }}
@@ -551,19 +553,19 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 <ThreadTitle>{t("thread:purpose")}</ThreadTitle>
                 <ThreadContent>{handlePurposeMatchingTab12(data?.purpose)}</ThreadContent>
               </Box>
-              <Box
+              {/* <Box
                 sx={{
                   mb: "15px",
                   display: "flex",
                   flexDirection: ["column", "row"],
                 }}
               >
-                <ThreadTitle>{t("thread:date-interview")}</ThreadTitle>
+                <ThreadTitle>{t("thread:date-interview")}</ThreadTitle> 
                 <ThreadContent>{data?.meeting_link?.length > 0 ? data?.meeting_link : t("no_info")}</ThreadContent>
-              </Box>
+              </Box> */}
               <Box
                 sx={{
-                  mb: "15px",
+                  mb: "10px",
                   display: "flex",
                   flexDirection: ["column", "row"],
                 }}

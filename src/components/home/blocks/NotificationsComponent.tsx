@@ -37,7 +37,7 @@ const NotificationComponent = () => {
       title: "ヒント",
       content: (
         <span>
-          goodhub1へようこそ！まずは
+          goodhubへようこそ！まずは
           <a style={{ color: "#FF9458" }} href="my-profile">
             プロフィール詳細を記入
           </a>
@@ -49,7 +49,7 @@ const NotificationComponent = () => {
       title: "ヒント",
       content: (
         <span>
-          goodhub2へようこそ！まずは
+          goodhubへようこそ！まずは
           <a style={{ color: "#FF9458" }} href="my-profile">
             プロフィール詳細を記入
           </a>

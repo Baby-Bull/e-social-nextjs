@@ -9,7 +9,7 @@ import { Field } from "src/components/common/Form/_Field";
 import styles from "src/components/home/home.module.scss";
 import { MATCHING_PURPOSE_OPTIONS } from "src/constants/constants";
 import { IStoreState } from "src/constants/interface";
-import { REGEX_RULES, VALIDATE_FORM_MATCHING_REQUEST } from "src/messages/validate";
+import { VALIDATE_FORM_MATCHING_REQUEST } from "src/messages/validate";
 import actionTypes from "src/store/actionTypes";
 
 interface IModalMatchingComponentProps {
@@ -30,9 +30,9 @@ const style = {
   p: 5,
   pb: 4,
   maxWidth: "90%",
-  marginTop: "100px",
+  marginTop: "5px",
   paddingTop: "60px",
-  padding: "21px",
+  padding: "20px",
 };
 
 const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
@@ -48,14 +48,14 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
   const [matchingRequest, setMatchingRequest] = useState({
     purpose: "",
     // desired_match_date: new Date()?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }),
-    meeting_link: "",
+    // meeting_link: "",
     message: null,
   });
 
   const [errorValidates, setErrorValidates] = useState({
     purpose: null,
     // desired_match_date: null,
-    meeting_link: null,
+    // meeting_link: null,
     message: null,
   });
 
@@ -71,7 +71,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
     const errorMessages = {
       purpose: null,
       // desired_match_date: null,
-      meeting_link: null,
+      // meeting_link: null,
       message: null,
     };
     // validate purpose;
@@ -80,7 +80,10 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
       errorMessages.purpose = VALIDATE_FORM_MATCHING_REQUEST.purpose.required;
     }
     // validate message
-    if (matchingRequest?.message?.length > 1000) {
+    if (!matchingRequest?.message || matchingRequest?.message?.length === 0) {
+      isValidForm = false;
+      errorMessages.message = VALIDATE_FORM_MATCHING_REQUEST.message.required;
+    } else if (matchingRequest?.message?.length > 1000) {
       isValidForm = false;
       errorMessages.message = VALIDATE_FORM_MATCHING_REQUEST.message.max_length;
     }
@@ -99,10 +102,10 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
     // }
 
     // validate meeting_link
-    if (matchingRequest?.meeting_link?.length > 0 && !REGEX_RULES.url.test(matchingRequest?.meeting_link)) {
-      isValidForm = false;
-      errorMessages.meeting_link = VALIDATE_FORM_MATCHING_REQUEST.meeting_link.invalid_url;
-    }
+    // if (matchingRequest?.meeting_link?.length > 0 && !REGEX_RULES.url.test(matchingRequest?.meeting_link)) {
+    //   isValidForm = false;
+    //   errorMessages.meeting_link = VALIDATE_FORM_MATCHING_REQUEST.meeting_link.invalid_url;
+    // }
 
     setErrorValidates(errorMessages);
     return isValidForm;
@@ -114,7 +117,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
       setMatchingRequest({
         // desired_match_date: new Date()?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }),
         purpose: "",
-        meeting_link: "",
+        // meeting_link: "",
         message: null,
       });
       dispatch({ type: actionTypes.ADD_MATCH_REQUEST_COUNT, payload: auth });
@@ -127,7 +130,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
     setMatchingRequest({
       // desired_match_date: new Date()?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }),
       purpose: "",
-      meeting_link: "",
+      // meeting_link: "",
       message: null,
     });
     setOpen(false);
@@ -147,14 +150,14 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
         </Button>
         <div className="title-modal" id="modal-modal-title">
           <Avatar
-            alt="avatar"
+            alt={userRequestMatching?.username}
             src={userRequestMatching?.profile_image || "/assets/images/home_page/ic_avatar_modal.svg"}
-            sx={{ width: 52, height: 52 }}
+            sx={{ width: 32, height: 32 }}
           />
           <span className="name">{`${userRequestMatching?.username ?? ""} さんへのマッチングリクエスト`}</span>
         </div>
 
-        <form>
+        <form className="form-content">
           <Field
             id="purpose"
             required
@@ -167,7 +170,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
             error={errorValidates.purpose}
           />
 
-          <Field
+          {/* <Field
             id="meeting_link"
             label={t("home:modal-matching.frequency")}
             placeholder="https://www.〇〇.jp"
@@ -175,7 +178,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
             value={matchingRequest?.meeting_link}
             onChangeValue={onChangeMatchingRequest}
             error={errorValidates.meeting_link}
-          />
+          /> */}
 
           {/* <Field
             id="desired_match_date"
@@ -190,6 +193,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
 
           <Field
             id="message"
+            required
             label={t("home:modal-matching.message")}
             placeholder={t("home:modal-matching.message-placeholder")}
             editor="textarea"
@@ -200,7 +204,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
 
           <Grid container>
             <Grid item xs={12} sx={{ mt: 4, textAlign: "center" }}>
-              <ButtonComponent mode="gradient" fullWidth onClick={() => submitMatchingRequest()}>
+              <ButtonComponent mode="gradient" sx={{ width: "70%" }} onClick={() => submitMatchingRequest()}>
                 {t("home:modal-matching.button")}
               </ButtonComponent>
             </Grid>

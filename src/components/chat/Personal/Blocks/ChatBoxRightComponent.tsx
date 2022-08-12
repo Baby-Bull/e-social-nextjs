@@ -144,10 +144,10 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
                   <span>{t("chat:purpose-firstMessage")}</span>
                   <p>{MATCHING_PURPOSE_OPTIONS.find((item) => item?.value === allInfoMessage?.purpose)?.label ?? ""}</p>
                 </Box>
-                <Box>
+                {/* <Box>
                   <span>{t("chat:date-firstMessage")}</span>
                   <p>{allInfoMessage?.meeting_link?.length > 0 ? allInfoMessage?.meeting_link : t("no_info")}</p>
-                </Box>
+                </Box> */}
                 <Box>
                   <span>{t("chat:content-firstMessage")}</span>
                   <p>
@@ -232,7 +232,7 @@ const BoxChatOthers: React.SFC<IBoxChatProps> = ({ time, allInfoMessage }) => {
     <Box className={styles.itemMsgOther}>
       <Avatar
         className="avatar"
-        alt="Avatar"
+        alt={allInfoMessage?.user?.username}
         src={allInfoMessage?.user?.profile_image || "/assets/images/svg/avatar.svg"}
       />
       {allInfoMessage?.content_type !== "image" && allInfoMessage?.content_type !== "file" && (
@@ -243,10 +243,10 @@ const BoxChatOthers: React.SFC<IBoxChatProps> = ({ time, allInfoMessage }) => {
                 <span>{t("chat:purpose-firstMessage")}</span>
                 <p>{MATCHING_PURPOSE_OPTIONS.find((item) => item?.value === allInfoMessage?.purpose)?.label ?? ""}</p>
               </Box>
-              <Box>
+              {/* <Box>
                 <span>{t("chat:date-firstMessage")}</span>
                 <p>{allInfoMessage?.meeting_link?.length > 0 ? allInfoMessage?.meeting_link : t("no_info")}</p>
-              </Box>
+              </Box> */}
               <Box>
                 <span>{t("chat:content-firstMessage")}</span>
                 <p>

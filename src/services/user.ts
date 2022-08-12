@@ -15,7 +15,7 @@ import {
   EMAIL_EXISTS,
 } from "src/messages/notification";
 import { typeTimeLogin, typeReview } from "src/constants/searchUserConstants";
-import {setIsProfileEdited} from "../helpers/storage";
+import { setIsProfileEdited } from "../helpers/storage";
 
 dayjs.extend(relativeTime)
 dayjs.extend(localizedFormat)
@@ -302,9 +302,9 @@ export const updateProfile = async (body: any) => {
   }
 };
 
-export const getListnotifications = async () => {
+export const getListnotifications = async (limit: number, cursor: string) => {
   try {
-    const res = await api.get(`/user/notifications`);
+    const res = await api.get(`/user/notifications?limit=${limit}&cursor=${cursor}`);
     return res?.data;
   } catch (error) {
     return error;

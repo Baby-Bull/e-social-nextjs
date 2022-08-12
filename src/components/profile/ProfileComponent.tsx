@@ -25,7 +25,7 @@ import SlickSliderRecommendComponent from "src/components/home/blocks/SlickSlide
 
 import theme from "../../theme";
 import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
-import { sendMatchingRequest } from "../../services/matching";
+import { acceptMatchingRequestReceived, sendMatchingRequest } from "../../services/matching";
 
 const PaginationCustom = styled(Pagination)({
   "& .MuiPaginationItem-root": {
@@ -134,13 +134,22 @@ const ProfileHaveDataComponent = () => {
     return res;
   };
 
+  const handleClickMatchingButton = async (statusValue: string) => {
+    if (statusValue === "received_pending") {
+      await acceptMatchingRequestReceived(profileSkill?.match_request?.id);
+      setIsRefresh(!isRefresh);
+    } else {
+      setModalMatching(true);
+    }
+  };
+
   const handleMapMatchingStatus = (statusMatchingTemp: string) => {
     switch (statusMatchingTemp) {
-      case "pending":
+      case "sent_pending":
         return 1;
       case "confirmed":
         return 2;
-      case "rejected":
+      case "received_pending":
         return 3;
       default:
         return 4;
@@ -305,11 +314,10 @@ const ProfileHaveDataComponent = () => {
             alignItems: "center",
             textAlign: "center",
             lineHeight: "24px",
-            background: "#1BD0B0",
             borderRadius: "40px",
             display: profileSkill?.match_status === "confirmed" ? "none" : "flex",
           }}
-          onClick={() => setModalMatching(true)}
+          onClick={() => handleClickMatchingButton(profileSkill?.match_status)}
           mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(profileSkill?.match_status)]?.mode}
           disabled={profileSkill?.match_status === "pending"}
         >
