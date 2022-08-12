@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { LoginSocialGoogle, IResolveParams, TypeCrossFunction } from "reactjs-social-login";
 import { useDispatch } from "react-redux";
 
-import ContentComponent from "src/components/layouts/ContentComponent";
+import FooterComponent from "src/components/layouts/FooterComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import theme from "src/theme";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
@@ -61,7 +61,7 @@ const LoginComponent = () => {
       {isLoading ? (
         <SplashScreen />
       ) : (
-        <ContentComponent authPage showHeader={false}>
+        <React.Fragment>
           <Box sx={{ flexGrow: 1 }}>
             <AppBar
               position="fixed"
@@ -187,7 +187,8 @@ const LoginComponent = () => {
               </Grid>
             </Grid>
           </Box>
-        </ContentComponent>
+          <FooterComponent />
+        </React.Fragment>
       )}
     </React.Fragment>
   );

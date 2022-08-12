@@ -7,7 +7,7 @@ import { LoginSocialGoogle, IResolveParams, TypeCrossFunction } from "reactjs-so
 import { useDispatch } from "react-redux";
 
 import theme from "src/theme";
-import ContentComponent from "src/components/layouts/ContentComponent";
+import FooterComponent from "src/components/layouts/FooterComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 import { authWithProvider } from "src/services/auth";
@@ -59,7 +59,7 @@ const RegisterComponents = () => {
   return isLoading ? (
     <SplashScreen />
   ) : (
-    <ContentComponent authPage showHeader={false}>
+    <React.Fragment>
       <Box sx={{ flexGrow: 1 }}>
         <AppBar
           position="fixed"
@@ -211,7 +211,8 @@ const RegisterComponents = () => {
           </Grid>
         </Grid>
       </Box>
-    </ContentComponent>
+      <FooterComponent />
+    </React.Fragment>
   );
 };
 export default RegisterComponents;

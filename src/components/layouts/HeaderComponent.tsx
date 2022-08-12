@@ -136,34 +136,6 @@ const typeSearchs = [
 ];
 
 const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false }) => {
-  useEffect(() => {
-    function notify(title, body) {
-      // eslint-disable-next-line no-new
-      new Notification(title, {
-        body,
-        icon: "/assets/images/logo/logo_footer.png",
-      });
-    }
-
-    if (Notification.permission === "granted") {
-      const wsHandler = (message) => {
-        notify("Goodhub Notification", `${message.content}`);
-        // call dispatch function here to update list noti_s in the store redux
-      };
-      websocket.on("get.chatRoom.message", wsHandler);
-      return () => {
-        websocket.off("get.chatRoom.message", wsHandler);
-      };
-    }
-    if (Notification.permission === "denied") {
-      window.alert("You denied permission. Please change your browser settings for this page to view notifications");
-    } else {
-      Notification.requestPermission((status) => {
-        if (status === "granted") notify("Goodhub Notification", "Thank you for granting permission");
-      });
-    }
-  }, []);
-
   const { t } = useTranslation();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -547,7 +519,11 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                   notifications?.items?.map((dataMap: any) => (
                     <MenuItem key={dataMap.id} className={styles.notificationMenuItem}>
                       <div className={styles.notificationImage}>
-                        <img alt="" src={dataMap?.metadata?.user?.profile_image || dataMap?.metadata?.community?.profile_image} />
+                        <Avatar
+                          alt={dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name}
+                          src={dataMap?.metadata?.user?.profile_image || dataMap?.metadata?.community?.profile_image}
+                          sx={{ width: "56px", height: "56px" }}
+                        />
                       </div>
                       <div className={styles.notificationContents}>
                         {!dataMap.is_read ? (
@@ -655,7 +631,11 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                     >
                       <div className={`thread-item ${thread?.user?.id === "userId" ? "active" : ""}`}>
                         <div className="avatar">
-                          <img alt="avatar" src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"} />
+                          <Avatar
+                            alt={thread?.user?.username}
+                            src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+                            sx={{ width: "56px", height: "56px", mr: "13px" }}
+                          />
                         </div>
                         <div className="thread-content">
                           <Typography className="name">{thread?.user?.username}</Typography>
