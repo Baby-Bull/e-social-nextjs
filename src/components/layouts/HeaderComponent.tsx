@@ -270,7 +270,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
             type: actionTypes.UPDATE_NOTIFICATIONS, payload: {
               ...notifications,
               // eslint-disable-next-line no-unsafe-optional-chaining
-              items: [...message, ...notifications?.items],
+              items: [message, ...notifications?.items],
               // eslint-disable-next-line no-unsafe-optional-chaining
               unread_count: notifications?.unread_count + 1,
             }
