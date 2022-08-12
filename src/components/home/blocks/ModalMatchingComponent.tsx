@@ -32,7 +32,7 @@ const style = {
   maxWidth: "90%",
   marginTop: "5px",
   paddingTop: "60px",
-  padding: "21px",
+  padding: "20px",
 };
 
 const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
@@ -152,12 +152,12 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
           <Avatar
             alt={userRequestMatching?.username}
             src={userRequestMatching?.profile_image || "/assets/images/home_page/ic_avatar_modal.svg"}
-            sx={{ width: 52, height: 52 }}
+            sx={{ width: 32, height: 32 }}
           />
           <span className="name">{`${userRequestMatching?.username ?? ""} さんへのマッチングリクエスト`}</span>
         </div>
 
-        <form>
+        <form className="form-content">
           <Field
             id="purpose"
             required
@@ -204,7 +204,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
 
           <Grid container>
             <Grid item xs={12} sx={{ mt: 4, textAlign: "center" }}>
-              <ButtonComponent mode="gradient" fullWidth onClick={() => submitMatchingRequest()}>
+              <ButtonComponent mode="gradient" sx={{ width: "70%" }} onClick={() => submitMatchingRequest()}>
                 {t("home:modal-matching.button")}
               </ButtonComponent>
             </Grid>

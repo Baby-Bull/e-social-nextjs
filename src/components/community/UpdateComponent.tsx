@@ -27,6 +27,7 @@ import _without from "lodash/without";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
+import useViewport from "src/helpers/useViewport";
 import { IStoreState } from "src/constants/interface";
 import theme from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabVerticalComponent";
@@ -101,6 +102,8 @@ const BoxTextValidate = styled(Box)({
 const UpdateComponent = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const viewPort = useViewport();
+  const isMobile = viewPort.width <= 992;
   const communityId = router.query;
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
@@ -519,8 +522,11 @@ const UpdateComponent = () => {
               {tabsCommunitySetting?.map((tab, index) => (
                 <TabCustom
                   props={{
-                    xsWidth: "33.33%",
+                    xsWidth: isMobile ? "25%" : "33.33%",
                     smWidth: "239px",
+                  }}
+                  sx={{
+                    fontSize: isMobile ? "12px" : "14px",
                   }}
                   key={index.toString()}
                   iconPosition="top"
@@ -528,13 +534,27 @@ const UpdateComponent = () => {
                   {...a11yProps(index)}
                 />
               ))}
+              {isMobile && (
+                <TabCustom
+                  props={{
+                    xsWidth: "25%",
+                    smWidth: "239px",
+                  }}
+                  sx={{ fontSize: "12px" }}
+                  iconPosition="top"
+                  label={t("community:setting.form.back-detail-community")}
+                  onClick={() => router.push(`/community/${communityId?.indexId}`)}
+                />
+              )}
             </Tabs>
-            <Typography
-              className={styles.linkToDetail}
-              onClick={() => router.push(`/community/${communityId?.indexId}`)}
-            >
-              {t("community:setting.form.back-detail-community")}
-            </Typography>
+            {!isMobile && (
+              <Typography
+                className={styles.linkToDetail}
+                onClick={() => router.push(`/community/${communityId?.indexId}`)}
+              >
+                {t("community:setting.form.back-detail-community")}
+              </Typography>
+            )}
           </Box>
 
           <TabPanel value={value} index={0}>
