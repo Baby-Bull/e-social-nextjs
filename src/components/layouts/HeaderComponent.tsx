@@ -36,6 +36,25 @@ import { logout } from "src/services/auth";
 interface IHeaderComponentProps {
   authPage?: boolean;
 }
+type UserDataInNotification = {
+  id: string,
+  username: string,
+  profile_image: string,
+}
+type CommunityDataInNotification = {
+  id: string,
+  name: string,
+  profile_image: string,
+}
+type DataRedirectNotification = {
+  match_request_id?: string,
+  user?: UserDataInNotification,
+  community_join_request_id?: string,
+  community_id?: string,
+  community?: CommunityDataInNotification,
+  comment_id?: string,
+  post_id?: string,
+}
 
 const Search = styled("div")({
   marginRight: theme.spacing(2),
@@ -207,8 +226,6 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   //end block function Messages
 
 
-
-
   //block function Notifications
   const [notifyAnchorEl, setNotifyAnchorEl] = React.useState(null);
   const [statusNotify, setStatusNotify] = useState(false);
@@ -224,7 +241,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     setNotifyAnchorEl(null);
     setStatusNotify(false);
   };
-  const handleNotifyOpenMenu = (event) => {
+  const handleNotifyOpenMenu = (event: any) => {
     setNotifyAnchorEl(event.currentTarget);
     setStatusNotify(true);
     dispatch({
@@ -246,6 +263,30 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
       }
     })
   };
+  const handleRedirectNotification = (typeOfMessage: string, dataOfMessage: DataRedirectNotification) => {
+    switch (typeOfMessage) {
+      case "new_matching_request":
+        router.push("/matching?type=received");
+        break;
+      case "matching_request_accepted":
+        router.push("/matching?type=received");
+        break;
+      case "new_community_join_request":
+        router.push(`/community/setting/${dataOfMessage?.community_id}`);
+        break;
+      case "community_join_request_accepted":
+        router.push(`/community/${dataOfMessage?.community?.id}`);
+        break;
+      case "new_comment_in_post":
+        router.push(`/community/${dataOfMessage?.community_id}/post/detail/${dataOfMessage?.post_id}`);
+        break;
+      case "new_recommend_user":
+        router.push(`/profile/${dataOfMessage?.user?.id}`);
+        break;
+      default:
+        break;
+    }
+  }
   //end block function Notifications
 
 
@@ -278,12 +319,14 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
         }
       };
       websocket.on(`get.chatRoom.message`, wsHandler);
+      websocket.on("get.community.chatRoom.message", wsHandler);
       // eslint-disable-next-line array-callback-return
       TYPE_OF_NOTIFICATIONS.map((notificationType) => {
         websocket.on(`get.notification.${notificationType}`, wsHandler);
       })
       return () => {
         websocket.off("get.chatRoom.message", wsHandler);
+        websocket.off("get.community.chatRoom.message", wsHandler);
         // eslint-disable-next-line array-callback-return
         TYPE_OF_NOTIFICATIONS.map((notificationType) => {
           websocket.off(`get.notification.${notificationType}`, wsHandler);
@@ -517,7 +560,11 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
               {
                 notifications?.items?.length ?
                   notifications?.items?.map((dataMap: any) => (
-                    <MenuItem key={dataMap.id} className={styles.notificationMenuItem}>
+                    <MenuItem
+                      key={dataMap.id}
+                      className={styles.notificationMenuItem}
+                      onClick={() => handleRedirectNotification(dataMap?.notification_type, dataMap?.metadata)}
+                    >
                       <div className={styles.notificationImage}>
                         <Avatar
                           alt={dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name}
@@ -529,14 +576,14 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                         {!dataMap.is_read ? (
                           <div className={styles.notificationContent}>{
                             // eslint-disable-next-line no-unsafe-optional-chaining
-                            dataMap?.metadata?.user?.username +
+                            (dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name) +
                             // eslint-disable-next-line no-unsafe-optional-chaining
                             CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label
                           }</div>
                         ) : (
                           <div>{
                             // eslint-disable-next-line no-unsafe-optional-chaining
-                            dataMap?.metadata?.user?.username +
+                            (dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name) +
                             // eslint-disable-next-line no-unsafe-optional-chaining
                             CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label
                           }</div>
