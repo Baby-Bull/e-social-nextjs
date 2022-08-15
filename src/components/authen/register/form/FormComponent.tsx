@@ -26,7 +26,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 import theme from "src/theme";
-import ContentComponent from "src/components/layouts/ContentComponent";
+import FooterComponent from "src/components/layouts/FooterComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 import { updateProfile } from "src/services/user";
@@ -206,7 +206,7 @@ const FormRegisterComponents = () => {
 
   return (
     <React.Fragment>
-      <ContentComponent authPage showHeader={false}>
+      <React.Fragment>
         {isLoading && (
           <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
             <CircularProgress color="inherit" />
@@ -358,7 +358,8 @@ const FormRegisterComponents = () => {
             </Grid>
           </Grid>
         </Box>
-      </ContentComponent>
+        <FooterComponent />
+      </React.Fragment>
 
       <Dialog
         PaperProps={{

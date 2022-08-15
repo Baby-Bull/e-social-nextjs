@@ -270,7 +270,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
             type: actionTypes.UPDATE_NOTIFICATIONS, payload: {
               ...notifications,
               // eslint-disable-next-line no-unsafe-optional-chaining
-              items: [...message, ...notifications?.items],
+              items: [message, ...notifications?.items],
               // eslint-disable-next-line no-unsafe-optional-chaining
               unread_count: notifications?.unread_count + 1,
             }
@@ -519,7 +519,11 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                   notifications?.items?.map((dataMap: any) => (
                     <MenuItem key={dataMap.id} className={styles.notificationMenuItem}>
                       <div className={styles.notificationImage}>
-                        <img alt="" src={dataMap?.metadata?.user?.profile_image || dataMap?.metadata?.community?.profile_image} />
+                        <Avatar
+                          alt={dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name}
+                          src={dataMap?.metadata?.user?.profile_image || dataMap?.metadata?.community?.profile_image}
+                          sx={{ width: "56px", height: "56px" }}
+                        />
                       </div>
                       <div className={styles.notificationContents}>
                         {!dataMap.is_read ? (
@@ -627,7 +631,11 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                     >
                       <div className={`thread-item ${thread?.user?.id === "userId" ? "active" : ""}`}>
                         <div className="avatar">
-                          <img alt="avatar" src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"} />
+                          <Avatar
+                            alt={thread?.user?.username}
+                            src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+                            sx={{ width: "56px", height: "56px", mr: "13px" }}
+                          />
                         </div>
                         <div className="thread-content">
                           <Typography className="name">{thread?.user?.username}</Typography>

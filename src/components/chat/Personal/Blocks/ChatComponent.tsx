@@ -107,7 +107,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
       if (chatRoomIdRef.current === message.chat_room_id) {
         setNewMessageOfRoom(message);
       }
-
       updateLastMessageOfListRooms(message);
     };
     websocket.on("get.chatRoom.message", wsHandler);
