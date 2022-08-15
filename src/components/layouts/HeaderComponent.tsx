@@ -746,39 +746,41 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                       hasMore={false}
                       loader=""
                     >
-                      {listRoomsPersonal?.map((thread, index: number) => (
-                        <React.Fragment key={index}>
-                          <li
-                            onClick={() => {
-                              router.push(
-                                {
-                                  pathname: "/chat/personal",
-                                  query: { room: thread?.user?.id },
-                                },
-                                undefined,
-                                { shallow: false },
-                              );
-                              //onSelectRoom(index);
-                            }}
-                          >
-                            <div className={`thread-item ${thread?.user?.id === "userId" ? "active" : ""}`}>
-                              <div className="avatar">
-                                <Avatar
-                                  alt={thread?.user?.username}
-                                  src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"}
-                                  sx={{ width: "56px", height: "56px", mr: "13px" }}
-                                />
-                              </div>
-                              <div className="thread-content">
-                                <Typography className="name">{thread?.user?.username}</Typography>
-                                {thread?.last_message_content_type === "text" ? (
-                                  <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
-                                ) : (
-                                  <Typography className="message-hide">添付ファイル</Typography>
-                                )}
-                              </div>
-                              <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
-                              {/* {!isMobile && (
+                      {
+                        listRoomsPersonal?.length ?
+                          listRoomsPersonal?.map((thread, index: number) => (
+                            <React.Fragment key={index}>
+                              <li
+                                onClick={() => {
+                                  router.push(
+                                    {
+                                      pathname: "/chat/personal",
+                                      query: { room: thread?.user?.id },
+                                    },
+                                    undefined,
+                                    { shallow: false },
+                                  );
+                                  //onSelectRoom(index);
+                                }}
+                              >
+                                <div className={`thread-item ${thread?.user?.id === "userId" ? "active" : ""}`}>
+                                  <div className="avatar">
+                                    <Avatar
+                                      alt={thread?.user?.username}
+                                      src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+                                      sx={{ width: "56px", height: "56px", mr: "13px" }}
+                                    />
+                                  </div>
+                                  <div className="thread-content">
+                                    <Typography className="name">{thread?.user?.username}</Typography>
+                                    {thread?.last_message_content_type === "text" ? (
+                                      <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
+                                    ) : (
+                                      <Typography className="message-hide">添付ファイル</Typography>
+                                    )}
+                                  </div>
+                                  <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
+                                  {/* {!isMobile && (
                                 <div className="more-options">
                                   <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
                                     <img alt="more-options" src="/assets/images/chat/more_options.svg" />
@@ -793,9 +795,9 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                                   />
                                 </div>
                               )} */}
-                            </div>
-                          </li>
-                          {/* {isMobile && (
+                                </div>
+                              </li>
+                              {/* {isMobile && (
                             <div className="more-options-SP">
                               <IconButton
                                 onClick={(event: React.MouseEvent<HTMLElement>) => {
@@ -826,8 +828,21 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                               />
                             </div>
                           )} */}
-                        </React.Fragment>
-                      ))}
+                            </React.Fragment>
+                          ))
+                          :
+                          <Box
+                            sx={{
+                              width: "365px",
+                              display: "flex",
+                              height: "550px",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <b>会話なし</b>
+                          </Box>
+                      }
                     </InfiniteScroll>
                   </ul>
                 </Box>
@@ -856,42 +871,44 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                       hasMore={false}
                       loader=""
                     >
-                      {listRoomsCommunity?.map((thread, index: number) => (
-                        <React.Fragment key={index}>
-                          <li
-                            onClick={() => {
-                              router.push(
-                                {
-                                  pathname: "/chat/community",
-                                  query: { room: thread?.community?.id },
-                                },
-                                undefined,
-                                { shallow: false },
-                              );
-                              // onSelectRoom(index);
-                            }}
-                          >
-                            <div className={`thread-item ${thread?.community?.id === "communityId" ? "active" : ""}`}>
-                              <div
-                                className="avatar background"
-                                style={{
-                                  backgroundImage: `url(${thread?.community?.profile_image})`,
+                      {
+                        listRoomsCommunity?.length ?
+                          listRoomsCommunity?.map((thread, index: number) => (
+                            <React.Fragment key={index}>
+                              <li
+                                onClick={() => {
+                                  router.push(
+                                    {
+                                      pathname: "/chat/community",
+                                      query: { room: thread?.community?.id },
+                                    },
+                                    undefined,
+                                    { shallow: false },
+                                  );
+                                  // onSelectRoom(index);
                                 }}
-                              />
-                              <div className="thread-content" style={{ maxWidth: "70%" }}>
-                                <Typography className="name">
-                                  {thread?.community?.name}({thread?.community?.member_count})
-                                </Typography>
-                                {thread?.last_message_content_type === "text" ? (
-                                  <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
-                                ) : (
-                                  <Typography className="message-hide">添付ファイル</Typography>
-                                )}
-                              </div>
-                              <div className="thread-last-time">
-                                {thread?.last_chat_message_at ? formatChatDateRoom(thread?.last_chat_message_at) : ""}
-                              </div>
-                              {/* {!isMobile && (
+                              >
+                                <div className={`thread-item ${thread?.community?.id === "communityId" ? "active" : ""}`}>
+                                  <div
+                                    className="avatar background"
+                                    style={{
+                                      backgroundImage: `url(${thread?.community?.profile_image})`,
+                                    }}
+                                  />
+                                  <div className="thread-content" style={{ maxWidth: "70%" }}>
+                                    <Typography className="name">
+                                      {thread?.community?.name}({thread?.community?.member_count})
+                                    </Typography>
+                                    {thread?.last_message_content_type === "text" ? (
+                                      <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
+                                    ) : (
+                                      <Typography className="message-hide">添付ファイル</Typography>
+                                    )}
+                                  </div>
+                                  <div className="thread-last-time">
+                                    {thread?.last_chat_message_at ? formatChatDateRoom(thread?.last_chat_message_at) : ""}
+                                  </div>
+                                  {/* {!isMobile && (
                                 <div className="more-options">
                                   <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
                                     <img alt="more-options" src="/assets/images/chat/more_options.svg" />
@@ -904,9 +921,9 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                                   />
                                 </div>
                               )} */}
-                            </div>
-                          </li>
-                          {/* {isMobile && (
+                                </div>
+                              </li>
+                              {/* {isMobile && (
                             <div className="more-options-SP">
                               <IconButton
                                 aria-label="more"
@@ -925,8 +942,21 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                               </IconButton>
                             </div>
                           )} */}
-                        </React.Fragment>
-                      ))}
+                            </React.Fragment>
+                          ))
+                          :
+                          <Box
+                            sx={{
+                              width: "365px",
+                              display: "flex",
+                              height: "550px",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <b>会話なし</b>
+                          </Box>
+                      }
                     </InfiniteScroll>
                   </ul>
                 </Box>
