@@ -172,9 +172,9 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
             backgroundColor: [theme.whiteBlue, "white"],
           }}
         >
-          {dataChild[2]?.data?.length ? (
+          {dataChild[1]?.data?.length ? (
             <React.Fragment>
-              {dataChild[2]?.data
+              {dataChild[1]?.data
                 ?.slice((pagePagination.pageRejected - 1) * LIMIT, pagePagination.pageRejected * LIMIT)
                 .map((tab, index) => (
                   <React.Fragment key={index.toString()}>
@@ -202,12 +202,12 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
                   justifyContent: "center",
                 }}
               >
-                {dataChild[2]?.data?.length > LIMIT && (
+                {dataChild[1]?.data?.length > LIMIT && (
                   <PaginationCustomComponent
                     handleCallbackChangePagination={handleCallbackChangePaginationRejected}
                     page={pagePagination?.pageRejected}
                     perPage={pagePagination?.perPageRejected}
-                    totalPage={Math.ceil(dataChild[2]?.data?.length > 0 ? dataChild[2].data.length / LIMIT : 1)}
+                    totalPage={Math.ceil(dataChild[1]?.data?.length > 0 ? dataChild[1].data.length / LIMIT : 1)}
                   />
                 )}
               </Box>

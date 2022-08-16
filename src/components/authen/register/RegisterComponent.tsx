@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 import React, { useRef, useState, useEffect } from "react";
-import { Box, Grid, Typography, Link } from "@mui/material";
+import { Box, Grid, Typography, Link, AppBar, Toolbar } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { LoginSocialGoogle, IResolveParams, TypeCrossFunction } from "reactjs-social-login";
 import { useDispatch } from "react-redux";
 
 import theme from "src/theme";
-import ContentComponent from "src/components/layouts/ContentComponent";
+import FooterComponent from "src/components/layouts/FooterComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 import { authWithProvider } from "src/services/auth";
@@ -59,7 +59,43 @@ const RegisterComponents = () => {
   return isLoading ? (
     <SplashScreen />
   ) : (
-    <ContentComponent authPage>
+    <React.Fragment>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar
+          position="fixed"
+          sx={{
+            background: "#fff",
+            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+            p: { xs: 0, lg: "0 16px" },
+          }}
+        >
+          <Toolbar
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: { xs: "100%", xl: "1440px" },
+              margin: "auto",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Link href="/">
+                <a>
+                  <Box
+                    component="img"
+                    sx={{
+                      width: { xs: "70px", lg: "141px" },
+                      height: { xs: "20px", lg: "42px" },
+                    }}
+                    alt="avatar"
+                    src="/assets/images/logo/logo.png"
+                  />
+                </a>
+              </Link>
+            </Box>
+          </Toolbar>
+        </AppBar>
+      </Box>
+
       <Box sx={{ marginTop: "55px" }}>
         <Grid container>
           <GridLeftComponent />
@@ -175,7 +211,8 @@ const RegisterComponents = () => {
           </Grid>
         </Grid>
       </Box>
-    </ContentComponent>
+      <FooterComponent />
+    </React.Fragment>
   );
 };
 export default RegisterComponents;

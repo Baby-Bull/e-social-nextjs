@@ -15,7 +15,7 @@ import EmptyComponent from "src/components/community/blocks/EmptyComponent";
 const TypographyCustom = styled(Typography)({
   fontSize: 16,
   "@media (max-width: 425px)": {
-    fontSize: 14,
+    fontSize: "14px!important",
   },
 });
 
@@ -280,8 +280,9 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ maxWidth, dataC
                 handleClick={redirectToCreatePost}
               >
                 <TypographyCustom>{t("community:empty.no-post")}</TypographyCustom>
-                <TypographyCustom display={["none", "inherit"]}>
-                  {t("community:empty.create-post") + t("community:empty.talk-to-members")}
+                <TypographyCustom display={["block", "flex"]}>
+                  <Typography sx={{ fontSize: ["14px", "16px"] }}>{t("community:empty.create-post")}</Typography>
+                  <Typography sx={{ fontSize: ["14px", "16px"] }}>{t("community:empty.talk-to-members")}</Typography>
                 </TypographyCustom>
               </EmptyComponent>
             </Box>

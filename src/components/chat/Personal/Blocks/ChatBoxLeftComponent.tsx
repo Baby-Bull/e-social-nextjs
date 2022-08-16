@@ -198,6 +198,7 @@ const ChatBoxLeftComponent = ({
                       <Avatar
                         alt={thread?.user?.username}
                         src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+                        sx={{ width: "56px", height: "56px", mr: "13px" }}
                       />
                     </div>
                     <div className="thread-content">

@@ -141,6 +141,7 @@ const CommunityComponent = () => {
                 width: "240px !important",
                 "@media (max-width: 900px)": {
                   mr: "25px !important",
+                  width: "100% !important",
                 },
               }}
             >

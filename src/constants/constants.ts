@@ -383,3 +383,20 @@ export const TEXT_ENGLISH_LEVEL_OPTIONS = {
   day_communication: { label: "日常会話レベル" },
   can_not_use: { label: "話せない" },
 };
+
+export const TYPE_OF_NOTIFICATIONS = [
+  "new_matching_request",
+  "matching_request_accepted",
+  "new_community_join_request",
+  "community_join_request_accepted",
+  "new_comment_in_post",
+  "new_recommend_user"
+]
+export const CONTENT_OF_NOTIFICATIONS = {
+  new_matching_request: { label: "さんからマッチングリクエストが届きました。" },
+  matching_request_accepted: { label: "さんとのマッチングが成立しました:tada:メッセージを送ってみましょう。" },
+  new_community_join_request: { label: " さんからコミュニティ参加申請が届きました" },
+  community_join_request_accepted: { label: "コミュニティ参加申請が承認されました。" },
+  new_comment_in_post: { label: "username さんが postname にコメントしました。" },
+  new_recommend_user: { label: "username + さんがgoodhubに参加しました。コンタクトをとってみましょう！" },
+}

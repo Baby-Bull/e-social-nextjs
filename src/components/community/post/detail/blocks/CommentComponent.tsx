@@ -23,7 +23,7 @@ dayjs.extend(localizedFormat);
 dayjs.locale("ja");
 
 interface ICommentComponentProps {
-  item: any;
+  itemData: any;
   handleCallbackRemove?: any;
   index?: string;
 }
@@ -35,11 +35,12 @@ const BoxTextValidate = styled(Box)({
   fontSize: "14px",
 });
 
-const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallbackRemove, index }) => {
+const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleCallbackRemove, index }) => {
   const { t } = useTranslation();
   const auth = useSelector((state: IStoreState) => state.user);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [item, setItem] = useState(itemData);
   const [isDisableBtn, setIsDisableBtn] = useState(true);
   const [isUpdateComment, setIsUpdateComment] = useState(false);
   const [content, setContent] = useState("");
@@ -101,7 +102,11 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
       setIsLoading(false);
       setIsUpdateComment(false);
       setContentUpdateId(item?.id);
-      // setContent("");
+      setItem({
+        ...item,
+        content: communityPostUpdateRequest?.content,
+      });
+      // setContent(communityPostUpdateRequest?.content);
       return response;
     }
   };
@@ -285,6 +290,25 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ item, handleCallb
             </MentionsInput>
             {errorValidates?.content && <BoxTextValidate>{errorValidates?.content}</BoxTextValidate>}
             <Box sx={{ textAlign: "right", cursor: "pointer" }}>
+              {!isDisableBtn && (
+                <ButtonComponent
+                  props={{
+                    square: true,
+                    bgColor: theme.gray,
+                  }}
+                  sx={{
+                    mt: "20px",
+                    mr: "15px",
+                    width: "96px",
+                  }}
+                  onClick={() => {
+                    setContent(item?.content);
+                    setIsUpdateComment(false);
+                  }}
+                >
+                  {t("community:button.detail.cancel-edit")}
+                </ButtonComponent>
+              )}
               <ButtonComponent
                 disabled={isDisableBtn || content.length < 1}
                 props={{
