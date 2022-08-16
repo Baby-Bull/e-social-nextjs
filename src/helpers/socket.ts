@@ -17,7 +17,7 @@ const WebsocketClient = ({
   // eslint-disable-next-line no-unused-vars
   const eventHandlers: Map<string, Array<(payload?: any) => void | Promise<void>>> = new Map();
 
-  const emitInternal = (event, payload) => {
+  const emitInternal = (event: any, payload: any) => {
     const handlersOfEvent = eventHandlers.get(event);
     if (handlersOfEvent?.length) {
       handlersOfEvent.forEach((handler) => {
@@ -95,22 +95,8 @@ const WebsocketClient = ({
   };
 };
 
-const socket = WebsocketClient({
+const socket = (typeof window !== 'undefined') ? WebsocketClient({
   url: getWsEndpoint,
-});
-
-if (process.env.NODE_ENV === "development") {
-  socket.on("connected", () => {
-    console.log("WS connected");
-  });
-
-  socket.on("disconnected", () => {
-    console.log("WS disconnected");
-  });
-
-  socket.on("reconnected", () => {
-    console.log("WS RECONNECTED");
-  });
-}
+}) : null;
 
 export default socket;

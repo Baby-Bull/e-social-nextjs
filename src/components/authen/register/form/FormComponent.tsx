@@ -17,13 +17,16 @@ import {
   Chip,
   Backdrop,
   CircularProgress,
+  AppBar,
+  Toolbar,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 import theme from "src/theme";
-import ContentComponent from "src/components/layouts/ContentComponent";
+import FooterComponent from "src/components/layouts/FooterComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 import { updateProfile } from "src/services/user";
@@ -203,12 +206,49 @@ const FormRegisterComponents = () => {
 
   return (
     <React.Fragment>
-      <ContentComponent authPage>
+      <React.Fragment>
         {isLoading && (
           <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
             <CircularProgress color="inherit" />
           </Backdrop>
         )}
+
+        <Box sx={{ flexGrow: 1 }}>
+          <AppBar
+            position="fixed"
+            sx={{
+              background: "#fff",
+              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
+              p: { xs: 0, lg: "0 16px" },
+            }}
+          >
+            <Toolbar
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: { xs: "100%", xl: "1440px" },
+                margin: "auto",
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Link href="/">
+                  <a>
+                    <Box
+                      component="img"
+                      sx={{
+                        width: { xs: "70px", lg: "141px" },
+                        height: { xs: "20px", lg: "42px" },
+                      }}
+                      alt="avatar"
+                      src="/assets/images/logo/logo.png"
+                    />
+                  </a>
+                </Link>
+              </Box>
+            </Toolbar>
+          </AppBar>
+        </Box>
+
         <Box sx={{ marginTop: "55px" }}>
           <Grid container>
             <GridLeftComponent smAndUp />
@@ -318,7 +358,8 @@ const FormRegisterComponents = () => {
             </Grid>
           </Grid>
         </Box>
-      </ContentComponent>
+        <FooterComponent />
+      </React.Fragment>
 
       <Dialog
         PaperProps={{
