@@ -9,6 +9,10 @@ import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import { useRouter } from "next/router";
 import { Button, Select, Avatar, Typography, Paper, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
@@ -24,14 +28,15 @@ import { IStoreState } from "src/constants/interface";
 // eslint-disable-next-line import/order
 import InfiniteScroll from "react-infinite-scroll-component";
 import InputCustom from "../chat/ElementCustom/InputCustom";
-import { getListChatRooms } from "src/services/chat";
+import { getListChatRooms, getListChatRoomsCommunity } from "src/services/chat";
 import { formatChatDateRoom, sortListRoomChat } from "src/helpers/helper";
-import { CONTENT_OF_NOTIFICATIONS, TYPE_OF_NOTIFICATIONS } from "src/constants/constants";
+import { CONTENT_OF_NOTIFICATIONS, REACT_QUERY_KEYS, TYPE_OF_NOTIFICATIONS } from "src/constants/constants";
 // eslint-disable-next-line import/order
 import dayjs from "dayjs";
 import { getListnotifications } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
 import { logout } from "src/services/auth";
+import { useQuery } from "react-query";
 
 interface IHeaderComponentProps {
   authPage?: boolean;
@@ -143,6 +148,25 @@ const TypoLabel = styled(Typography)({
   marginLeft: "4px",
 });
 
+const TabsCustom = styled(TabList)(() => ({
+  padding: 0,
+  color: "black",
+  fontSize: "20px",
+  fontWeight: 500,
+
+  "& .MuiTab-root": {
+    fontSize: "20px",
+    fontWeight: 500,
+    whiteSpace: "nowrap",
+  },
+  "& .Mui-selected": {
+    color: theme.blue,
+  },
+  "& .MuiTabs-indicator": {
+    backgroundColor: theme.blue,
+  },
+}));
+
 const typeSearchs = [
   {
     value: "エンジニア",
@@ -164,64 +188,105 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
 
   //block function Messages
   //const [countUnreadMessage, setCountUnreadMessage] = useState(0)
-  const [listRooms, setListRooms] = useState([]);
-  const listRoomRef = useRef([]);
+  const [listRoomsPersonal, setListRoomsPersonal] = useState([]);
+  const listRoomsPersonalRef = useRef([]);
+  const [listRoomsCommunity, setListRoomsCommunity] = useState([]);
+  const listRoomsCommunityRef = useRef([]);
   const [menuChatAnchorEl, setMenuChatAnchorEl] = React.useState(null);
   const [statusChatMenu, setStatusChatMenu] = useState(false);
   const isMenuChatOpen = Boolean(menuChatAnchorEl);
+  const [valueTabChatMessage, setValueTabChatMessage] = React.useState('1');
   // const [searchChatRoom, setSearchChatRoom] = useState({
   //   search: null,
   //   cursor: null,
   // });
+
+  const { data: listRoomsChatResQuery } = useQuery(
+    [REACT_QUERY_KEYS.COMMUNITY_CHAT.LIST_CHAT_ROOMS],
+    async () => {
+      const res1 = await getListChatRooms(null, "");
+      const res2 = await getListChatRoomsCommunity(null, "");
+      return {
+        roomsPersonal: res1,
+        roomsCommunity: res2,
+      };
+    },
+    { refetchOnWindowFocus: false },
+  );
   useEffect(() => {
-    listRoomRef.current = listRooms;
-  }, [listRooms]);
+    setListRoomsPersonal([]);
+    setListRoomsCommunity([]);
+    const listRoomsPersonalSorted = sortListRoomChat(listRoomsChatResQuery?.roomsPersonal?.items || []);
+    const listRoomsCommunitySorted = sortListRoomChat(listRoomsChatResQuery?.roomsCommunity?.items || []);
+    setListRoomsPersonal(listRoomsPersonalSorted);
+    setListRoomsCommunity(listRoomsCommunitySorted)
+  }, [listRoomsChatResQuery]);
+
+  useEffect(() => {
+    listRoomsPersonalRef.current = listRoomsPersonal;
+    listRoomsCommunityRef.current = listRoomsCommunity;
+  }, [listRoomsPersonal, listRoomsCommunity]);
+
+  // storage listRoomMessage to Redux to update dropMenu when send message
   const updateLastMessageOfListRooms = async (message: any) => {
     let hasChatRoomExist = false;
-    setListRooms(
-      sortListRoomChat(
-        listRoomRef.current?.map((item) => {
-          if (item.id === message.chat_room_id) {
-            hasChatRoomExist = true;
-            return {
-              ...item,
-              last_chat_message_at: new Date().toISOString(),
-              last_chat_message_received: message.content,
-              last_message_content_type: message.last_message_content_type,
-            };
-          }
-          return item;
-        }),
-      ),
+    const sourceRoomsTemp = (message?.community) ? listRoomsCommunityRef : listRoomsPersonalRef;
+    const listRoomTemp = sortListRoomChat(
+      sourceRoomsTemp.current?.map((item) => {
+        if (item.id === message.chat_room_id) {
+          hasChatRoomExist = true;
+          return {
+            ...item,
+            last_chat_message_at: new Date().toISOString(),
+            last_chat_message_received: message.content,
+            last_message_content_type: message.content_type,
+          };
+        }
+        return item;
+      }),
     );
-    if (!hasChatRoomExist && message?.user) {
-      setListRooms(
-        sortListRoomChat([
+    if (message?.community) {
+      setListRoomsCommunity(listRoomTemp);
+    } else {
+      setListRoomsPersonal(listRoomTemp);
+    }
+    if (!hasChatRoomExist) {
+      if (message?.community) {
+        const listRoomTemp = sortListRoomChat([
+          {
+            id: message.chat_room_id,
+            user: message?.user || {},
+            community: message?.community || {},
+            last_chat_message_at: new Date().toISOString(),
+            last_chat_message_received: message.content,
+          },
+          ...listRoomsCommunityRef.current,
+        ]);
+        setListRoomsCommunity(listRoomTemp);
+      } else {
+        const listRoomTemp = sortListRoomChat([
           {
             id: message.chat_room_id,
             user: message?.user || {},
             last_chat_message_at: new Date().toISOString(),
             last_chat_message_received: message.content,
           },
-          ...listRoomRef.current,
-        ]),
-      );
+          ...listRoomsPersonalRef.current,
+        ]);
+        setListRoomsPersonal(listRoomTemp);
+      }
     }
   };
   const handleMenuChatClose = () => {
     setMenuChatAnchorEl(null);
     setStatusChatMenu(false);
   };
-  const getListMessagesMenuChat = async () => {
-    //const res = await getListChatRooms(searchChatRoom?.search, searchChatRoom?.cursor);
-    const res = await getListChatRooms(null, "");
-    setStatusChatMenu(true);
-    setListRooms(res?.items);
-    //setHasMoreScrollMenuChat(res?.hasMore);
-  };
   const handleOpenMenuChat = (event) => {
     setMenuChatAnchorEl(event.currentTarget);
-    getListMessagesMenuChat();
+    setStatusChatMenu(true);
+  };
+  const handleChangeTabMessage = (event, newValue) => {
+    setValueTabChatMessage(newValue);
   };
   //end block function Messages
 
@@ -641,110 +706,262 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
             }
           }}
         >
-          <Box className={styles.boxSearch}>
-            <Paper className={styles.inputSearch} sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}>
-              <img alt="search" src="/assets/images/svg/ic_search.svg" />
-              <InputCustom
-                //inputRef={inputSearchRef}
-                sx={{ ml: 1, flex: 1 }}
-                placeholder={t("chat:box-left-input-search-placeholder")}
-                inputProps={{ "aria-label": t("chat:box-left-input-search-placeholder") }}
-              // onKeyUp={handleOnKeyUpInputSearchRef}
-              />
-            </Paper>
-          </Box>
-          <Box className="box-content">
-            <ul className={styles.boxThreads}>
-              <InfiniteScroll
-                dataLength={100}
-                next={null}
-                hasMore={false}
-                loader=""
-              >
-                {listRooms?.map((thread, index: number) => (
-                  <React.Fragment key={index}>
-                    <li
-                      onClick={() => {
-                        router.push(
-                          {
-                            pathname: "/chat/personal",
-                            query: { room: thread?.user?.id },
-                          },
-                          undefined,
-                          { shallow: false },
-                        );
-                        //onSelectRoom(index);
-                      }}
-                    >
-                      <div className={`thread-item ${thread?.user?.id === "userId" ? "active" : ""}`}>
-                        <div className="avatar">
-                          <Avatar
-                            alt={thread?.user?.username}
-                            src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"}
-                            sx={{ width: "56px", height: "56px", mr: "13px" }}
-                          />
-                        </div>
-                        <div className="thread-content">
-                          <Typography className="name">{thread?.user?.username}</Typography>
-                          {thread?.last_message_content_type === "text" ? (
-                            <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
-                          ) : (
-                            <Typography className="message-hide">添付ファイル</Typography>
-                          )}
-                        </div>
-                        <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
-                        {/* {!isMobile && (
-                      <div className="more-options">
-                        <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
-                          <img alt="more-options" src="/assets/images/chat/more_options.svg" />
-                        </IconButton>
-                        <ThreadDropdown
-                          open={open}
-                          handleClose={handleClose}
-                          setShowPopupReport={setShowPopupReport}
-                          setShowPopupReview={setShowPopupReview}
-                          anchorEl={anchorEl}
-                          redirectToProfile={redirectToProfile}
-                        />
-                      </div>
-                    )} */}
-                      </div>
-                    </li>
-                    {/* {isMobile && (
-                  <div className="more-options-SP">
-                    <IconButton
-                      onClick={(event: React.MouseEvent<HTMLElement>) => {
-                        handleClick(event);
-                        transferUserToLeftMobile(index);
-                      }}
-                      aria-label="more"
-                      aria-haspopup="true"
-                      sx={{
-                        position: "absolute",
-                        right: "2em",
-                        marginTop: "-2.4em",
-                        height: "40px",
-                        width: "40px",
-                        background: "white",
-                        boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
-                      }}
-                    >
-                      <img alt="more-options" src="/assets/images/chat/more_options.svg" />
-                    </IconButton>
-                    <ThreadDropdown
-                      open={open}
-                      handleClose={handleClose}
-                      setShowPopupReport={setShowPopupReport}
-                      setShowPopupReview={setShowPopupReview}
-                      anchorEl={anchorEl}
-                      redirectToProfile={redirectToProfile}
+          <Box sx={{ width: '100%', typography: 'body1' }}>
+            <TabContext value={valueTabChatMessage}>
+              <Box sx={{
+                borderBottom: 1,
+                borderColor: 'divider',
+                position: "sticky",
+                top: "0",
+                background: "white",
+                zIndex: "1",
+              }}>
+                <TabsCustom variant="fullWidth" onChange={handleChangeTabMessage} >
+                  <Tab label={"メッセージ"} value="1" />
+                  <Tab label={"グループチャット"} value="2" />
+                </TabsCustom>
+              </Box>
+              <TabPanel
+                sx={{ padding: "0" }}
+                value="1">
+                <Box className={styles.boxSearch}>
+                  <Paper className={styles.inputSearch} sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}>
+                    <img alt="search" src="/assets/images/svg/ic_search.svg" />
+                    <InputCustom
+                      //inputRef={inputSearchRef}
+                      sx={{ ml: 1, flex: 1 }}
+                      // placeholder={t("chat:box-left-input-search-placeholder")}
+                      // inputProps={{ "aria-label": t("chat:box-left-input-search-placeholder") }}
+                      placeholder={"アカウントを検索"}
+                      inputProps={{ "aria-label": "アカウントを検索" }}
+                    // onKeyUp={handleOnKeyUpInputSearchRef}
                     />
-                  </div>
-                )} */}
-                  </React.Fragment>
-                ))}
-              </InfiniteScroll>
-            </ul>
+                  </Paper>
+                </Box>
+                <Box className="box-content">
+                  <ul className={styles.boxThreads}>
+                    <InfiniteScroll
+                      dataLength={100}
+                      next={null}
+                      hasMore={false}
+                      loader=""
+                    >
+                      {
+                        listRoomsPersonal?.length ?
+                          listRoomsPersonal?.map((thread, index: number) => (
+                            <React.Fragment key={index}>
+                              <li
+                                onClick={() => {
+                                  router.push(
+                                    {
+                                      pathname: "/chat/personal",
+                                      query: { room: thread?.user?.id },
+                                    },
+                                    undefined,
+                                    { shallow: false },
+                                  );
+                                  //onSelectRoom(index);
+                                }}
+                              >
+                                <div className={`thread-item ${thread?.user?.id === "userId" ? "active" : ""}`}>
+                                  <div className="avatar">
+                                    <Avatar
+                                      alt={thread?.user?.username}
+                                      src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+                                      sx={{ width: "56px", height: "56px", mr: "13px" }}
+                                    />
+                                  </div>
+                                  <div className="thread-content">
+                                    <Typography className="name">{thread?.user?.username}</Typography>
+                                    {thread?.last_message_content_type === "text" ? (
+                                      <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
+                                    ) : (
+                                      <Typography className="message-hide">添付ファイル</Typography>
+                                    )}
+                                  </div>
+                                  <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
+                                  {/* {!isMobile && (
+                                <div className="more-options">
+                                  <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
+                                    <img alt="more-options" src="/assets/images/chat/more_options.svg" />
+                                  </IconButton>
+                                  <ThreadDropdown
+                                    open={open}
+                                    handleClose={handleClose}
+                                    setShowPopupReport={setShowPopupReport}
+                                    setShowPopupReview={setShowPopupReview}
+                                    anchorEl={anchorEl}
+                                    redirectToProfile={redirectToProfile}
+                                  />
+                                </div>
+                              )} */}
+                                </div>
+                              </li>
+                              {/* {isMobile && (
+                            <div className="more-options-SP">
+                              <IconButton
+                                onClick={(event: React.MouseEvent<HTMLElement>) => {
+                                  handleClick(event);
+                                  transferUserToLeftMobile(index);
+                                }}
+                                aria-label="more"
+                                aria-haspopup="true"
+                                sx={{
+                                  position: "absolute",
+                                  right: "2em",
+                                  marginTop: "-2.4em",
+                                  height: "40px",
+                                  width: "40px",
+                                  background: "white",
+                                  boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
+                                }}
+                              >
+                                <img alt="more-options" src="/assets/images/chat/more_options.svg" />
+                              </IconButton>
+                              <ThreadDropdown
+                                open={open}
+                                handleClose={handleClose}
+                                setShowPopupReport={setShowPopupReport}
+                                setShowPopupReview={setShowPopupReview}
+                                anchorEl={anchorEl}
+                                redirectToProfile={redirectToProfile}
+                              />
+                            </div>
+                          )} */}
+                            </React.Fragment>
+                          ))
+                          :
+                          <Box
+                            sx={{
+                              width: "365px",
+                              display: "flex",
+                              height: "550px",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <b>会話なし</b>
+                          </Box>
+                      }
+                    </InfiniteScroll>
+                  </ul>
+                </Box>
+              </TabPanel>
+              <TabPanel
+                sx={{ padding: "0" }}
+                value="2"
+              >
+                <Box className={styles.boxSearch}>
+                  <Paper className={styles.inputSearch} sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}>
+                    <img alt="search" src="/assets/images/svg/ic_search.svg" />
+                    <InputCustom
+                      //inputRef={inputSearchRef}
+                      sx={{ ml: 1, flex: 1 }}
+                      placeholder={"アカウントを検索"}
+                      inputProps={{ "aria-label": "アカウントを検索" }}
+                    // onKeyUp={handleOnKeyUpInputSearchRef}
+                    />
+                  </Paper>
+                </Box>
+                <Box className="box-content">
+                  <ul className={styles.boxThreads}>
+                    <InfiniteScroll
+                      dataLength={100}
+                      next={null}
+                      hasMore={false}
+                      loader=""
+                    >
+                      {
+                        listRoomsCommunity?.length ?
+                          listRoomsCommunity?.map((thread, index: number) => (
+                            <React.Fragment key={index}>
+                              <li
+                                onClick={() => {
+                                  router.push(
+                                    {
+                                      pathname: "/chat/community",
+                                      query: { room: thread?.community?.id },
+                                    },
+                                    undefined,
+                                    { shallow: false },
+                                  );
+                                  // onSelectRoom(index);
+                                }}
+                              >
+                                <div className={`thread-item ${thread?.community?.id === "communityId" ? "active" : ""}`}>
+                                  <div
+                                    className="avatar background"
+                                    style={{
+                                      backgroundImage: `url(${thread?.community?.profile_image})`,
+                                    }}
+                                  />
+                                  <div className="thread-content" style={{ maxWidth: "70%" }}>
+                                    <Typography className="name">
+                                      {thread?.community?.name}({thread?.community?.member_count})
+                                    </Typography>
+                                    {thread?.last_message_content_type === "text" ? (
+                                      <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
+                                    ) : (
+                                      <Typography className="message-hide">添付ファイル</Typography>
+                                    )}
+                                  </div>
+                                  <div className="thread-last-time">
+                                    {thread?.last_chat_message_at ? formatChatDateRoom(thread?.last_chat_message_at) : ""}
+                                  </div>
+                                  {/* {!isMobile && (
+                                <div className="more-options">
+                                  <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
+                                    <img alt="more-options" src="/assets/images/chat/more_options.svg" />
+                                  </IconButton>
+                                  <ThreadDropdown
+                                    open={open}
+                                    handleClose={handleClose}
+                                    anchorEl={anchorEl}
+                                    redirectToCommunity={() => redirectToCommunity(thread?.id)}
+                                  />
+                                </div>
+                              )} */}
+                                </div>
+                              </li>
+                              {/* {isMobile && (
+                            <div className="more-options-SP">
+                              <IconButton
+                                aria-label="more"
+                                aria-haspopup="true"
+                                sx={{
+                                  position: "absolute",
+                                  right: "2em",
+                                  marginTop: "-2.4em",
+                                  height: "40px",
+                                  width: "40px",
+                                  background: "white",
+                                  boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
+                                }}
+                              >
+                                <img alt="more-options" src="/assets/images/chat/more_options.svg" />
+                              </IconButton>
+                            </div>
+                          )} */}
+                            </React.Fragment>
+                          ))
+                          :
+                          <Box
+                            sx={{
+                              width: "365px",
+                              display: "flex",
+                              height: "550px",
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <b>会話なし</b>
+                          </Box>
+                      }
+                    </InfiniteScroll>
+                  </ul>
+                </Box>
+              </TabPanel>
+            </TabContext>
           </Box>
         </Menu>
       )

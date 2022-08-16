@@ -178,19 +178,20 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
                 onClick={() => handleShowModalMatching(data?.match_status)}
                 mode={
                   HOMEPAGE_RECOMMEND_MEMBER_STATUS[
-                    handleMapMatchingStatus(statusMatching ? "pending" : data?.match_status)
+                    handleMapMatchingStatus(statusMatching ? "sent_pending" : data?.match_status)
                   ]?.mode
                 }
-                disabled={(data?.match_status === "pending" || statusMatching) && true}
+                disabled={data?.match_status === "sent_pending" || statusMatching}
                 sx={{
-                  ":disabled:": {
-                    color: "red !important",
+                  "&:disabled": {
+                    background: "gray",
+                    color: "white",
                   },
                 }}
               >
                 {
                   HOMEPAGE_RECOMMEND_MEMBER_STATUS[
-                    handleMapMatchingStatus(statusMatching ? "pending" : data?.match_status)
+                    handleMapMatchingStatus(statusMatching ? "sent_pending" : data?.match_status)
                   ]?.label
                 }
               </ButtonComponent>
