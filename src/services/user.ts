@@ -310,3 +310,19 @@ export const getListnotifications = async (limit: number, cursor: string) => {
     return error;
   }
 };
+
+export const readAllNotifications = async () => {
+  try {
+    await api.patch(`/user/notifications/read`);
+  } catch (error) {
+    return error;
+  }
+}
+
+export const readNotification = async (notificationId: string) => {
+  try {
+    await api.patch(`/user/notifications/${notificationId}/read`);
+  } catch (error) {
+    return error;
+  }
+}

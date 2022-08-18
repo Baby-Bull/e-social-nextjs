@@ -33,7 +33,7 @@ import { formatChatDateRoom, sortListRoomChat } from "src/helpers/helper";
 import { CONTENT_OF_NOTIFICATIONS, REACT_QUERY_KEYS, TYPE_OF_NOTIFICATIONS } from "src/constants/constants";
 // eslint-disable-next-line import/order
 import dayjs from "dayjs";
-import { getListnotifications } from "src/services/user";
+import { getListnotifications, readAllNotifications, readNotification } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
 import { logout } from "src/services/auth";
 import { useQuery } from "react-query";
@@ -185,12 +185,10 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   const fullText = router.query?.fulltext;
   const auth = useSelector((state: IStoreState) => state.user);
   const notifications = useSelector((state: IStoreState) => state.notifications);
+  const listRoomsChatTemp = useSelector((state: IStoreState) => state.listrooms);
 
   //block function Messages
-  //const [countUnreadMessage, setCountUnreadMessage] = useState(0)
-  const [listRoomsPersonal, setListRoomsPersonal] = useState([]);
   const listRoomsPersonalRef = useRef([]);
-  const [listRoomsCommunity, setListRoomsCommunity] = useState([]);
   const listRoomsCommunityRef = useRef([]);
   const [menuChatAnchorEl, setMenuChatAnchorEl] = React.useState(null);
   const [statusChatMenu, setStatusChatMenu] = useState(false);
@@ -214,18 +212,25 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     { refetchOnWindowFocus: false },
   );
   useEffect(() => {
-    setListRoomsPersonal([]);
-    setListRoomsCommunity([]);
     const listRoomsPersonalSorted = sortListRoomChat(listRoomsChatResQuery?.roomsPersonal?.items || []);
     const listRoomsCommunitySorted = sortListRoomChat(listRoomsChatResQuery?.roomsCommunity?.items || []);
-    setListRoomsPersonal(listRoomsPersonalSorted);
-    setListRoomsCommunity(listRoomsCommunitySorted)
+    dispatch({
+      type: actionTypes.UPDATE_LIST_ROOMS, payload: {
+        ...listRoomsChatTemp,
+        itemsPersonal: listRoomsPersonalSorted,
+        itemsCommunity: listRoomsCommunitySorted,
+        hasMorePersonal: listRoomsChatResQuery?.roomsPersonal?.hasMore,
+        hasMoreCommunity: listRoomsChatResQuery?.roomsCommunity?.hasMore,
+        cursorPersonal: listRoomsChatResQuery?.roomsPersonal?.cursor,
+        cursorCommunity: listRoomsChatResQuery?.roomsCommunity?.cursor,
+      }
+    })
   }, [listRoomsChatResQuery]);
 
   useEffect(() => {
-    listRoomsPersonalRef.current = listRoomsPersonal;
-    listRoomsCommunityRef.current = listRoomsCommunity;
-  }, [listRoomsPersonal, listRoomsCommunity]);
+    listRoomsPersonalRef.current = listRoomsChatTemp?.itemsPersonal;
+    listRoomsCommunityRef.current = listRoomsChatTemp?.itemsCommunity;
+  }, [listRoomsChatTemp?.itemsPersonal, listRoomsChatTemp?.itemsCommunity]);
 
   // storage listRoomMessage to Redux to update dropMenu when send message
   const updateLastMessageOfListRooms = async (message: any) => {
@@ -246,9 +251,21 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
       }),
     );
     if (message?.community) {
-      setListRoomsCommunity(listRoomTemp);
+      dispatch({
+        type: actionTypes.UPDATE_LIST_ROOMS, payload: {
+          ...listRoomsChatTemp,
+          itemsCommunity: listRoomTemp,
+          unread_count: listRoomsChatTemp?.unread_count + 1,
+        }
+      })
     } else {
-      setListRoomsPersonal(listRoomTemp);
+      dispatch({
+        type: actionTypes.UPDATE_LIST_ROOMS, payload: {
+          ...listRoomsChatTemp,
+          itemsPersonal: listRoomTemp,
+          unread_count: listRoomsChatTemp?.unread_count + 1,
+        }
+      })
     }
     if (!hasChatRoomExist) {
       if (message?.community) {
@@ -262,7 +279,13 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
           },
           ...listRoomsCommunityRef.current,
         ]);
-        setListRoomsCommunity(listRoomTemp);
+        dispatch({
+          type: actionTypes.UPDATE_LIST_ROOMS, payload: {
+            ...listRoomsChatTemp,
+            itemsCommunity: listRoomTemp,
+            unread_count: listRoomsChatTemp?.unread_count + 1,
+          }
+        })
       } else {
         const listRoomTemp = sortListRoomChat([
           {
@@ -273,17 +296,48 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
           },
           ...listRoomsPersonalRef.current,
         ]);
-        setListRoomsPersonal(listRoomTemp);
+        dispatch({
+          type: actionTypes.UPDATE_LIST_ROOMS, payload: {
+            ...listRoomsChatTemp,
+            itemsPersonal: listRoomTemp,
+            unread_count: listRoomsChatTemp?.unread_count + 1,
+          }
+        })
       }
     }
   };
+  const loadMoreMessagePersonal = async () => {
+    const res = await getListChatRooms("", listRoomsChatTemp?.cursorPersonal, 10);
+    dispatch({
+      type: actionTypes.UPDATE_LIST_ROOMS, payload: {
+        ...listRoomsChatTemp,
+        // eslint-disable-next-line no-unsafe-optional-chaining
+        itemsPersonal: [...listRoomsChatTemp.itemsPersonal, ...res?.items],
+        cursorPersonal: res?.cursorPersonal,
+        hasMorePersonal: res?.hasMorePersonal,
+      }
+    })
+  }
+  const loadMoreMessageCommunity = async () => {
+    const res = await getListChatRoomsCommunity("", listRoomsChatTemp?.cursorCommunity, 10);
+    dispatch({
+      type: actionTypes.UPDATE_LIST_ROOMS, payload: {
+        ...listRoomsChatTemp,
+        // eslint-disable-next-line no-unsafe-optional-chaining
+        itemsCommunity: [...listRoomsChatTemp.itemsCommunity, ...res?.items],
+        cursorCommunity: res?.cursorCommunity,
+        hasMoreCommunity: res?.hasMoreCommunity,
+      }
+    })
+  }
   const handleMenuChatClose = () => {
     setMenuChatAnchorEl(null);
     setStatusChatMenu(false);
   };
-  const handleOpenMenuChat = (event) => {
+  const handleOpenMenuChat = (event: any) => {
     setMenuChatAnchorEl(event.currentTarget);
     setStatusChatMenu(true);
+    dispatch({ type: actionTypes.REMOVE_UNREAD_LISTROOMS_COUNT });
   };
   const handleChangeTabMessage = (event, newValue) => {
     setValueTabChatMessage(newValue);
@@ -306,9 +360,10 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     setNotifyAnchorEl(null);
     setStatusNotify(false);
   };
-  const handleNotifyOpenMenu = (event: any) => {
+  const handleNotifyOpenMenu = async (event: any) => {
     setNotifyAnchorEl(event.currentTarget);
     setStatusNotify(true);
+    (notifications?.unread_count > 0) && await readAllNotifications();
     dispatch({
       type: actionTypes.UPDATE_NOTIFICATIONS, payload: {
         ...notifications,
@@ -364,48 +419,48 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
         icon: image
       });
     }
-    if (Notification.permission === "granted") {
-      const wsHandler = (message: any) => {
-        if (!message?.metadata) {
+    const wsHandler = (message: any) => {
+      if (!message?.metadata) {
+        updateLastMessageOfListRooms(message)
+        if (Notification.permission === "granted") {
           notify(`${message?.user?.username}`, `${message.content}`, `${message?.user?.profile_image}`);
-          updateLastMessageOfListRooms(message)
         }
-        else {
+      }
+      else {
+        dispatch({
+          type: actionTypes.UPDATE_NOTIFICATIONS, payload: {
+            ...notifications,
+            items: [message, ...notifications?.items],
+            unread_count: notifications?.unread_count + 1,
+          }
+        })
+        if (Notification.permission === "granted") {
           notify(`${message?.metadata?.user?.username}`, CONTENT_OF_NOTIFICATIONS[message?.notification_type]?.label, `${message?.metadata?.user?.profile_image || message?.metadata?.community?.profile_image}`);
-          dispatch({
-            type: actionTypes.UPDATE_NOTIFICATIONS, payload: {
-              ...notifications,
-              // eslint-disable-next-line no-unsafe-optional-chaining
-              items: [message, ...notifications?.items],
-              // eslint-disable-next-line no-unsafe-optional-chaining
-              unread_count: notifications?.unread_count + 1,
-            }
-          })
         }
-      };
-      websocket.on(`get.chatRoom.message`, wsHandler);
-      websocket.on("get.community.chatRoom.message", wsHandler);
+      }
+    };
+    websocket.on(`get.chatRoom.message`, wsHandler);
+    websocket.on("get.community.chatRoom.message", wsHandler);
+    // eslint-disable-next-line array-callback-return
+    TYPE_OF_NOTIFICATIONS.map((notificationType) => {
+      websocket.on(`get.notification.${notificationType}`, wsHandler);
+    })
+    if (Notification.permission === "denied" && notifications?.askPermissionNotification) {
+      window.alert("You denied permission. Please change your browser settings for this page to view notifications");
+      dispatch({ type: actionTypes.UPDATE_PERMISSION_NOTIFICATION });
+    }
+    else if (Notification.permission === "default" && notifications?.askPermissionNotification) {
+      Notification.requestPermission();
+      dispatch({ type: actionTypes.UPDATE_PERMISSION_NOTIFICATION });
+    }
+    return () => {
+      websocket.off("get.chatRoom.message", wsHandler);
+      websocket.off("get.community.chatRoom.message", wsHandler);
       // eslint-disable-next-line array-callback-return
       TYPE_OF_NOTIFICATIONS.map((notificationType) => {
-        websocket.on(`get.notification.${notificationType}`, wsHandler);
+        websocket.off(`get.notification.${notificationType}`, wsHandler);
       })
-      return () => {
-        websocket.off("get.chatRoom.message", wsHandler);
-        websocket.off("get.community.chatRoom.message", wsHandler);
-        // eslint-disable-next-line array-callback-return
-        TYPE_OF_NOTIFICATIONS.map((notificationType) => {
-          websocket.off(`get.notification.${notificationType}`, wsHandler);
-        })
-      };
-    }
-    if (Notification.permission === "denied") {
-      window.alert("You denied permission. Please change your browser settings for this page to view notifications");
-    }
-    // else {
-    //   Notification.requestPermission((status) => {
-    //     if (status === "granted") notify("Goodhub Notification", "Thank you for granting permission", "");
-    //   });
-    // }
+    };
   }, []);
 
   //block function Menu
@@ -628,13 +683,16 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                     <MenuItem
                       key={dataMap.id}
                       className={styles.notificationMenuItem}
-                      onClick={() => handleRedirectNotification(dataMap?.notification_type, dataMap?.metadata)}
+                      onClick={async () => {
+                        await readNotification(dataMap?.id)
+                        handleRedirectNotification(dataMap?.notification_type, dataMap?.metadata)
+                      }}
                     >
                       <div className={styles.notificationImage}>
                         <Avatar
                           alt={dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name}
                           src={dataMap?.metadata?.user?.profile_image || dataMap?.metadata?.community?.profile_image}
-                          sx={{ width: "56px", height: "56px" }}
+                          sx={{ width: "50px", height: "50px" }}
                         />
                       </div>
                       <div className={styles.notificationContents}>
@@ -653,7 +711,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                             CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label
                           }</div>
                         )}
-                        <div className={styles.createdTime}>{dayjs(dataMap.created_at).format("H:s")}</div>
+                        <div className={styles.createdTime}>{dayjs(dataMap?.updated_at).format("H:s")}</div>
                       </div>
                     </MenuItem>
                   ))
@@ -741,14 +799,19 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 <Box className="box-content">
                   <ul className={styles.boxThreads}>
                     <InfiniteScroll
-                      dataLength={100}
-                      next={null}
-                      hasMore={false}
-                      loader=""
+                      dataLength={listRoomsChatTemp?.itemsPersonal?.length}
+                      next={loadMoreMessagePersonal}
+                      hasMore={listRoomsChatTemp?.hasMorePersonal}
+                      height={650}
+                      loader={
+                        <Box sx={{ display: "flex", py: "15px", justifyContent: "center" }}>
+                          <CircularProgress sx={{ color: theme.blue }} size={30} />
+                        </Box>
+                      }
                     >
                       {
-                        listRoomsPersonal?.length ?
-                          listRoomsPersonal?.map((thread, index: number) => (
+                        listRoomsChatTemp?.itemsPersonal?.length ?
+                          listRoomsChatTemp?.itemsPersonal?.map((thread, index: number) => (
                             <React.Fragment key={index}>
                               <li
                                 onClick={() => {
@@ -768,7 +831,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                                     <Avatar
                                       alt={thread?.user?.username}
                                       src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"}
-                                      sx={{ width: "56px", height: "56px", mr: "13px" }}
+                                      sx={{ width: "50px", height: "50px", mr: "13px" }}
                                     />
                                   </div>
                                   <div className="thread-content">
@@ -866,14 +929,19 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 <Box className="box-content">
                   <ul className={styles.boxThreads}>
                     <InfiniteScroll
-                      dataLength={100}
-                      next={null}
-                      hasMore={false}
-                      loader=""
+                      dataLength={listRoomsChatTemp?.itemsCommunity?.length}
+                      next={loadMoreMessageCommunity}
+                      hasMore={listRoomsChatTemp?.hasMoreCommunity}
+                      height={650}
+                      loader={
+                        <Box sx={{ display: "flex", py: "15px", justifyContent: "center" }}>
+                          <CircularProgress sx={{ color: theme.blue }} size={30} />
+                        </Box>
+                      }
                     >
                       {
-                        listRoomsCommunity?.length ?
-                          listRoomsCommunity?.map((thread, index: number) => (
+                        listRoomsChatTemp?.itemsCommunity?.length ?
+                          listRoomsChatTemp?.itemsCommunity?.map((thread, index: number) => (
                             <React.Fragment key={index}>
                               <li
                                 onClick={() => {
@@ -1067,7 +1135,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 sx={{ p: "12px 16px" }}
                 onClick={handleOpenMenuChat}
               >
-                <Badge badgeContent={0} color="error">
+                <Badge badgeContent={listRoomsChatTemp?.unread_count} color="error">
                   <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
                 </Badge>
               </IconButton>
@@ -1113,7 +1181,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 sx={{ p: "12px 16px" }}
                 onClick={handleOpenMenuChat}
               >
-                <Badge badgeContent={0} color="error">
+                <Badge badgeContent={listRoomsChatTemp?.unread_count} color="error">
                   <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
                 </Badge>
               </IconButton>

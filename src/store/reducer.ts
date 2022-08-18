@@ -10,6 +10,10 @@ const reducer = (state, action: any) => {
       return {
         ...state,
         user: action?.user?.profile || {},
+        notifications: {
+          ...state.notifications,
+          askPermissionNotification: true,
+        },
         is_profile_edited: action?.user?.is_profile_edited || false,
       };
     case actionTypes.LOGOUT:
@@ -115,6 +119,46 @@ const reducer = (state, action: any) => {
           unread_count: 0
         }
       }
+    case actionTypes.UPDATE_PERMISSION_NOTIFICATION:
+      return {
+        ...state,
+        notifications: {
+          ...state?.notifications,
+          askPermissionNotification: false,
+        }
+      }
+    case actionTypes.UPDATE_LIST_ROOMS:
+      return {
+        ...state,
+        listrooms: {
+          ...state?.listrooms,
+          itemsPersonal: action.payload?.itemsPersonal || [],
+          itemsCommunity: action.payload?.itemsCommunity || [],
+          hasMorePersonal: action?.payload?.hasMorePersonal ?? false,
+          hasMoreCommunity: action?.payload?.hasMoreCommunity ?? false,
+          cursorPersonal: action?.payload?.cursorPersonal ?? "",
+          cursorCommunity: action?.payload?.cursorCommunity ?? "",
+          unread_count: action?.payload?.unread_count || 0,
+        }
+      }
+    case actionTypes.ADD_UNREAD_LISTROOMS_COUNT:
+      return {
+        ...state,
+        listrooms: {
+          ...state?.listrooms,
+          unread_count: (state?.listrooms?.unread_count || 0) + 1
+        }
+      }
+    case actionTypes.REMOVE_UNREAD_LISTROOMS_COUNT:
+      return {
+        ...state,
+        listrooms: {
+          ...state?.listrooms,
+          unread_count: 0
+        }
+      }
+
+
     case actionTypes.REFRESH_TOKEN:
       refreshToken();
       return state;

@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { Grid } from "@mui/material";
 import classNames from "classnames";
 import { useQuery } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
 
 import styles from "src/components/chat/chat.module.scss";
 import useViewport from "src/helpers/useViewport";
@@ -12,6 +13,8 @@ import { REACT_QUERY_KEYS } from "src/constants/constants";
 import { sortListRoomChat } from "src/helpers/helper";
 import ChatBoxLeftComponent from "src/components/chat/Personal/Blocks/ChatBoxLeftComponent";
 import websocket from "src/helpers/socket";
+import { IStoreState } from "src/constants/interface";
+import actionTypes from "src/store/actionTypes";
 
 import ChatBoxRightComponent from "./ChatBoxRightComponent";
 import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
@@ -22,6 +25,8 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   // Responsive
   const viewPort = useViewport();
   const isMobile = viewPort.width <= 992;
+  const dispatch = useDispatch();
+  const listRoomsChatTemp = useSelector((state: IStoreState) => state.listrooms);
 
   const [listRooms, setListRooms] = useState([]);
   const [userId, setUserId] = useState(roomQuery);
@@ -57,34 +62,46 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
 
   const updateLastMessageOfListRooms = async (message: any) => {
     let hasChatRoomExist = false;
-    setListRooms(
-      sortListRoomChat(
-        listRoomRef.current?.map((item) => {
-          if (item.id === message.chat_room_id) {
-            hasChatRoomExist = true;
-            return {
-              ...item,
-              last_chat_message_at: new Date().toISOString(),
-              last_chat_message_received: message.content,
-              last_message_content_type: message.last_message_content_type,
-            };
-          }
-          return item;
-        }),
-      ),
-    );
-    if (!hasChatRoomExist && message?.user) {
-      setListRooms(
-        sortListRoomChat([
-          {
-            id: message.chat_room_id,
-            user: message?.user || {},
+    const listRoomsSorted = sortListRoomChat(
+      listRoomRef.current?.map((item) => {
+        if (item.id === message.chat_room_id) {
+          hasChatRoomExist = true;
+          return {
+            ...item,
             last_chat_message_at: new Date().toISOString(),
             last_chat_message_received: message.content,
-          },
-          ...listRoomRef.current,
-        ]),
-      );
+            last_message_content_type: message.last_message_content_type,
+          };
+        }
+        return item;
+      }),
+    );
+    setListRooms(listRoomsSorted);
+    dispatch({
+      type: actionTypes.UPDATE_LIST_ROOMS,
+      payload: {
+        ...listRoomsChatTemp,
+        itemsPersonal: listRoomsSorted,
+      },
+    });
+    if (!hasChatRoomExist && message?.user) {
+      const listRoomsSorted2 = sortListRoomChat([
+        {
+          id: message.chat_room_id,
+          user: message?.user || {},
+          last_chat_message_at: new Date().toISOString(),
+          last_chat_message_received: message.content,
+        },
+        ...listRoomRef.current,
+      ]);
+      setListRooms(listRoomsSorted2);
+      dispatch({
+        type: actionTypes.UPDATE_LIST_ROOMS,
+        payload: {
+          ...listRoomsChatTemp,
+          itemsPersonal: listRoomsSorted2,
+        },
+      });
     }
   };
 
