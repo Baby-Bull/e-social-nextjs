@@ -84,8 +84,8 @@ export const LoginSocialTwitterV1 = forwardRef(
       // if this window is the parent and there is cached twitter credentials
       if (window.opener === null) {
         const eventHandler = (event) => {
-          if (twitterCredentials.current) {
-            const twitterAuthData = event.data as TwitterAuthData;
+          const twitterAuthData = event.data as TwitterAuthData;
+          if (twitterCredentials.current && twitterAuthData.oauth_verifier && twitterAuthData.oauth_token) {
             setIsProcessing(true);
             handlePostMessage({
               provider: "twitter",
