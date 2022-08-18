@@ -66,6 +66,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
     }
   };
   const handleSendMatchingRequest = async (matchingRequest) => {
+    setLiked(true);
     const res = await sendMatchingRequest(data?.id, matchingRequest);
     await addUserFavorite(data?.id);
     setModalMatching(false);

@@ -399,4 +399,5 @@ export const CONTENT_OF_NOTIFICATIONS = {
   community_join_request_accepted: { label: "コミュニティ参加申請が承認されました。" },
   new_comment_in_post: { label: " さんが  にコメントしました。" },
   new_recommend_user: { label: "さんがgoodhubに参加しました。コンタクトをとってみましょう！" },
+  community_join_request_rejected: { label: "コミュニティ加が承認されませんでした。" }
 }

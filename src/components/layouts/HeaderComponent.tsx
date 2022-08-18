@@ -232,7 +232,6 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     listRoomsCommunityRef.current = listRoomsChatTemp?.itemsCommunity;
   }, [listRoomsChatTemp?.itemsPersonal, listRoomsChatTemp?.itemsCommunity]);
 
-  // storage listRoomMessage to Redux to update dropMenu when send message
   const updateLastMessageOfListRooms = async (message: any) => {
     let hasChatRoomExist = false;
     const sourceRoomsTemp = (message?.community) ? listRoomsCommunityRef : listRoomsPersonalRef;
@@ -711,7 +710,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                             CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label
                           }</div>
                         )}
-                        <div className={styles.createdTime}>{dayjs(dataMap?.updated_at).format("H:s")}</div>
+                        <div className={styles.createdTime}>{dayjs(dataMap?.created_at).format("H:m")}</div>
                       </div>
                     </MenuItem>
                   ))
