@@ -313,8 +313,8 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
         ...listRoomsChatTemp,
         // eslint-disable-next-line no-unsafe-optional-chaining
         itemsPersonal: [...listRoomsChatTemp.itemsPersonal, ...res?.items],
-        cursorPersonal: res?.cursorPersonal,
-        hasMorePersonal: res?.hasMorePersonal,
+        cursorPersonal: res?.cursor,
+        hasMorePersonal: res?.hasMore,
       }
     })
   }
@@ -325,8 +325,8 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
         ...listRoomsChatTemp,
         // eslint-disable-next-line no-unsafe-optional-chaining
         itemsCommunity: [...listRoomsChatTemp.itemsCommunity, ...res?.items],
-        cursorCommunity: res?.cursorCommunity,
-        hasMoreCommunity: res?.hasMoreCommunity,
+        cursorCommunity: res?.cursor,
+        hasMoreCommunity: res?.hasMore,
       }
     })
   }
