@@ -55,11 +55,7 @@ api.interceptors.response.use(
     }
 
     if (err.response.status === 422) {
-      if (
-        !err?.response?.data?.message?.email ||
-        !err.response.data?.message?.access_token ||
-        !err.response.data?.message?.refresh_token
-      ) {
+      if (!err?.response?.data?.message?.email && !err.response.data?.message?.access_token) {
         toast.error(SERVER_ERROR);
       }
       window.location.href = "/";

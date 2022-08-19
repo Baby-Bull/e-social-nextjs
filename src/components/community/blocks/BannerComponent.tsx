@@ -44,7 +44,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
   const handleJoinCommunity = async () => {
     const community = router.query;
     const res = await joinCommunity(community?.id, data?.is_public);
-    if (res) {
+    if (res.status) {
       setTimeout(() => router.reload(), 1000);
     }
     return res;
