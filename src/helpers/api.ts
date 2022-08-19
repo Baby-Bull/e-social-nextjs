@@ -55,10 +55,14 @@ api.interceptors.response.use(
     }
 
     if (err.response.status === 422) {
-      if (!err?.response?.data?.message?.email) {
+      if (
+        !err?.response?.data?.message?.email ||
+        !err.response.data?.message?.access_token ||
+        !err.response.data?.message?.refresh_token
+      ) {
         toast.error(SERVER_ERROR);
       }
-      // window.location.href = "/";
+      window.location.href = "/";
     }
     const originalRequest = err.config;
     if (originalRequest.url !== "/auth/tokens") {
