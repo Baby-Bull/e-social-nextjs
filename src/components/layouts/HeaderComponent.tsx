@@ -203,13 +203,23 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage }) => {
   const { data: listRoomsChatResQuery } = useQuery(
     [REACT_QUERY_KEYS.COMMUNITY_CHAT.LIST_CHAT_ROOMS],
     async () => {
-      const draftList1 = await getListChatRooms(null, "");
-      const draftList2 = await getListChatRoomsCommunity(null, "");
-      const res1 = auth?.community_count === undefined ? {} : draftList1;
-      const res2 = auth?.community_count === undefined ? {} : draftList2;
+      let draftList1 = {
+        items: [],
+        hasMore: false,
+        cursor: ""
+      };
+      let draftList2 =  {
+        items: [],
+        hasMore: false,
+        cursor: ""
+      };
+      if (auth?.community_count !== undefined) {
+        draftList1 = await getListChatRooms(null, "");
+        draftList2 = await getListChatRoomsCommunity(null, "");
+      }
       return {
-        roomsPersonal: res1,
-        roomsCommunity: res2,
+        roomsPersonal: draftList1,
+        roomsCommunity: draftList2,
       };
     },
     { refetchOnWindowFocus: false },
