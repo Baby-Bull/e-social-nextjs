@@ -20,7 +20,7 @@ const BoxInfoProfile = styled(Box)`
   color: #1a2944;
 `;
 const CommunityOgp: React.FC<CommunityOgpProps> = ({ community }) => {
-  const [id, setId] = useState(null);
+  const [id, setId] = useState(community?.profileImage ? null : "ogp-component");
   return (
     <Box id={id} sx={{ backgroundColor: theme.whiteBlue, padding: "33px 53px" }}>
       <Box sx={{ display: "flex", justifyContent: "center", marginBottom: "29px" }}>

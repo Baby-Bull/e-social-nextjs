@@ -24,8 +24,12 @@ export default class MyDocument extends Document {
             rel="stylesheet"
           />
           <meta name="title" content="GOODHUB" />
-          <meta name="description" content="GOODHUB エンジニア向けのソフトウェア" />
-          <meta name="keywords" content="キーワード" />
+          <meta
+            name="description"
+            content="goodhubは業界初、新しい形のITエンジニアの憩いの場を提供するサービスです。
+コミュニティで新しい繋がりや仲間づくり、キャリアの相談など無料で全て使えます。"
+          />
+          <meta name="keywords" content="キーワード,  goodhub" />
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
           {(this.props as any).emotionStyleTags}
         </Head>
