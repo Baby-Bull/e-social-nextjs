@@ -34,13 +34,13 @@ interface MyAppProps extends AppProps {
   pathname: string;
 }
 
-const SplashScreen = () => (
-  <img
-    alt="splash"
-    src="/assets/images/bg_loading.gif"
-    style={{ top: "40vh", bottom: 0, right: 0, left: "40%", width: "20%", position: "fixed" }}
-  />
-);
+// const SplashScreen = () => (
+//   <img
+//     alt="splash"
+//     src="/assets/images/bg_loading.gif"
+//     style={{ top: "40vh", bottom: 0, right: 0, left: "40%", width: "20%", position: "fixed" }}
+//   />
+// );
 
 // eslint-disable-next-line no-undef
 const MyApp = (props: MyAppProps) => {
@@ -113,7 +113,7 @@ const MyApp = (props: MyAppProps) => {
       </Head>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
-          <PersistGate loading={<SplashScreen />} persistor={persistor}>
+          <PersistGate loading={null} persistor={persistor}>
             {() => (
               <CacheProvider value={emotionCache}>
                 <ThemeProvider theme={theme}>
