@@ -49,7 +49,7 @@ const MyApp = (props: MyAppProps) => {
   React.useEffect(() => {
     const cookies = parseCookies();
     if (!AUTH_PAGE_PATHS.includes(pathname) && !cookies[USER_TOKEN]) {
-      Router.push("/login");
+      // Router.push("/login");
     }
     if (!AUTH_PAGE_PATHS.includes(pathname) && cookies[USER_TOKEN]) {
       const now = new Date();

@@ -34,7 +34,7 @@ export default class MyDocument extends Document {
           <meta property="og:url" content={`${process.env.NEXT_PUBLIC_URL_PROFILE}`} key="og-url" />
           <meta
             property="og:image"
-            content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/222203821.png`}
+            content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/ogp_home.png`}
             key="og-img"
           />
           <meta property="og:site_name" content="GOODHUB エンジニア向けのソフトウェア" key="og-type" />
@@ -42,7 +42,7 @@ export default class MyDocument extends Document {
           <meta name="twitter:url" content={`${process.env.NEXT_PUBLIC_URL_PROFILE}`} />
           <meta
             name="twitter:image"
-            content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/222203821.png`}
+            content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/ogp_home.png`}
           />
           <meta name="twitter:title" content="GOODHUB" />
           <meta name="twitter:description" content="GOODHUB エンジニア向けのソフトウェア" />

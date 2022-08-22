@@ -85,7 +85,7 @@ const CommunityComponent = () => {
   const handleJoinCommunity = async () => {
     const community = router.query;
     const res = await joinCommunity(community?.id);
-    if (res) {
+    if (res.status) {
       router.reload();
     }
     return res;
@@ -274,7 +274,7 @@ const CommunityComponent = () => {
                 alignItems: "center",
                 width: "100%",
                 background: "#fff !important",
-                ml: "25px",
+                ml: { xs: 0, lg: "25px" },
               }}
             >
               <Box sx={{ textAlign: "center" }}>

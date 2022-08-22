@@ -178,7 +178,7 @@ const typeSearchs = [
   },
 ];
 
-const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false }) => {
+const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -194,6 +194,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   const [statusChatMenu, setStatusChatMenu] = useState(false);
   const isMenuChatOpen = Boolean(menuChatAnchorEl);
   const [valueTabChatMessage, setValueTabChatMessage] = React.useState('1');
+  const [statusAuthPage, setStatusAuthPage] = React.useState(false);
   // const [searchChatRoom, setSearchChatRoom] = useState({
   //   search: null,
   //   cursor: null,
@@ -202,8 +203,10 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   const { data: listRoomsChatResQuery } = useQuery(
     [REACT_QUERY_KEYS.COMMUNITY_CHAT.LIST_CHAT_ROOMS],
     async () => {
-      const res1 = await getListChatRooms(null, "");
-      const res2 = await getListChatRoomsCommunity(null, "");
+      const draftList1 = await getListChatRooms(null, "");
+      const draftList2 = await getListChatRoomsCommunity(null, "");
+      const res1 = auth?.community_count === undefined ? {} : draftList1;
+      const res2 = auth?.community_count === undefined ? {} : draftList2;
       return {
         roomsPersonal: res1,
         roomsCommunity: res2,
@@ -212,6 +215,9 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     { refetchOnWindowFocus: false },
   );
   useEffect(() => {
+    if (auth?.community_count === undefined || authPage === true) {
+      setStatusAuthPage(true)
+    }
     const listRoomsPersonalSorted = sortListRoomChat(listRoomsChatResQuery?.roomsPersonal?.items || []);
     const listRoomsCommunitySorted = sortListRoomChat(listRoomsChatResQuery?.roomsCommunity?.items || []);
     dispatch({
@@ -349,11 +355,13 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
   const [statusNotify, setStatusNotify] = useState(false);
   const isNotifyMenuOpen = Boolean(notifyAnchorEl);
   useEffect(() => {
-    const getNotis = async () => {
-      const res = await getListnotifications(10, "");
-      dispatch({ type: actionTypes.UPDATE_NOTIFICATIONS, payload: res });
+    if (auth?.community_count !== undefined) {
+      const getNotis = async () => {
+        const res = await getListnotifications(10, "");
+        dispatch({ type: actionTypes.UPDATE_NOTIFICATIONS, payload: res });
+      }
+      !notifications?.items_count && getNotis();
     }
-    !notifications?.items_count && getNotis();
   }, [])
   const handleNotifyMenuClose = () => {
     setNotifyAnchorEl(null);
@@ -515,7 +523,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
     await logout();
     dispatch({ type: actionTypes.LOGOUT })
     window.location.href = "/login";
-    // router.push("/login");
+    router.push("/login");
   };
 
   const menuId = "primary-search-account-menu";
@@ -1078,7 +1086,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 />
               </a>
             </Link>
-            <Box sx={{ display: { xs: "none", lg: authPage ? "none" : "block" } }}>
+            <Box sx={{ display: { xs: "none", lg: statusAuthPage ? "none" : "block" } }}>
               <Link href="/search_user">
                 <a style={{ textDecoration: "none" }}>
                   <StyledButtonList startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" />}>
@@ -1094,7 +1102,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
                 </a>
               </Link>
             </Box>
-            <Search sx={{ display: authPage ? "none" : "inherit" }}>
+            <Search sx={{ display: statusAuthPage ? "none" : "inherit" }}>
               <SearchIconWrapper>
                 <img src="/assets/images/icon/ic_search_2.png" alt="ic_search" width="18px" height="18px" />
               </SearchIconWrapper>
@@ -1124,7 +1132,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
               </Box>
             </Search>
           </Box>
-          <Box sx={{ display: authPage ? "none" : "inherit" }}>
+          <Box sx={{ display: statusAuthPage ? "none" : "inherit" }}>
             <Box sx={{ flexGrow: 1 }} />
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
               <IconButton
@@ -1215,7 +1223,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage = false })
             </Box>
           </Box>
         </Toolbar >
-        {!authPage && (
+        {!statusAuthPage && (
           <Box sx={{ display: { xs: "flex", lg: "none" }, justifyContent: "center" }}>
             <Link href="/search_user">
               <a style={{ textDecoration: "none" }}>
