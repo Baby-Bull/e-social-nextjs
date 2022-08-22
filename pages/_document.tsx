@@ -23,13 +23,6 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap"
             rel="stylesheet"
           />
-          <meta name="title" content="GOODHUB" />
-          <meta
-            name="description"
-            content="goodhubは業界初、新しい形のITエンジニアの憩いの場を提供するサービスです。
-コミュニティで新しい繋がりや仲間づくり、キャリアの相談など無料で全て使えます。"
-          />
-          <meta name="keywords" content="キーワード,  goodhub" />
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
           {(this.props as any).emotionStyleTags}
         </Head>
