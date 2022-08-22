@@ -118,7 +118,7 @@ const ProfileHaveDataComponent = () => {
   const fetchRecommended = async () => {
     setIsLoading(true);
     const data = await getUserRecommended(LIMIT);
-    setRecommended(data?.items?.filter((item) => !item?.match_status));
+    setRecommended(data?.items?.filter((item) => item?.match_status !== "confirmed"));
     setIsLoading(false);
     return data;
   };

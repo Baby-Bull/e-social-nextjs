@@ -228,7 +228,7 @@ const CommunityComponent = () => {
                 mb: ["40px", 0],
                 width: { md: "80%" },
                 "@media (max-width: 900px)": {
-                  width: "90% !important",
+                  width: "100% !important",
                 },
                 borderRadius: "12px",
                 display:

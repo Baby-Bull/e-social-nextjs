@@ -10,13 +10,17 @@ import reducer from "./reducer";
 interface IStoreState {
   user: any;
   notifications: any;
+  listrooms: any;
 }
 
 let store: any;
 
 const exampleInitialState: IStoreState = {
   user: {},
-  notifications: {},
+  notifications: {
+    items: [],
+  },
+  listrooms: {},
 };
 
 export const login = (user: any) => ({ type: actionTypes.LOGIN, user });
@@ -26,7 +30,7 @@ export const logout = () => ({ type: actionTypes.LOGIN, user: {} });
 const persistConfig = {
   key: "primary",
   storage,
-  whitelist: ["user", "is_profile_edited", "notifications"], // place to select which state you want to persist
+  whitelist: ["user", "is_profile_edited", "notifications", "listrooms"], // place to select which state you want to persist
 };
 const persistedReducer = persistReducer(persistConfig, reducer);
 

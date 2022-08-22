@@ -115,7 +115,7 @@ const FooterComponent: React.SFC<IFooterComponentProps> = ({ authPage = false })
               </Box>
               <Box
                 sx={{
-                  display: authPage ? "none" : "inherit",
+                  display: !authPage ? "none" : "inherit",
                 }}
                 onClick={handleLogout}
               >
