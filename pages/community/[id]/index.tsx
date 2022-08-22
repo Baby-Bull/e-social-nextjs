@@ -35,6 +35,8 @@ export const getServerSideProps = async (ctx) => {
     serverSideTranslations(locale, ["common", "community"]),
   ]);
 
+  console.log(community);
+
   return {
     props: {
       ...translations,

@@ -68,64 +68,68 @@ const MyApp = (props: MyAppProps) => {
   const store = useStore(pageProps.initialReduxState);
   const persistor = persistStore(store);
   return (
-    <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        <PersistGate loading={<SplashScreen />} persistor={persistor}>
-          <CacheProvider value={emotionCache}>
-            <Head>
-              <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1" />
-              <meta name="theme-color" content={theme.palette.primary.main} />
-              <meta name="title" content="GOODHUB" />
-              <meta
-                name="description"
-                content="goodhubは業界初、新しい形のITエンジニアの憩いの場を提供するサービスです。
+    <React.Fragment>
+      <Head>
+        <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1" />
+        <meta name="theme-color" content={theme.palette.primary.main} />
+        <meta name="title" content="GOODHUB" />
+        <meta
+          name="description"
+          content="goodhubは業界初、新しい形のITエンジニアの憩いの場を提供するサービスです。
 コミュニティで新しい繋がりや仲間づくり、キャリアの相談など無料で全て使えます。"
-              />
-              <meta name="keywords" content="キーワード, goodhub" />
-              <meta property="og:type" content="website" key="og-type" />
-              <meta property="og:title" content='ITエンジニアのための溜まり場 - "goodhub"' key="og-title" />
-              <meta
-                property="og:description"
-                content="goodhubは業界初、新しい形のITエンジニアの憩いの場を提供するサービスです。
+        />
+        <meta name="keywords" content="キーワード, goodhub" />
+        <meta property="og:type" content="website" key="og-type" />
+        <meta property="og:title" content='ITエンジニアのための溜まり場 - "goodhub"' key="og-title" />
+        <meta
+          property="og:description"
+          content="goodhubは業界初、新しい形のITエンジニアの憩いの場を提供するサービスです。
 コミュニティで新しい繋がりや仲間づくり、キャリアの相談など無料で全て使えます。"
-                key="og-description"
-              />
-              <meta property="og:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} key="og-url" />
-              <meta
-                property="og:image"
-                content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/ogp_home.png`}
-                key="og-img"
-              />
-              <meta property="og:site_name" content="GOODHUB" key="og-type" />
-              <meta property="og:image:width" content="600" />
-              <meta property="og:image:height" content="315" />
-              <meta name="twitter:card" content='ITエンジニアのための溜まり場 - "goodhub"' key="twitter-card" />
-              <meta name="twitter:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} key="twitter-url" />
-              <meta
-                name="twitter:image"
-                content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/ogp_home.png`}
-                key="twitter-image"
-              />
-              <meta name="twitter:title" content='ITエンジニアのための溜まり場 - "goodhub"' key="twitter-title" />
-              <meta
-                name="twitter:description"
-                content="goodhubは業界初、新しい形のITエンジニアの憩いの場を提供するサービスです。
+          key="og-description"
+        />
+        <meta property="og:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} key="og-url" />
+        <meta
+          property="og:image"
+          content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/ogp_home.png`}
+          key="og-img"
+        />
+        <meta property="og:site_name" content="GOODHUB" key="og-type" />
+        <meta property="og:image:width" content="600" />
+        <meta property="og:image:height" content="315" />
+        <meta name="twitter:card" content='ITエンジニアのための溜まり場 - "goodhub"' key="twitter-card" />
+        <meta name="twitter:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} key="twitter-url" />
+        <meta
+          name="twitter:image"
+          content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/ogp_home.png`}
+          key="twitter-image"
+        />
+        <meta name="twitter:title" content='ITエンジニアのための溜まり場 - "goodhub"' key="twitter-title" />
+        <meta
+          name="twitter:description"
+          content="goodhubは業界初、新しい形のITエンジニアの憩いの場を提供するサービスです。
 コミュニティで新しい繋がりや仲間づくり、キャリアの相談など無料で全て使えます。"
-                key="twitter-description"
-              />
-            </Head>
-            <ThemeProvider theme={theme}>
-              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-              <CssBaseline />
+          key="twitter-description"
+        />
+      </Head>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <PersistGate loading={<SplashScreen />} persistor={persistor}>
+            {() => (
+              <CacheProvider value={emotionCache}>
+                <ThemeProvider theme={theme}>
+                  {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+                  <CssBaseline />
 
-              <Hydrate state={pageProps.dehydratedState}>
-                <Component {...pageProps} />
-              </Hydrate>
-            </ThemeProvider>
-          </CacheProvider>
-        </PersistGate>
-      </Provider>
-    </QueryClientProvider>
+                  <Hydrate state={pageProps.dehydratedState}>
+                    <Component {...pageProps} />
+                  </Hydrate>
+                </ThemeProvider>
+              </CacheProvider>
+            )}
+          </PersistGate>
+        </Provider>
+      </QueryClientProvider>
+    </React.Fragment>
   );
 };
 
