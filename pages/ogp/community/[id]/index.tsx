@@ -2,7 +2,7 @@ import CommunityOgp from "src/components/ogp/CommunityOgpComponent";
 
 export const getServerSideProps = async (ctx) => {
   const { name = null, profile_image: profileImage = null, member_count: memberCount = 0 } = ctx.query;
-
+  console.log(ctx.query);
   return {
     props: {
       community: {
