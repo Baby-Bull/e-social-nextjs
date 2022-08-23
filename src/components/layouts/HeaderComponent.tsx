@@ -225,7 +225,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage }) => {
     { refetchOnWindowFocus: false },
   );
   useEffect(() => {
-    const communityCount = JSON.parse(JSON.parse(localStorage.getItem("persist:primary")).user).community_count
+    const communityCount = JSON.parse(JSON.parse(localStorage.getItem("persist:primary"))?.user)?.community_count
     if (communityCount === undefined || authPage === true) {
       setStatusAuthPage(true)
     }
