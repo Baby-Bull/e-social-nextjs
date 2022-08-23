@@ -16,7 +16,7 @@ const Community = ({ communityInfo, communityMembers, url }) => (
       <meta property="og:site_name" content="GOODHUB" key="og-type" />
       <meta property="og:image:width" content="600" />
       <meta property="og:image:height" content="315" />
-      <meta name="twitter:card" content={`GOODHUB COMMUNITY: ${communityInfo.name}`} key="twitter-card" />
+      <meta name="twitter:card" content="summary_large_image" key="twitter-card" />
       <meta name="twitter:url" content={url} key="twitter-url" />
       <meta name="twitter:image" content={communityInfo.ogp_image} key="twitter-image" />
       <meta name="twitter:title" content={`GOODHUB COMMUNITY: ${communityInfo.name}`} key="twitter-title" />
