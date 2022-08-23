@@ -225,7 +225,8 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage }) => {
     { refetchOnWindowFocus: false },
   );
   useEffect(() => {
-    if (auth?.community_count === undefined || authPage === true) {
+    const communityCount = JSON.parse(JSON.parse(localStorage.getItem("persist:primary")).user).community_count
+    if (communityCount === undefined || authPage === true) {
       setStatusAuthPage(true)
     }
     const listRoomsPersonalSorted = sortListRoomChat(listRoomsChatResQuery?.roomsPersonal?.items || []);
