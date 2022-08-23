@@ -32,14 +32,14 @@ export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API,
 });
 
-const set = (token: string) => {
+export const setApiAuth = (token: string) => {
   api.defaults.headers.common.Authorization = `Bearer ${token}`;
   axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 };
 
 export function setToken(token: string, expiresIn?: number) {
   setTokenStorage(token, expiresIn);
-  set(token);
+  setApiAuth(token);
 }
 api.interceptors.response.use(
   (response) => response,
@@ -122,4 +122,4 @@ api.interceptors.response.use(
   }),
 );
 
-set(getTokenStorage());
+setApiAuth(getTokenStorage());
