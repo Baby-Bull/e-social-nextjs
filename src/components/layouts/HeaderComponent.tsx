@@ -178,7 +178,7 @@ const typeSearchs = [
   },
 ];
 
-const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
+const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -224,9 +224,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     },
     { refetchOnWindowFocus: false },
   );
-
   useEffect(() => {
-    const communityCount = auth?.community_count;
+    const communityCount = JSON.parse(JSON.parse(localStorage.getItem("persist:primary")).user).community_count
     if (communityCount === undefined || authPage === true) {
       setStatusAuthPage(true)
     }
@@ -243,7 +242,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
         cursorCommunity: listRoomsChatResQuery?.roomsCommunity?.cursor,
       }
     })
-  }, [listRoomsChatResQuery, auth]);
+  }, [listRoomsChatResQuery]);
 
   useEffect(() => {
     listRoomsPersonalRef.current = listRoomsChatTemp?.itemsPersonal;
@@ -374,8 +373,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
       }
       !notifications?.items_count && getNotis();
     }
-  }, [auth])
-
+  }, [])
   const handleNotifyMenuClose = () => {
     setNotifyAnchorEl(null);
     setStatusNotify(false);
