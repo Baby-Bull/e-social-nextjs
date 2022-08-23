@@ -25,6 +25,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "src/styles/index.scss";
 
 import { useStore } from "src/store/store";
+import { setApiAuth } from "src/helpers/api";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -143,6 +144,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   const { query, pathname, res } = ctx;
 
   const cookies = parseCookies(ctx);
+
   if (!AUTH_PAGE_PATHS.includes(pathname)) {
     if (!cookies[USER_TOKEN]) {
       if (!res) {
@@ -150,6 +152,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
       }
       return {};
     }
+    setApiAuth(cookies[USER_TOKEN]);
   }
   if (Component.getInitialProps) {
     pageProps = await Component.getInitialProps(ctx);
