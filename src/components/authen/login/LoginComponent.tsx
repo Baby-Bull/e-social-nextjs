@@ -39,7 +39,8 @@ const LoginComponent = () => {
       if (resAuth?.data?.access_token) {
         await dispatch(login(resAuth?.data?.user));
         if (resAuth?.data?.user?.is_profile_edited) {
-          router.push("/");
+          // router.push("/");
+          router.back();
         } else {
           router.push("/register/form");
         }

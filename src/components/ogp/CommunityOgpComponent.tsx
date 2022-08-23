@@ -24,7 +24,7 @@ const CommunityOgp: React.FC<CommunityOgpProps> = ({ community }) => (
     <Box sx={{ display: "flex", justifyContent: "center", marginBottom: "29px" }}>
       <Avatar src="/assets/images/logo/logo.png" variant="square" sx={{ width: "148.24px", height: "43.39px" }} />
     </Box>
-    <Box sx={{ backgroundColor: "white", padding: "49px 40px", display: "flex" }}>
+    <Box sx={{ backgroundColor: "white", padding: "49px 40px", display: "flex", alignItems: "center" }}>
       <Box sx={{ marginRight: "30px" }}>
         <Avatar src={community?.profileImage} sx={{ width: "360px", height: "360px" }} />
       </Box>
@@ -34,7 +34,7 @@ const CommunityOgp: React.FC<CommunityOgpProps> = ({ community }) => (
             fontWeight: 700,
             fontSize: "44px",
             marginBottom: "18px",
-            height: "170px",
+            // height: "170px",
             "text-overflow": "ellipsis",
             overflow: "hidden",
             wordBreak: "break-all",
