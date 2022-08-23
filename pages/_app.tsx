@@ -25,6 +25,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "src/styles/index.scss";
 
 import { useStore } from "src/store/store";
+import { setApiAuth } from "src/helpers/api";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -34,13 +35,13 @@ interface MyAppProps extends AppProps {
   pathname: string;
 }
 
-// const SplashScreen = () => (
-//   <img
-//     alt="splash"
-//     src="/assets/images/bg_loading.gif"
-//     style={{ top: "40vh", bottom: 0, right: 0, left: "40%", width: "20%", position: "fixed" }}
-//   />
-// );
+const SplashScreen = () => (
+  <img
+    alt="splash"
+    src="/assets/images/bg_loading.gif"
+    style={{ top: "40vh", bottom: 0, right: 0, left: "40%", width: "20%", position: "fixed" }}
+  />
+);
 
 // eslint-disable-next-line no-undef
 const MyApp = (props: MyAppProps) => {
@@ -65,6 +66,7 @@ const MyApp = (props: MyAppProps) => {
     }
   }, []);
 
+  const isServerRendering = typeof window === "undefined";
   const store = useStore(pageProps.initialReduxState);
   const persistor = persistStore(store);
   return (
@@ -118,8 +120,19 @@ const MyApp = (props: MyAppProps) => {
       </Head>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            {() => (
+          {isServerRendering ? (
+            <CacheProvider value={emotionCache}>
+              <ThemeProvider theme={theme}>
+                {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+                <CssBaseline />
+
+                <Hydrate state={pageProps.dehydratedState}>
+                  <Component {...pageProps} />
+                </Hydrate>
+              </ThemeProvider>
+            </CacheProvider>
+          ) : (
+            <PersistGate loading={<SplashScreen />} persistor={persistor}>
               <CacheProvider value={emotionCache}>
                 <ThemeProvider theme={theme}>
                   {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
@@ -130,8 +143,8 @@ const MyApp = (props: MyAppProps) => {
                   </Hydrate>
                 </ThemeProvider>
               </CacheProvider>
-            )}
-          </PersistGate>
+            </PersistGate>
+          )}
         </Provider>
       </QueryClientProvider>
     </React.Fragment>
@@ -143,6 +156,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   const { query, pathname, res } = ctx;
 
   const cookies = parseCookies(ctx);
+
   if (!AUTH_PAGE_PATHS.includes(pathname)) {
     if (!cookies[USER_TOKEN]) {
       if (!res) {
@@ -150,6 +164,7 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
       }
       return {};
     }
+    setApiAuth(cookies[USER_TOKEN]);
   }
   if (Component.getInitialProps) {
     pageProps = await Component.getInitialProps(ctx);
