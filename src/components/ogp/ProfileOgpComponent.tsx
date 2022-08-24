@@ -22,7 +22,17 @@ const ProfileOgp: React.SFC<ProfileOgpProps> = ({ user }) => (
     </Box>
     <Box sx={{ backgroundColor: "white", padding: "49px 40px", display: "flex" }}>
       <Box sx={{ marginRight: "30px" }}>
-        <Avatar src={user?.profile_image} sx={{ width: "360px", height: "360px" }} />
+        <Avatar
+          src={user?.profile_image}
+          sx={{
+            width: "360px",
+            height: "360px",
+            "border-radius": "50%",
+            ".MuiAvatar-img": {
+              "object-fit": "contain",
+            },
+          }}
+        />
       </Box>
       <Box sx={{ color: theme.navy }}>
         <Box
