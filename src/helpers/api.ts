@@ -96,7 +96,7 @@ api.interceptors.response.use(
           setRefreshToken("");
           setIsProfileEdited("");
           if (typeof window !== "undefined") {
-            window.location.href = "/login";
+            window.location.href = `/login?oldUrl=${window.location.pathname}`;
           }
           return Promise.reject(_error);
         }
@@ -108,7 +108,7 @@ api.interceptors.response.use(
       setRefreshToken("");
       setIsProfileEdited("");
       if (typeof window !== "undefined") {
-        window.location.href = "/login";
+        window.location.href = `/login?oldUrl=${window.location.pathname}`;
       }
     }
   },
