@@ -4,9 +4,9 @@ export const getServerSideProps = async (ctx) => {
   const {
     username = null,
     profile_image: profileImage = null,
-    review_count: reviewCount,
-    match_count: matchCount,
-    community_count: communityCount,
+    review_count: reviewCount = 0,
+    match_count: matchCount = 0,
+    community_count: communityCount = 0,
   } = ctx.query;
   return {
     props: {
