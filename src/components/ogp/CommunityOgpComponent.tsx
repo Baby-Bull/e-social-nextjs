@@ -26,7 +26,17 @@ const CommunityOgp: React.FC<CommunityOgpProps> = ({ community }) => (
     </Box>
     <Box sx={{ backgroundColor: "white", padding: "49px 40px", display: "flex", alignItems: "center" }}>
       <Box sx={{ marginRight: "30px" }}>
-        <Avatar src={community?.profileImage} sx={{ width: "360px", height: "360px" }} />
+        <Avatar
+          src={community?.profileImage}
+          sx={{
+            width: "360px",
+            height: "360px",
+            "border-radius": "50%",
+            ".MuiAvatar-img": {
+              "object-fit": "contain",
+            },
+          }}
+        />
       </Box>
       <Box sx={{ color: theme.navy }}>
         <Box
