@@ -225,10 +225,14 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage }) => {
     { refetchOnWindowFocus: false },
   );
   useEffect(() => {
-    const communityCount = auth?.community_count;
-    if (communityCount === undefined || authPage === true) {
+    const user = auth?.username;
+    console.log("user: " + user);
+    console.log("authPage: " + authPage);
+    console.log("authPage + user: " + user === undefined || authPage === true);
+    if (user === undefined || authPage === true) {
       setStatusAuthPage(true)
     }
+    console.log("setStatusAuthPage + " + statusAuthPage);
     const listRoomsPersonalSorted = sortListRoomChat(listRoomsChatResQuery?.roomsPersonal?.items || []);
     const listRoomsCommunitySorted = sortListRoomChat(listRoomsChatResQuery?.roomsCommunity?.items || []);
     dispatch({

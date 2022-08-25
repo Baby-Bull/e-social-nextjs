@@ -20,6 +20,7 @@ import { useQuery } from "react-query";
 import Linkify from "react-linkify";
 import { useSelector } from "react-redux";
 import Lightbox from "react-image-lightbox";
+import { useRouter } from "next/router";
 
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
@@ -35,6 +36,7 @@ interface IBoxChatProps {
   message: any;
   time: string;
   showAvatar: boolean;
+  userId: string;
 }
 interface IBoxMyChatProps {
   message: any;
@@ -174,11 +176,19 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({ message, time, isStartOfDay = f
   );
 };
 
-const BoxChatOthers: React.SFC<IBoxChatProps> = ({ avatar, message, time, showAvatar }) => {
+const BoxChatOthers: React.SFC<IBoxChatProps> = ({ avatar, message, time, showAvatar, userId }) => {
   const [openPopupImage, setOpenPopupImage] = useState(false);
+  const router = useRouter();
+  const redirectProfile = () => {
+    router.push(`${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${userId}`);
+  };
   return (
     <Box className={styles.itemMsgOther}>
-      {showAvatar ? <Avatar className="avatar" alt="Avatar" src={avatar} /> : <div className="avatar" />}
+      {showAvatar ? (
+        <Avatar className="avatar" alt="Avatar" src={avatar} onClick={redirectProfile} sx={{ cursor: "pointer" }} />
+      ) : (
+        <div className="avatar" />
+      )}
       {message?.content_type === "text" && (
         <div className="message-content">
           <Linkify>{message?.content}</Linkify>
@@ -452,6 +462,7 @@ const ChatBoxRightComponent = ({
       });
     return res;
   };
+  console.log(listMessagesShow);
   return (
     <Grid
       item
@@ -510,6 +521,7 @@ const ChatBoxRightComponent = ({
                         key={index}
                         avatar={message?.user?.profile_image || "/assets/images/svg/avatar.svg"}
                         message={message}
+                        userId={message?.user?.id}
                         time={formatChatDate(message?.created_at)}
                         showAvatar={
                           !listMessagesShow[dateText][index + 1] ||
