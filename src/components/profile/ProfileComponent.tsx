@@ -4,7 +4,9 @@ import { useTranslation } from "next-i18next";
 import Pagination from "@mui/material/Pagination";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
+import { IStoreState } from "src/constants/interface";
 import useViewport from "src/helpers/useViewport";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ProfileSkillComponent from "src/components/profile/ProfileSkillComponent";
@@ -93,6 +95,7 @@ const ProfileHaveDataComponent: FC<Props> = ({
   const { t } = useTranslation();
   const viewPort = useViewport();
   const router = useRouter();
+  const auth = useSelector((state: IStoreState) => state.user);
   const isMobile = viewPort.width <= 992;
   // const LIMIT = 20;
   const NumberOfReviewsPerPage = isMobile ? 5 : 10;
@@ -182,6 +185,12 @@ const ProfileHaveDataComponent: FC<Props> = ({
     setPage(p);
     reviews.jump(p);
   };
+
+  useEffect(() => {
+    if (router.query?.userId === auth?.id) {
+      router.push("/my-profile");
+    }
+  }, []);
 
   useEffect(() => {
     // const userIdFromUrl = window.location.pathname.split("/")[2];

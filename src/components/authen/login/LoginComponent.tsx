@@ -188,7 +188,7 @@ const LoginComponent = () => {
               </Grid>
             </Grid>
           </Box>
-          <FooterComponent />
+          <FooterComponent authPage />
         </React.Fragment>
       )}
     </React.Fragment>
