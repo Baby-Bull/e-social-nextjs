@@ -25,7 +25,7 @@ export const getServerSideProps = async (ctx) => {
   if (!cookies[USER_TOKEN]) {
     return {
       redirect: {
-        destination: "/login",
+        destination: `/login?oldUrl=${ctx.resolvedUrl}`,
         permanent: false,
       },
     };

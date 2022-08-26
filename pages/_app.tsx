@@ -72,6 +72,7 @@ const MyApp = (props: MyAppProps) => {
   return (
     <React.Fragment>
       <Head>
+        <title>GOODHUB</title>
         <meta property="og:type" content="website" key="og-type" />
         <meta property="og:title" content='ITエンジニアのための溜まり場 - "goodhub"' key="og-title" />
         <meta

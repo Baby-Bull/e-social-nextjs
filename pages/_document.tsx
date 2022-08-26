@@ -83,6 +83,6 @@ MyDocument.getInitialProps = async (ctx) => {
   ));
   return {
     ...initialProps,
-    styles: <React.Fragment>...{emotionStyleTags}</React.Fragment>,
+    styles: emotionStyleTags,
   };
 };

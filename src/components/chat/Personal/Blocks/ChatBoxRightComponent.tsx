@@ -20,6 +20,7 @@ import { useQuery } from "react-query";
 import Linkify from "react-linkify";
 import InfiniteScroll from "react-infinite-scroller";
 import Lightbox from "react-image-lightbox";
+import { useRouter } from "next/router";
 
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
@@ -36,6 +37,7 @@ import "react-image-lightbox/style.css";
 interface IBoxChatProps {
   allInfoMessage: any;
   time: string;
+  showAvatar: Boolean;
 }
 interface IBoxMyChatProps {
   allInfoMessage: any;
@@ -225,16 +227,26 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
   );
 };
 
-const BoxChatOthers: React.SFC<IBoxChatProps> = ({ time, allInfoMessage }) => {
+const BoxChatOthers: React.SFC<IBoxChatProps> = ({ time, allInfoMessage, showAvatar }) => {
   const { t } = useTranslation();
   const [openPopupImage, setOpenPopupImage] = useState(false);
+  const router = useRouter();
+  const redirectProfile = () => {
+    router.push(`${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${allInfoMessage?.user?.id}`);
+  };
   return (
     <Box className={styles.itemMsgOther}>
-      <Avatar
-        className="avatar"
-        alt={allInfoMessage?.user?.username}
-        src={allInfoMessage?.user?.profile_image || "/assets/images/svg/avatar.svg"}
-      />
+      {showAvatar ? (
+        <Avatar
+          className="avatar"
+          alt={allInfoMessage?.user?.username}
+          src={allInfoMessage?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+          onClick={redirectProfile}
+          sx={{ cursor: "pointer" }}
+        />
+      ) : (
+        <div className="avatar" />
+      )}
       {allInfoMessage?.content_type !== "image" && allInfoMessage?.content_type !== "file" && (
         <div className="message-content">
           {allInfoMessage.content_type === "first-message" ? (
@@ -581,7 +593,15 @@ const ChatBoxRightComponent = ({
                         deleteErrorMessage={deletedMessageError}
                       />
                     ) : (
-                      <BoxChatOthers key={index} allInfoMessage={message} time={formatChatDate(message?.created_at)} />
+                      <BoxChatOthers
+                        key={index}
+                        allInfoMessage={message}
+                        time={formatChatDate(message?.created_at)}
+                        showAvatar={
+                          !listMessagesShow[dateText][index + 1] ||
+                          listMessagesShow[dateText][index + 1]?.user?.id !== message?.user?.id
+                        }
+                      />
                     ),
                   )}
                 </Box>

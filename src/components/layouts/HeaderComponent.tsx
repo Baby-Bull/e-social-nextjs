@@ -178,7 +178,7 @@ const typeSearchs = [
   },
 ];
 
-const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
+const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -208,7 +208,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
         hasMore: false,
         cursor: ""
       };
-      let draftList2 =  {
+      let draftList2 = {
         items: [],
         hasMore: false,
         cursor: ""
@@ -224,12 +224,15 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     },
     { refetchOnWindowFocus: false },
   );
-
   useEffect(() => {
-    const communityCount = auth?.community_count;
-    if (communityCount === undefined || authPage === true) {
+    const user = auth?.username;
+    console.log("user: " + user);
+    console.log("authPage: " + authPage);
+    console.log("authPage + user: " + user === undefined || authPage === true);
+    if (user === undefined || authPage === true) {
       setStatusAuthPage(true)
     }
+    console.log("setStatusAuthPage + " + statusAuthPage);
     const listRoomsPersonalSorted = sortListRoomChat(listRoomsChatResQuery?.roomsPersonal?.items || []);
     const listRoomsCommunitySorted = sortListRoomChat(listRoomsChatResQuery?.roomsCommunity?.items || []);
     dispatch({
@@ -375,7 +378,6 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
       !notifications?.items_count && getNotis();
     }
   }, [auth])
-
   const handleNotifyMenuClose = () => {
     setNotifyAnchorEl(null);
     setStatusNotify(false);
@@ -685,7 +687,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
           }}
         >
           <InfiniteScroll
-            dataLength={notifications?.items?.length}
+            dataLength={notifications?.items?.length || 0}
             next={loadMoreNotifications}
             hasMore={notifications?.hasMore}
             height={650}
@@ -712,7 +714,11 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                         <Avatar
                           alt={dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name}
                           src={dataMap?.metadata?.user?.profile_image || dataMap?.metadata?.community?.profile_image}
-                          sx={{ width: "50px", height: "50px" }}
+                          sx={{
+                            width: "50px",
+                            height: "50px",
+                            objectFit: dataMap?.metadata?.community?.profile_image === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                          }}
                         />
                       </div>
                       <div className={styles.notificationContents}>
@@ -819,7 +825,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                 <Box className="box-content">
                   <ul className={styles.boxThreads}>
                     <InfiniteScroll
-                      dataLength={listRoomsChatTemp?.itemsPersonal?.length}
+                      dataLength={listRoomsChatTemp?.itemsPersonal?.length || 0}
                       next={loadMoreMessagePersonal}
                       hasMore={listRoomsChatTemp?.hasMorePersonal}
                       height={650}
@@ -949,7 +955,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                 <Box className="box-content">
                   <ul className={styles.boxThreads}>
                     <InfiniteScroll
-                      dataLength={listRoomsChatTemp?.itemsCommunity?.length}
+                      dataLength={listRoomsChatTemp?.itemsCommunity?.length || 0}
                       next={loadMoreMessageCommunity}
                       hasMore={listRoomsChatTemp?.hasMoreCommunity}
                       height={650}
