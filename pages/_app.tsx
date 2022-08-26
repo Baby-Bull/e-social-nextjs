@@ -90,7 +90,7 @@ const MyApp = (props: MyAppProps) => {
         <meta property="og:site_name" content="GOODHUB" key="og-type" />
         <meta property="og:image:width" content="600" />
         <meta property="og:image:height" content="315" />
-        <meta name="twitter:card" content='ITエンジニアのための溜まり場 - "goodhub"' key="twitter-card" />
+        <meta name="twitter:card" content="summary_large_image" key="twitter-card" />
         <meta name="twitter:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} key="twitter-url" />
         <meta
           name="twitter:image"
