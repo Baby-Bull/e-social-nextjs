@@ -22,7 +22,7 @@ const TagA = styled(Link)`
     margin-left: 0;
   }
 `;
-const FooterComponent: React.SFC<IFooterComponentProps> = ({ authPage = false }) => {
+const FooterComponent: React.FC<IFooterComponentProps> = ({ authPage = false }) => {
   const { t } = useTranslation();
   const router = useRouter();
 
@@ -115,12 +115,12 @@ const FooterComponent: React.SFC<IFooterComponentProps> = ({ authPage = false })
               </Box>
               <Box
                 sx={{
-                  display: !authPage ? "none" : "inherit",
+                  display: authPage ? "none" : "inherit",
                 }}
                 onClick={handleLogout}
               >
                 <Box sx={{ display: { xs: "none", lg: "inherit" } }}>
-                  <TagA href="/#" color="secondary">
+                  <TagA href="/login" color="secondary">
                     {t("footer.logout")}
                   </TagA>
                 </Box>

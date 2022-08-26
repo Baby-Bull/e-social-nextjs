@@ -211,7 +211,7 @@ const RegisterComponents = () => {
           </Grid>
         </Grid>
       </Box>
-      <FooterComponent />
+      <FooterComponent authPage />
     </React.Fragment>
   );
 };

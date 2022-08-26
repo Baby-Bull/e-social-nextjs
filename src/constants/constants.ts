@@ -390,7 +390,8 @@ export const TYPE_OF_NOTIFICATIONS = [
   "new_community_join_request",
   "community_join_request_accepted",
   "new_comment_in_post",
-  "new_recommend_user"
+  "new_recommend_user",
+  "community_join_request_rejected",
 ]
 export const CONTENT_OF_NOTIFICATIONS = {
   new_matching_request: { label: "さんからマッチングリクエストが届きました。" },

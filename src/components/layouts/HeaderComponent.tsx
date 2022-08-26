@@ -178,7 +178,7 @@ const typeSearchs = [
   },
 ];
 
-const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage }) => {
+const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -195,10 +195,6 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage }) => {
   const isMenuChatOpen = Boolean(menuChatAnchorEl);
   const [valueTabChatMessage, setValueTabChatMessage] = React.useState('1');
   const [statusAuthPage, setStatusAuthPage] = React.useState(false);
-  // const [searchChatRoom, setSearchChatRoom] = useState({
-  //   search: null,
-  //   cursor: null,
-  // });
 
   const { data: listRoomsChatResQuery } = useQuery(
     [REACT_QUERY_KEYS.COMMUNITY_CHAT.LIST_CHAT_ROOMS],
@@ -226,13 +222,9 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage }) => {
   );
   useEffect(() => {
     const user = auth?.username;
-    console.log("user: " + user);
-    console.log("authPage: " + authPage);
-    console.log("authPage + user: " + user === undefined || authPage === true);
     if (user === undefined || authPage === true) {
       setStatusAuthPage(true)
     }
-    console.log("setStatusAuthPage + " + statusAuthPage);
     const listRoomsPersonalSorted = sortListRoomChat(listRoomsChatResQuery?.roomsPersonal?.items || []);
     const listRoomsCommunitySorted = sortListRoomChat(listRoomsChatResQuery?.roomsCommunity?.items || []);
     dispatch({
@@ -786,7 +778,7 @@ const HeaderComponent: React.SFC<IHeaderComponentProps> = ({ authPage }) => {
             "& .MuiMenu-paper": {
               borderRadius: "12px",
               height: "40em",
-              overflowY: "scroll",
+              //overflowY: "scroll",
             }
           }}
         >
