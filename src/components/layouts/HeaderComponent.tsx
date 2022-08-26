@@ -709,7 +709,9 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                           sx={{
                             width: "50px",
                             height: "50px",
-                            objectFit: dataMap?.metadata?.community?.profile_image === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                            ".MuiAvatar-img": {
+                              objectFit: (dataMap?.metadata?.community?.profile_image == "/assets/images/logo/logo.png") ? "contain!important" : "cover",
+                            },
                           }}
                         />
                       </div>
@@ -778,7 +780,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
             "& .MuiMenu-paper": {
               borderRadius: "12px",
               height: "40em",
-              //overflowY: "scroll",
+              overflow: "hidden"
             }
           }}
         >
@@ -798,7 +800,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                 </TabsCustom>
               </Box>
               <TabPanel
-                sx={{ padding: "0" }}
+                sx={{ padding: "0", width: "365px", }}
                 value="1">
                 <Box className={styles.boxSearch}>
                   <Paper className={styles.inputSearch} sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}>
@@ -929,7 +931,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                 </Box>
               </TabPanel>
               <TabPanel
-                sx={{ padding: "0" }}
+                sx={{ padding: "0", width: "365px" }}
                 value="2"
               >
                 <Box className={styles.boxSearch}>
