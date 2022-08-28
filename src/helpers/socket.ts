@@ -95,8 +95,11 @@ const WebsocketClient = ({
   };
 };
 
-const socket = (typeof window !== 'undefined') ? WebsocketClient({
-  url: getWsEndpoint,
-}) : null;
+const socket =
+  typeof window !== "undefined"
+    ? WebsocketClient({
+        url: getWsEndpoint,
+      })
+    : null;
 
 export default socket;
