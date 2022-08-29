@@ -29,8 +29,10 @@ const WebsocketClient = ({
   const createWsInstance = () => {
     tryReconnectFn = () => {
       window.setTimeout(() => {
-        createWsInstance();
-        emitInternal("reconnected", null);
+        if (getToken()) {
+          createWsInstance();
+          emitInternal("reconnected", null);
+        }
       }, retryDelay);
     };
     const wsUrl = typeof url === "function" ? url() : url;
@@ -95,8 +97,11 @@ const WebsocketClient = ({
   };
 };
 
-const socket = (typeof window !== 'undefined') ? WebsocketClient({
-  url: getWsEndpoint,
-}) : null;
+const socket =
+  typeof window !== "undefined"
+    ? WebsocketClient({
+        url: getWsEndpoint,
+      })
+    : null;
 
 export default socket;

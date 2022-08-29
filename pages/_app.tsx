@@ -26,6 +26,7 @@ import "src/styles/index.scss";
 
 import { useStore } from "src/store/store";
 import { setApiAuth } from "src/helpers/api";
+import socket from "src/helpers/socket";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -49,10 +50,11 @@ const MyApp = (props: MyAppProps) => {
   const [queryClient] = React.useState(() => new QueryClient());
   React.useEffect(() => {
     const cookies = parseCookies();
-    if (!AUTH_PAGE_PATHS.includes(pathname) && !cookies[USER_TOKEN]) {
+    const isAuth = cookies[USER_TOKEN];
+    if (!AUTH_PAGE_PATHS.includes(pathname) && !isAuth) {
       // Router.push("/login");
     }
-    if (!AUTH_PAGE_PATHS.includes(pathname) && cookies[USER_TOKEN]) {
+    if (!AUTH_PAGE_PATHS.includes(pathname) && isAuth) {
       const now = new Date();
       const expiresIn = parseInt(cookies.EXPIRES_IN, 10) || now.getTime();
 
@@ -63,6 +65,12 @@ const MyApp = (props: MyAppProps) => {
           refreshToken();
         }, 2700000);
       }, timeOutFreshToken);
+
+      const updateLastSeenAtInterval = setInterval(() => {
+        socket.emit("user.last_seen_at", null);
+      }, 60000); // 1minute
+
+      return () => clearInterval(updateLastSeenAtInterval);
     }
   }, []);
 
