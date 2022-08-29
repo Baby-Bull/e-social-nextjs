@@ -3,7 +3,6 @@ import React, { useRef, useState, useEffect } from "react";
 import { Box, Grid, Typography, Link, Toolbar, AppBar } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import { LoginSocialGoogle, IResolveParams, TypeCrossFunction } from "reactjs-social-login";
 import { useDispatch } from "react-redux";
 
 import FooterComponent from "src/components/layouts/FooterComponent";
@@ -14,7 +13,8 @@ import SplashScreen from "src/components/common/SplashScreen";
 import { authWithProvider } from "src/services/auth";
 import { login } from "src/store/store";
 
-import { LoginSocialGithub, LoginSocialTwitterV1 } from "../loginSocial";
+import { IResolveParams, LoginSocialGithub, LoginSocialTwitterV1 } from "../loginSocial";
+import LoginSocialGoogle from "../loginSocial/google/LoginSocialGoogle";
 
 const LoginComponent = () => {
   const { t } = useTranslation();
@@ -25,12 +25,9 @@ const LoginComponent = () => {
 
   const [provider, setProvider] = useState("");
   const [profile, setProfile] = useState<any>();
-  const githubRef = useRef<TypeCrossFunction>(null!);
-  const googleRef = useRef<TypeCrossFunction>(null!);
+  const githubRef = useRef(null!);
 
   const onLoginStart = () => {};
-
-  const onLogoutFailure = () => {};
 
   useEffect(() => {
     const registerAccount = async (providerAuth: string, accessToken: any) => {
@@ -125,7 +122,7 @@ const LoginComponent = () => {
                     <LoginSocialTwitterV1
                       ref={githubRef}
                       redirect_uri={process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER}
-                      onResolve={({ provider: twitterProvider, data }: IResolveParams) => {
+                      onResolve={({ provider: twitterProvider, data }) => {
                         setProvider(twitterProvider);
                         setProfile(data);
                       }}
@@ -137,15 +134,13 @@ const LoginComponent = () => {
                   </Box>
                   <Box pt="48px">
                     <LoginSocialGoogle
-                      ref={googleRef}
-                      client_id={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}
-                      onLogoutFailure={onLogoutFailure}
-                      onLoginStart={onLoginStart}
-                      onResolve={({ provider: googleProvider, data }: IResolveParams) => {
+                      clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+                      redirectUrl={process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER}
+                      onSuccess={({ provider: googleProvider, data }) => {
                         setProvider(googleProvider);
                         setProfile(data);
                       }}
-                      onReject={() => {}}
+                      onError={(err) => console.log(err)}
                     >
                       <ButtonComponent props={{ mode: "google" }}>{t("login:right.register-google")}</ButtonComponent>
                     </LoginSocialGoogle>
