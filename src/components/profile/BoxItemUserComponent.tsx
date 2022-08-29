@@ -50,9 +50,9 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
   const router = useRouter();
   const [showModalMatching, setModalMatching] = React.useState(false);
   const [liked, setLiked] = useState(data?.is_favorite);
+  const [statusBtnSendMatching, setStatusBtnSendMatching] = useState(data?.match_status);
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
-
   const handleShowModalMatching = async (matchStatus) => {
     if (!matchStatus) {
       setModalMatching(true);
@@ -68,6 +68,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
   const handleSendMatchingRequest = async (matchingRequest) => {
     setLiked(true);
     const res = await sendMatchingRequest(data?.id, matchingRequest);
+    setStatusBtnSendMatching("sent_pending");
     await addUserFavorite(data?.id);
     setModalMatching(false);
     callbackHandleIsRefresh(!isRefresh);
@@ -173,10 +174,10 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
           <ButtonComponent
             className="button-matching"
             fullWidth
-            onClick={() => handleShowModalMatching(data?.match_status)}
-            mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.mode}
+            onClick={() => handleShowModalMatching(statusBtnSendMatching)}
+            mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(statusBtnSendMatching)]?.mode}
           >
-            {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.label}
+            {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(statusBtnSendMatching)]?.label}
           </ButtonComponent>
         </Box>
       </Grid>

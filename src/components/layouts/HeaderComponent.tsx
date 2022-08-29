@@ -404,7 +404,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
         router.push("/matching?type=received");
         break;
       case "matching_request_accepted":
-        router.push("/matching?type=received");
+        router.push("/matching?type=matched");
         break;
       case "new_community_join_request":
         router.push(`/community/setting/${dataOfMessage?.community_id}`);
