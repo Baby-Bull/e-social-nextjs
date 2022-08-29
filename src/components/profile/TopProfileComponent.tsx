@@ -19,6 +19,7 @@ import styles from "src/components/profile/profile.module.scss";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
 import { IStoreState } from "src/constants/interface";
+import { USER_ONLINE_STATUS } from "src/constants/constants";
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
@@ -296,7 +297,9 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                       mt: "11px",
                     }}
                   >
-                    {t("profile:login")}：{dayjs(user?.last_login_at).fromNow()}
+                    {user?.activity_status === USER_ONLINE_STATUS
+                      ? t("profile:login")
+                      : `${t("profile:login")}：${dayjs(user?.last_login_at).fromNow()}`}
                   </Box>
                   <Box
                     sx={{
@@ -606,7 +609,9 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   fontSize: "10px",
                 }}
               >
-                {t("profile:login")}：{dayjs(user?.last_login_at).fromNow()}
+                {user?.activity_status === USER_ONLINE_STATUS
+                  ? t("profile:login")
+                  : `${t("profile:login")}：${dayjs(user?.last_login_at).fromNow()}`}
               </Box>
 
               <Box

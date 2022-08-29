@@ -92,24 +92,46 @@ const FooterComponent: React.FC<IFooterComponentProps> = ({ authPage = false }) 
           >
             <Box sx={{ display: { xs: "block", lg: "flex" }, fontSize: "12px" }}>
               <Box sx={{ mb: { xs: "12px", lg: "0" } }}>
-                <TagA href="/#" color="secondary">
+                <TagA
+                  target="_blank"
+                  href="https://ruddy-muenster-a17.notion.site/f7dee0adb1d54cf59f025cd8cbc73c89"
+                  color="secondary"
+                >
                   {t("footer.terms-service")}
                 </TagA>
               </Box>
               <Box>
-                <TagA href="/#" color="secondary">
+                <TagA
+                  target="_blank"
+                  href="https://ruddy-muenster-a17.notion.site/6fd1d8e405e648f7874a5dd6c4bc3351"
+                  color="secondary"
+                >
                   {t("footer.privacy-policy")}
+                </TagA>
+              </Box>
+              <Box sx={{ mt: { xs: "14px", lg: "0" } }}>
+                <TagA
+                  target="_blank"
+                  href="https://ruddy-muenster-a17.notion.site/bd145a92a3ac456bb4a48148d1a218f7"
+                  color="secondary"
+                >
+                  {t("footer.commerical-act")}
                 </TagA>
               </Box>
             </Box>
             <Box sx={{ display: { xs: "block", lg: "flex" }, fontSize: "12px" }}>
               <Box sx={{ mb: { xs: "12px", lg: "0" } }}>
-                <TagA href="/#" color="secondary">
+                <TagA
+                  target="_blank"
+                  // eslint-disable-next-line max-len
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSecrUnFmCu_iVSKLGU6haUiwA_JHOurjjag3MZahO6W6GBEwQ/viewform?usp=sf_link"
+                  color="secondary"
+                >
                   {t("footer.inquiry")}
                 </TagA>
               </Box>
               <Box>
-                <TagA href="/#" color="secondary">
+                <TagA target="_blank" href="https://ailab-corp.com/" color="secondary">
                   {t("footer.operating-company")}
                 </TagA>
               </Box>

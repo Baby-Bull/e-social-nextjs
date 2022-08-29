@@ -1,14 +1,14 @@
 {
-  "title": "簡単SNS登録",
-  "sub-title": "SNSアカウントで登録になります。SNSアカウントをお持ちでない方は、お手数ですがSNSの登録を先にお願いいたします。",
+  "title": "登録方法",
+  "sub-title": "各種アカウントによる登録になります。アカウントをお持ちでない方は発行の上、ご登録お願いいたします。",
   "register-git": "Githubで登録",
   "register-google": "Googleで登録",
   "register-twitter": "Twitterで登録",
   "description": {
     "title": "goodhubからのお願い",
     "text-1.1": "エンジニアonly",
-    "text-1.2": "※エージェント様などののご登録はご遠慮ください",
-    "text-2": "Give &Givenの精神でお願いします",
+    "text-1.2": "※エージェント様などのご登録はご遠慮ください",
+    "text-2": "Give&Givenの精神でお願いします",
     "text-3": "気持ち良いコミュニケーションにご協力ください"
   },
   "form": {

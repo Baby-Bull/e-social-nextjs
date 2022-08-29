@@ -392,7 +392,7 @@ export const TYPE_OF_NOTIFICATIONS = [
   "new_comment_in_post",
   "new_recommend_user",
   "community_join_request_rejected",
-]
+];
 export const CONTENT_OF_NOTIFICATIONS = {
   new_matching_request: { label: "さんからマッチングリクエストが届きました。" },
   matching_request_accepted: { label: "さんとのマッチングが成立しました🎉メッセージを送ってみましょう。" },
@@ -400,5 +400,8 @@ export const CONTENT_OF_NOTIFICATIONS = {
   community_join_request_accepted: { label: "コミュニティ参加申請が承認されました。" },
   new_comment_in_post: { label: " さんが  にコメントしました。" },
   new_recommend_user: { label: "さんがgoodhubに参加しました。コンタクトをとってみましょう！" },
-  community_join_request_rejected: { label: "コミュニティ加が承認されませんでした。" }
-}
+  community_join_request_rejected: { label: "コミュニティ加が承認されませんでした。" },
+};
+
+export const USER_ONLINE_STATUS = "online";
+export const USER_OFFLINE_STATUS = "offline";
