@@ -2,9 +2,9 @@ export type objectType = {
   [key: string]: any;
 };
 
-export type IResolveParams = {
+export type IResolveParams<T = objectType> = {
   provider: string;
-  data?: objectType;
+  data?: T;
 };
 
 export type TypeCrossFunction = {

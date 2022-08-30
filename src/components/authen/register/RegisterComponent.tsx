@@ -3,7 +3,6 @@ import React, { useRef, useState, useEffect } from "react";
 import { Box, Grid, Typography, Link, AppBar, Toolbar } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import { LoginSocialGoogle, IResolveParams, TypeCrossFunction } from "reactjs-social-login";
 import { useDispatch } from "react-redux";
 
 import theme from "src/theme";
@@ -14,7 +13,8 @@ import { authWithProvider } from "src/services/auth";
 import { login } from "src/store/store";
 import SplashScreen from "src/components/common/SplashScreen";
 
-import { LoginSocialTwitterV1, LoginSocialGithub } from "../loginSocial";
+import { LoginSocialTwitterV1, LoginSocialGithub, IResolveParams } from "../loginSocial";
+import LoginSocialGoogle from "../loginSocial/google/LoginSocialGoogle";
 
 const RegisterComponents = () => {
   const { t } = useTranslation();
@@ -24,8 +24,7 @@ const RegisterComponents = () => {
 
   const [provider, setProvider] = useState("");
   const [profile, setProfile] = useState<any>();
-  const githubRef = useRef<TypeCrossFunction>(null!);
-  const googleRef = useRef<TypeCrossFunction>(null!);
+  const githubRef = useRef(null!);
 
   const onLoginStart = () => {
     console.log(isLoading);
@@ -149,20 +148,15 @@ const RegisterComponents = () => {
               </Box>
               <Box pt="48px">
                 <LoginSocialGoogle
-                  ref={googleRef}
-                  client_id={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}
-                  onLogoutFailure={onLogoutFailure}
-                  onLoginStart={onLoginStart}
-                  onResolve={({ provider: googleProvider, data }: IResolveParams) => {
+                  clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+                  redirectUrl={process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER}
+                  onSuccess={({ provider: googleProvider, data }) => {
                     setProvider(googleProvider);
                     setProfile(data);
                   }}
-                  onReject={(err) => {
-                    console.log(err);
-                    setIsLoading(false);
-                  }}
+                  onError={onLogoutFailure}
                 >
-                  <ButtonComponent props={{ mode: "google" }}>{t("register:register-google")}</ButtonComponent>
+                  <ButtonComponent props={{ mode: "google" }}>{t("login:right.register-google")}</ButtonComponent>
                 </LoginSocialGoogle>
               </Box>
 

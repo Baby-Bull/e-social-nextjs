@@ -57,6 +57,7 @@ const MyApp = (props: MyAppProps) => {
     if (!AUTH_PAGE_PATHS.includes(pathname) && isAuth) {
       const now = new Date();
       const expiresIn = parseInt(cookies.EXPIRES_IN, 10) || now.getTime();
+      let updateLastSeenAtInterval = null;
 
       const timeOutFreshToken = expiresIn - now.getTime() - 300000;
       setTimeout(() => {
@@ -66,11 +67,17 @@ const MyApp = (props: MyAppProps) => {
         }, 2700000);
       }, timeOutFreshToken);
 
-      const updateLastSeenAtInterval = setInterval(() => {
-        socket.emit("user.last_seen_at", null);
-      }, 60000); // 1minute
+      socket.on("connected", () => {
+        updateLastSeenAtInterval = setInterval(() => {
+          socket.emit("user.last_seen_at", null);
+        }, 60000); // 1minute
+      });
 
-      return () => clearInterval(updateLastSeenAtInterval);
+      return () => {
+        clearInterval(updateLastSeenAtInterval);
+        updateLastSeenAtInterval = null;
+        socket.off("connected");
+      };
     }
   }, []);
 
