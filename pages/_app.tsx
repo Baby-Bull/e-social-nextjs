@@ -48,20 +48,32 @@ const SplashScreen = () => (
 const MyApp = (props: MyAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps, pathname } = props;
   const [queryClient] = React.useState(() => new QueryClient());
+  const cookies = parseCookies();
+  const isAuth = cookies[USER_TOKEN];
   React.useEffect(() => {
-    const cookies = parseCookies();
-    const isAuth = cookies[USER_TOKEN];
-
-    console.log(socket.isClosed(), isAuth);
     if (socket.isClosed() && isAuth) {
       socket.reconnect();
     }
-  });
+  }, [isAuth]);
 
   React.useEffect(() => {
-    const cookies = parseCookies();
-    const isAuth = cookies[USER_TOKEN];
     let updateLastSeenAtInterval = null;
+    socket.on("connected", () => {
+      updateLastSeenAtInterval = setInterval(() => {
+        if (!socket.isClosed()) {
+          socket.emit("user.last_seen_at", null);
+        }
+      }, 60000); // 1minute
+    });
+
+    return () => {
+      clearInterval(updateLastSeenAtInterval);
+      updateLastSeenAtInterval = null;
+      socket.off("connected");
+    };
+  }, [isAuth]);
+
+  React.useEffect(() => {
     if (!AUTH_PAGE_PATHS.includes(pathname) && !isAuth) {
       // Router.push("/login");
     }
@@ -70,28 +82,19 @@ const MyApp = (props: MyAppProps) => {
       const expiresIn = parseInt(cookies.EXPIRES_IN, 10) || now.getTime();
 
       const timeOutFreshToken = expiresIn - now.getTime() - 300000;
-      setTimeout(() => {
+      let intervalRef = null;
+      const timeOutRef = setTimeout(() => {
         refreshToken();
-        setInterval(() => {
+        intervalRef = setInterval(() => {
           refreshToken();
         }, 2700000);
       }, timeOutFreshToken);
-
-      socket.on("connected", () => {
-        updateLastSeenAtInterval = setInterval(() => {
-          if (!socket.isClosed()) {
-            socket.emit("user.last_seen_at", null);
-          }
-        }, 60000); // 1minute
-      });
-
       return () => {
-        clearInterval(updateLastSeenAtInterval);
-        updateLastSeenAtInterval = null;
-        socket.off("connected");
+        clearInterval(intervalRef);
+        clearTimeout(timeOutRef);
       };
     }
-  }, []);
+  }, [isAuth]);
 
   const isServerRendering = typeof window === "undefined";
   const store = useStore(pageProps.initialReduxState);
