@@ -36,7 +36,6 @@ const WebsocketClient = ({
     tryReconnectFn = () => {
       retries += 1;
       isClosed = retries >= maxRetries;
-      console.log(retries);
       if (!isClosed) {
         window.setTimeout(() => {
           createWsInstance();
@@ -51,9 +50,8 @@ const WebsocketClient = ({
       if (retries > 0) {
         emitInternal("reconnected", null);
         retries = 0;
-      } else {
-        emitInternal("connected", e);
       }
+      emitInternal("connected", e);
       isClosed = false;
     };
 
