@@ -51,13 +51,23 @@ const MyApp = (props: MyAppProps) => {
   React.useEffect(() => {
     const cookies = parseCookies();
     const isAuth = cookies[USER_TOKEN];
+
+    console.log(socket.isClosed(), isAuth);
+    if (socket.isClosed() && isAuth) {
+      socket.reconnect();
+    }
+  });
+
+  React.useEffect(() => {
+    const cookies = parseCookies();
+    const isAuth = cookies[USER_TOKEN];
+    let updateLastSeenAtInterval = null;
     if (!AUTH_PAGE_PATHS.includes(pathname) && !isAuth) {
       // Router.push("/login");
     }
     if (!AUTH_PAGE_PATHS.includes(pathname) && isAuth) {
       const now = new Date();
       const expiresIn = parseInt(cookies.EXPIRES_IN, 10) || now.getTime();
-      let updateLastSeenAtInterval = null;
 
       const timeOutFreshToken = expiresIn - now.getTime() - 300000;
       setTimeout(() => {
@@ -69,7 +79,9 @@ const MyApp = (props: MyAppProps) => {
 
       socket.on("connected", () => {
         updateLastSeenAtInterval = setInterval(() => {
-          socket.emit("user.last_seen_at", null);
+          if (!socket.isClosed()) {
+            socket.emit("user.last_seen_at", null);
+          }
         }, 60000); // 1minute
       });
 
