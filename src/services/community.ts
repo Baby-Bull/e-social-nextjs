@@ -317,7 +317,7 @@ export const joinCommunity = async (communityId, isPulic = true) => {
       return res.data;
     }
   } catch (error) {
-    toast.error(SERVER_ERROR);
+    // toast.error(SERVER_ERROR);
     return error;
   }
 };

@@ -119,7 +119,7 @@ const GridLeftComponent: React.SFC<IGridLeftComponentProps> = ({ smAndUp }) => {
                 <TypoCustom fontWeight="700" pl={{ md: "20px" }}>
                   {t("register:description.text-1.1")}
                 </TypoCustom>
-                <Typography fontSize="12px" fontWeight="400" pl={{ md: "20px" }}>
+                <Typography fontSize="12px" mt="6px" fontWeight="400" pl={{ md: "5px" }}>
                   {t("register:description.text-1.2")}
                 </Typography>
               </Box>

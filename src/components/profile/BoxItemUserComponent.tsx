@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "src/components/profile/profile.module.scss";
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import { HOMEPAGE_RECOMMEND_MEMBER_STATUS, USER_SEARCH_STATUS } from "src/components/constants/constants";
-import { JOBS } from "src/constants/constants";
+import { JOBS, USER_ONLINE_STATUS } from "src/constants/constants";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
@@ -26,6 +26,7 @@ interface IUserItemProps {
   id: string;
   profile_image: string;
   last_login_at: string;
+  activity_status?: string;
   username: string;
   job: string;
   review_count: number;
@@ -50,9 +51,9 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
   const router = useRouter();
   const [showModalMatching, setModalMatching] = React.useState(false);
   const [liked, setLiked] = useState(data?.is_favorite);
+  const [statusBtnSendMatching, setStatusBtnSendMatching] = useState(data?.match_status);
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
-
   const handleShowModalMatching = async (matchStatus) => {
     if (!matchStatus) {
       setModalMatching(true);
@@ -66,7 +67,9 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
     }
   };
   const handleSendMatchingRequest = async (matchingRequest) => {
+    setLiked(true);
     const res = await sendMatchingRequest(data?.id, matchingRequest);
+    setStatusBtnSendMatching("sent_pending");
     await addUserFavorite(data?.id);
     setModalMatching(false);
     callbackHandleIsRefresh(!isRefresh);
@@ -118,12 +121,12 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
                 {USER_SEARCH_STATUS[data?.status]?.label}
               </ButtonComponent>
               <span className="label-login-status">
-                {data?.last_login_at
-                  ? replaceLabelByTranslate(
+                {data?.activity_status === USER_ONLINE_STATUS
+                  ? t("home:box-member-recommend.no-login")
+                  : replaceLabelByTranslate(
                       t("home:box-member-recommend.last-login"),
                       dayjs(data?.last_login_at).fromNow(),
-                    )
-                  : t("home:box-member-recommend.no-login")}
+                    )}
               </span>
             </div>
 
@@ -172,10 +175,10 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
           <ButtonComponent
             className="button-matching"
             fullWidth
-            onClick={() => handleShowModalMatching(data?.match_status)}
-            mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.mode}
+            onClick={() => handleShowModalMatching(statusBtnSendMatching)}
+            mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(statusBtnSendMatching)]?.mode}
           >
-            {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(data?.match_status)]?.label}
+            {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(statusBtnSendMatching)]?.label}
           </ButtonComponent>
         </Box>
       </Grid>

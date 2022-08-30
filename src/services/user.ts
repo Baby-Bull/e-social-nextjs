@@ -1,8 +1,8 @@
 import { toast } from "react-toastify";
-import dayjs from 'dayjs';
-import 'dayjs/locale/ja';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
+import dayjs from "dayjs";
+import "dayjs/locale/ja";
+import relativeTime from "dayjs/plugin/relativeTime";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 
 import { api } from "src/helpers/api";
 import {
@@ -15,11 +15,12 @@ import {
   EMAIL_EXISTS,
 } from "src/messages/notification";
 import { typeTimeLogin, typeReview } from "src/constants/searchUserConstants";
+
 import { setIsProfileEdited } from "../helpers/storage";
 
-dayjs.extend(relativeTime)
-dayjs.extend(localizedFormat)
-dayjs.locale('ja');
+dayjs.extend(relativeTime);
+dayjs.extend(localizedFormat);
+dayjs.locale("ja");
 
 export const getUserFavorite = async (limit: number, cursor: string) => {
   try {
@@ -37,7 +38,7 @@ export const getUserStatics = async () => {
   } catch (error) {
     return error;
   }
-}
+};
 
 export const getUserFavoriteTags = async (limit: number, cursor: string = "") => {
   try {
@@ -265,9 +266,13 @@ export const getUserRecommended = async (limit: number, cursor: string = "") => 
   }
 };
 
-export const getUserReviews = async (userId: string | string[], limit: number, cursor: string) => {
+export const getUserReviews = async (userId: string | string[], limit: number | null = null, cursor: string = null) => {
   try {
-    const res = await api.get(`/user/${userId}/reviews?limit=${limit}&cursor=${cursor}`);
+    const queryString = new URLSearchParams({
+      ...(limit ? { limit: `${limit}` } : {}),
+      ...(cursor ? { cursor } : {}),
+    }).toString();
+    const res = await api.get(`/user/${userId}/reviews?${queryString}`);
     return res?.data;
   } catch (error) {
     return error;
@@ -306,6 +311,22 @@ export const getListnotifications = async (limit: number, cursor: string) => {
   try {
     const res = await api.get(`/user/notifications?limit=${limit}&cursor=${cursor}`);
     return res?.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const readAllNotifications = async () => {
+  try {
+    await api.patch(`/user/notifications/read`);
+  } catch (error) {
+    return error;
+  }
+};
+
+export const readNotification = async (notificationId: string) => {
+  try {
+    await api.patch(`/user/notifications/${notificationId}/read`);
   } catch (error) {
     return error;
   }

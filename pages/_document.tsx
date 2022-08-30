@@ -12,42 +12,13 @@ export default class MyDocument extends Document {
         <Head>
           {/* PWA primary color */}
           <meta name="theme-color" content={theme.palette.primary.main} />
-          <link rel="icon" href="/favicon.ico" />
-          <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-          <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-          <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-          <link rel="manifest" href="/site.webmanifest" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           {/* <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" /> */}
           <link
             href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap"
             rel="stylesheet"
           />
-          <meta property="og:image:width" content="600" />
-          <meta property="og:image:height" content="315" />
-          <meta name="title" content="GOODHUB" />
-          <meta name="description" content="GOODHUB エンジニア向けのソフトウェア" />
-          <meta name="keywords" content="キーワード" />
-          <meta property="og:type" content="ウェブサイト" key="og-type" />
-          <meta property="og:title" content="GOODHUB" key="og-title" />
-          <meta property="og:description" content="GOODHUB エンジニア向けのソフトウェア" key="og-description" />
-          <meta property="og:url" content={`${process.env.NEXT_PUBLIC_URL_PROFILE}`} key="og-url" />
-          <meta
-            property="og:image"
-            content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/222203821.png`}
-            key="og-img"
-          />
-          <meta property="og:site_name" content="GOODHUB エンジニア向けのソフトウェア" key="og-type" />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:url" content={`${process.env.NEXT_PUBLIC_URL_PROFILE}`} />
-          <meta
-            name="twitter:image"
-            content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/222203821.png`}
-          />
-          <meta name="twitter:title" content="GOODHUB" />
-          <meta name="twitter:description" content="GOODHUB エンジニア向けのソフトウェア" />
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
-          {(this.props as any).emotionStyleTags}
         </Head>
         <body>
           <Main />
@@ -110,9 +81,8 @@ MyDocument.getInitialProps = async (ctx) => {
       dangerouslySetInnerHTML={{ __html: style.css }}
     />
   ));
-
   return {
     ...initialProps,
-    emotionStyleTags,
+    styles: emotionStyleTags,
   };
 };

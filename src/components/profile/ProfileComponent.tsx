@@ -1,19 +1,22 @@
 import { Backdrop, Box, CircularProgress } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import Pagination from "@mui/material/Pagination";
 import { styled } from "@mui/material/styles";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
+import { IStoreState } from "src/constants/interface";
 import useViewport from "src/helpers/useViewport";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import ProfileSkillComponent from "src/components/profile/ProfileSkillComponent";
 import ReviewComponent from "src/components/profile/ReviewComponent";
 import ParticipatingCommunityComponent from "src/components/profile/ParticipatingCommunityComponent";
 import {
-  getUserCommunites,
-  getOrtherUserProfile,
-  getUserReviews,
-  getUserRecommended,
+  // getUserCommunites,
+  // getOrtherUserProfile,
+  // getUserReviews,
+  // getUserRecommended,
   addUserFavorite,
 } from "src/services/user";
 import BoxItemUserComponent from "src/components/profile/BoxItemUserComponent";
@@ -72,55 +75,76 @@ function usePagination(data: any, itemsPerPage: any) {
   return { next, prev, jump, currentData, currentPage, maxPage };
 }
 
-const ProfileHaveDataComponent = () => {
+interface Props {
+  // isAuth: boolean;
+  userId: string;
+  profileSkill: any;
+  communities: any[];
+  allReviews: any[];
+  recommended?: any[];
+}
+
+const ProfileHaveDataComponent: FC<Props> = ({
+  // isAuth,
+  userId,
+  profileSkill,
+  communities,
+  allReviews,
+  recommended,
+}) => {
   const { t } = useTranslation();
   const viewPort = useViewport();
+  const router = useRouter();
+  const auth = useSelector((state: IStoreState) => state.user);
   const isMobile = viewPort.width <= 992;
-  const LIMIT = 20;
+  // const LIMIT = 20;
   const NumberOfReviewsPerPage = isMobile ? 5 : 10;
   const NumberOfCommunitiesPerPage = isMobile ? 2 : 8;
 
-  const [profileSkill, setProfileSkill] = useState<any>([]);
-  const [communities, setCommunities] = useState([]);
-  const [allReviews, setAllReviews] = useState([]);
-  const [countReviews, setCountReviews] = useState(0);
-  const [recommended, setRecommended] = useState([]);
+  const countReviews = allReviews.length;
+
+  // const [profileSkill, setProfileSkill] = useState<any>([]);
+  // const [communities, setCommunities] = useState([]);
+  // const [allReviews, setAllReviews] = useState([]);
+  // const [countReviews, setCountReviews] = useState(0);
+  // const [recommended, setRecommended] = useState([]);
+  const [isDisableBtn, setIsDisableBtn] = useState(false);
   const [isRefresh, setIsRefresh] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [showModalMatching, setModalMatching] = React.useState(false);
-  const [userId, setUserId] = useState(null);
+  // const [userId, setUserId] = useState(null);
 
-  const fetchProfileSkill = async (userIdFromUrl: string) => {
-    setIsLoading(true);
-    const data = await getOrtherUserProfile(userIdFromUrl);
-    setProfileSkill(data);
-    setIsLoading(false);
-    return data;
-  };
+  // const fetchProfileSkill = async (userIdFromUrl: string) => {
+  //   setIsLoading(true);
+  //   const data = await getOrtherUserProfile(userIdFromUrl);
+  //   setProfileSkill(data);
+  //   setIsLoading(false);
+  //   return data;
+  // };
 
-  const fetchCommunities = async (userIdFromUrl: string) => {
-    setIsLoading(true);
-    const data = await getUserCommunites(userIdFromUrl);
-    setCommunities(data?.items);
-    setIsLoading(false);
-    return data;
-  };
+  // const fetchCommunities = async (userIdFromUrl: string) => {
+  //   setIsLoading(true);
+  //   const data = await getUserCommunites(userIdFromUrl);
+  //   setCommunities(data?.items);
+  //   setIsLoading(false);
+  //   return data;
+  // };
 
-  const fetchUserReviews = async (userIdFromUrl: string) => {
-    setIsLoading(true);
-    const data = await getUserReviews(userIdFromUrl, 40, "");
-    setAllReviews(data?.items);
-    setCountReviews(data?.items_count ?? 0);
-    setIsLoading(false);
-    return data;
-  };
-  const fetchRecommended = async () => {
-    setIsLoading(true);
-    const data = await getUserRecommended(LIMIT);
-    setRecommended(data?.items?.filter((item: any) => item?.match_status !== "confirmed"));
-    setIsLoading(false);
-    return data;
-  };
+  // const fetchUserReviews = async (userIdFromUrl: string) => {
+  //   setIsLoading(true);
+  //   const data = await getUserReviews(userIdFromUrl, 40, "");
+  //   setAllReviews(data?.items);
+  //   setCountReviews(data?.items_count ?? 0);
+  //   setIsLoading(false);
+  //   return data;
+  // };
+  // const fetchRecommended = async () => {
+  //   setIsLoading(true);
+  //   const data = await getUserRecommended(LIMIT);
+  //   setRecommended(data?.items?.filter((item: any) => item?.match_status !== "confirmed"));
+  //   setIsLoading(false);
+  //   return data;
+  // };
 
   const callbackHandleIsRefresh = (status: any) => {
     setIsRefresh(status);
@@ -130,14 +154,15 @@ const ProfileHaveDataComponent = () => {
     const res = await sendMatchingRequest(userId, matchingRequest);
     await addUserFavorite(userId);
     setModalMatching(false);
-    setIsRefresh(!isRefresh);
+    // setIsRefresh(!isRefresh);
+    setIsDisableBtn(true);
     return res;
   };
 
   const handleClickMatchingButton = async (statusValue: string) => {
     if (statusValue === "received_pending") {
       await acceptMatchingRequestReceived(profileSkill?.match_request?.id);
-      setIsRefresh(!isRefresh);
+      // setIsRefresh(!isRefresh);
     } else {
       setModalMatching(true);
     }
@@ -164,13 +189,20 @@ const ProfileHaveDataComponent = () => {
   };
 
   useEffect(() => {
-    const userIdFromUrl = window.location.pathname.split("/")[2];
-    setUserId(userIdFromUrl);
-    fetchProfileSkill(userIdFromUrl);
-    fetchUserReviews(userIdFromUrl);
-    fetchCommunities(userIdFromUrl);
-    fetchRecommended();
-  }, [isRefresh, userId]);
+    if (router.query?.userId === auth?.id) {
+      router.push("/my-profile");
+    }
+  }, []);
+
+  useEffect(() => {
+    // const userIdFromUrl = window.location.pathname.split("/")[2];
+    // setUserId(userIdFromUrl);
+    // fetchProfileSkill(userIdFromUrl);
+    // fetchUserReviews(userIdFromUrl);
+    // fetchCommunities(userIdFromUrl);
+    // fetchRecommended();
+    // router.replace(router.asPath);
+  }, [isRefresh]);
 
   const [dataElements, setDataElements] = useState(
     recommended?.map((item, index) => <BoxItemUserComponent data={item} key={index} />),
@@ -316,10 +348,14 @@ const ProfileHaveDataComponent = () => {
             lineHeight: "24px",
             borderRadius: "40px",
             display: profileSkill?.match_status === "confirmed" ? "none" : "flex",
+            "&.Mui-disabled": {
+              background: "#989EA8 !important",
+              color: "#fff",
+            },
           }}
           onClick={() => handleClickMatchingButton(profileSkill?.match_status)}
           mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(profileSkill?.match_status)]?.mode}
-          disabled={profileSkill?.match_status === "pending"}
+          disabled={profileSkill?.match_status === "pending" || isDisableBtn}
         >
           {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(profileSkill?.match_status)]?.label}
         </ButtonComponent>

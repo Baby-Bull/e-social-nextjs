@@ -109,7 +109,7 @@ const ProfileHaveDataComponent = () => {
 
   const fetchUserReviews = async () => {
     setIsLoading(true);
-    const data = await getUserReviews(userId, 40, "");
+    const data = await getUserReviews(userId);
     setAllReviews(data?.items);
     setCountReviews(data?.items_count ?? 0);
     setIsLoading(false);
@@ -118,7 +118,7 @@ const ProfileHaveDataComponent = () => {
   const fetchRecommended = async () => {
     setIsLoading(true);
     const data = await getUserRecommended(LIMIT);
-    setRecommended(data?.items?.filter((item) => !item?.match_status));
+    setRecommended(data?.items?.filter((item) => item?.match_status !== "confirmed"));
     setIsLoading(false);
     return data;
   };

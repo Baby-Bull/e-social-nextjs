@@ -32,14 +32,14 @@ export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API,
 });
 
-const set = (token: string) => {
+export const setApiAuth = (token: string) => {
   api.defaults.headers.common.Authorization = `Bearer ${token}`;
   axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 };
 
 export function setToken(token: string, expiresIn?: number) {
   setTokenStorage(token, expiresIn);
-  set(token);
+  setApiAuth(token);
 }
 api.interceptors.response.use(
   (response) => response,
@@ -55,10 +55,10 @@ api.interceptors.response.use(
     }
 
     if (err.response.status === 422) {
-      if (!err?.response?.data?.message?.email) {
+      if (!err?.response?.data?.message?.email && !err.response.data?.message?.access_token) {
         toast.error(SERVER_ERROR);
       }
-      // window.location.href = "/";
+      window.location.href = "/";
     }
     const originalRequest = err.config;
     if (originalRequest.url !== "/auth/tokens") {
@@ -96,7 +96,7 @@ api.interceptors.response.use(
           setRefreshToken("");
           setIsProfileEdited("");
           if (typeof window !== "undefined") {
-            window.location.href = "/login";
+            window.location.href = `/login?oldUrl=${window.location.pathname}`;
           }
           return Promise.reject(_error);
         }
@@ -108,7 +108,7 @@ api.interceptors.response.use(
       setRefreshToken("");
       setIsProfileEdited("");
       if (typeof window !== "undefined") {
-        window.location.href = "/login";
+        window.location.href = `/login?oldUrl=${window.location.pathname}`;
       }
     }
   },
@@ -122,4 +122,4 @@ api.interceptors.response.use(
   }),
 );
 
-set(getTokenStorage());
+setApiAuth(getTokenStorage());

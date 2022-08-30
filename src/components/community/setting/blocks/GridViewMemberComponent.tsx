@@ -101,7 +101,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
             <Avatar
               sx={{
                 width: "64px",
-                height: "100%",
+                height: "54px",
                 cursor: "pointer",
               }}
               onClick={() => redirectProfile(data?.id)}
