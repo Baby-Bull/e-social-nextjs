@@ -74,7 +74,7 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
         <Avatar
           sx={{
             width: ["24px", "64px"],
-            height: "100%",
+            height: ["24px", "64px"],
             cursor: "pointer",
           }}
           onClick={redirectProfile}

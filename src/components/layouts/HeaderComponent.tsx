@@ -660,6 +660,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     </Menu>
   );
   const notifyMenuId = "primary-search-account-menu-notification";
+  console.log(notifications?.items)
   const renderNotificationMenu = (
     <Box>
       {statusNotify && (
@@ -727,14 +728,18 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                             // eslint-disable-next-line no-unsafe-optional-chaining
                             (dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name) +
                             // eslint-disable-next-line no-unsafe-optional-chaining
-                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label + " " +
+                            (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") + " " +
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
                           }</div>
                         ) : (
                           <div>{
                             // eslint-disable-next-line no-unsafe-optional-chaining
                             (dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name) +
                             // eslint-disable-next-line no-unsafe-optional-chaining
-                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label + " " +
+                            (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") + " " +
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
                           }</div>
                         )}
                         <div className={styles.createdTime}>{dayjs(dataMap?.created_at).format("H:m")}</div>
