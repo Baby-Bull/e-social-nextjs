@@ -23,7 +23,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "react-toastify/dist/ReactToastify.css";
 import "src/styles/index.scss";
-
+import * as gtag from "lib/gtag";
 import { useStore } from "src/store/store";
 import { setApiAuth } from "src/helpers/api";
 import socket from "src/helpers/socket";
@@ -50,11 +50,24 @@ const MyApp = (props: MyAppProps) => {
   const [queryClient] = React.useState(() => new QueryClient());
   const cookies = parseCookies();
   const isAuth = cookies[USER_TOKEN];
+
   React.useEffect(() => {
     if (socket.isClosed() && isAuth) {
       socket.reconnect();
     }
   }, [isAuth]);
+
+  React.useEffect(() => {
+    const handleRouteChange = (url) => {
+      gtag.pageview(url);
+    };
+    Router.events.on("routeChangeComplete", handleRouteChange);
+    Router.events.on("hashChangeComplete", handleRouteChange);
+    return () => {
+      Router.events.off("routeChangeComplete", handleRouteChange);
+      Router.events.off("hashChangeComplete", handleRouteChange);
+    };
+  }, [Router.events]);
 
   React.useEffect(() => {
     let updateLastSeenAtInterval = null;
@@ -99,6 +112,7 @@ const MyApp = (props: MyAppProps) => {
   const isServerRendering = typeof window === "undefined";
   const store = useStore(pageProps.initialReduxState);
   const persistor = persistStore(store);
+
   return (
     <React.Fragment>
       <Head>
@@ -108,7 +122,7 @@ const MyApp = (props: MyAppProps) => {
         <meta
           property="og:description"
           content="goodhubは業界初、新しい形のITエンジニアの憩いの場を提供するサービスです。
-コミュニティで新しい繋がりや仲間づくり、キャリアの相談など無料で全て使えます。"
+            コミュニティで新しい繋がりや仲間づくり、キャリアの相談など無料で全て使えます。"
           key="og-description"
         />
         <meta property="og:url" content={process.env.NEXT_PUBLIC_URL_PROFILE} key="og-url" />
@@ -131,7 +145,7 @@ const MyApp = (props: MyAppProps) => {
         <meta
           name="twitter:description"
           content="goodhubは業界初、新しい形のITエンジニアの憩いの場を提供するサービスです。
-コミュニティで新しい繋がりや仲間づくり、キャリアの相談など無料で全て使えます。"
+            コミュニティで新しい繋がりや仲間づくり、キャリアの相談など無料で全て使えます。"
           key="twitter-description"
         />
         <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1" />
@@ -140,7 +154,7 @@ const MyApp = (props: MyAppProps) => {
         <meta
           name="description"
           content="goodhubは業界初、新しい形のITエンジニアの憩いの場を提供するサービスです。
-コミュニティで新しい繋がりや仲間づくり、キャリアの相談など無料で全て使えます。"
+            コミュニティで新しい繋がりや仲間づくり、キャリアの相談など無料で全て使えます。"
         />
         <meta name="keywords" content="キーワード, goodhub" />
         <link rel="icon" href="/favicon.ico" />
@@ -148,6 +162,20 @@ const MyApp = (props: MyAppProps) => {
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`} />
+        <script
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${gtag.GA_TRACKING_ID}', {
+              page_path: window.location.pathname,
+            });
+          `,
+          }}
+        />
       </Head>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
