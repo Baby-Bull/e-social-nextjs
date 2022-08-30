@@ -3,8 +3,11 @@ import { Link, Box } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
 
 import { logout } from "src/services/auth";
+
+import actionTypes from "../../store/actionTypes";
 
 interface IFooterComponentProps {
   authPage?: boolean;
@@ -25,9 +28,12 @@ const TagA = styled(Link)`
 const FooterComponent: React.FC<IFooterComponentProps> = ({ authPage = false }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const handleLogout = async () => {
     await logout();
+    dispatch({ type: actionTypes.LOGOUT });
+    window.location.href = "/login";
     router.push("/login");
   };
 
@@ -138,13 +144,12 @@ const FooterComponent: React.FC<IFooterComponentProps> = ({ authPage = false }) 
               <Box
                 sx={{
                   display: authPage ? "none" : "inherit",
+                  cursor: "pointer",
                 }}
                 onClick={handleLogout}
               >
                 <Box sx={{ display: { xs: "none", lg: "inherit" } }}>
-                  <TagA href="/login" color="secondary">
-                    {t("footer.logout")}
-                  </TagA>
+                  <TagA color="secondary">{t("footer.logout")}</TagA>
                 </Box>
               </Box>
             </Box>
