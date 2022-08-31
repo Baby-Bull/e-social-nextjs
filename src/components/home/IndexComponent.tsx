@@ -192,8 +192,6 @@ const HomeIndexComponents = () => {
   };
 
   const handleAcceptMatchingRequestReceived = async (userSendMatching: any, index: number) => {
-    console.log(userSendMatching);
-
     await acceptMatchingRequestReceived(userSendMatching?.match_request?.id);
     indexRefetch.current = index;
     handleRefetchData();

@@ -660,7 +660,6 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     </Menu>
   );
   const notifyMenuId = "primary-search-account-menu-notification";
-  console.log(notifications?.items)
   const renderNotificationMenu = (
     <Box>
       {statusNotify && (
