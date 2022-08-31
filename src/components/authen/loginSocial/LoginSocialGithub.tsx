@@ -30,6 +30,7 @@ interface Props {
 
 type GithubAuthData = {
   code: string;
+  provider: "github";
 };
 
 const GITHUB_URL: string = "https://github.com";
@@ -65,6 +66,7 @@ export const LoginSocialGithub = forwardRef(
       if (isPopupWindow && stateItem?.includes("_github") && code) {
         window.opener.postMessage({
           code,
+          provider: "github",
         });
         window.close();
       }
@@ -82,6 +84,7 @@ export const LoginSocialGithub = forwardRef(
         const headers = new Headers({
           "Content-Type": "application/x-www-form-urlencoded",
           "x-cors-grida-api-key": "875c0462-6309-4ddf-9889-5227b1acc82c",
+          Accept: "application/json",
         });
 
         fetch(`${PREVENT_CORS_URL}/${GITHUB_URL}/login/oauth/access_token`, {
@@ -89,18 +92,13 @@ export const LoginSocialGithub = forwardRef(
           headers,
           body: new URLSearchParams(params),
         })
-          .then((response) => response.text())
+          .then((response) => response.json())
           .then((response) => {
             setIsProcessing(false);
-            const data: objectType = {};
-            const searchParams: any = new URLSearchParams(response);
-            for (const p of searchParams) {
-              data[p[0]] = p[1];
-            }
-            if (data.access_token) {
+            if (response.access_token) {
               setIsLogged(true);
               setIsProcessing(false);
-              onResolve({ provider: "github", data });
+              onResolve({ provider: "github", data: response });
             } else {
               setIsProcessing(false);
               onReject("no data");
@@ -125,7 +123,7 @@ export const LoginSocialGithub = forwardRef(
       if (window.opener === null) {
         const eventHandler = (event) => {
           const githubAuthData = event.data as GithubAuthData;
-          if (githubAuthData?.code) {
+          if (githubAuthData?.code && githubAuthData.provider === "github") {
             setIsProcessing(true);
             handlePostMessage({
               provider: "github",
