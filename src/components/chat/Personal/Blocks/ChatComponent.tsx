@@ -61,6 +61,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   );
 
   const updateLastMessageOfListRooms = async (message: any) => {
+    console.log(message);
     let hasChatRoomExist = false;
     const listRoomsSorted = sortListRoomChat(
       listRoomRef.current?.map((item) => {
@@ -70,7 +71,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
             ...item,
             last_chat_message_at: new Date().toISOString(),
             last_chat_message_received: message.content,
-            last_message_content_type: message.last_message_content_type,
+            last_message_content_type: message.content_type,
           };
         }
         return item;
@@ -185,7 +186,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
       updateLastMessageOfListRooms({
         content: message,
         chat_room_id: roomSelect.id,
-        last_message_content_type: type,
+        content_type: type,
         meta: {
           filename: fileName,
           size: fileSize,

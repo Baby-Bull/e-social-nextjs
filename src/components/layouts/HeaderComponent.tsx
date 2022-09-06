@@ -348,8 +348,12 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     setStatusChatMenu(false);
   };
   const handleOpenMenuChat = (event: any) => {
-    setMenuChatAnchorEl(event.currentTarget);
-    setStatusChatMenu(true);
+    if (isMobile) {
+      router.push("/chat/personal")
+    } else {
+      setMenuChatAnchorEl(event.currentTarget);
+      setStatusChatMenu(true);
+    }
     dispatch({ type: actionTypes.REMOVE_UNREAD_LISTROOMS_COUNT });
   };
   const handleChangeTabMessage = (event, newValue) => {
@@ -398,6 +402,20 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
       }
     })
   };
+  const handleReadNotification = async (idNoti: string, index: number) => {
+    await readNotification(idNoti);
+    let tempArray = notifications?.items;
+    tempArray[index] = {
+      ...tempArray[index],
+      is_read: true
+    }
+    dispatch({
+      type: actionTypes.UPDATE_NOTIFICATIONS, payload: {
+        ...notifications,
+        items: tempArray
+      }
+    })
+  }
   const handleRedirectNotification = (typeOfMessage: string, dataOfMessage: DataRedirectNotification) => {
     switch (typeOfMessage) {
       case "new_matching_request":
@@ -438,7 +456,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
         updateLastMessageOfListRooms(message)
         if (!isMobile) {
           if (Notification.permission === "granted") {
-            notify(`${message?.user?.username}`, `${message.content}`, `${message?.user?.profile_image}`);
+            notify(`${message?.user?.username}`, message?.content_type === "text" ? `${message.content}` : "添付ファイル", `${message?.user?.profile_image}`);
           }
         }
       }
@@ -660,7 +678,6 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     </Menu>
   );
   const notifyMenuId = "primary-search-account-menu-notification";
-  console.log(notifications?.items)
   const renderNotificationMenu = (
     <Box>
       {statusNotify && (
@@ -700,12 +717,12 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
             <Box sx={{ paddingTop: "50px" }}>
               {
                 notifications?.items?.length ?
-                  notifications?.items?.map((dataMap: any) => (
+                  notifications?.items?.map((dataMap: any, index: number) => (
                     <MenuItem
                       key={dataMap.id}
                       className={styles.notificationMenuItem}
                       onClick={async () => {
-                        await readNotification(dataMap?.id)
+                        handleReadNotification(dataMap?.id, index)
                         handleRedirectNotification(dataMap?.notification_type, dataMap?.metadata)
                       }}
                     >
@@ -742,7 +759,12 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                             CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
                           }</div>
                         )}
-                        <div className={styles.createdTime}>{dayjs(dataMap?.created_at).format("H:m")}</div>
+                        <div className={styles.createdTime}>{
+                          (new Date(dataMap?.created_at)).getDate() === (new Date()).getDate() ?
+                            dayjs(dataMap?.created_at).format("HH:mm") :
+                            dayjs(dataMap?.created_at).format("YYYY/MM/DD")
+
+                        }</div>
                       </div>
                     </MenuItem>
                   ))

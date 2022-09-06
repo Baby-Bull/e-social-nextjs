@@ -310,7 +310,7 @@ const ChatBoxRightComponent = ({
       hasMore: listMessageResQuery?.hasMore,
     });
     isFirstRender.current = true;
-    inputChatRef.current.focus();
+    // inputChatRef.current.focus();
 
     setTimeout(() => {
       scrollEl(boxMessageRef.current);

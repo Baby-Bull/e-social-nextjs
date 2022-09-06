@@ -103,9 +103,11 @@
       .contentBottomLeft {
         margin-top: 97px;
         display: flex;
+
         a {
           margin-right: 40px;
         }
+
         .contentBottomLeftMenu {
           display: flex;
         }
@@ -116,12 +118,14 @@
       .contentTopRight {
         text-align: right;
       }
+
       .contentBottomRight {
         margin-top: 77px;
       }
     }
   }
 }
+
 @media only screen and (max-width: 1180px) {
   .boxFooterContent {
     padding: 40px 50px 20px 50px !important;
@@ -203,8 +207,10 @@
       }
     }
   }
+
   .footer {
     background-color: #1a2944;
+
     .boxFooterContent {
       display: block;
       padding: 24px 28px;
@@ -219,6 +225,7 @@
         .contentTopLeft {
           font-weight: 700;
           font-size: 14px;
+
           a:first-child {
             margin-right: 48px;
           }
@@ -226,10 +233,12 @@
 
         .contentBottomLeft {
           margin-top: 30px;
+
           a {
             margin-right: 40px;
             font-size: 12px;
           }
+
           .contentBottomLeftMenu {
             display: block;
           }
@@ -238,9 +247,11 @@
 
       .footerContentRight {
         margin-top: 39px;
+
         .contentTopRight {
           text-align: center;
         }
+
         .contentBottomRight {
           margin-top: 0px;
           text-align: center;
@@ -252,6 +263,7 @@
 
 .menuChatDropDown {
   top: 2.8em;
+
   /* width */
   ::-webkit-scrollbar {
     width: 5px;
@@ -276,6 +288,7 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #c4c4c4;
   }
+
   .boxSearch {
     padding: 20px 19px;
     border-bottom: 1px solid #e4e6eb;
@@ -291,6 +304,7 @@
       color: #989ea8;
     }
   }
+
   .boxThreads {
     list-style: none;
     padding: 0;
@@ -388,9 +402,11 @@
   margin-top: 46px;
   width: 360px;
   height: 704px;
+
   ul {
     padding: 0;
   }
+
   /* width */
   ::-webkit-scrollbar {
     width: 5px;
@@ -451,6 +467,7 @@
 
 .notificationImage {
   margin-right: 16px;
+
   img {
     width: 52px;
     height: 52px;
