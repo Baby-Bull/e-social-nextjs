@@ -37,6 +37,7 @@ import { getListnotifications, readAllNotifications, readNotification } from "sr
 import actionTypes from "src/store/actionTypes";
 import { logout } from "src/services/auth";
 import { useQuery } from "react-query";
+import { isMobile } from "react-device-detect";
 
 interface IHeaderComponentProps {
   authPage?: boolean;
@@ -403,7 +404,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
         router.push("/matching?type=received");
         break;
       case "matching_request_accepted":
-        router.push("/matching?type=received");
+        router.push("/matching?type=matched");
         break;
       case "new_community_join_request":
         router.push(`/community/setting/${dataOfMessage?.community_id}`);
@@ -427,7 +428,6 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
   // notification system
   useEffect(() => {
     function notify(title: string, body: any, image: any) {
-      // eslint-disable-next-line no-new
       new Notification(title, {
         body,
         icon: image
@@ -436,8 +436,10 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     const wsHandler = (message: any) => {
       if (!message?.metadata) {
         updateLastMessageOfListRooms(message)
-        if (Notification.permission === "granted") {
-          notify(`${message?.user?.username}`, `${message.content}`, `${message?.user?.profile_image}`);
+        if (!isMobile) {
+          if (Notification.permission === "granted") {
+            notify(`${message?.user?.username}`, `${message.content}`, `${message?.user?.profile_image}`);
+          }
         }
       }
       else {
@@ -448,8 +450,10 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
             unread_count: notifications?.unread_count + 1,
           }
         })
-        if (Notification.permission === "granted") {
-          notify(`${message?.metadata?.user?.username}`, CONTENT_OF_NOTIFICATIONS[message?.notification_type]?.label, `${message?.metadata?.user?.profile_image || message?.metadata?.community?.profile_image}`);
+        if (!isMobile) {
+          if (Notification.permission === "granted") {
+            notify(`${message?.metadata?.user?.username}`, CONTENT_OF_NOTIFICATIONS[message?.notification_type]?.label, `${message?.metadata?.user?.profile_image || message?.metadata?.community?.profile_image}`);
+          }
         }
       }
     };
@@ -459,13 +463,15 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     TYPE_OF_NOTIFICATIONS.map((notificationType) => {
       websocket.on(`get.notification.${notificationType}`, wsHandler);
     })
-    if (Notification.permission === "denied" && notifications?.askPermissionNotification) {
-      window.alert("You denied permission. Please change your browser settings for this page to view notifications");
-      dispatch({ type: actionTypes.UPDATE_PERMISSION_NOTIFICATION });
-    }
-    else if (Notification.permission === "default" && notifications?.askPermissionNotification) {
-      Notification.requestPermission();
-      dispatch({ type: actionTypes.UPDATE_PERMISSION_NOTIFICATION });
+    if (!isMobile) {
+      if (Notification.permission === "denied" && notifications?.askPermissionNotification) {
+        window.alert("You denied permission. Please change your browser settings for this page to view notifications");
+        dispatch({ type: actionTypes.UPDATE_PERMISSION_NOTIFICATION });
+      }
+      else if (Notification.permission === "default" && notifications?.askPermissionNotification) {
+        Notification.requestPermission();
+        dispatch({ type: actionTypes.UPDATE_PERMISSION_NOTIFICATION });
+      }
     }
     return () => {
       websocket.off("get.chatRoom.message", wsHandler);
@@ -654,6 +660,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     </Menu>
   );
   const notifyMenuId = "primary-search-account-menu-notification";
+  console.log(notifications?.items)
   const renderNotificationMenu = (
     <Box>
       {statusNotify && (
@@ -721,14 +728,18 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                             // eslint-disable-next-line no-unsafe-optional-chaining
                             (dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name) +
                             // eslint-disable-next-line no-unsafe-optional-chaining
-                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label + " " +
+                            (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") + " " +
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
                           }</div>
                         ) : (
                           <div>{
                             // eslint-disable-next-line no-unsafe-optional-chaining
                             (dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name) +
                             // eslint-disable-next-line no-unsafe-optional-chaining
-                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label + " " +
+                            (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") + " " +
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
                           }</div>
                         )}
                         <div className={styles.createdTime}>{dayjs(dataMap?.created_at).format("H:m")}</div>
@@ -780,7 +791,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
             "& .MuiMenu-paper": {
               borderRadius: "12px",
               height: "40em",
-              overflow: "hidden"
+              overflowY: "hidden",
             }
           }}
         >

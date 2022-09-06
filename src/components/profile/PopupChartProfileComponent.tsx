@@ -74,7 +74,7 @@ const PopupChartProfileComponent: React.SFC<IReportUserProps> = ({ showPopup, se
       >
         {/* Delete this element after completing the profile chart feature. */}
         <Box className={styles.commingSoon}>
-          <span className={styles.commingSoonTitle}>comming soon ...</span>
+          <span className={styles.commingSoonTitle}>coming soon ...</span>
         </Box>
         <Box
           sx={{

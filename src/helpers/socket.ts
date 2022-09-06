@@ -2,18 +2,24 @@ import { getToken } from "./storage";
 
 // retryDelay: 5s
 const defaultRetryDelay = 5000;
+const defaultMaxRetries = 5;
 
 const getWsEndpoint = () => `${process.env.NEXT_PUBLIC_WS}${getToken()}`;
 
 const WebsocketClient = ({
   url,
   retryDelay = defaultRetryDelay,
+  maxRetries = defaultMaxRetries,
 }: {
   url: string | (() => string);
   retryDelay?: number;
+  maxRetries?: number;
 }) => {
   let wsInstance: WebSocket;
   let tryReconnectFn: any;
+  let retries = 0;
+  let isClosed = false;
+
   // eslint-disable-next-line no-unused-vars
   const eventHandlers: Map<string, Array<(payload?: any) => void | Promise<void>>> = new Map();
 
@@ -28,16 +34,25 @@ const WebsocketClient = ({
 
   const createWsInstance = () => {
     tryReconnectFn = () => {
-      window.setTimeout(() => {
-        createWsInstance();
-        emitInternal("reconnected", null);
-      }, retryDelay);
+      retries += 1;
+      isClosed = retries >= maxRetries;
+      if (!isClosed) {
+        window.setTimeout(() => {
+          createWsInstance();
+        }, retryDelay);
+      }
     };
     const wsUrl = typeof url === "function" ? url() : url;
     wsInstance = new WebSocket(wsUrl);
 
     wsInstance.onopen = (e) => {
+      console.log("WS connected");
+      if (retries > 0) {
+        emitInternal("reconnected", null);
+        retries = 0;
+      }
       emitInternal("connected", e);
+      isClosed = false;
     };
 
     wsInstance.addEventListener("message", (e: any) => {
@@ -53,6 +68,9 @@ const WebsocketClient = ({
   createWsInstance();
 
   return {
+    isClosed() {
+      return isClosed;
+    },
     // emit to server
     emit(event, payload) {
       wsInstance.send(
@@ -85,18 +103,23 @@ const WebsocketClient = ({
     close() {
       wsInstance.removeEventListener("close", tryReconnectFn);
       wsInstance.close();
+      isClosed = true;
       emitInternal("disconnected", null);
     },
 
     reconnect() {
+      isClosed = false;
+      retries = 0;
       createWsInstance();
-      emitInternal("reconnected", null);
     },
   };
 };
 
-const socket = (typeof window !== 'undefined') ? WebsocketClient({
-  url: getWsEndpoint,
-}) : null;
+const socket =
+  typeof window !== "undefined"
+    ? WebsocketClient({
+        url: getWsEndpoint,
+      })
+    : null;
 
 export default socket;

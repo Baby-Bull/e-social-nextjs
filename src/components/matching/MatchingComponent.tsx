@@ -162,12 +162,15 @@ const MatchingComponent = () => {
     },
   ]);
   const [keyRefetchData, setKeyRefetchData] = useState(null);
-  const [tabValue, setTabValue] = useState(TAB_VALUE_BY_KEY[typeQuery] || TAB_VALUE_BY_KEY.received);
+  const [tabValue, setTabValue] = useState(TAB_VALUE_BY_KEY[typeQuery]);
   const [checkLoadingReceived, setCheckLoadingReceived] = useState(false);
   const [checkLoadingSend, setCheckLoadingSend] = useState(false);
   const [checkLoadingFavorite, setCheckLoadingFavorite] = useState(false);
   const [checkLoadingCommunity, setCheckLoadingCommunity] = useState(false);
 
+  useEffect(() => {
+    setTabValue(TAB_VALUE_BY_KEY[typeQuery]);
+  }, [typeQuery]);
   useEffect(() => {
     const refetchData = async () => {
       let dataRefetch;

@@ -96,7 +96,7 @@ const reducer = (state, action: any) => {
         ...state,
         notifications: {
           ...state?.notifications,
-          items: action?.payload?.items || {},
+          items: action?.payload?.items || [],
           hasMore: action?.payload?.hasMore ?? false,
           cursor: action?.payload?.cursor ?? "",
           unread_count: action?.payload?.unread_count || 0,

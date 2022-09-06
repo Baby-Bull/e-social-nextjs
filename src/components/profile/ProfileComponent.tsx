@@ -108,6 +108,7 @@ const ProfileHaveDataComponent: FC<Props> = ({
   // const [allReviews, setAllReviews] = useState([]);
   // const [countReviews, setCountReviews] = useState(0);
   // const [recommended, setRecommended] = useState([]);
+  const [isDisableBtn, setIsDisableBtn] = useState(false);
   const [isRefresh, setIsRefresh] = useState(false);
   const [isLoading] = useState(false);
   const [showModalMatching, setModalMatching] = React.useState(false);
@@ -153,14 +154,15 @@ const ProfileHaveDataComponent: FC<Props> = ({
     const res = await sendMatchingRequest(userId, matchingRequest);
     await addUserFavorite(userId);
     setModalMatching(false);
-    setIsRefresh(!isRefresh);
+    // setIsRefresh(!isRefresh);
+    setIsDisableBtn(true);
     return res;
   };
 
   const handleClickMatchingButton = async (statusValue: string) => {
     if (statusValue === "received_pending") {
       await acceptMatchingRequestReceived(profileSkill?.match_request?.id);
-      setIsRefresh(!isRefresh);
+      // setIsRefresh(!isRefresh);
     } else {
       setModalMatching(true);
     }
@@ -199,7 +201,7 @@ const ProfileHaveDataComponent: FC<Props> = ({
     // fetchUserReviews(userIdFromUrl);
     // fetchCommunities(userIdFromUrl);
     // fetchRecommended();
-    router.replace(router.asPath);
+    // router.replace(router.asPath);
   }, [isRefresh]);
 
   const [dataElements, setDataElements] = useState(
@@ -346,10 +348,14 @@ const ProfileHaveDataComponent: FC<Props> = ({
             lineHeight: "24px",
             borderRadius: "40px",
             display: profileSkill?.match_status === "confirmed" ? "none" : "flex",
+            "&.Mui-disabled": {
+              background: "#989EA8 !important",
+              color: "#fff",
+            },
           }}
           onClick={() => handleClickMatchingButton(profileSkill?.match_status)}
           mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(profileSkill?.match_status)]?.mode}
-          disabled={profileSkill?.match_status === "pending"}
+          disabled={profileSkill?.match_status === "pending" || isDisableBtn}
         >
           {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(profileSkill?.match_status)]?.label}
         </ButtonComponent>
