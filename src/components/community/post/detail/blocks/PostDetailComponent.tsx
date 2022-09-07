@@ -211,7 +211,10 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
 
       <React.Fragment>
         {data?.reference_url && (
-          <Box onClick={() => redirectReferenceUrl(data?.reference_url)} sx={{ cursor: "pointer" }}>
+          <Box
+            onClick={() => redirectReferenceUrl(data?.reference_url)}
+            sx={{ cursor: "pointer", marginBottom: "7px" }}
+          >
             <BoxInfo title={t("community:url")} text={data?.reference_url} textColor={theme.blue} fontWeight={500} />
           </Box>
         )}

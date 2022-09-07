@@ -378,7 +378,7 @@ const ChatBoxRightComponent = ({
       cursor: listMessageResQuery?.cursor,
       hasMore: listMessageResQuery?.hasMore,
     });
-    inputChatRef.current.focus();
+    // inputChatRef.current.focus();
     setTimeout(() => {
       scrollEl(boxMessageRef.current);
     }, 0);
