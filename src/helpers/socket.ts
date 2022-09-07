@@ -46,7 +46,6 @@ const WebsocketClient = ({
     wsInstance = new WebSocket(wsUrl);
 
     wsInstance.onopen = (e) => {
-      console.log("WS connected");
       if (retries > 0) {
         emitInternal("reconnected", null);
         retries = 0;
