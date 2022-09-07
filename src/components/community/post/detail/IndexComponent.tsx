@@ -163,7 +163,7 @@ const DetailPostComponent = () => {
       if (comments.length < 2 + (page - 1) * 10 && page > 1) {
         handleCallBackPaginationIndex(page - 1, perPage);
       }
-      setComments(comments.filter((_, index) => index !== indexComment));
+      setComments(comments.filter((e) => comments.indexOf(e) !== indexComment));
       setTotalComment(totalComment - 1);
 
       if (comments.length <= 10 && comments.length < totalComment) {
@@ -204,6 +204,7 @@ const DetailPostComponent = () => {
     fetchCommunityPost();
     fetchMember();
   }, []);
+
   const defaultStyle = {
     control: {
       backgroundColor: "#fff",

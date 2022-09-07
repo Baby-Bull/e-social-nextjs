@@ -452,6 +452,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
       });
     }
     const wsHandler = (message: any) => {
+      console.log(notifications?.unread_count);
+      console.log(message);
       if (!message?.metadata) {
         updateLastMessageOfListRooms(message)
         if (!isMobile) {
@@ -470,13 +472,13 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
         })
         if (!isMobile) {
           if (Notification.permission === "granted") {
-            notify(`${message?.metadata?.user?.username}`, CONTENT_OF_NOTIFICATIONS[message?.notification_type]?.label, `${message?.metadata?.user?.profile_image || message?.metadata?.community?.profile_image}`);
+            notify(`${message?.metadata?.user?.username || message?.metadata?.community?.name}`, CONTENT_OF_NOTIFICATIONS[message?.notification_type]?.label, `${message?.metadata?.user?.profile_image || message?.metadata?.community?.profile_image}`);
           }
         }
       }
     };
     websocket.on(`get.chatRoom.message`, wsHandler);
-    websocket.on("get.community.chatRoom.message", wsHandler);
+    websocket.on(`get.community.chatRoom.message`, wsHandler);
     // eslint-disable-next-line array-callback-return
     TYPE_OF_NOTIFICATIONS.map((notificationType) => {
       websocket.on(`get.notification.${notificationType}`, wsHandler);
@@ -889,11 +891,14 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                                   </div>
                                   <div className="thread-content">
                                     <Typography className="name">{thread?.user?.username}</Typography>
-                                    {thread?.last_message_content_type === "text" ? (
-                                      <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
-                                    ) : (
-                                      <Typography className="message-hide">添付ファイル</Typography>
-                                    )}
+                                    <Typography className="message-hide"
+                                      sx={{
+                                        color: thread?.is_unread ? "black" : "#989ea8",
+                                        fontWeight: thread?.is_unread ? "700" : "400",
+                                      }}
+                                    >
+                                      {thread?.last_message_content_type === "text" ? thread?.last_chat_message_received : "添付ファイル"}
+                                    </Typography>
                                   </div>
                                   <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
                                   {/* {!isMobile && (

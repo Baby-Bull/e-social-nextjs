@@ -462,7 +462,6 @@ const ChatBoxRightComponent = ({
       });
     return res;
   };
-  console.log(listMessagesShow);
   return (
     <Grid
       item

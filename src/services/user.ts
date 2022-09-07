@@ -129,6 +129,8 @@ export const userSettingEmail = async (body: any) => {
     const res = await api.patch("/user/email", body);
     if (!res.data) {
       toast.error(SERVER_ERROR);
+    } else if (res?.data?.error_code === "422") {
+      toast.error(EMAIL_EXISTS);
     } else {
       toast.success(SETTING_EMAIL);
     }

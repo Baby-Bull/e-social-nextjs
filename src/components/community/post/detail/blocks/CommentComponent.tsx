@@ -39,15 +39,15 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
   const { t } = useTranslation();
   const auth = useSelector((state: IStoreState) => state.user);
   const router = useRouter();
+  const [triggerRenderClient, setTriggerRenderClient] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
-  const [item, setItem] = useState(itemData);
   const [isDisableBtn, setIsDisableBtn] = useState(true);
   const [isUpdateComment, setIsUpdateComment] = useState(false);
-  const [content, setContent] = useState("");
-  const [contentUpdateId, setContentUpdateId] = useState("");
+  const [content, setContent] = useState(itemData?.content);
   const [member, setMember] = useState([]);
   const [communityPostUpdateRequest, setCommunityPostUpdateRequest] = useState({
-    content: "",
+    content: itemData?.content,
   });
   const [errorValidates, setErrorValidates] = useState({
     content: null,
@@ -57,6 +57,12 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
     content: null,
   };
 
+  useEffect(() => {
+    setCommunityPostUpdateRequest({
+      content: itemData?.content,
+    });
+    setContent(itemData?.content);
+  }, [itemData]);
   const fetchMember = async (text: string = "") => {
     const community = router.query;
     const res = await searchMemberCommunity(community?.id, text);
@@ -96,31 +102,26 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
       const response = await updatePostComment(
         communityId?.id,
         communityId?.detailId,
-        item?.id,
+        itemData?.id,
         communityPostUpdateRequest,
       );
       setIsLoading(false);
+      setTriggerRenderClient(true);
       setIsUpdateComment(false);
-      setContentUpdateId(item?.id);
-      setItem({
-        ...item,
-        content: communityPostUpdateRequest?.content,
-      });
-      // setContent(communityPostUpdateRequest?.content);
       return response;
     }
   };
 
   const redirectProfile = () => {
-    if (item?.user?.id === auth?.id) {
+    if (itemData?.user?.id === auth?.id) {
       router.push("/my-profile");
     } else {
-      router.push(`/profile/${item?.user?.id}`);
+      router.push(`/profile/${itemData?.user?.id}`);
     }
   };
 
-  const handleCallbackUpdateComment = (status) => {
-    setContent(content.length > 0 ? content : item?.content);
+  const handleCallbackUpdateComment = (status: any) => {
+    setContent(content.length > 0 ? content : itemData?.content);
     setIsUpdateComment(status);
   };
 
@@ -212,14 +213,14 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
           position: "relative",
         }}
       >
-        {(item?.can_delete || item?.can_edit) && (
+        {(itemData?.can_delete || itemData?.can_edit) && (
           <ButtonDropDownComponent
             top={["4px", "10px"]}
             right="0"
             handleCallbackRemove={handleCallbackRemove}
             handleCallbackUpdateComment={handleCallbackUpdateComment}
             index={index}
-            comment={item}
+            comment={itemData}
           />
         )}
         <Box
@@ -236,8 +237,8 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
               cursor: "pointer",
             }}
             onClick={redirectProfile}
-            src={item?.user?.profile_image}
-            alt={item?.user?.username}
+            src={itemData?.user?.profile_image}
+            alt={itemData?.user?.username}
           />
           <Box
             sx={{
@@ -252,7 +253,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
                 fontSize: [10, 14],
               }}
             >
-              {dayjs(item?.created_at).format("LLL")}
+              {dayjs(itemData?.created_at).format("LLL")}
             </Typography>
             <Typography
               sx={{
@@ -263,14 +264,14 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
               }}
               onClick={redirectProfile}
             >
-              {item?.user?.username}
+              {itemData?.user?.username}
             </Typography>
           </Box>
         </Box>
         {isUpdateComment ? (
           <Box>
             <MentionsInput
-              value={content}
+              value={communityPostUpdateRequest?.content}
               className="mention-update"
               style={defaultStyle}
               placeholder={t("community:place-holder")}
@@ -302,7 +303,8 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
                     width: "96px",
                   }}
                   onClick={() => {
-                    setContent(item?.content);
+                    setTriggerRenderClient(false);
+                    setContent(itemData?.content);
                     setIsUpdateComment(false);
                   }}
                 >
@@ -327,7 +329,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
           </Box>
         ) : (
           <MentionsInput
-            value={contentUpdateId === item?.id ? communityPostUpdateRequest?.content : item?.content}
+            value={triggerRenderClient ? communityPostUpdateRequest?.content : itemData?.content}
             className="mention-detail"
             style={defaultStyle}
             readOnly
