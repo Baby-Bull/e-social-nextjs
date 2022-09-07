@@ -452,8 +452,6 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
       });
     }
     const wsHandler = (message: any) => {
-      console.log(notifications?.unread_count);
-      console.log(message);
       if (!message?.metadata) {
         updateLastMessageOfListRooms(message)
         if (!isMobile) {
