@@ -140,7 +140,7 @@ const LoginComponent = () => {
                         setProvider(googleProvider);
                         setProfile(data);
                       }}
-                      onError={(err) => console.log(err)}
+                      onError={() => {}}
                     >
                       <ButtonComponent props={{ mode: "google" }}>{t("login:right.register-google")}</ButtonComponent>
                     </LoginSocialGoogle>

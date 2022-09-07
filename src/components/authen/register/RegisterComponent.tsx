@@ -26,9 +26,7 @@ const RegisterComponents = () => {
   const [profile, setProfile] = useState<any>();
   const githubRef = useRef(null!);
 
-  const onLoginStart = () => {
-    console.log(isLoading);
-  };
+  const onLoginStart = () => {};
 
   const onLogoutFailure = () => {
     setIsLoading(true);
@@ -171,8 +169,7 @@ const RegisterComponents = () => {
                     setProfile(data);
                   }}
                   onLoginStart={onLoginStart}
-                  onReject={(err: any) => {
-                    console.log(err);
+                  onReject={() => {
                     setIsLoading(false);
                   }}
                 >

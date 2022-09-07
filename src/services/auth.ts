@@ -23,8 +23,6 @@ export const getAuthUrlTwitter = async (redirectUrl: string) => {
     const response = await res.json();
     return response.data;
   } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log(error);
     return null;
   }
 };

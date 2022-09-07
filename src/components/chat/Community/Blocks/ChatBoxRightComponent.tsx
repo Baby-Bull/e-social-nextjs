@@ -368,7 +368,12 @@ const ChatBoxRightComponent = ({
   };
 
   const onKeyUpMessageText = (e) => {
-    if (!e.shiftKey && e.keyCode === 13 && e.target.value) {
+    // composition of IME. fix bug on safari for japanese IME
+    if (e.isComposing || e.keyCode === 229) {
+      return;
+    }
+    if (!isMobile && !e.shiftKey && e.keyCode === 13 && e.target.value) {
+      e.preventDefault();
       handleSendTextMessage();
     }
   };
@@ -462,7 +467,6 @@ const ChatBoxRightComponent = ({
       });
     return res;
   };
-  console.log(listMessagesShow);
   return (
     <Grid
       item
@@ -562,7 +566,7 @@ const ChatBoxRightComponent = ({
             sx={{ ml: 1, flex: 1 }}
             placeholder={t("chat:input-chat-placeholder")}
             inputProps={{ "aria-label": t("chat:input-chat-placeholder") }}
-            onKeyUp={onKeyUpMessageText}
+            onKeyDown={onKeyUpMessageText}
           />
           <input hidden id="icon-button-file" type="file" onChange={sendFileOnMess} />
           <label htmlFor="icon-button-file">
