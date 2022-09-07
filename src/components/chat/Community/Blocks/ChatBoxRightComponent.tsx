@@ -372,7 +372,7 @@ const ChatBoxRightComponent = ({
     if (e.isComposing || e.keyCode === 229) {
       return;
     }
-    if (!e.shiftKey && e.keyCode === 13 && e.target.value) {
+    if (!isMobile && !e.shiftKey && e.keyCode === 13 && e.target.value) {
       e.preventDefault();
       handleSendTextMessage();
     }
