@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -38,6 +38,7 @@ import actionTypes from "src/store/actionTypes";
 import { logout } from "src/services/auth";
 import { useQuery } from "react-query";
 import { isMobile } from "react-device-detect";
+import _ from "lodash";
 
 interface IHeaderComponentProps {
   authPage?: boolean;
@@ -196,23 +197,45 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
   const isMenuChatOpen = Boolean(menuChatAnchorEl);
   const [valueTabChatMessage, setValueTabChatMessage] = React.useState('1');
   const [statusAuthPage, setStatusAuthPage] = React.useState(false);
+  const inputSearchMenuChatPersonal = useRef(null);
+  const inputSearchMenuChatCommunity = useRef(null);
+
+  const [searchChatRoomPersonal, setSearchChatRoomPersonal] = useState({
+    search: null,
+    cursor: null
+  })
+  const [searchChatRoomCommunity, setSearchChatRoomCommunity] = useState({
+    search: null,
+    cursor: null
+  })
+  const debounceSearchRooms = useCallback(
+    _.debounce((searchValue: string, mode: string) => {
+      mode === "communtity" ?
+        setSearchChatRoomCommunity({
+          search: searchValue,
+          cursor: null,
+        }) :
+        setSearchChatRoomPersonal({
+          search: searchValue,
+          cursor: null
+        })
+    }, 700), []
+  )
+  const handleTypingForInputSearch = (valueInputSearchTemp: any, mode: string) => {
+    debounceSearchRooms(valueInputSearchTemp, mode);
+  }
 
   const { data: listRoomsChatResQuery } = useQuery(
-    [REACT_QUERY_KEYS.COMMUNITY_CHAT.LIST_CHAT_ROOMS],
+    [REACT_QUERY_KEYS.LIST_ROOMS, searchChatRoomCommunity, searchChatRoomPersonal],
     async () => {
-      let draftList1 = {
-        items: [],
-        hasMore: false,
-        cursor: ""
-      };
-      let draftList2 = {
+      let draftList1, draftList2 = draftList1 = {
         items: [],
         hasMore: false,
         cursor: ""
       };
       if (auth?.community_count !== undefined) {
-        draftList1 = await getListChatRooms(null, "");
-        draftList2 = await getListChatRoomsCommunity(null, "");
+        draftList1 = await getListChatRooms(searchChatRoomPersonal?.search, searchChatRoomPersonal?.cursor);
+        draftList2 = await getListChatRoomsCommunity(searchChatRoomCommunity?.search, searchChatRoomCommunity?.cursor);
       }
       return {
         roomsPersonal: draftList1,
@@ -320,7 +343,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     }
   };
   const loadMoreMessagePersonal = async () => {
-    const res = await getListChatRooms("", listRoomsChatTemp?.cursorPersonal, 10);
+    const res = await getListChatRooms(searchChatRoomPersonal?.search, listRoomsChatTemp?.cursorPersonal, 10);
     dispatch({
       type: actionTypes.UPDATE_LIST_ROOMS, payload: {
         ...listRoomsChatTemp,
@@ -332,7 +355,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     })
   }
   const loadMoreMessageCommunity = async () => {
-    const res = await getListChatRoomsCommunity("", listRoomsChatTemp?.cursorCommunity, 10);
+    const res = await getListChatRoomsCommunity(searchChatRoomCommunity?.search, listRoomsChatTemp?.cursorCommunity, 10);
     dispatch({
       type: actionTypes.UPDATE_LIST_ROOMS, payload: {
         ...listRoomsChatTemp,
@@ -839,13 +862,13 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                   <Paper className={styles.inputSearch} sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}>
                     <img alt="search" src="/assets/images/svg/ic_search.svg" />
                     <InputCustom
-                      //inputRef={inputSearchRef}
+                      inputRef={inputSearchMenuChatPersonal}
                       sx={{ ml: 1, flex: 1 }}
                       // placeholder={t("chat:box-left-input-search-placeholder")}
                       // inputProps={{ "aria-label": t("chat:box-left-input-search-placeholder") }}
                       placeholder={"アカウントを検索"}
                       inputProps={{ "aria-label": "アカウントを検索" }}
-                    // onKeyUp={handleOnKeyUpInputSearchRef}
+                      onKeyUp={() => handleTypingForInputSearch(inputSearchMenuChatPersonal.current.value, "personal")}
                     />
                   </Paper>
                 </Box>
@@ -974,11 +997,11 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                   <Paper className={styles.inputSearch} sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}>
                     <img alt="search" src="/assets/images/svg/ic_search.svg" />
                     <InputCustom
-                      //inputRef={inputSearchRef}
+                      inputRef={inputSearchMenuChatCommunity}
                       sx={{ ml: 1, flex: 1 }}
                       placeholder={"アカウントを検索"}
                       inputProps={{ "aria-label": "アカウントを検索" }}
-                    // onKeyUp={handleOnKeyUpInputSearchRef}
+                      onKeyUp={() => handleTypingForInputSearch(inputSearchMenuChatCommunity.current.value, "community")}
                     />
                   </Paper>
                 </Box>

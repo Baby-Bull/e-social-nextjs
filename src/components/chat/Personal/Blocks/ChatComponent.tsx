@@ -61,7 +61,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   );
 
   const updateLastMessageOfListRooms = async (message: any) => {
-    console.log(message);
     let hasChatRoomExist = false;
     const listRoomsSorted = sortListRoomChat(
       listRoomRef.current?.map((item) => {
