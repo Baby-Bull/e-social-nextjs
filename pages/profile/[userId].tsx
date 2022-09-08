@@ -14,7 +14,7 @@ const Profile = ({ url, userId, profileSkill, communities, allReviews, recommend
   <React.Fragment>
     <Head>
       <meta property="og:type" content="article" key="og-type" />
-      <meta property="og:title" content={`GOODHUB USER: ${profileSkill.username}`} key="og-title" />
+      <meta property="og:title" content={`goodhub user: ${profileSkill.username}`} key="og-title" />
       <meta property="og:description" content={profileSkill.self_description} key="og-description" />
       <meta property="og:url" content={url} key="og-url" />
       <meta property="og:image" content={profileSkill.ogp_image} key="og-img" />
@@ -24,7 +24,7 @@ const Profile = ({ url, userId, profileSkill, communities, allReviews, recommend
       <meta name="twitter:card" content="summary_large_image" key="twitter-card" />
       <meta name="twitter:url" content={url} key="twitter-url" />
       <meta name="twitter:image" content={profileSkill.ogp_image} key="twitter-image" />
-      <meta name="twitter:title" content={`GOODHUB USER: ${profileSkill.username}`} key="twitter-title" />
+      <meta name="twitter:title" content={`goodhub user: ${profileSkill.username}`} key="twitter-title" />
       <meta name="twitter:description" content={profileSkill.self_description} key="twitter-description" />
       {/* Inject MUI styles first to match with the prepend: true configuration. */}
     </Head>
