@@ -47,7 +47,7 @@ const CommunityOgp: React.FC<CommunityOgpProps> = ({ community }) => (
             // height: "170px",
             "text-overflow": "ellipsis",
             overflow: "hidden",
-            wordBreak: "break-all",
+            wordBreak: "break-word",
             display: "-webkit-box",
             "-webkit-line-clamp": "3 !important",
             "-webkit-box-orient": "vertical",

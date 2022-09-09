@@ -185,6 +185,7 @@ const UpdateComponent = () => {
     setRoleCreatePost(data?.post_permission);
     setRoleJoin(data?.is_public);
     setSrcProfileImage(data?.profile_image);
+    setProfileImage(data?.profile_image);
     setTagData(data?.tags);
     setOwner(data?.owner);
     setCommunityRequest({
