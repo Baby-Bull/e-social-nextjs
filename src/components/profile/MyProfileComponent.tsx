@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from "react";
 import { Backdrop, Box, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
@@ -26,6 +27,7 @@ import { IStoreState } from "src/constants/interface";
 
 import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
 import { sendMatchingRequest } from "../../services/matching";
+import PaginationCustomComponent from "../common/PaginationCustomComponent";
 
 const PaginationCustom = styled(Pagination)({
   "& .MuiPaginationItem-root": {
@@ -81,15 +83,50 @@ const ProfileHaveDataComponent = () => {
   const NumberOfCommunitiesPerPage = isMobile ? 2 : 8;
 
   const auth = useSelector((state: IStoreState) => state.user);
+
   const [profileSkill, setProfileSkill] = useState([]);
-  const [communities, setCommunities] = useState([]);
-  const [allReviews, setAllReviews] = useState([]);
-  const [countReviews, setCountReviews] = useState(0);
+
   const [recommended, setRecommended] = useState([]);
+
   const [isRefresh, setIsRefresh] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showModalMatching, setModalMatching] = React.useState(false);
   const [userId] = useState(auth?.id);
+
+  // Block render user-reviews ***** paginated
+  const [allReviewsRef, setAllReviewsRef] = useState([]);
+  const [countReviews, setCountReviews] = useState(0);
+  const [cursorReviews, setCursorReviews] = useState("");
+  const [page, setPage] = useState(1);
+  const [countCurrentPages, setCountCurrentPages] = useState(2);
+  const fetchUserReviews = async () => {
+    setIsLoading(true);
+    const data = await getUserReviews(userId, NumberOfReviewsPerPage, cursorReviews);
+    setCursorReviews(data?.cursor)
+    setAllReviewsRef([...allReviewsRef, ...data?.items])
+    setCountReviews(data?.items_count ?? 0);
+    setIsLoading(false);
+    return data;
+  };
+  const handleCallbackChangePagination = (event, value) => {
+    setPage(value);
+    if (countCurrentPages <= value && countReviews > allReviewsRef.length) {
+      setCountCurrentPages(countCurrentPages + 1);
+      fetchUserReviews();
+    }
+  }; // end block paginate for user reviews
+
+  // Block render user-communities ***** paginated
+  const [countAllCommunities, setCommunities] = useState([]);
+  const [cursorCommunities, setCursorCommunities] = useState("");
+  const fetchCommunities = async () => {
+    const data = await getUserCommunites(userId, NumberOfCommunitiesPerPage, "");
+    setCursorCommunities(data?.cursor)
+    setCommunities(data?.items);
+    setIsLoading(false);
+    return data;
+  };
+
 
   const fetchProfileSkill = async () => {
     setIsLoading(true);
@@ -99,22 +136,6 @@ const ProfileHaveDataComponent = () => {
     return data;
   };
 
-  const fetchCommunities = async () => {
-    setIsLoading(true);
-    const data = await getUserCommunites(userId);
-    setCommunities(data?.items);
-    setIsLoading(false);
-    return data;
-  };
-
-  const fetchUserReviews = async () => {
-    setIsLoading(true);
-    const data = await getUserReviews(userId);
-    setAllReviews(data?.items);
-    setCountReviews(data?.items_count ?? 0);
-    setIsLoading(false);
-    return data;
-  };
   const fetchRecommended = async () => {
     setIsLoading(true);
     const data = await getUserRecommended(LIMIT);
@@ -133,13 +154,6 @@ const ProfileHaveDataComponent = () => {
     setModalMatching(false);
     setIsRefresh(!isRefresh);
     return res;
-  };
-
-  const [page, setPage] = useState(1);
-  const reviews = usePagination(allReviews, NumberOfReviewsPerPage);
-  const handleChange = (e, p) => {
-    setPage(p);
-    reviews.jump(p);
   };
 
   useEffect(() => {
@@ -164,6 +178,7 @@ const ProfileHaveDataComponent = () => {
       )),
     );
   }, [recommended]);
+
   return (
     <ContentComponent>
       {isLoading && (
@@ -187,16 +202,17 @@ const ProfileHaveDataComponent = () => {
             fontWeight: 700,
           }}
         >
-          {t("profile:title-participating-community")} ({communities?.length ?? 0})
+          {/* {t("profile:title-participating-community")} ({communities?.length ?? 0})
           {communities?.length > 0 ? (
             <ParticipatingCommunityComponent
-              communities={communities}
+              userId={userId}
+              countAllCommunities={communities}
               usePagination={usePagination}
               NumberOfCommunitiesPerPage={NumberOfCommunitiesPerPage}
             />
           ) : (
             <BoxNoDataComponent content="まだ参加中のコミュニティがありません" />
-          )}
+          )} */}
         </Box>
         <Box
           sx={{
@@ -208,25 +224,23 @@ const ProfileHaveDataComponent = () => {
           }}
         >
           {t("profile:title-review")}（{countReviews}）
-          <PaginationCustom
-            hideNextButton={page === Math.ceil(countReviews / 10) || countReviews < 10}
-            hidePrevButton={page === 1 || countReviews < 10}
-            count={Math.ceil(countReviews / 10)}
-            onChange={handleChange}
+          <PaginationCustomComponent
+            handleCallbackChangePagination={handleCallbackChangePagination}
+            page={page}
+            perPage={countCurrentPages}
+            totalPage={Math.ceil(countReviews / NumberOfReviewsPerPage)}
           />
-          {reviews.currentData()?.length > 0 ? (
-            reviews
-              .currentData()
-              ?.map((item, key) => (
-                <ReviewComponent
-                  user={item?.user}
-                  hideReviewer={item?.hide_reviewer}
-                  rating={item?.rating}
-                  comment={item?.comment}
-                  createdAt={item?.created_at}
-                  key={key}
-                />
-              ))
+          {allReviewsRef?.length > 0 ? (
+            allReviewsRef.slice((page - 1) * NumberOfReviewsPerPage, page * NumberOfReviewsPerPage)?.map((item, key) => (
+              <ReviewComponent
+                user={item?.user}
+                hideReviewer={item?.hide_reviewer}
+                rating={item?.rating}
+                comment={item?.comment}
+                createdAt={item?.created_at}
+                key={key}
+              />
+            ))
           ) : (
             <BoxNoDataComponent content="まだレビューがありません" />
           )}

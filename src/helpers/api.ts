@@ -41,6 +41,7 @@ export function setToken(token: string, expiresIn?: number) {
   setTokenStorage(token, expiresIn);
   setApiAuth(token);
 }
+
 api.interceptors.response.use(
   (response) => response,
   async (err: any) => {

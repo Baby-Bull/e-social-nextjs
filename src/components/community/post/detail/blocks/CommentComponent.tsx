@@ -137,7 +137,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
 
     "&multiLine": {
       control: {
-        minHeight: 130,
+        minHeight: "100%",
       },
       highlighter: {
         padding: 9.3,

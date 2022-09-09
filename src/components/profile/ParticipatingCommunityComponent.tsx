@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Avatar, Box, Grid, Typography, Pagination } from "@mui/material";
 import React, { useState } from "react";
 import { useTranslation } from "next-i18next";
@@ -5,9 +6,12 @@ import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
 
 import theme from "src/theme";
+import PaginationCustomComponent from "../common/PaginationCustomComponent";
+import { getUserCommunites } from "src/services/user";
 
 interface BoxNodataProps {
-  communities: any;
+  userId: string,
+  countAllCommunities: number;
   usePagination: any;
   NumberOfCommunitiesPerPage: number;
 }
@@ -32,20 +36,34 @@ const PaginationCustom = styled(Pagination)({
 });
 
 const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({
-  communities,
+  userId,
+  countAllCommunities,
   usePagination,
   NumberOfCommunitiesPerPage,
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
-  const numberAllCommunities = communities?.length ?? 0;
 
-  const [pageCommunity, setPageCommunity] = useState(1);
-  const countCommunity = usePagination(communities, NumberOfCommunitiesPerPage);
-  const handleChangePageCommunity = (e, p) => {
-    setPageCommunity(p);
-    countCommunity.jump(p);
+  // Block render user-reviews ***** paginated
+  const [allCommunitiesRef, setAllCommunitiesRef] = useState([]);
+  const [cursorCommunities, setCursorCommunities] = useState("");
+  const [page, setPage] = useState(1);
+  const [countCurrentPages, setCountCurrentPages] = useState(2);
+  const fetchUserCommunities = async () => {
+    //setIsLoading(true);
+    const data = await getUserCommunites(userId, NumberOfCommunitiesPerPage, cursorCommunities);
+    setCursorCommunities(data?.cursor)
+    setAllCommunitiesRef([...allCommunitiesRef, ...data?.items])
+    //setIsLoading(false);
+    return data;
   };
+  const handleCallbackChangePagination = (event, value) => {
+    setPage(value);
+    if (countCurrentPages <= value && countAllCommunities > allCommunitiesRef.length) {
+      setCountCurrentPages(countCurrentPages + 1);
+      fetchUserCommunities();
+    }
+  }; // end block paginate for user reviews
 
   return (
     <Box
@@ -55,17 +73,14 @@ const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({
         p: "20px 20px",
       }}
     >
-      <PaginationCustom
-        hideNextButton={
-          pageCommunity === Math.ceil(numberAllCommunities / NumberOfCommunitiesPerPage) ||
-          numberAllCommunities < NumberOfCommunitiesPerPage
-        }
-        hidePrevButton={pageCommunity === 1 || numberAllCommunities < NumberOfCommunitiesPerPage}
-        count={Math.ceil(numberAllCommunities / NumberOfCommunitiesPerPage)}
-        onChange={handleChangePageCommunity}
+      <PaginationCustomComponent
+        handleCallbackChangePagination={handleCallbackChangePagination}
+        page={page}
+        perPage={countCurrentPages}
+        totalPage={Math.ceil(countAllCommunities / 10)}
       />
       <Grid container>
-        {countCommunity.currentData()?.map((item, key) => (
+        {allCommunitiesRef?.map((item, key) => (
           <Grid item xs={12} lg={3} key={key}>
             <Box
               onClick={() => router.push(`/community/${item?.id}`)}

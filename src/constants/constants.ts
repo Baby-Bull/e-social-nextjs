@@ -406,3 +406,8 @@ export const CONTENT_OF_NOTIFICATIONS = {
 
 export const USER_ONLINE_STATUS = "online";
 export const USER_OFFLINE_STATUS = "offline";
+
+export const MODE_ROOM_CHAT = {
+  personal: "personal",
+  community: "community"
+}
