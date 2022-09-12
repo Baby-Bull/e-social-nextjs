@@ -448,7 +448,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
               </ButtonComponent>
             )}
 
-            {type === "favorite" && (
+            {type === "favorite" && data?.match_status !== "confirmed" && (
               <ButtonComponent
                 disabled={data?.match_status}
                 props={{

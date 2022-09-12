@@ -48,32 +48,6 @@ const PaginationCustom = styled(Pagination)({
   },
 });
 
-function usePagination(data: any, itemsPerPage: any) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const maxPage = data && data?.length > 0 ? Math.ceil(data.length / itemsPerPage) : 0;
-
-  function currentData() {
-    const begin = (currentPage - 1) * itemsPerPage;
-    const end = begin + itemsPerPage;
-    return data?.slice(begin, end);
-  }
-
-  function next() {
-    setCurrentPage(() => Math.min(currentPage + 1, maxPage));
-  }
-
-  function prev() {
-    setCurrentPage(() => Math.max(currentPage - 1, 1));
-  }
-
-  function jump(page: number) {
-    const pageNumber = Math.max(1, page);
-    setCurrentPage(() => Math.min(pageNumber, maxPage));
-  }
-
-  return { next, prev, jump, currentData, currentPage, maxPage };
-}
-
 const ProfileHaveDataComponent = () => {
   const { t } = useTranslation();
   const viewPort = useViewport();
@@ -117,13 +91,10 @@ const ProfileHaveDataComponent = () => {
   }; // end block paginate for user reviews
 
   // Block render user-communities ***** paginated
-  const [countAllCommunities, setCommunities] = useState([]);
-  const [cursorCommunities, setCursorCommunities] = useState("");
+  const [countAllCommunities, setCountAllCommunities] = useState(0);
   const fetchCommunities = async () => {
     const data = await getUserCommunites(userId, NumberOfCommunitiesPerPage, "");
-    setCursorCommunities(data?.cursor)
-    setCommunities(data?.items);
-    setIsLoading(false);
+    setCountAllCommunities(data?.items_count)
     return data;
   };
 
@@ -202,17 +173,16 @@ const ProfileHaveDataComponent = () => {
             fontWeight: 700,
           }}
         >
-          {/* {t("profile:title-participating-community")} ({communities?.length ?? 0})
-          {communities?.length > 0 ? (
+          {t("profile:title-participating-community")} ({countAllCommunities ?? 0})
+          {countAllCommunities > 0 ? (
             <ParticipatingCommunityComponent
               userId={userId}
-              countAllCommunities={communities}
-              usePagination={usePagination}
+              countAllCommunities={countAllCommunities}
               NumberOfCommunitiesPerPage={NumberOfCommunitiesPerPage}
             />
           ) : (
             <BoxNoDataComponent content="まだ参加中のコミュニティがありません" />
-          )} */}
+          )}
         </Box>
         <Box
           sx={{
@@ -224,13 +194,13 @@ const ProfileHaveDataComponent = () => {
           }}
         >
           {t("profile:title-review")}（{countReviews}）
-          <PaginationCustomComponent
+          {(countReviews > NumberOfReviewsPerPage) && <PaginationCustomComponent
             handleCallbackChangePagination={handleCallbackChangePagination}
             page={page}
             perPage={countCurrentPages}
             totalPage={Math.ceil(countReviews / NumberOfReviewsPerPage)}
-          />
-          {allReviewsRef?.length > 0 ? (
+          />}
+          {countReviews > 0 ? (
             allReviewsRef.slice((page - 1) * NumberOfReviewsPerPage, page * NumberOfReviewsPerPage)?.map((item, key) => (
               <ReviewComponent
                 user={item?.user}

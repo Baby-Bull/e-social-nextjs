@@ -1235,7 +1235,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                 onClick={handleOpenMenuChat}
               >
                 <Badge badgeContent={listRoomsChatTemp?.unread_count} color="error">
-                  <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
+                  <img style={{ width: "24px", height: "20px" }} src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
                 </Badge>
               </IconButton>
               <IconButton
@@ -1246,7 +1246,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                 onClick={handleNotifyOpenMenu}
               >
                 <Badge badgeContent={notifications?.unread_count} color="error">
-                  <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
+                  <img style={{ width: "24px", height: "24px" }} src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
                 </Badge>
               </IconButton>
               <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -1281,7 +1281,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                 onClick={handleOpenMenuChat}
               >
                 <Badge badgeContent={listRoomsChatTemp?.unread_count} color="error">
-                  <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
+                  <img style={{ width: "24px", height: "20px" }} src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
                 </Badge>
               </IconButton>
               <IconButton
@@ -1291,7 +1291,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                 onClick={handleNotifyOpenMenu}
               >
                 <Badge badgeContent={notifications?.unread_count} color="error">
-                  <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
+                  <img style={{ width: "24px", height: "24px" }} src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
                 </Badge>
               </IconButton>
               <IconButton
