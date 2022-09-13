@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from "react";
 import { Avatar, Backdrop, Box, CircularProgress, Typography } from "@mui/material";
 import dayjs from "dayjs";
@@ -140,13 +141,18 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
         minHeight: "100%",
       },
       highlighter: {
+        substring: {
+          visibility: isUpdateComment ? "hidden" : "visible",
+          color: "black"
+        },
+        position: "",
         padding: 9.3,
         fontFamily: "Noto Sans JP,sans-serif !important",
         color: theme.blue,
         zIndex: "1",
       },
-
       input: {
+        display: isUpdateComment ? "block" : "none",
         padding: 9,
         border: errorValidates.content
           ? `2px solid ${theme.blue} !important`
@@ -269,7 +275,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
           </Box>
         </Box>
         {isUpdateComment ? (
-          <Box>
+          <>
             <MentionsInput
               value={communityPostUpdateRequest?.content}
               className="mention-update"
@@ -287,7 +293,12 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
                 }
               }}
             >
-              <Mention markup="^__display__^" trigger="@" data={member} style={{ backgroundColor: "#cee4e5" }} />
+              <Mention
+                trigger="@"
+                markup="@{__id__|__display__}"
+                data={member}
+                style={{ backgroundColor: "#cee4e5" }}
+              />
             </MentionsInput>
             {errorValidates?.content && <BoxTextValidate>{errorValidates?.content}</BoxTextValidate>}
             <Box sx={{ textAlign: "right", cursor: "pointer" }}>
@@ -326,16 +337,28 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
                 {t("community:button.detail.submit-post")}
               </ButtonComponent>
             </Box>
-          </Box>
+          </>
         ) : (
-          <MentionsInput
-            value={triggerRenderClient ? communityPostUpdateRequest?.content : itemData?.content}
-            className="mention-detail"
-            style={defaultStyle}
-            readOnly
-          >
-            <Mention markup="^__display__^" style={{ backgroundColor: "#fff", cursor: "pointer !important" }} />
-          </MentionsInput>
+          <>
+            <MentionsInput
+              value={triggerRenderClient ? communityPostUpdateRequest?.content : itemData?.content}
+              className="mention-detail"
+              style={defaultStyle}
+              readOnly
+            >
+              <Mention
+                displayTransform={(id: string, display: any) => (
+                  <a
+                    style={{ textDecoration: "none", color: "#03BCDB" }}
+                    href={`/profile/${id}`}
+                  >
+                    {display}
+                  </a>
+                )}
+                markup="@{__id__|__display__}"
+                style={{ backgroundColor: "#fff", cursor: "pointer !important" }} />
+            </MentionsInput>
+          </>
         )}
       </Box>
     </Box>

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as React from "react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { parseCookies } from "nookies";
@@ -58,6 +59,7 @@ export const getServerSideProps = async (ctx) => {
     getUserReviews(userId),
     ...(isAuth ? [getUserRecommended(20)] : [Promise.resolve(undefined)]),
   ]);
+  React.useState
   // if (!cookies[USER_TOKEN]) {
   //   return {
   //     redirect: {

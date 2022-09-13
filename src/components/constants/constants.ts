@@ -69,7 +69,7 @@ export const USER_SEARCH_STATUS = {
 
 export const JOBS = {
   frontend: { label: "フロントエンドエンジニア" },
-  backend: { label: "データサイエンティスト" },
+  backend: { label: "バックエンドエンジニア" },
   "data-scientist": { label: "データサイエンティスト" },
   "project-manager": { label: "プロジェクトマネージャー" },
   "project-leader": { label: "プロジェクトリーダー" },

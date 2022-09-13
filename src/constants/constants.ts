@@ -402,6 +402,7 @@ export const CONTENT_OF_NOTIFICATIONS = {
   new_comment_in_post: { label: " さんが", label2: "にコメントしました。" },
   new_recommend_user: { label: "さんがgoodhubに参加しました。コンタクトをとってみましょう！", label2: "" },
   community_join_request_rejected: { label: "コミュニティ加が承認されませんでした。", label2: "" },
+  tagged_in_comment: { label: "コミュニティ加が承認されませんでした。", label2: "" },
 };
 
 export const USER_ONLINE_STATUS = "online";

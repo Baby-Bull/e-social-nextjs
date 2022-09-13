@@ -2,8 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { Backdrop, Box, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import Pagination from "@mui/material/Pagination";
-import { styled } from "@mui/material/styles";
 import { useSelector } from "react-redux";
 
 import useViewport from "src/helpers/useViewport";
@@ -28,25 +26,6 @@ import { IStoreState } from "src/constants/interface";
 import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
 import { sendMatchingRequest } from "../../services/matching";
 import PaginationCustomComponent from "../common/PaginationCustomComponent";
-
-const PaginationCustom = styled(Pagination)({
-  "& .MuiPaginationItem-root": {
-    color: `${theme.blue}`,
-    fontFamily: "Noto Sans JP,sans-serif",
-    fontSize: "14px",
-    fontWeight: "700",
-  },
-  "& .MuiPagination-ul": {
-    width: "fit-content",
-    margin: "auto",
-    marginTop: "0.5em",
-    marginBottom: "0.5em",
-  },
-  "& .Mui-selected": {
-    color: "white",
-    backgroundColor: `${theme.blue}!important`,
-  },
-});
 
 const ProfileHaveDataComponent = () => {
   const { t } = useTranslation();
