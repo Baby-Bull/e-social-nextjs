@@ -13,7 +13,6 @@ export const sendMatchingRequest = async (userId: string | string[], body: any) 
     }
     return res.data;
   } catch (error) {
-    toast.error(SERVER_ERROR);
     return error;
   }
 };

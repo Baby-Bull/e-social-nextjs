@@ -14,7 +14,7 @@ import {
   HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS,
   HOMEPAGE_RECOMMEND_MEMBER_STATUS,
 } from "src/components/constants/constants";
-import { JOBS } from "src/constants/constants";
+import { JOBS, USER_ONLINE_STATUS } from "src/constants/constants";
 import styles from "src/components/home/home.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
@@ -101,7 +101,6 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
   const [liked, setLiked] = useState(data?.is_favorite);
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
-  const isOnline = "online";
 
   useEffect(() => {
     setLiked(data?.is_favorite);
@@ -136,7 +135,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
                 {HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.label}
               </ButtonComponent>
               <span className="label-login-status">
-                {data?.activity_status !== isOnline
+                {data?.activity_status !== USER_ONLINE_STATUS
                   ? replaceLabelByTranslate(
                       t("home:box-member-recommend.last-login"),
                       dayjs(data?.last_login_at).fromNow(),

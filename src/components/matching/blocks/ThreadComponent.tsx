@@ -26,7 +26,7 @@ import { addUserFavorite } from "src/services/user";
 import { TYPE } from "src/constants/matching";
 import { IStoreState } from "src/constants/interface";
 import actionTypes from "src/store/actionTypes";
-import { JOBS } from "src/constants/constants";
+import { JOBS, USER_ONLINE_STATUS } from "src/constants/constants";
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
@@ -67,7 +67,6 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
   const router = useRouter();
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
-  const isOnline = "online";
 
   const isShowThread = type === "unConfirm" || type === "reject";
   const isConfirmOrFavoriteOrMatched = type === "confirm" || type === "favorite" || type === "matched";
@@ -268,7 +267,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   mt: "9px",
                 }}
               >
-                {data?.activity_status === isOnline ? "ログイン中" : dayjs(data?.last_login_at).fromNow()}
+                {data?.activity_status === USER_ONLINE_STATUS ? "ログイン中" : dayjs(data?.last_login_at).fromNow()}
               </Typography>
               {/* End Title bottom Avatar tab favorite */}
             </Box>
@@ -528,7 +527,9 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 mt: "9px",
               }}
             >
-              {data?.user?.activity_status === isOnline ? "ログイン中" : dayjs(data?.user?.last_login_at).fromNow()}
+              {data?.user?.activity_status === USER_ONLINE_STATUS
+                ? "ログイン中"
+                : dayjs(data?.user?.last_login_at).fromNow()}
             </Typography>
 
             <Box

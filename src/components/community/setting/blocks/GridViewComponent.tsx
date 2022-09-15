@@ -106,7 +106,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
           <Avatar
             sx={{
               width: ["32px", "64px"],
-              height: "100%",
+              height: ["32px", "64px"],
               cursor: "pointer",
             }}
             src={data?.user?.profile_image}
