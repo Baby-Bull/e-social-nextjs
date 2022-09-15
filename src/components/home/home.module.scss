@@ -456,10 +456,10 @@
       line-height: 24px;
       text-align: justify;
       word-break: break-word;
-      height: 72px;
+      height: 63px;
       overflow: hidden;
       text-overflow: ellipsis;
-      -webkit-line-clamp: 3;
+      -webkit-line-clamp: 4;
       -webkit-box-orient: vertical;
       display: -webkit-box;
     }

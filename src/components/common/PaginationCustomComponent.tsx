@@ -52,6 +52,7 @@ const PaginationCustomComponent: React.SFC<IPaginationProps> = ({
     <PaginationCustom
       count={perPage > totalPage ? totalPage : perPage}
       page={page}
+      siblingCount={1}
       onChange={handleCallbackChangePagination}
     />
   </Stack>

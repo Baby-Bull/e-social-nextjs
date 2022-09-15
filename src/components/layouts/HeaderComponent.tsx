@@ -30,7 +30,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import InputCustom from "../chat/ElementCustom/InputCustom";
 import { getListChatRooms, getListChatRoomsCommunity } from "src/services/chat";
 import { formatChatDateRoom, sortListRoomChat } from "src/helpers/helper";
-import { CONTENT_OF_NOTIFICATIONS, REACT_QUERY_KEYS, TYPE_OF_NOTIFICATIONS } from "src/constants/constants";
+import { CONTENT_OF_NOTIFICATIONS, MODE_ROOM_CHAT, REACT_QUERY_KEYS, TYPE_OF_NOTIFICATIONS } from "src/constants/constants";
 // eslint-disable-next-line import/order
 import dayjs from "dayjs";
 import { getListnotifications, readAllNotifications, readNotification } from "src/services/user";
@@ -210,7 +210,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
   })
   const debounceSearchRooms = useCallback(
     _.debounce((searchValue: string, mode: string) => {
-      mode === "communtity" ?
+      mode === MODE_ROOM_CHAT.community ?
         setSearchChatRoomCommunity({
           search: searchValue,
           cursor: null,
@@ -466,14 +466,24 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
   //end block function Notifications
 
 
-  // notification system
-  useEffect(() => {
-    function notify(title: string, body: any, image: any) {
-      new Notification(title, {
-        body,
-        icon: image
-      });
+  // notification browser
+  function notify(title: string, body: any, image: any) {
+    new Notification(title, {
+      body,
+      icon: image
+    });
+  }
+  const customizeContentNotificationBrowser = (typeOfNotification: string, userName: string, postName: string, label1: string, label2: string) => {
+    // add labels or other arguments for this function if have more than 2 labels to create string content
+    // add other cases to modify notifications's content
+    switch (typeOfNotification) {
+      case TYPE_OF_NOTIFICATIONS[4]:
+        return userName + label1 + postName + label2;
+      default:
+        return label1;
     }
+  }
+  useEffect(() => {
     const wsHandler = (message: any) => {
       if (!message?.metadata) {
         updateLastMessageOfListRooms(message)
@@ -493,7 +503,17 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
         })
         if (!isMobile) {
           if (Notification.permission === "granted") {
-            notify(`${message?.metadata?.user?.username || message?.metadata?.community?.name}`, CONTENT_OF_NOTIFICATIONS[message?.notification_type]?.label, `${message?.metadata?.user?.profile_image || message?.metadata?.community?.profile_image}`);
+            notify(
+              `${message?.metadata?.user?.username || message?.metadata?.community?.name}`,
+              customizeContentNotificationBrowser(
+                message?.notification_type,
+                message?.metadata?.user?.username || message?.metadata?.community?.name,
+                message?.metadata?.post_id,
+                CONTENT_OF_NOTIFICATIONS[message?.notification_type]?.label,
+                CONTENT_OF_NOTIFICATIONS[message?.notification_type]?.label2
+              ),
+              `${message?.metadata?.user?.profile_image || message?.metadata?.community?.profile_image}`
+            );
           }
         }
       }
@@ -868,7 +888,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                       // inputProps={{ "aria-label": t("chat:box-left-input-search-placeholder") }}
                       placeholder={"アカウントを検索"}
                       inputProps={{ "aria-label": "アカウントを検索" }}
-                      onKeyUp={() => handleTypingForInputSearch(inputSearchMenuChatPersonal.current.value, "personal")}
+                      onKeyUp={() => handleTypingForInputSearch(inputSearchMenuChatPersonal.current.value, MODE_ROOM_CHAT.personal)}
                     />
                   </Paper>
                 </Box>
@@ -1001,7 +1021,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                       sx={{ ml: 1, flex: 1 }}
                       placeholder={"アカウントを検索"}
                       inputProps={{ "aria-label": "アカウントを検索" }}
-                      onKeyUp={() => handleTypingForInputSearch(inputSearchMenuChatCommunity.current.value, "community")}
+                      onKeyUp={() => handleTypingForInputSearch(inputSearchMenuChatCommunity.current.value, MODE_ROOM_CHAT.community)}
                     />
                   </Paper>
                 </Box>
@@ -1215,7 +1235,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                 onClick={handleOpenMenuChat}
               >
                 <Badge badgeContent={listRoomsChatTemp?.unread_count} color="error">
-                  <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
+                  <img style={{ width: "24px", height: "20px" }} src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
                 </Badge>
               </IconButton>
               <IconButton
@@ -1226,7 +1246,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                 onClick={handleNotifyOpenMenu}
               >
                 <Badge badgeContent={notifications?.unread_count} color="error">
-                  <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
+                  <img style={{ width: "24px", height: "24px" }} src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
                 </Badge>
               </IconButton>
               <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -1261,7 +1281,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                 onClick={handleOpenMenuChat}
               >
                 <Badge badgeContent={listRoomsChatTemp?.unread_count} color="error">
-                  <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
+                  <img style={{ width: "24px", height: "20px" }} src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
                 </Badge>
               </IconButton>
               <IconButton
@@ -1271,7 +1291,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                 onClick={handleNotifyOpenMenu}
               >
                 <Badge badgeContent={notifications?.unread_count} color="error">
-                  <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
+                  <img style={{ width: "24px", height: "24px" }} src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
                 </Badge>
               </IconButton>
               <IconButton
