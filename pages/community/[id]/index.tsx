@@ -8,18 +8,18 @@ import { CommunityMembers, getCommunity } from "src/services/community";
 const Community = ({ communityInfo, communityMembers, url }) => (
   <React.Fragment>
     <Head>
-      <meta property="og:type" content="website" key="og-type" />
-      <meta property="og:title" content={`GOODHUB COMMUNITY: ${communityInfo.name}`} key="og-title" />
+      <meta property="og:type" content="article" key="og-type" />
+      <meta property="og:title" content={`goodhub community: ${communityInfo.name}`} key="og-title" />
       <meta property="og:description" content={communityInfo.description} key="og-description" />
       <meta property="og:url" content={url} key="og-url" />
       <meta property="og:image" content={communityInfo.ogp_image} key="og-img" />
-      <meta property="og:site_name" content="GOODHUB" key="og-type" />
+      <meta property="og:site_name" content="goodhub" key="og-type" />
       <meta property="og:image:width" content="600" />
       <meta property="og:image:height" content="315" />
       <meta name="twitter:card" content="summary_large_image" key="twitter-card" />
       <meta name="twitter:url" content={url} key="twitter-url" />
       <meta name="twitter:image" content={communityInfo.ogp_image} key="twitter-image" />
-      <meta name="twitter:title" content={`GOODHUB COMMUNITY: ${communityInfo.name}`} key="twitter-title" />
+      <meta name="twitter:title" content={`goodhub community: ${communityInfo.name}`} key="twitter-title" />
       <meta name="twitter:description" content={communityInfo.description} key="twitter-description" />
       {/* Inject MUI styles first to match with the prepend: true configuration. */}
     </Head>

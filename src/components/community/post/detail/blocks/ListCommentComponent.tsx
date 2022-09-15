@@ -132,7 +132,7 @@ const ListCommentComponent: React.SFC<IListCommentProps> = ({
                 {comments?.map((item, index) => (
                   <CommentComponent
                     itemData={item}
-                    index={index}
+                    index={index + 10 * (page - 1)}
                     key={index.toString()}
                     handleCallbackRemove={handleCallbackRemove}
                   />

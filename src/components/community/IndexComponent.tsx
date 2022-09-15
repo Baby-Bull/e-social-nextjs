@@ -36,6 +36,8 @@ interface Props {
   communityInfo: {
     name: string;
     profile_image?: string;
+    ogp_image: string;
+    ogp_image_version: number;
     description: string;
     owner: User;
     admins: User[];
@@ -70,7 +72,8 @@ const CommunityComponent: FC<Props> = ({ communityInfo, communityMembers }) => {
   const router = useRouter();
   const handleCopyUrl = () => {
     const communityId = router.query;
-    const resUrl = `${process.env.NEXT_PUBLIC_URL_PROFILE}/community/${communityId?.id}`;
+    const ogpImageVersionQuery = communityInfo.ogp_image_version ? `?v=${communityInfo.ogp_image_version}` : "";
+    const resUrl = `${process.env.NEXT_PUBLIC_URL_PROFILE}/community/${communityId?.id}${ogpImageVersionQuery}`;
     copy(resUrl);
     toast.success(COPY_SUCCESSFUL);
   };

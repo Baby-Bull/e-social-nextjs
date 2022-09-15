@@ -10,6 +10,7 @@ import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmWithAvatarComponent from "src/components/common/dialog/DialogConfirmWithAvatarComponent";
 import { joinCommunity, leaveCommunity } from "src/services/community";
+import useViewport from "src/helpers/useViewport";
 
 import { bgColorByStatus } from "../mockData";
 
@@ -22,6 +23,8 @@ const ListItem = styled("li")({});
 const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const viewPort = useViewport();
+  const isMobile = viewPort.width <= 600; // use only with communiy screen - banner community
 
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => setOpen(true);
@@ -131,7 +134,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
                 justifyContent: "space-around",
                 alignItems: "flex-start",
                 zIndex: "9999",
-                textShadow: "1px 1px #666666",
+                textShadow: isMobile ? "none" : "1px 1px #666666",
               }}
             >
               <Typography

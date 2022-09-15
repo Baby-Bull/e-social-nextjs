@@ -1,4 +1,8 @@
 /* eslint-disable no-param-reassign */
+import _clone from 'lodash/clone'
+import _escapeRegExp from 'lodash/escapeRegExp'
+import _uniqBy from 'lodash/uniqBy'
+
 export const sortListRoomChat = (listRooms: any) => {
   const listRoomSort = listRooms?.filter((item: any) => item.last_chat_message_at);
   const listRoomNoSort = listRooms?.filter((item: any) => !item.last_chat_message_at);
@@ -59,3 +63,13 @@ export const formatListMessages = (messages: any) => {
     return prev;
   }, {});
 };
+
+
+export function swapTags(text) {
+  const tags = Array.from(text.matchAll(/@\{(.+)\|(.+)\}/g), (m: any) => ({
+    match: m[0],
+    group: m.length > 1 ? m.slice(1) : undefined,
+    startIndex: m.index
+  }));
+  return tags;
+}

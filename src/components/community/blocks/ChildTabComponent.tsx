@@ -74,7 +74,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ maxWidth, dataC
     const res = await getListCommunityPost(communityId?.id, LIMIT, cursor, sortOrder);
     if (!res?.error_code) {
       // eslint-disable-next-line no-unsafe-optional-chaining
-      setPostRecommended([...posts, ...res?.items]);
+      setPostRecommended([...postsRecommended, ...res?.items]);
       setTotalCommunityPostRecommended(res?.items_count);
       setCursorPostRecommended(res?.cursor);
       return res;

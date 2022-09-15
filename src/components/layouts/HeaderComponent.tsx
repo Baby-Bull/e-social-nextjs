@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -30,7 +30,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import InputCustom from "../chat/ElementCustom/InputCustom";
 import { getListChatRooms, getListChatRoomsCommunity } from "src/services/chat";
 import { formatChatDateRoom, sortListRoomChat } from "src/helpers/helper";
-import { CONTENT_OF_NOTIFICATIONS, REACT_QUERY_KEYS, TYPE_OF_NOTIFICATIONS } from "src/constants/constants";
+import { CONTENT_OF_NOTIFICATIONS, MODE_ROOM_CHAT, REACT_QUERY_KEYS, TYPE_OF_NOTIFICATIONS } from "src/constants/constants";
 // eslint-disable-next-line import/order
 import dayjs from "dayjs";
 import { getListnotifications, readAllNotifications, readNotification } from "src/services/user";
@@ -38,6 +38,7 @@ import actionTypes from "src/store/actionTypes";
 import { logout } from "src/services/auth";
 import { useQuery } from "react-query";
 import { isMobile } from "react-device-detect";
+import _ from "lodash";
 
 interface IHeaderComponentProps {
   authPage?: boolean;
@@ -196,23 +197,45 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
   const isMenuChatOpen = Boolean(menuChatAnchorEl);
   const [valueTabChatMessage, setValueTabChatMessage] = React.useState('1');
   const [statusAuthPage, setStatusAuthPage] = React.useState(false);
+  const inputSearchMenuChatPersonal = useRef(null);
+  const inputSearchMenuChatCommunity = useRef(null);
+
+  const [searchChatRoomPersonal, setSearchChatRoomPersonal] = useState({
+    search: null,
+    cursor: null
+  })
+  const [searchChatRoomCommunity, setSearchChatRoomCommunity] = useState({
+    search: null,
+    cursor: null
+  })
+  const debounceSearchRooms = useCallback(
+    _.debounce((searchValue: string, mode: string) => {
+      mode === MODE_ROOM_CHAT.community ?
+        setSearchChatRoomCommunity({
+          search: searchValue,
+          cursor: null,
+        }) :
+        setSearchChatRoomPersonal({
+          search: searchValue,
+          cursor: null
+        })
+    }, 700), []
+  )
+  const handleTypingForInputSearch = (valueInputSearchTemp: any, mode: string) => {
+    debounceSearchRooms(valueInputSearchTemp, mode);
+  }
 
   const { data: listRoomsChatResQuery } = useQuery(
-    [REACT_QUERY_KEYS.COMMUNITY_CHAT.LIST_CHAT_ROOMS],
+    [REACT_QUERY_KEYS.LIST_ROOMS, searchChatRoomCommunity, searchChatRoomPersonal],
     async () => {
-      let draftList1 = {
-        items: [],
-        hasMore: false,
-        cursor: ""
-      };
-      let draftList2 = {
+      let draftList1, draftList2 = draftList1 = {
         items: [],
         hasMore: false,
         cursor: ""
       };
       if (auth?.community_count !== undefined) {
-        draftList1 = await getListChatRooms(null, "");
-        draftList2 = await getListChatRoomsCommunity(null, "");
+        draftList1 = await getListChatRooms(searchChatRoomPersonal?.search, searchChatRoomPersonal?.cursor);
+        draftList2 = await getListChatRoomsCommunity(searchChatRoomCommunity?.search, searchChatRoomCommunity?.cursor);
       }
       return {
         roomsPersonal: draftList1,
@@ -320,7 +343,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     }
   };
   const loadMoreMessagePersonal = async () => {
-    const res = await getListChatRooms("", listRoomsChatTemp?.cursorPersonal, 10);
+    const res = await getListChatRooms(searchChatRoomPersonal?.search, listRoomsChatTemp?.cursorPersonal, 10);
     dispatch({
       type: actionTypes.UPDATE_LIST_ROOMS, payload: {
         ...listRoomsChatTemp,
@@ -332,7 +355,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     })
   }
   const loadMoreMessageCommunity = async () => {
-    const res = await getListChatRoomsCommunity("", listRoomsChatTemp?.cursorCommunity, 10);
+    const res = await getListChatRoomsCommunity(searchChatRoomCommunity?.search, listRoomsChatTemp?.cursorCommunity, 10);
     dispatch({
       type: actionTypes.UPDATE_LIST_ROOMS, payload: {
         ...listRoomsChatTemp,
@@ -348,8 +371,12 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     setStatusChatMenu(false);
   };
   const handleOpenMenuChat = (event: any) => {
-    setMenuChatAnchorEl(event.currentTarget);
-    setStatusChatMenu(true);
+    if (isMobile) {
+      router.push("/chat/personal")
+    } else {
+      setMenuChatAnchorEl(event.currentTarget);
+      setStatusChatMenu(true);
+    }
     dispatch({ type: actionTypes.REMOVE_UNREAD_LISTROOMS_COUNT });
   };
   const handleChangeTabMessage = (event, newValue) => {
@@ -398,6 +425,20 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
       }
     })
   };
+  const handleReadNotification = async (idNoti: string, index: number) => {
+    await readNotification(idNoti);
+    let tempArray = notifications?.items;
+    tempArray[index] = {
+      ...tempArray[index],
+      is_read: true
+    }
+    dispatch({
+      type: actionTypes.UPDATE_NOTIFICATIONS, payload: {
+        ...notifications,
+        items: tempArray
+      }
+    })
+  }
   const handleRedirectNotification = (typeOfMessage: string, dataOfMessage: DataRedirectNotification) => {
     switch (typeOfMessage) {
       case "new_matching_request":
@@ -425,20 +466,32 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
   //end block function Notifications
 
 
-  // notification system
-  useEffect(() => {
-    function notify(title: string, body: any, image: any) {
-      new Notification(title, {
-        body,
-        icon: image
-      });
+  // notification browser
+  function notify(title: string, body: any, image: any) {
+    new Notification(title, {
+      body,
+      icon: image
+    });
+  }
+  const customizeContentNotificationBrowser = (typeOfNotification: string, userName: string, postName: string, label1: string, label2: string) => {
+    // add labels or other arguments for this function if have more than 2 labels to create string content
+    // add other cases to modify notifications's content
+    switch (typeOfNotification) {
+      case TYPE_OF_NOTIFICATIONS[4]:
+        return userName + label1 + postName + label2;
+      default:
+        return label1;
     }
+  }
+  useEffect(() => {
     const wsHandler = (message: any) => {
+      console.log(message);
+
       if (!message?.metadata) {
         updateLastMessageOfListRooms(message)
         if (!isMobile) {
           if (Notification.permission === "granted") {
-            notify(`${message?.user?.username}`, `${message.content}`, `${message?.user?.profile_image}`);
+            notify(`${message?.user?.username}`, message?.content_type === "text" ? `${message.content}` : "添付ファイル", `${message?.user?.profile_image}`);
           }
         }
       }
@@ -452,13 +505,25 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
         })
         if (!isMobile) {
           if (Notification.permission === "granted") {
-            notify(`${message?.metadata?.user?.username}`, CONTENT_OF_NOTIFICATIONS[message?.notification_type]?.label, `${message?.metadata?.user?.profile_image || message?.metadata?.community?.profile_image}`);
+            notify(
+              `${message?.metadata?.user?.username || message?.metadata?.community?.name}`,
+              customizeContentNotificationBrowser(
+                message?.notification_type,
+                message?.metadata?.user?.username || message?.metadata?.community?.name,
+                message?.metadata?.post_id,
+                CONTENT_OF_NOTIFICATIONS[message?.notification_type]?.label,
+                CONTENT_OF_NOTIFICATIONS[message?.notification_type]?.label2
+              ),
+              `${message?.metadata?.user?.profile_image || message?.metadata?.community?.profile_image}`
+            );
           }
         }
       }
     };
     websocket.on(`get.chatRoom.message`, wsHandler);
-    websocket.on("get.community.chatRoom.message", wsHandler);
+    websocket.on(`get.chatRoom.new_unread`, wsHandler);
+    websocket.on(`get.user.chat_room_with_unread_messages`, wsHandler);
+    websocket.on(`get.community.chatRoom.message`, wsHandler);
     // eslint-disable-next-line array-callback-return
     TYPE_OF_NOTIFICATIONS.map((notificationType) => {
       websocket.on(`get.notification.${notificationType}`, wsHandler);
@@ -475,6 +540,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     }
     return () => {
       websocket.off("get.chatRoom.message", wsHandler);
+      websocket.off(`get.chatRoom.new_unread`, wsHandler);
+      websocket.off(`get.user.chat_room_with_unread_messages`, wsHandler);
       websocket.off("get.community.chatRoom.message", wsHandler);
       // eslint-disable-next-line array-callback-return
       TYPE_OF_NOTIFICATIONS.map((notificationType) => {
@@ -660,7 +727,6 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     </Menu>
   );
   const notifyMenuId = "primary-search-account-menu-notification";
-  console.log(notifications?.items)
   const renderNotificationMenu = (
     <Box>
       {statusNotify && (
@@ -700,12 +766,12 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
             <Box sx={{ paddingTop: "50px" }}>
               {
                 notifications?.items?.length ?
-                  notifications?.items?.map((dataMap: any) => (
+                  notifications?.items?.map((dataMap: any, index: number) => (
                     <MenuItem
                       key={dataMap.id}
                       className={styles.notificationMenuItem}
                       onClick={async () => {
-                        await readNotification(dataMap?.id)
+                        handleReadNotification(dataMap?.id, index)
                         handleRedirectNotification(dataMap?.notification_type, dataMap?.metadata)
                       }}
                     >
@@ -742,7 +808,12 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                             CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
                           }</div>
                         )}
-                        <div className={styles.createdTime}>{dayjs(dataMap?.created_at).format("H:m")}</div>
+                        <div className={styles.createdTime}>{
+                          (new Date(dataMap?.created_at)).getDate() === (new Date()).getDate() ?
+                            dayjs(dataMap?.created_at).format("HH:mm") :
+                            dayjs(dataMap?.created_at).format("YYYY/MM/DD")
+
+                        }</div>
                       </div>
                     </MenuItem>
                   ))
@@ -817,13 +888,13 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                   <Paper className={styles.inputSearch} sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}>
                     <img alt="search" src="/assets/images/svg/ic_search.svg" />
                     <InputCustom
-                      //inputRef={inputSearchRef}
+                      inputRef={inputSearchMenuChatPersonal}
                       sx={{ ml: 1, flex: 1 }}
                       // placeholder={t("chat:box-left-input-search-placeholder")}
                       // inputProps={{ "aria-label": t("chat:box-left-input-search-placeholder") }}
                       placeholder={"アカウントを検索"}
                       inputProps={{ "aria-label": "アカウントを検索" }}
-                    // onKeyUp={handleOnKeyUpInputSearchRef}
+                      onKeyUp={() => handleTypingForInputSearch(inputSearchMenuChatPersonal.current.value, MODE_ROOM_CHAT.personal)}
                     />
                   </Paper>
                 </Box>
@@ -833,7 +904,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                       dataLength={listRoomsChatTemp?.itemsPersonal?.length || 0}
                       next={loadMoreMessagePersonal}
                       hasMore={listRoomsChatTemp?.hasMorePersonal}
-                      height={650}
+                      height={495}
                       loader={
                         <Box sx={{ display: "flex", py: "15px", justifyContent: "center" }}>
                           <CircularProgress sx={{ color: theme.blue }} size={30} />
@@ -867,11 +938,14 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                                   </div>
                                   <div className="thread-content">
                                     <Typography className="name">{thread?.user?.username}</Typography>
-                                    {thread?.last_message_content_type === "text" ? (
-                                      <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
-                                    ) : (
-                                      <Typography className="message-hide">添付ファイル</Typography>
-                                    )}
+                                    <Typography className="message-hide"
+                                      sx={{
+                                        color: (thread?.unread_message_count > 0) ? "black" : "#989ea8",
+                                        fontWeight: (thread?.unread_message_count > 0) ? "700" : "400",
+                                      }}
+                                    >
+                                      {thread?.last_message_content_type === "text" ? thread?.last_chat_message_received : "添付ファイル"}
+                                    </Typography>
                                   </div>
                                   <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
                                   {/* {!isMobile && (
@@ -949,11 +1023,11 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                   <Paper className={styles.inputSearch} sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}>
                     <img alt="search" src="/assets/images/svg/ic_search.svg" />
                     <InputCustom
-                      //inputRef={inputSearchRef}
+                      inputRef={inputSearchMenuChatCommunity}
                       sx={{ ml: 1, flex: 1 }}
                       placeholder={"アカウントを検索"}
                       inputProps={{ "aria-label": "アカウントを検索" }}
-                    // onKeyUp={handleOnKeyUpInputSearchRef}
+                      onKeyUp={() => handleTypingForInputSearch(inputSearchMenuChatCommunity.current.value, MODE_ROOM_CHAT.community)}
                     />
                   </Paper>
                 </Box>
@@ -963,7 +1037,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                       dataLength={listRoomsChatTemp?.itemsCommunity?.length || 0}
                       next={loadMoreMessageCommunity}
                       hasMore={listRoomsChatTemp?.hasMoreCommunity}
-                      height={650}
+                      height={495}
                       loader={
                         <Box sx={{ display: "flex", py: "15px", justifyContent: "center" }}>
                           <CircularProgress sx={{ color: theme.blue }} size={30} />
@@ -1167,7 +1241,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                 onClick={handleOpenMenuChat}
               >
                 <Badge badgeContent={listRoomsChatTemp?.unread_count} color="error">
-                  <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
+                  <img style={{ width: "24px", height: "20px" }} src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
                 </Badge>
               </IconButton>
               <IconButton
@@ -1178,7 +1252,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                 onClick={handleNotifyOpenMenu}
               >
                 <Badge badgeContent={notifications?.unread_count} color="error">
-                  <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
+                  <img style={{ width: "24px", height: "24px" }} src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
                 </Badge>
               </IconButton>
               <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -1213,7 +1287,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                 onClick={handleOpenMenuChat}
               >
                 <Badge badgeContent={listRoomsChatTemp?.unread_count} color="error">
-                  <img src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
+                  <img style={{ width: "24px", height: "20px" }} src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
                 </Badge>
               </IconButton>
               <IconButton
@@ -1223,7 +1297,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                 onClick={handleNotifyOpenMenu}
               >
                 <Badge badgeContent={notifications?.unread_count} color="error">
-                  <img src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
+                  <img style={{ width: "24px", height: "24px" }} src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
                 </Badge>
               </IconButton>
               <IconButton

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as React from "react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { parseCookies } from "nookies";
@@ -13,18 +14,18 @@ const sampleUserId = "624cf8551b8a720009e2e1db";
 const Profile = ({ url, userId, profileSkill, communities, allReviews, recommended }) => (
   <React.Fragment>
     <Head>
-      <meta property="og:type" content="website" key="og-type" />
-      <meta property="og:title" content={`GOODHUB USER: ${profileSkill.username}`} key="og-title" />
+      <meta property="og:type" content="article" key="og-type" />
+      <meta property="og:title" content={`goodhub user: ${profileSkill.username}`} key="og-title" />
       <meta property="og:description" content={profileSkill.self_description} key="og-description" />
       <meta property="og:url" content={url} key="og-url" />
       <meta property="og:image" content={profileSkill.ogp_image} key="og-img" />
-      <meta property="og:site_name" content="GOODHUB" key="og-type" />
+      <meta property="og:site_name" content="goodhub" key="og-type" />
       <meta property="og:image:width" content="600" />
       <meta property="og:image:height" content="315" />
       <meta name="twitter:card" content="summary_large_image" key="twitter-card" />
       <meta name="twitter:url" content={url} key="twitter-url" />
       <meta name="twitter:image" content={profileSkill.ogp_image} key="twitter-image" />
-      <meta name="twitter:title" content={`GOODHUB USER: ${profileSkill.username}`} key="twitter-title" />
+      <meta name="twitter:title" content={`goodhub user: ${profileSkill.username}`} key="twitter-title" />
       <meta name="twitter:description" content={profileSkill.self_description} key="twitter-description" />
       {/* Inject MUI styles first to match with the prepend: true configuration. */}
     </Head>
@@ -58,6 +59,7 @@ export const getServerSideProps = async (ctx) => {
     getUserReviews(userId),
     ...(isAuth ? [getUserRecommended(20)] : [Promise.resolve(undefined)]),
   ]);
+  React.useState
   // if (!cookies[USER_TOKEN]) {
   //   return {
   //     redirect: {

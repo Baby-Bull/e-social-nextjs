@@ -116,7 +116,7 @@ const MyApp = (props: MyAppProps) => {
   return (
     <React.Fragment>
       <Head>
-        <title>GOODHUB</title>
+        <title>goodhub</title>
         <meta property="og:type" content="website" key="og-type" />
         <meta property="og:title" content='ITエンジニアのための溜まり場 - "goodhub"' key="og-title" />
         <meta
@@ -131,7 +131,7 @@ const MyApp = (props: MyAppProps) => {
           content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/ogp_home.png`}
           key="og-img"
         />
-        <meta property="og:site_name" content="GOODHUB" key="og-type" />
+        <meta property="og:site_name" content="goodhub" key="og-type" />
         <meta property="og:image:width" content="600" />
         <meta property="og:image:height" content="315" />
         <meta name="twitter:card" content="summary_large_image" key="twitter-card" />

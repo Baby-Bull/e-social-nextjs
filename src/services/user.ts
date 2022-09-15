@@ -129,6 +129,8 @@ export const userSettingEmail = async (body: any) => {
     const res = await api.patch("/user/email", body);
     if (!res.data) {
       toast.error(SERVER_ERROR);
+    } else if (res?.data?.error_code === "422") {
+      toast.error(EMAIL_EXISTS);
     } else {
       toast.success(SETTING_EMAIL);
     }
@@ -248,9 +250,9 @@ export const getOrtherUserProfile = async (userId: string | string[]) => {
   }
 };
 
-export const getUserCommunites = async (userId: string | string[]) => {
+export const getUserCommunites = async (userId: string | string[], limit: number | null = null, cursor: string = null) => {
   try {
-    const res = await api.get(`/user/${userId}/communities?limit=40`);
+    const res = await api.get(`/user/${userId}/communities?limit=${limit}&cursor=${cursor}`);
     return res?.data;
   } catch (error) {
     return error;

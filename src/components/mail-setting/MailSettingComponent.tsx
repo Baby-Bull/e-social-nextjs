@@ -136,8 +136,8 @@ const MailSettingComponent = () => {
   const [newRecommended, setNewRecommended] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const [settingNotificationRequest, setSettingNotificationRequest] = useState({
-    new_message_email_notify: newMessage,
-    new_recommended_user_email_notify: newRecommended,
+    new_message_email_notify: auth?.setting?.new_message_email_notify,
+    new_recommended_user_email_notify: auth?.setting?.new_recommended_user_email_notify,
   });
 
   useEffect(() => {
@@ -192,9 +192,9 @@ const MailSettingComponent = () => {
   const handleSaveSettingNotification = async () => {
     const res = await userSettingNotification(settingNotificationRequest);
     if (res) {
+      setValueOnchange(false);
       auth.setting = settingNotificationRequest;
       dispatch({ type: actionTypes.UPDATE_PROFILE, payload: auth });
-      return res.data;
     }
   };
 
@@ -226,12 +226,11 @@ const MailSettingComponent = () => {
   // submit setting mail
   const submitSettingMailRequest = async () => {
     if (handleValidateForm()) {
-      setMailOnChange(false);
       const res = await userSettingEmail(settingMailRequest);
-      if (res) {
+      if (res === true) {
+        setMailOnChange(false);
         auth.email = settingMailRequest.email;
         dispatch({ type: actionTypes.UPDATE_PROFILE, payload: auth });
-        return res.data;
       }
     }
   };

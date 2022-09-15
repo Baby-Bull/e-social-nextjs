@@ -54,7 +54,8 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
   const [hint, setHint] = useState(false);
   const [hintMobile, setHintMobile] = useState(false);
   const [showPopupAnalysis, setShowPopupAnalysis] = useState(false);
-  const urlProfile = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${user?.id}`;
+  const ogpImageVersionQuery = user.ogp_image_version ? `?v=${user.ogp_image_version}` : "";
+  const urlProfile = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${user?.id}${ogpImageVersionQuery}`;
   // const urlProfile = `https://www.tiktok.com/discover/c%C3%A1c-c%E1%BA%ADu-idol`;
 
   useEffect(() => {
@@ -83,10 +84,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
   };
 
   const handleCopyUrl = () => {
-    const resUrl = window.location.href;
-    const myProfileUrl = window.location.href?.replace("my-profile", `profile/${user?.id}`);
-    if (myProfile) copy(myProfileUrl);
-    else copy(resUrl);
+    copy(urlProfile);
     toast.success(COPY_SUCCESSFUL);
   };
 

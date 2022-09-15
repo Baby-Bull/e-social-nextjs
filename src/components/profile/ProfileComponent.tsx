@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Backdrop, Box, CircularProgress } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
@@ -244,7 +245,7 @@ const ProfileHaveDataComponent: FC<Props> = ({
             fontWeight: 700,
           }}
         >
-          {t("profile:title-participating-community")} ({communities?.length ?? 0})
+          {/* {t("profile:title-participating-community")} ({communities?.length ?? 0})
           {communities?.length > 0 ? (
             <ParticipatingCommunityComponent
               communities={communities}
@@ -253,7 +254,7 @@ const ProfileHaveDataComponent: FC<Props> = ({
             />
           ) : (
             <BoxNoDataComponent content="まだ参加中のコミュニティがありません" />
-          )}
+          )} */}
         </Box>
         <Box
           sx={{

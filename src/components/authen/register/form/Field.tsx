@@ -505,7 +505,11 @@ export const Field: React.SFC<IFieldProps> = ({
                 display: "flex",
               }}
             >
-              <Link href="#" color="secondary">
+              <Link
+                href="https://ruddy-muenster-a17.notion.site/f7dee0adb1d54cf59f025cd8cbc73c89"
+                target="_blank"
+                color="secondary"
+              >
                 <Box color={theme.blue}>利用規約</Box>
               </Link>
               {label}

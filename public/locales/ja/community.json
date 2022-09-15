@@ -7,7 +7,7 @@
   "can-approve": "閲覧が可能になります。",
   "comment": "コメント",
   "write-comment": "コメントする",
-  "place-holder": "1000文字以内でコメントを入力",
+  "place-holder": "1000文字以内で記入してください",
   "url": "URL",
   "address": "場所",
   "banner": {
@@ -54,7 +54,7 @@
       "cancel-edit": "キャンセル"
     },
     "setting": {
-      "save": "保存する",
+      "save": "作成する",
       "upload": "画像をアップロード",
       "participation": {
         "approve": "承認する",

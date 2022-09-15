@@ -163,7 +163,7 @@ const DetailPostComponent = () => {
       if (comments.length < 2 + (page - 1) * 10 && page > 1) {
         handleCallBackPaginationIndex(page - 1, perPage);
       }
-      setComments(comments.filter((_, index) => index !== indexComment));
+      setComments(comments.filter((e) => comments.indexOf(e) !== indexComment));
       setTotalComment(totalComment - 1);
 
       if (comments.length <= 10 && comments.length < totalComment) {
@@ -204,6 +204,7 @@ const DetailPostComponent = () => {
     fetchCommunityPost();
     fetchMember();
   }, []);
+
   const defaultStyle = {
     control: {
       backgroundColor: "#fff",
@@ -216,6 +217,7 @@ const DetailPostComponent = () => {
         minHeight: 130,
       },
       highlighter: {
+        position: "",
         padding: 9.3,
         fontFamily: "Noto Sans JP,sans-serif !important",
         color: theme.blue,
@@ -335,8 +337,10 @@ const DetailPostComponent = () => {
                   {t("community:write-comment")}
                 </Typography>
                 <MentionsInput
-                  trigger="@"
                   value={content}
+                  className="mention-update"
+                  style={defaultStyle}
+                  placeholder={t("community:place-holder")}
                   onChange={(e) => onChangeCommunityPostRequest("content", e.target.value)}
                   onKeyPress={(e) => {
                     if (e.shiftKey && (e.keyCode || e.which) === 13) {
@@ -348,11 +352,13 @@ const DetailPostComponent = () => {
                       return true;
                     }
                   }}
-                  className="mention-create"
-                  style={defaultStyle}
-                  placeholder={t("community:place-holder")}
                 >
-                  <Mention markup="^__display__^" data={member} style={{ backgroundColor: "#fff" }} />
+                  <Mention
+                    trigger="@"
+                    markup="@{__id__|__display__}"
+                    data={member}
+                    style={{ backgroundColor: "#cee4e5" }}
+                  />
                 </MentionsInput>
                 {errorValidates?.content && <BoxTextValidate>{errorValidates?.content}</BoxTextValidate>}
                 <Box sx={{ textAlign: "right", cursor: "pointer" }}>
