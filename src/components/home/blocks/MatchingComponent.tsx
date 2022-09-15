@@ -90,25 +90,25 @@ const MatchingComponent = () => {
 
   const [dataMatching, setDataMatching] = useState<any>({
     request: {
-      label: t("home:matching.request"),
+      label: t("home:matching.request-m"),
       data: auth?.match_application_count ?? 0,
       unit: t("home:matching.request-unit"),
       link: "received",
     },
     application: {
-      label: t("home:matching.application"),
+      label: t("home:matching.application-m"),
       data: auth?.match_request_pending_count ?? 0,
       unit: t("home:matching.application-unit"),
       link: "sent",
     },
     people: {
-      label: t("home:matching.people"),
+      label: t("home:matching.people-m"),
       data: auth?.favorite_count ?? 0,
       unit: t("home:matching.people-unit"),
       link: "favorite",
     },
     community: {
-      label: t("home:matching.community"),
+      label: t("home:matching.community-m"),
       data: auth?.community_count ?? 0,
       unit: t("home:matching.community-unit"),
       link: "community",
@@ -117,31 +117,31 @@ const MatchingComponent = () => {
 
   const [dataMatchingMobile, setDataMatchingMobile] = useState<any>({
     request: {
-      label: t("home:matching.request"),
+      label: t("home:matching.request-m"),
       data: auth?.match_application_count ?? 0,
       icon: "/assets/images/home_page/ic_user.svg",
       link: "received",
     },
     application: {
-      label: t("home:matching.application"),
+      label: t("home:matching.application-m"),
       data: auth?.match_request_pending_count ?? 0,
       icon: "/assets/images/home_page/ic_hand.svg",
       link: "type=sent",
     },
     people: {
-      label: t("home:matching.people"),
+      label: t("home:matching.people-m"),
       data: auth?.favorite_count ?? 0,
       icon: "/assets/images/home_page/ic_heart_blue.svg",
       link: "favorite",
     },
     chat: {
-      label: t("home:matching.matched"),
+      label: t("home:matching.matched-m"),
       data: 1,
       icon: "/assets/images/svg/perm_contact_calendar.svg",
       link: "matched",
     },
     community: {
-      label: t("home:matching.community"),
+      label: t("home:matching.community-m"),
       data: auth?.community_count ?? 0,
       icon: "/assets/images/home_page/ic_star_circle.svg",
       link: "community",
@@ -151,25 +151,25 @@ const MatchingComponent = () => {
   useEffect(() => {
     setDataMatching({
       request: {
-        label: t("home:matching.request"),
+        label: t("home:matching.request-m"),
         data: auth?.match_application_pending_count ?? 0,
         unit: t("home:matching.request-unit"),
         link: "received",
       },
       application: {
-        label: t("home:matching.application"),
+        label: t("home:matching.application-m"),
         data: auth?.match_request_pending_count ?? 0,
         unit: t("home:matching.application-unit"),
         link: "sent",
       },
       people: {
-        label: t("home:matching.people"),
+        label: t("home:matching.people-m"),
         data: auth?.favorite_count ?? 0,
         unit: t("home:matching.people-unit"),
         link: "favorite",
       },
       community: {
-        label: t("home:matching.community"),
+        label: t("home:matching.community-m"),
         data: auth?.community_count ?? 0,
         unit: t("home:matching.community-unit"),
         link: "community",
@@ -178,31 +178,31 @@ const MatchingComponent = () => {
 
     setDataMatchingMobile({
       request: {
-        label: t("home:matching.request"),
+        label: t("home:matching.request-m"),
         data: auth?.match_application_count ?? 0,
         icon: "/assets/images/home_page/ic_user.svg",
         link: "received",
       },
       application: {
-        label: t("home:matching.application"),
+        label: t("home:matching.application-m"),
         data: auth?.match_request_pending_count ?? 0,
         icon: "/assets/images/home_page/ic_hand.svg",
         link: "sent",
       },
       people: {
-        label: t("home:matching.people"),
+        label: t("home:matching.people-m"),
         data: auth?.favorite_count ?? 0,
         icon: "/assets/images/home_page/ic_heart_blue.svg",
         link: "favorite",
       },
       chat: {
-        label: t("home:matching.matched"),
+        label: t("home:matching.matched-m"),
         data: 1,
         icon: "/assets/images/svg/perm_contact_calendar.svg",
         link: "matched",
       },
       community: {
-        label: t("home:matching.community"),
+        label: t("home:matching.community-m"),
         data: auth?.community_count ?? 0,
         icon: "/assets/images/home_page/ic_star_circle.svg",
         link: "community",

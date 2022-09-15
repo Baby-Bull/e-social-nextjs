@@ -232,7 +232,9 @@ const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
       <div className="div-title">
         <span className="title">{title}</span>
         <Link href="/search_user">
-          <a className="link-see-more content-pc">{t("home:see-more")}</a>
+          <a className="link-see-more content-pc">
+            {t("home:see-more")} <img src="/assets/images/icon/icon_seemore.png" alt="" />
+          </a>
         </Link>
       </div>
       <div className="content">
@@ -240,7 +242,9 @@ const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
       </div>
       <div style={{ textAlign: "center" }}>
         <Link href="/search_user">
-          <a className="link-see-more content-mobile">{t("home:see-more")}</a>
+          <a className="link-see-more content-mobile">
+            {t("home:see-more")} <img src="/assets/images/icon/icon_seemore.png" alt="" />
+          </a>
         </Link>
       </div>
     </Grid>

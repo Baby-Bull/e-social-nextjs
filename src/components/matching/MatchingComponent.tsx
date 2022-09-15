@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
+import { isMobile } from "react-device-detect";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import TabComponent from "src/components/matching/TabComponent";
@@ -18,7 +19,7 @@ const MatchingComponent = () => {
 
   const [tabs, setTabs] = useState([
     {
-      text: t("home:matching.request"),
+      text: isMobile ? t("home:matching.request-m") : t("home:matching.request"),
       icon: <img src="/assets/images/svg/person.svg" alt="person" />,
       type: TYPE.RECEIVED,
       tabValue: TAB_VALUE_BY_KEY.received,
@@ -39,7 +40,7 @@ const MatchingComponent = () => {
       ],
     },
     {
-      text: t("home:matching.application"),
+      text: isMobile ? t("home:matching.application-m") : t("home:matching.application"),
       icon: <img src="/assets/images/svg/pan_tool.svg" alt="pan_tool" />,
       type: TYPE.SENT,
       tabValue: TAB_VALUE_BY_KEY.sent,
@@ -60,7 +61,7 @@ const MatchingComponent = () => {
       ],
     },
     {
-      text: t("home:matching.people"),
+      text: isMobile ? t("home:matching.people-m") : t("home:matching.people"),
       icon: <img src="/assets/images/svg/favorite.svg" alt="favorite" />,
       data: [],
       type: TYPE.FAVORITE,
@@ -68,7 +69,7 @@ const MatchingComponent = () => {
       isFetched: false,
     },
     {
-      text: t("home:matching.matched"),
+      text: isMobile ? t("home:matching.matched-m") : t("home:matching.matched"),
       icon: <img src="/assets/images/svg/perm_contact_calendar.svg" alt="perm_contact_calendar" />,
       type: TYPE.MATCHED,
       tabValue: TAB_VALUE_BY_KEY.matched,
@@ -128,37 +129,11 @@ const MatchingComponent = () => {
       ],
     },
     {
-      text: t("home:matching.community"),
+      text: isMobile ? t("home:matching.community-m") : t("home:matching.community"),
       icon: <img src="/assets/images/svg/stars.svg" alt="stars" />,
       type: TYPE.COMMUNITY,
       tabValue: TAB_VALUE_BY_KEY.community,
-      data: [
-        // {
-        //   avatar: "/assets/images/svg/account.svg",
-        //   name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
-        //   count_member: 0,
-        // },
-        // {
-        //   avatar: "/assets/images/svg/account.svg",
-        //   name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
-        //   count_member: 0,
-        // },
-        // {
-        //   avatar: "/assets/images/svg/account.svg",
-        //   name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
-        //   count_member: 0,
-        // },
-        // {
-        //   avatar: "/assets/images/svg/account.svg",
-        //   name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
-        //   count_member: 0,
-        // },
-        // {
-        //   avatar: "/assets/images/svg/account.svg",
-        //   name: "コミュニティの名前がここに入ります。最大文字数40文字で...",
-        //   count_member: 0,
-        // }
-      ],
+      data: [],
     },
   ]);
   const [keyRefetchData, setKeyRefetchData] = useState(null);

@@ -1,5 +1,6 @@
 .sliderContainer {
   width: 100%;
+
   :global {
     @media screen and (max-width: 992px) {
       .slick-slider {
@@ -12,9 +13,11 @@
 .sliderItem {
   height: 100%;
   vertical-align: middle;
+
   :global {
     img {
       object-fit: cover;
+
       @media screen and (min-width: 993px) {
         width: 33.33vw;
         min-width: 680px;
@@ -22,6 +25,7 @@
         min-height: 320px;
         //height: 23vw;
       }
+
       @media screen and (max-width: 992px) {
         width: 95vw;
       }
@@ -41,9 +45,11 @@
   @media screen and (max-width: 992px) {
     padding-left: 27px;
   }
+
   .notificationSlick {
     height: initial;
     display: contents;
+
     @media screen and (max-width: 992px) {
       display: flex;
     }
@@ -111,13 +117,16 @@
     }
   }
 }
+
 .notificationMenu {
   margin-top: 46px;
   width: 360px;
   height: 704px;
+
   ul {
     padding: 0;
   }
+
   /* width */
   ::-webkit-scrollbar {
     width: 5px;
@@ -178,6 +187,7 @@
 
 .notificationImage {
   margin-right: 16px;
+
   img {
     width: 52px;
     height: 52px;
@@ -229,6 +239,7 @@
           font-weight: 700;
           color: #03bcdb;
         }
+
         .unit {
           font-size: 16px;
           color: #1a2944;
@@ -245,6 +256,7 @@
     width: 20%;
     text-align: center;
   }
+
   .boxMatchingMobile {
     height: 80px;
     border: 1px solid rgba(196, 196, 196, 0.4);
@@ -297,11 +309,13 @@
     .div-title {
       margin-bottom: 33px;
       margin-left: 0.7em;
+
       @media screen and (max-width: 992px) {
         width: 100%;
         text-align: center;
         margin-bottom: 19px;
       }
+
       .title {
         color: #1a2944;
         font-size: 24px;
@@ -313,11 +327,16 @@
         }
       }
     }
+
     .link-see-more {
       font-size: 20px;
       color: #03bcdb;
       margin-left: 10px;
       text-decoration: none;
+
+      img {
+        height: 14px;
+      }
 
       @media screen and (max-width: 992px) {
         font-size: 17px;
@@ -328,6 +347,7 @@
         margin-left: 0px;
       }
     }
+
     .content {
       margin-bottom: 20px;
       width: 100%;
@@ -350,11 +370,14 @@
     margin-right: 0;
   }
 }
+
 .button-action-community {
   padding: 20px;
 }
+
 .boxRecommendCommunity {
   cursor: pointer;
+
   :global {
     .label-number-of-register {
       font-size: 10px;
@@ -411,9 +434,11 @@
     .tags {
       height: 54px;
       margin: 0 20px;
+
       &::-webkit-scrollbar-thumb {
         background-color: #b3b3b3;
       }
+
       ::-webkit-scrollbar {
         width: 3px !important;
       }
@@ -427,12 +452,14 @@
       ::-webkit-scrollbar-thumb {
         background: #d7d7d7;
       }
+
       ul {
         display: flex;
         flex-wrap: wrap;
         padding: 0;
         overflow-y: auto;
         height: 53px;
+
         li {
           display: inline-block;
           white-space: nowrap;
@@ -484,8 +511,10 @@
         margin-top: 2px;
       }
     }
+
     .info-summary {
       display: flex;
+
       img {
         width: 56px;
         height: 56px;
@@ -515,6 +544,7 @@
           line-height: 18px;
           margin: 6px 0;
         }
+
         .review {
           font-size: 10px;
           font-weight: 400;
@@ -523,6 +553,7 @@
         }
       }
     }
+
     .introduce {
       margin-top: 11px;
       margin-bottom: 20px;
@@ -540,21 +571,26 @@
       padding: 9.5px 8px;
       height: 40px;
     }
+
     .tags {
       height: 4em;
       overflow-y: auto;
+
       &::-webkit-scrollbar {
         width: 4px;
         background-color: #d7d7d7;
       }
+
       &::-webkit-scrollbar-thumb {
         background-color: #b3b3b3;
       }
+
       ul {
         display: flex;
         flex-wrap: wrap;
         padding: 0;
         margin: 0;
+
         li {
           display: inline-block;
           white-space: nowrap;
@@ -579,6 +615,7 @@
       font-size: 14px;
       color: #262a30;
       line-height: 24px;
+
       img {
         width: 22px;
         margin-right: 7px;
@@ -640,17 +677,21 @@
       display: flex;
       align-items: center;
       padding: 0 80px;
+
       @media screen and (max-width: 992px) {
         padding: 0;
       }
+
       .name {
         font-size: 16px;
         font-weight: 700;
         margin-left: 10px;
       }
     }
+
     .form-content {
       padding: 0 80px;
+
       @media screen and (max-width: 992px) {
         padding: 0;
       }

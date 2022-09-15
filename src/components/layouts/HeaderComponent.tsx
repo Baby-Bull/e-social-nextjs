@@ -485,6 +485,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
   }
   useEffect(() => {
     const wsHandler = (message: any) => {
+      console.log(message);
+
       if (!message?.metadata) {
         updateLastMessageOfListRooms(message)
         if (!isMobile) {
@@ -519,6 +521,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
       }
     };
     websocket.on(`get.chatRoom.message`, wsHandler);
+    websocket.on(`get.chatRoom.new_unread`, wsHandler);
+    websocket.on(`get.user.chat_room_with_unread_messages`, wsHandler);
     websocket.on(`get.community.chatRoom.message`, wsHandler);
     // eslint-disable-next-line array-callback-return
     TYPE_OF_NOTIFICATIONS.map((notificationType) => {
@@ -536,6 +540,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     }
     return () => {
       websocket.off("get.chatRoom.message", wsHandler);
+      websocket.off(`get.chatRoom.new_unread`, wsHandler);
+      websocket.off(`get.user.chat_room_with_unread_messages`, wsHandler);
       websocket.off("get.community.chatRoom.message", wsHandler);
       // eslint-disable-next-line array-callback-return
       TYPE_OF_NOTIFICATIONS.map((notificationType) => {
@@ -898,7 +904,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                       dataLength={listRoomsChatTemp?.itemsPersonal?.length || 0}
                       next={loadMoreMessagePersonal}
                       hasMore={listRoomsChatTemp?.hasMorePersonal}
-                      height={650}
+                      height={495}
                       loader={
                         <Box sx={{ display: "flex", py: "15px", justifyContent: "center" }}>
                           <CircularProgress sx={{ color: theme.blue }} size={30} />
@@ -934,8 +940,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                                     <Typography className="name">{thread?.user?.username}</Typography>
                                     <Typography className="message-hide"
                                       sx={{
-                                        color: thread?.is_unread ? "black" : "#989ea8",
-                                        fontWeight: thread?.is_unread ? "700" : "400",
+                                        color: (thread?.unread_message_count > 0) ? "black" : "#989ea8",
+                                        fontWeight: (thread?.unread_message_count > 0) ? "700" : "400",
                                       }}
                                     >
                                       {thread?.last_message_content_type === "text" ? thread?.last_chat_message_received : "添付ファイル"}
@@ -1031,7 +1037,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                       dataLength={listRoomsChatTemp?.itemsCommunity?.length || 0}
                       next={loadMoreMessageCommunity}
                       hasMore={listRoomsChatTemp?.hasMoreCommunity}
-                      height={650}
+                      height={495}
                       loader={
                         <Box sx={{ display: "flex", py: "15px", justifyContent: "center" }}>
                           <CircularProgress sx={{ color: theme.blue }} size={30} />

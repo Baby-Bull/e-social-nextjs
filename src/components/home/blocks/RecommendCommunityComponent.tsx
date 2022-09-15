@@ -121,7 +121,7 @@ const RecommendCommunityComponent: React.SFC<IRecommendCommunityProps> = ({ reco
       <div className="div-title">
         <span className="title">{t("home:recommend-community")}</span>
         <Link className="link-see-more content-pc" href="/search_community" underline="none">
-          {t("home:see-more")}
+          {t("home:see-more")} <img src="/assets/images/icon/icon_seemore.png" alt="" />
         </Link>
       </div>
 
@@ -130,7 +130,7 @@ const RecommendCommunityComponent: React.SFC<IRecommendCommunityProps> = ({ reco
       </div>
       <div style={{ textAlign: "center", width: "100%" }}>
         <Link className="link-see-more content-mobile" href="/search_community" underline="none">
-          {t("home:see-more")}
+          {t("home:see-more")} <img src="/assets/images/icon/icon_seemore.png" alt="" />
         </Link>
       </div>
     </Grid>
