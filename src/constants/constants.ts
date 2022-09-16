@@ -160,7 +160,7 @@ export const USER_REPORT_OPTIONS = [
     value: "project-broker",
   },
   {
-    label: "他の",
+    label: "その他　",
     value: "other",
   },
 ];
