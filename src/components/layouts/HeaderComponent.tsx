@@ -33,7 +33,7 @@ import { formatChatDateRoom, sortListRoomChat } from "src/helpers/helper";
 import { CONTENT_OF_NOTIFICATIONS, MODE_ROOM_CHAT, REACT_QUERY_KEYS, TYPE_OF_NOTIFICATIONS } from "src/constants/constants";
 // eslint-disable-next-line import/order
 import dayjs from "dayjs";
-import { getListnotifications, readAllNotifications, readNotification } from "src/services/user";
+import { getListnotifications, readAllNotifications, readMessageCommunity, readMessagePersonal, readNotification } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
 import { logout } from "src/services/auth";
 import { useQuery } from "react-query";
@@ -916,7 +916,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                           listRoomsChatTemp?.itemsPersonal?.map((thread, index: number) => (
                             <React.Fragment key={index}>
                               <li
-                                onClick={() => {
+                                onClick={async () => {
+                                  await readMessagePersonal(thread?.user?.id);
                                   router.push(
                                     {
                                       pathname: "/chat/personal",
@@ -940,8 +941,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                                     <Typography className="name">{thread?.user?.username}</Typography>
                                     <Typography className="message-hide"
                                       sx={{
-                                        color: (thread?.unread_message_count > 0) ? "black" : "#989ea8",
-                                        fontWeight: (thread?.unread_message_count > 0) ? "700" : "400",
+                                        color: (thread?.unread_message_count > 0) ? "black!important" : "#989ea8",
+                                        fontWeight: (thread?.unread_message_count > 0) ? "700!important" : "400",
                                       }}
                                     >
                                       {thread?.last_message_content_type === "text" ? thread?.last_chat_message_received : "添付ファイル"}
@@ -1049,7 +1050,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                           listRoomsChatTemp?.itemsCommunity?.map((thread, index: number) => (
                             <React.Fragment key={index}>
                               <li
-                                onClick={() => {
+                                onClick={async () => {
+                                  await readMessageCommunity(thread?.community?.id);
                                   router.push(
                                     {
                                       pathname: "/chat/community",

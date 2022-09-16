@@ -333,3 +333,19 @@ export const readNotification = async (notificationId: string) => {
     return error;
   }
 };
+
+export const readMessagePersonal = async (userId: string) => {
+  try {
+    await api.post(`/user/${userId}/messages/read`);
+  } catch (error) {
+    return error;
+  }
+}
+
+export const readMessageCommunity = async (communityId: string) => {
+  try {
+    await api.post(`user/communities/chat-rooms/${communityId}/messages/read`);
+  } catch (error) {
+    return error;
+  }
+}
