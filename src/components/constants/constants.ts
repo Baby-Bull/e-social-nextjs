@@ -13,7 +13,7 @@ export const HOMEPAGE_RECOMMEND_COMMUNITY_STATUS = {
     mode: "orange",
   },
   4: {
-    label: "コミュニティに参加した",
+    label: "メッセージを開",
     mode: "info",
   },
 };

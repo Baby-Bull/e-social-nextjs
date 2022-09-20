@@ -158,7 +158,7 @@ const ChatBoxLeftComponent = ({
   return (
     <Grid item className={styles.chatBoxLeft}>
       <Box className="box-title">
-        <TabsCustom value={1} aria-label="chat-tab" variant="fullWidth">
+        <TabsCustom value={1} aria-label="chat-tab" variant="fullWidth" sx={{ border: "1px solid #e4e6eb" }}>
           <Tab label={t("chat:box-left-title")} value={1} />
           <Tab label={t("chat:community-box-left-title")} value={2} onClick={() => router.push("/chat/community")} />
         </TabsCustom>

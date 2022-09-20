@@ -205,7 +205,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     }
   };
   const onSelectRoom = async (index: number) => {
-    console.log(listRooms[index]);
     if (isMobile) setIsRenderRightSide(!isRenderRightSide);
     (listRooms[index]?.unread_message_count > 0) && await readMessageCommunity(listRooms[index]?.community?.id);
     if (listRooms[index]?.community?.id !== communityId) {

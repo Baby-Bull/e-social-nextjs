@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { useCallback, useRef } from "react";
-import { Box, Grid, Paper, Typography, IconButton, Tabs, Tab, MenuItem, Menu } from "@mui/material";
+import { Box, Grid, Paper, Typography, IconButton, Tabs, Tab, MenuItem, Menu, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import _ from "lodash";
 import InfiniteScroll from "react-infinite-scroller";
@@ -117,7 +117,7 @@ const ChatBoxLeftComponent = ({
   return (
     <Grid item className={styles.chatBoxLeft}>
       <Box className="box-title">
-        <TabsCustom value={2} aria-label="chat-tab" variant="fullWidth">
+        <TabsCustom value={2} aria-label="chat-tab" variant="fullWidth" sx={{ border: "1px solid #e4e6eb" }}>
           <Tab label={t("chat:box-left-title")} value={1} onClick={() => router.push("/chat/personal")} />
           <Tab label={t("chat:community-box-left-title")} value={2} />
         </TabsCustom>
@@ -153,16 +153,23 @@ const ChatBoxLeftComponent = ({
                   }}
                 >
                   <div className={`thread-item ${thread?.community?.id === communityId ? "active" : ""}`}>
-                    <div
+                    <Avatar
+                      onClick={() => router.push(`/community/${thread?.community?.id}`)}
+                      alt={thread?.community?.name}
                       className="avatar background"
-                      style={{
-                        backgroundImage: `url(${thread?.community?.profile_image})`,
+                      src={thread?.community?.profile_image}
+                      sx={{
+                        ".MuiAvatar-img": {
+                          objectFit:
+                            thread?.community?.profile_image === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                        },
                       }}
                     />
                     <div className="thread-content" style={{ maxWidth: "70%" }}>
-                      <Typography className="name">
-                        {thread?.community?.name}({thread?.community?.member_count})
-                      </Typography>
+                      <div className="title-content">
+                        <Typography className="name">{thread?.community?.name}</Typography>
+                        <Typography className="countMember">({thread?.community?.member_count})</Typography>
+                      </div>
                       <Typography
                         className="message-hide"
                         sx={{

@@ -275,14 +275,15 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
           </Box>
         </Box>
         {isUpdateComment ? (
-          <>
+          <Box>
             <MentionsInput
-              value={communityPostUpdateRequest?.content}
+              //value={communityPostUpdateRequest?.content}
+              value={content}
               className="mention-update"
               style={defaultStyle}
               placeholder={t("community:place-holder")}
-              onChange={(e) => onChangeCommunityPostRequest("content", e.target.value)}
-              onKeyPress={(e) => {
+              onChange={(e: any) => onChangeCommunityPostRequest("content", e.target.value)}
+              onKeyPress={(e: any) => {
                 if (e.shiftKey && (e.keyCode || e.which) === 13) {
                   return true;
                 }
@@ -337,7 +338,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
                 {t("community:button.detail.submit-post")}
               </ButtonComponent>
             </Box>
-          </>
+          </Box>
         ) : (
           <>
             <MentionsInput
