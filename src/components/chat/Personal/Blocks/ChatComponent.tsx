@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+/* eslint-disable */
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { Grid } from "@mui/material";
@@ -18,6 +19,7 @@ import actionTypes from "src/store/actionTypes";
 
 import ChatBoxRightComponent from "./ChatBoxRightComponent";
 import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
+import { readMessagePersonal } from "src/services/user";
 
 const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, setHasData }) => {
   const router = useRouter();
@@ -194,8 +196,9 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     }
   };
 
-  const onSelectRoom = (index: number) => {
+  const onSelectRoom = async (index: number) => {
     if (isMobile) setIsRenderRightSide(!isRenderRightSide);
+    (listRooms[index]?.unread_message_count > 0) && await readMessagePersonal(listRooms[index]?.user?.id);
     if (listRooms[index]?.user?.id !== userId) {
       setRoomSelect(listRooms[index]);
       setUserId(listRooms[index]?.user?.id);

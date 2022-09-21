@@ -33,7 +33,7 @@ import { formatChatDateRoom, sortListRoomChat } from "src/helpers/helper";
 import { CONTENT_OF_NOTIFICATIONS, MODE_ROOM_CHAT, REACT_QUERY_KEYS, TYPE_OF_NOTIFICATIONS } from "src/constants/constants";
 // eslint-disable-next-line import/order
 import dayjs from "dayjs";
-import { getListnotifications, readAllNotifications, readNotification } from "src/services/user";
+import { getListnotifications, readAllNotifications, readMessageCommunity, readMessagePersonal, readNotification } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
 import { logout } from "src/services/auth";
 import { useQuery } from "react-query";
@@ -189,7 +189,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
   const notifications = useSelector((state: IStoreState) => state.notifications);
   const listRoomsChatTemp = useSelector((state: IStoreState) => state.listrooms);
 
-  //block function Messages
+  //block function Messages ***********************************************************
   const listRoomsPersonalRef = useRef([]);
   const listRoomsCommunityRef = useRef([]);
   const [menuChatAnchorEl, setMenuChatAnchorEl] = React.useState(null);
@@ -382,10 +382,10 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
   const handleChangeTabMessage = (event, newValue) => {
     setValueTabChatMessage(newValue);
   };
-  //end block function Messages
+  //end block function Messages *************************************************
 
 
-  //block function Notifications
+  //block function Notifications ********************************************
   const [notifyAnchorEl, setNotifyAnchorEl] = React.useState(null);
   const [statusNotify, setStatusNotify] = useState(false);
   const isNotifyMenuOpen = Boolean(notifyAnchorEl);
@@ -459,14 +459,17 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
       case "new_recommend_user":
         router.push(`/profile/${dataOfMessage?.user?.id}`);
         break;
+      case "tagged_in_comment":
+        router.push(`/community/${dataOfMessage?.community_id}/post/detail/${dataOfMessage?.post_id}`);
+        break;
       default:
         break;
     }
   }
-  //end block function Notifications
+  //end block function Notifications ***************************************
 
 
-  // notification browser
+  // notification browser ******************************************
   function notify(title: string, body: any, image: any) {
     new Notification(title, {
       body,
@@ -518,7 +521,12 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
         }
       }
     };
+    const handleWSlog = (message: any) => {
+      console.log(message);
+    }
     websocket.on(`get.chatRoom.message`, wsHandler);
+    websocket.on(`get.chatRoom.new_unread`, handleWSlog);
+    websocket.on(`get.user.chat_room_with_unread_messages`, handleWSlog);
     websocket.on(`get.community.chatRoom.message`, wsHandler);
     // eslint-disable-next-line array-callback-return
     TYPE_OF_NOTIFICATIONS.map((notificationType) => {
@@ -536,6 +544,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     }
     return () => {
       websocket.off("get.chatRoom.message", wsHandler);
+      websocket.off(`get.chatRoom.new_unread`, handleWSlog);
+      websocket.off(`get.user.chat_room_with_unread_messages`, handleWSlog);
       websocket.off("get.community.chatRoom.message", wsHandler);
       // eslint-disable-next-line array-callback-return
       TYPE_OF_NOTIFICATIONS.map((notificationType) => {
@@ -544,7 +554,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     };
   }, []);
 
-  //block function Menu
+  //block function Menu ****************************************
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -562,9 +572,9 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
-  // end block function Menu
+  // end block function Menu ***********************************
 
-  // block search 
+  // block search **************************************************
   const [typeSearch, setTypeSearch] = React.useState(typeSearchs[0].label);
   const [valueSearch, setValueSearch] = useState(fullText);
   const handleChange = (event: any) => {
@@ -592,7 +602,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
         });
       }
     }
-  };
+  }; // end block search ***********************************
+
   const handleLogout = async () => {
     await logout();
     dispatch({ type: actionTypes.LOGOUT })
@@ -614,6 +625,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
         vertical: "top",
         horizontal: "right",
       }}
+      sx={{ zIndex: 10001, }}
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
@@ -630,6 +642,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
       sx={{
+        zIndex: 10001,
         top: "9px",
         "& .MuiMenu-paper": {
           width: "160px",
@@ -740,6 +753,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
             horizontal: "right",
           }}
           sx={{
+            zIndex: 10001,
             ".MuiPaper-root": {
               borderRadius: "12px !important",
             },
@@ -853,6 +867,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
           onClose={handleMenuChatClose}
           className={styles.menuChatDropDown}
           sx={{
+            zIndex: 10001,
             "& .MuiMenu-paper": {
               borderRadius: "12px",
               height: "40em",
@@ -898,7 +913,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                       dataLength={listRoomsChatTemp?.itemsPersonal?.length || 0}
                       next={loadMoreMessagePersonal}
                       hasMore={listRoomsChatTemp?.hasMorePersonal}
-                      height={650}
+                      height={495}
                       loader={
                         <Box sx={{ display: "flex", py: "15px", justifyContent: "center" }}>
                           <CircularProgress sx={{ color: theme.blue }} size={30} />
@@ -910,7 +925,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                           listRoomsChatTemp?.itemsPersonal?.map((thread, index: number) => (
                             <React.Fragment key={index}>
                               <li
-                                onClick={() => {
+                                onClick={async () => {
+                                  await readMessagePersonal(thread?.user?.id);
                                   router.push(
                                     {
                                       pathname: "/chat/personal",
@@ -934,8 +950,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                                     <Typography className="name">{thread?.user?.username}</Typography>
                                     <Typography className="message-hide"
                                       sx={{
-                                        color: thread?.is_unread ? "black" : "#989ea8",
-                                        fontWeight: thread?.is_unread ? "700" : "400",
+                                        color: (thread?.unread_message_count > 0) ? "black!important" : "#989ea8",
+                                        fontWeight: (thread?.unread_message_count > 0) ? "700!important" : "400",
                                       }}
                                     >
                                       {thread?.last_message_content_type === "text" ? thread?.last_chat_message_received : "添付ファイル"}
@@ -1031,7 +1047,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                       dataLength={listRoomsChatTemp?.itemsCommunity?.length || 0}
                       next={loadMoreMessageCommunity}
                       hasMore={listRoomsChatTemp?.hasMoreCommunity}
-                      height={650}
+                      height={495}
                       loader={
                         <Box sx={{ display: "flex", py: "15px", justifyContent: "center" }}>
                           <CircularProgress sx={{ color: theme.blue }} size={30} />
@@ -1043,7 +1059,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                           listRoomsChatTemp?.itemsCommunity?.map((thread, index: number) => (
                             <React.Fragment key={index}>
                               <li
-                                onClick={() => {
+                                onClick={async () => {
+                                  await readMessageCommunity(thread?.community?.id);
                                   router.push(
                                     {
                                       pathname: "/chat/community",
@@ -1052,7 +1069,6 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                                     undefined,
                                     { shallow: false },
                                   );
-                                  // onSelectRoom(index);
                                 }}
                               >
                                 <div className={`thread-item ${thread?.community?.id === "communityId" ? "active" : ""}`}>
@@ -1066,11 +1082,14 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                                     <Typography className="name">
                                       {thread?.community?.name}({thread?.community?.member_count})
                                     </Typography>
-                                    {thread?.last_message_content_type === "text" ? (
-                                      <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
-                                    ) : (
-                                      <Typography className="message-hide">添付ファイル</Typography>
-                                    )}
+                                    <Typography className="message-hide"
+                                      sx={{
+                                        color: (thread?.unread_message_count > 0) ? "black!important" : "#989ea8",
+                                        fontWeight: (thread?.unread_message_count > 0) ? "700!important" : "400",
+                                      }}
+                                    >
+                                      {thread?.last_message_content_type === "text" ? thread?.last_chat_message_received : "添付ファイル"}
+                                    </Typography>
                                   </div>
                                   <div className="thread-last-time">
                                     {thread?.last_chat_message_at ? formatChatDateRoom(thread?.last_chat_message_at) : ""}

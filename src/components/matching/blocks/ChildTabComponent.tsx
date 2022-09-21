@@ -29,7 +29,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
   maxWidth,
   setKeyRefetchData,
 }) => {
-  const LIMIT = 10;
+  const LIMIT = 2;
   const { t } = useTranslation();
   const [valueChildTab, setValueChildTab] = React.useState(0);
 

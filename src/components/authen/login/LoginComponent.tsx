@@ -12,6 +12,7 @@ import GridLeftComponent from "src/components/authen/register/GridLeftComponent"
 import SplashScreen from "src/components/common/SplashScreen";
 import { authWithProvider } from "src/services/auth";
 import { login } from "src/store/store";
+import actionTypes from "src/store/actionTypes";
 
 import { IResolveParams, LoginSocialGithub, LoginSocialTwitterV1 } from "../loginSocial";
 import LoginSocialGoogle from "../loginSocial/google/LoginSocialGoogle";
@@ -34,7 +35,13 @@ const LoginComponent = () => {
       setIsLoading(true);
       const resAuth = await authWithProvider(providerAuth, accessToken);
       if (resAuth?.data?.access_token) {
-        await dispatch(login(resAuth?.data?.user));
+        dispatch(login(resAuth?.data?.user));
+        dispatch({
+          type: actionTypes.UPDATE_LIST_ROOMS,
+          payload: {
+            unread_count: resAuth?.data?.user?.profile?.chat_room_with_unread_messages,
+          },
+        });
         if (resAuth?.data?.user?.is_profile_edited) {
           router.push(`/${router.query?.oldUrl || ""}`);
           // router.back();

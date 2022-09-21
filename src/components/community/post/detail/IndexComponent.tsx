@@ -341,8 +341,8 @@ const DetailPostComponent = () => {
                   className="mention-update"
                   style={defaultStyle}
                   placeholder={t("community:place-holder")}
-                  onChange={(e) => onChangeCommunityPostRequest("content", e.target.value)}
-                  onKeyPress={(e) => {
+                  onChange={(e: any) => onChangeCommunityPostRequest("content", e.target.value)}
+                  onKeyPress={(e: any) => {
                     if (e.shiftKey && (e.keyCode || e.which) === 13) {
                       return true;
                     }

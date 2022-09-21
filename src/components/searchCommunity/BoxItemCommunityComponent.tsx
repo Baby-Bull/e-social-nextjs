@@ -35,8 +35,10 @@ const BoxItemCommunityComponent: React.SFC<IBoxItemCommunityComponentProps> = ({
   );
   const IS_MEMBER = data?.join_status === "member";
   const joinCommunitySearch = async () => {
-    if (IS_MEMBER || statusJoin === 2) {
-      return false;
+    if (statusJoin === 2) return;
+    if (IS_MEMBER) {
+      router.push(`chat/community?room=${data?.id}`);
+      return;
     }
     const res = await joinCommunity(data?.id, data?.is_public);
     if (res) {
