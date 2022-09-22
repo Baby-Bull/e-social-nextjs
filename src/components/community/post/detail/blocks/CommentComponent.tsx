@@ -358,6 +358,21 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
                 )}
                 markup="@{__id__|__display__}"
                 style={{ backgroundColor: "#fff", cursor: "pointer !important" }} />
+              <Mention
+                displayTransform={(id: string, display: any) => {
+                  return (
+                  <a
+                    target="_blank"
+                    style={{ textDecoration: "none", color: "#03BCDB" }}
+                    href={id}
+                  >
+                    {id}
+                  </a>
+                )
+                }}
+                markup="__id__"
+                regex={/((?:http|https):\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*))/}
+                style={{ backgroundColor: "#fff", cursor: "pointer !important" }} />
             </MentionsInput>
           </>
         )}
