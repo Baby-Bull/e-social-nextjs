@@ -173,12 +173,13 @@ const ProfileHaveDataComponent = () => {
           }}
         >
           {t("profile:title-review")}（{countReviews}）
-          {(countReviews > NumberOfReviewsPerPage) && <PaginationCustomComponent
-            handleCallbackChangePagination={handleCallbackChangePagination}
-            page={page}
-            perPage={countCurrentPages}
-            totalPage={Math.ceil(countReviews / NumberOfReviewsPerPage)}
-          />}
+          {(countReviews > NumberOfReviewsPerPage) &&
+            <PaginationCustomComponent
+              handleCallbackChangePagination={handleCallbackChangePagination}
+              page={page}
+              perPage={countCurrentPages}
+              totalPage={Math.ceil(countReviews / NumberOfReviewsPerPage)}
+            />}
           {countReviews > 0 ? (
             allReviewsRef.slice((page - 1) * NumberOfReviewsPerPage, page * NumberOfReviewsPerPage)?.map((item, key) => (
               <ReviewComponent
