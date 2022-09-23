@@ -19,8 +19,14 @@ import theme from "src/theme";
 import { getListCommunityHome } from "src/services/community";
 
 import BannerComponent from "./blocks/BannerComponent";
-import ModalMatchingComponent from "./blocks/ModalMatchingComponent";
-import NotificationComponent from "./blocks/NotificationsComponent";
+
+const NotificationComponent = dynamic(() => import("./blocks/NotificationsComponent"), {
+  ssr: true,
+}) as any;
+
+const ModalMatchingComponent = dynamic(() => import("./blocks/ModalMatchingComponent"), {
+  ssr: true,
+}) as any;
 
 const MatchingComponent = dynamic(() => import("./blocks/MatchingComponent"), {
   ssr: true,
