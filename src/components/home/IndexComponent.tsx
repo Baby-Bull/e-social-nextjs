@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { Backdrop, Box, CircularProgress, Grid } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, Suspense } from "react";
 import { useQuery } from "react-query";
+import dynamic from "next/dynamic";
 
 import { REACT_QUERY_KEYS } from "src/constants/constants";
 import ContentComponent from "src/components/layouts/ContentComponent";
@@ -18,11 +19,20 @@ import theme from "src/theme";
 import { getListCommunityHome } from "src/services/community";
 
 import BannerComponent from "./blocks/BannerComponent";
-import MatchingComponent from "./blocks/MatchingComponent";
 import ModalMatchingComponent from "./blocks/ModalMatchingComponent";
 import NotificationComponent from "./blocks/NotificationsComponent";
-import RecommendCommunityComponent from "./blocks/RecommendCommunityComponent";
-import RecommendMembersComponent from "./blocks/RecommendMembersComponent";
+
+const MatchingComponent = dynamic(() => import("./blocks/MatchingComponent"), {
+  ssr: true,
+}) as any;
+
+const RecommendCommunityComponent = dynamic(() => import("./blocks/RecommendCommunityComponent"), {
+  ssr: true,
+}) as any;
+
+const RecommendMembersComponent = dynamic(() => import("./blocks/RecommendMembersComponent"), {
+  ssr: true,
+}) as any;
 
 const LIMIT = 20;
 

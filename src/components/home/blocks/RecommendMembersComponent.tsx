@@ -8,6 +8,7 @@ import "dayjs/locale/ja";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
+import Image from "next/image";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import {
@@ -145,14 +146,22 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
             </div>
 
             <div className="info-summary">
-              <Avatar
-                src={
-                  data?.profile_image ??
-                  "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
-                }
-                alt={data?.username}
-                sx={{ width: "56px", height: "56px", mr: "13px" }}
-              />
+              <Avatar sx={{ width: "56px", height: "56px", mr: "13px" }}>
+                <Image
+                  loader={() =>
+                    data?.profile_image ??
+                    "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
+                  }
+                  width={56}
+                  height={56}
+                  src={
+                    data?.profile_image ??
+                    "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
+                  }
+                  alt={data?.username}
+                  objectFit="contain"
+                />
+              </Avatar>
               <div className="member-info">
                 <div className="name">{data?.username}</div>
                 <div className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? "情報なし"}</div>
