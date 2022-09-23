@@ -2,7 +2,7 @@
 import React, { useCallback, useRef, useState } from "react";
 import { Box, Grid, Paper, Typography, IconButton, Menu, MenuItem, Tabs, Tab, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import _ from "lodash";
+import lodashDebounce from "lodash/debounce";
 import InfiniteScroll from "react-infinite-scroller";
 import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
@@ -125,7 +125,7 @@ const ChatBoxLeftComponent = ({
   const inputSearchRef = useRef(null);
 
   const debounce = useCallback(
-    _.debounce((_searchVal: string) => {
+    lodashDebounce((_searchVal: string) => {
       setSearchChatRoom({
         search: _searchVal,
         cursor: null,

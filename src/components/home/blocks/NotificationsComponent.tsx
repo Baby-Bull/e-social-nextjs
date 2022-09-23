@@ -1,5 +1,7 @@
 import classNames from "classnames";
 import React from "react";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 
 import styles from "src/components/home/home.module.scss";

@@ -14,7 +14,7 @@ import {
   Paper,
   Avatar,
 } from "@mui/material";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import AdapterDayjs from "@mui/lab/AdapterDayjs";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DesktopDatePicker from "@mui/lab/DatePicker";
 import { styled } from "@mui/material/styles";
@@ -551,7 +551,7 @@ export const Field: React.SFC<IFieldProps> = ({
                 />
               </Box>
             </InputLabel>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DesktopDatePicker
                 maxDate={new Date()}
                 value={date}

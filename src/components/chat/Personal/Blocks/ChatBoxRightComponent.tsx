@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import crypto from "crypto";
 
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
@@ -16,11 +15,11 @@ import {
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useQuery } from "react-query";
-// import InfiniteScroll from "react-infinite-scroll-component";
 import Linkify from "react-linkify";
 import InfiniteScroll from "react-infinite-scroller";
 import Lightbox from "react-image-lightbox";
 import { useRouter } from "next/router";
+import { v4 as uuidv4 } from "uuid";
 
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
@@ -416,7 +415,7 @@ const ChatBoxRightComponent = ({
       setListMessages([
         ...listMessages,
         {
-          id: crypto.randomBytes(16).toString("hex"),
+          id: uuidv4(),
           content: message,
           content_type: MESSAGE_CONTENT_TYPES.TEXT,
           created_at: new Date().toISOString(),
@@ -453,7 +452,7 @@ const ChatBoxRightComponent = ({
       setListMessages([
         ...listMessagesTmp,
         {
-          id: crypto.randomBytes(16).toString("hex"),
+          id: uuidv4(),
           content: message,
           content_type: MESSAGE_CONTENT_TYPES.TEXT,
           created_at: new Date().toISOString(),
@@ -509,7 +508,7 @@ const ChatBoxRightComponent = ({
             content: data?.url,
             content_type: MESSAGE_CONTENT_TYPES.IMAGE,
             created_at: new Date().toISOString(),
-            id: crypto.randomBytes(16).toString("hex"),
+            id: uuidv4(),
             sender_id: "123",
             isErrorMessage: !navigator.onLine,
           };
@@ -519,7 +518,7 @@ const ChatBoxRightComponent = ({
             content: data?.url,
             content_type: MESSAGE_CONTENT_TYPES.FILE,
             created_at: new Date().toISOString(),
-            id: crypto.randomBytes(16).toString("hex"),
+            id: uuidv4(),
             sender_id: "123",
             isErrorMessage: !navigator.onLine,
             meta: {
