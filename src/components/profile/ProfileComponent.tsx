@@ -2,8 +2,6 @@
 import { Backdrop, Box, CircularProgress } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
-import Pagination from "@mui/material/Pagination";
-import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
@@ -13,13 +11,7 @@ import ContentComponent from "src/components/layouts/ContentComponent";
 import ProfileSkillComponent from "src/components/profile/ProfileSkillComponent";
 import ReviewComponent from "src/components/profile/ReviewComponent";
 import ParticipatingCommunityComponent from "src/components/profile/ParticipatingCommunityComponent";
-import {
-  // getUserCommunites,
-  // getOrtherUserProfile,
-  // getUserReviews,
-  // getUserRecommended,
-  addUserFavorite,
-} from "src/services/user";
+import { addUserFavorite, getUserReviews } from "src/services/user";
 import BoxItemUserComponent from "src/components/profile/BoxItemUserComponent";
 import BoxNoDataComponent from "src/components/profile/BoxNoDataComponent";
 import TopProfileComponent from "src/components/profile/TopProfileComponent";
@@ -30,58 +22,18 @@ import SlickSliderRecommendComponent from "src/components/home/blocks/SlickSlide
 import theme from "../../theme";
 import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "../../services/matching";
-
-const PaginationCustom = styled(Pagination)({
-  "& .MuiPaginationItem-root": {
-    color: `${theme.blue}`,
-    fontFamily: "Noto Sans JP,sans-serif",
-    fontSize: "14px",
-    fontWeight: "700",
-  },
-  "& .MuiPagination-ul": {
-    width: "fit-content",
-    margin: "auto",
-    marginTop: "0.5em",
-    marginBottom: "0.5em",
-  },
-  "& .Mui-selected": {
-    color: "white",
-    backgroundColor: `${theme.blue}!important`,
-  },
-});
-
-function usePagination(data: any, itemsPerPage: any) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const maxPage = data && data?.length > 0 ? Math.ceil(data.length / itemsPerPage) : 0;
-
-  function currentData() {
-    const begin = (currentPage - 1) * itemsPerPage;
-    const end = begin + itemsPerPage;
-    return data?.slice(begin, end);
-  }
-
-  function next() {
-    setCurrentPage(() => Math.min(currentPage + 1, maxPage));
-  }
-
-  function prev() {
-    setCurrentPage(() => Math.max(currentPage - 1, 1));
-  }
-
-  function jump(page: number) {
-    const pageNumber = Math.max(1, page);
-    setCurrentPage(() => Math.min(pageNumber, maxPage));
-  }
-
-  return { next, prev, jump, currentData, currentPage, maxPage };
-}
-
+import PaginationCustomComponent from "../common/PaginationCustomComponent";
 interface Props {
   // isAuth: boolean;
   userId: string;
   profileSkill: any;
-  communities: any[];
-  allReviews: any[];
+
+  countAllCommunities: number;
+
+  initialReviews: any[];
+  initialCursorReview: string;
+  countAllReviews: number;
+
   recommended?: any[];
 }
 
@@ -89,8 +41,13 @@ const ProfileHaveDataComponent: FC<Props> = ({
   // isAuth,
   userId,
   profileSkill,
-  communities,
-  allReviews,
+
+  countAllCommunities,
+
+  initialReviews,
+  initialCursorReview,
+  countAllReviews,
+
   recommended,
 }) => {
   const { t } = useTranslation();
@@ -98,54 +55,13 @@ const ProfileHaveDataComponent: FC<Props> = ({
   const router = useRouter();
   const auth = useSelector((state: IStoreState) => state.user);
   const isMobile = viewPort.width <= 992;
-  // const LIMIT = 20;
   const NumberOfReviewsPerPage = isMobile ? 5 : 10;
   const NumberOfCommunitiesPerPage = isMobile ? 2 : 8;
 
-  const countReviews = allReviews.length;
-
-  // const [profileSkill, setProfileSkill] = useState<any>([]);
-  // const [communities, setCommunities] = useState([]);
-  // const [allReviews, setAllReviews] = useState([]);
-  // const [countReviews, setCountReviews] = useState(0);
-  // const [recommended, setRecommended] = useState([]);
   const [isDisableBtn, setIsDisableBtn] = useState(false);
   const [isRefresh, setIsRefresh] = useState(false);
   const [isLoading] = useState(false);
   const [showModalMatching, setModalMatching] = React.useState(false);
-  // const [userId, setUserId] = useState(null);
-
-  // const fetchProfileSkill = async (userIdFromUrl: string) => {
-  //   setIsLoading(true);
-  //   const data = await getOrtherUserProfile(userIdFromUrl);
-  //   setProfileSkill(data);
-  //   setIsLoading(false);
-  //   return data;
-  // };
-
-  // const fetchCommunities = async (userIdFromUrl: string) => {
-  //   setIsLoading(true);
-  //   const data = await getUserCommunites(userIdFromUrl);
-  //   setCommunities(data?.items);
-  //   setIsLoading(false);
-  //   return data;
-  // };
-
-  // const fetchUserReviews = async (userIdFromUrl: string) => {
-  //   setIsLoading(true);
-  //   const data = await getUserReviews(userIdFromUrl, 40, "");
-  //   setAllReviews(data?.items);
-  //   setCountReviews(data?.items_count ?? 0);
-  //   setIsLoading(false);
-  //   return data;
-  // };
-  // const fetchRecommended = async () => {
-  //   setIsLoading(true);
-  //   const data = await getUserRecommended(LIMIT);
-  //   setRecommended(data?.items?.filter((item: any) => item?.match_status !== "confirmed"));
-  //   setIsLoading(false);
-  //   return data;
-  // };
 
   const callbackHandleIsRefresh = (status: any) => {
     setIsRefresh(status);
@@ -182,28 +98,11 @@ const ProfileHaveDataComponent: FC<Props> = ({
     }
   };
 
-  const [page, setPage] = useState(1);
-  const reviews = usePagination(allReviews, NumberOfReviewsPerPage);
-  const handleChangePageReview = (e, p) => {
-    setPage(p);
-    reviews.jump(p);
-  };
-
   useEffect(() => {
     if (router.query?.userId === auth?.id) {
       router.push("/my-profile");
     }
   }, []);
-
-  useEffect(() => {
-    // const userIdFromUrl = window.location.pathname.split("/")[2];
-    // setUserId(userIdFromUrl);
-    // fetchProfileSkill(userIdFromUrl);
-    // fetchUserReviews(userIdFromUrl);
-    // fetchCommunities(userIdFromUrl);
-    // fetchRecommended();
-    // router.replace(router.asPath);
-  }, [isRefresh]);
 
   const [dataElements, setDataElements] = useState(
     recommended?.map((item, index) => <BoxItemUserComponent data={item} key={index} />),
@@ -220,6 +119,25 @@ const ProfileHaveDataComponent: FC<Props> = ({
       )),
     );
   }, [recommended]);
+
+  // Block render user-reviews ***** paginated
+  const [allReviewsRef, setAllReviewsRef] = useState(initialReviews);
+  const [cursorReviews, setCursorReviews] = useState(initialCursorReview);
+  const [page, setPage] = useState(1);
+  const [countCurrentPages, setCountCurrentPages] = useState(2);
+  const fetchUserReviews = async () => {
+    const data = await getUserReviews(userId, NumberOfReviewsPerPage, cursorReviews);
+    setCursorReviews(data?.cursor)
+    setAllReviewsRef([...allReviewsRef, ...data?.items])
+    return data;
+  };
+  const handleCallbackChangePaginationReviews = (event, value) => {
+    setPage(value);
+    if (countCurrentPages <= value && countAllReviews > allReviewsRef?.length) {
+      setCountCurrentPages(countCurrentPages + 1);
+      fetchUserReviews();
+    }
+  }; // end block paginate for user reviews
 
   return (
     <ContentComponent>
@@ -245,16 +163,16 @@ const ProfileHaveDataComponent: FC<Props> = ({
             fontWeight: 700,
           }}
         >
-          {/* {t("profile:title-participating-community")} ({communities?.length ?? 0})
-          {communities?.length > 0 ? (
+          {t("profile:title-participating-community")} ({countAllCommunities ?? 0})
+          {countAllCommunities > 0 ? (
             <ParticipatingCommunityComponent
-              communities={communities}
-              usePagination={usePagination}
+              userId={userId}
+              countAllCommunities={countAllCommunities}
               NumberOfCommunitiesPerPage={NumberOfCommunitiesPerPage}
             />
           ) : (
             <BoxNoDataComponent content="まだ参加中のコミュニティがありません" />
-          )} */}
+          )}
         </Box>
         <Box
           sx={{
@@ -265,28 +183,26 @@ const ProfileHaveDataComponent: FC<Props> = ({
             fontWeight: 700,
           }}
         >
-          {t("profile:title-review")}（{countReviews}）
-          <PaginationCustom
-            hideNextButton={
-              page === Math.ceil(countReviews / NumberOfReviewsPerPage) || countReviews < NumberOfReviewsPerPage
-            }
-            hidePrevButton={page === 1 || countReviews < NumberOfReviewsPerPage}
-            count={Math.ceil(countReviews / NumberOfReviewsPerPage)}
-            onChange={handleChangePageReview}
-          />
-          {reviews.currentData()?.length > 0 ? (
-            reviews
-              .currentData()
-              ?.map((item, key) => (
-                <ReviewComponent
-                  user={item?.user}
-                  hideReviewer={item?.hide_reviewer}
-                  rating={item?.rating}
-                  comment={item?.comment}
-                  createdAt={item?.created_at}
-                  key={key}
-                />
-              ))
+          {t("profile:title-review")}（{countAllReviews}）
+          {(countAllReviews > NumberOfReviewsPerPage) &&
+            <PaginationCustomComponent
+              handleCallbackChangePagination={handleCallbackChangePaginationReviews}
+              page={page}
+              perPage={countCurrentPages}
+              totalPage={Math.ceil(countAllReviews / NumberOfReviewsPerPage)}
+            />
+          }
+          {countAllReviews > 0 ? (
+            allReviewsRef.slice((page - 1) * NumberOfReviewsPerPage, page * NumberOfReviewsPerPage)?.map((item, key) => (
+              <ReviewComponent
+                user={item?.user}
+                hideReviewer={item?.hide_reviewer}
+                rating={item?.rating}
+                comment={item?.comment}
+                createdAt={item?.created_at}
+                key={key}
+              />
+            ))
           ) : (
             <BoxNoDataComponent content="まだレビューがありません" />
           )}

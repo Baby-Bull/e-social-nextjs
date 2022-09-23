@@ -6,12 +6,12 @@ import Head from "next/head";
 
 import { IS_PROFILE_EDITED, USER_TOKEN } from "src/helpers/storage";
 import { getOrtherUserProfile, getUserCommunites, getUserRecommended, getUserReviews } from "src/services/user";
-
+import { isMobile } from "react-device-detect";
 import ProfileComponent from "../../src/components/profile/ProfileComponent";
 
 const sampleUserId = "624cf8551b8a720009e2e1db";
 
-const Profile = ({ url, userId, profileSkill, communities, allReviews, recommended }) => (
+const Profile = ({ url, userId, profileSkill, countAllCommunities, initialReviews, initialCursorReview, countAllReviews, recommended }) => (
   <React.Fragment>
     <Head>
       <meta property="og:type" content="article" key="og-type" />
@@ -33,8 +33,13 @@ const Profile = ({ url, userId, profileSkill, communities, allReviews, recommend
       // isAuth={isAuth}
       userId={userId}
       profileSkill={profileSkill}
-      communities={communities}
-      allReviews={allReviews}
+
+      countAllCommunities={countAllCommunities}
+
+      initialReviews={initialReviews}
+      initialCursorReview={initialCursorReview}
+      countAllReviews={countAllReviews}
+
       recommended={recommended}
     />
   </React.Fragment>
@@ -55,19 +60,10 @@ export const getServerSideProps = async (ctx) => {
   }
   const [profileSkill, communities, allReviews, recommended] = await Promise.all([
     getOrtherUserProfile(userId),
-    getUserCommunites(userId),
-    getUserReviews(userId),
+    getUserCommunites(userId, isMobile ? 2 : 10, ""),
+    getUserReviews(userId, isMobile ? 5 : 10, ""),
     ...(isAuth ? [getUserRecommended(20)] : [Promise.resolve(undefined)]),
   ]);
-  React.useState
-  // if (!cookies[USER_TOKEN]) {
-  //   return {
-  //     redirect: {
-  //       destination: "/login",
-  //       permanent: false,
-  //     },
-  //   };
-  // }
 
   return {
     props: {
@@ -76,8 +72,13 @@ export const getServerSideProps = async (ctx) => {
       isAuth,
       userId,
       profileSkill,
-      communities: communities?.items || [],
-      allReviews: allReviews?.items || [],
+
+      countAllCommunities: communities?.items_count || 0,
+
+      initialReviews: allReviews?.items || [],
+      initialCursorReview: allReviews?.cursor || "",
+      countAllReviews: allReviews?.items_count || 0,
+
       recommended: recommended?.items || [],
       paths: [{ params: { userId: sampleUserId } }],
       fallback: true, // 上記以外のパスでアクセスした場合は 404 ページにしない
