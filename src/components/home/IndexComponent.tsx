@@ -17,8 +17,10 @@ import {
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
 import theme from "src/theme";
 import { getListCommunityHome } from "src/services/community";
+import useViewport from "src/helpers/useViewport";
 
 import BannerComponent from "./blocks/BannerComponent";
+import MainInfomationComponent from "./blocks/MainInfomationComponent";
 
 const NotificationComponent = dynamic(() => import("./blocks/NotificationsComponent"), {
   ssr: true,
@@ -44,6 +46,8 @@ const LIMIT = 20;
 
 const HomeIndexComponents = () => {
   const { t } = useTranslation();
+  const viewPort = useViewport();
+  const isMobile = viewPort.width <= 992;
   const [recommendCommunity, setRecommendCommunity] = useState([]);
   const [memberRecommends, setMemberRecommends] = useState([
     // Newest
@@ -236,8 +240,8 @@ const HomeIndexComponents = () => {
             maxWidth: "1440px",
           }}
         >
-          <NotificationComponent />
-          <MatchingComponent />
+          {isMobile && <NotificationComponent />}
+          {isMobile ? <MatchingComponent /> : <MainInfomationComponent />}
 
           <RecommendCommunityComponent recommendCommunity={recommendCommunity} />
           {memberRecommends?.map((item, index) => (

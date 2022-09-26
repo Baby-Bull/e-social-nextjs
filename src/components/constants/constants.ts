@@ -82,6 +82,7 @@ export const JOBS = {
   "support-engineer": { label: "サポートエンジニア" },
   "help-desk": { label: "ヘルプデスク" },
   "markup-engineer": { label: "マークアップエンジニア" },
+  "mobile-engineer": { label: "モバイルアプリエンジニア" },
 };
 
 export const EMPLOYEES = {
