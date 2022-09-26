@@ -2,7 +2,7 @@ import { Avatar, Box, Grid, Link } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import Image from "next/image";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
@@ -114,9 +114,8 @@ const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data 
   );
 };
 
-const RecommendCommunityComponent: React.SFC<IRecommendCommunityProps> = ({ recommendCommunity }) => {
+const RecommendCommunityComponent: React.SFC<IRecommendCommunityProps> = memo(({ recommendCommunity }) => {
   const { t } = useTranslation();
-
   const [recommendCommunityItems, setRecommendCommunityItems] = useState([]);
 
   useEffect(() => {
@@ -143,6 +142,6 @@ const RecommendCommunityComponent: React.SFC<IRecommendCommunityProps> = ({ reco
       </div>
     </Grid>
   );
-};
+});
 
 export default RecommendCommunityComponent;

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Backdrop, Box, CircularProgress, Grid } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import React, { useEffect, useRef, useState, Suspense } from "react";
+import React, { useEffect, useRef, useState, Suspense, useCallback } from "react";
 import { useQuery } from "react-query";
 import dynamic from "next/dynamic";
 
@@ -193,25 +193,34 @@ const HomeIndexComponents = () => {
     }
   };
 
-  const handleSendMatchingRequest = async (matchingRequest: any) => {
-    const res = await sendMatchingRequest(userRequestMatching?.id, matchingRequest);
-    await addUserFavorite(userRequestMatching?.id);
-    setOpenModal(false);
-    handleRefetchData();
-    return res;
-  };
+  const handleSendMatchingRequest = useCallback(
+    async (matchingRequest: any) => {
+      const res = await sendMatchingRequest(userRequestMatching?.id, matchingRequest);
+      await addUserFavorite(userRequestMatching?.id);
+      setOpenModal(false);
+      handleRefetchData();
+      return res;
+    },
+    [userRequestMatching?.id],
+  );
 
-  const handleOpenMatchingModal = (userMatching: any, index: number) => {
-    setOpenModal(true);
-    setUserRequestMatching(userMatching);
-    indexRefetch.current = index;
-  };
+  const handleOpenMatchingModal = useCallback(
+    (userMatching: any, index: number) => {
+      setOpenModal(true);
+      setUserRequestMatching(userMatching);
+      indexRefetch.current = index;
+    },
+    [indexRefetch],
+  );
 
-  const handleAcceptMatchingRequestReceived = async (userSendMatching: any, index: number) => {
-    await acceptMatchingRequestReceived(userSendMatching?.match_request?.id);
-    indexRefetch.current = index;
-    handleRefetchData();
-  };
+  const handleAcceptMatchingRequestReceived = useCallback(
+    async (userSendMatching: any, index: number) => {
+      await acceptMatchingRequestReceived(userSendMatching?.match_request?.id);
+      indexRefetch.current = index;
+      handleRefetchData();
+    },
+    [indexRefetch],
+  );
 
   return (
     <ContentComponent>

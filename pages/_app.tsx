@@ -162,17 +162,13 @@ const MyApp = (props: MyAppProps) => {
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
-      <QueryClientProvider client={queryClient}>
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script
-          id="google-analytics"
-          strategy="afterInteractive"
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{
-            __html: `
+      <Script src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`} strategy="afterInteractive" />
+      <Script
+        id="google-analytics"
+        strategy="afterInteractive"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
@@ -180,8 +176,9 @@ const MyApp = (props: MyAppProps) => {
               page_path: window.location.pathname,
             });
           `,
-          }}
-        />
+        }}
+      />
+      <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           {isServerRendering ? (
             <CacheProvider value={emotionCache}>

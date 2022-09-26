@@ -52,6 +52,7 @@
     "redux": "^4.2.0",
     "redux-persist": "^6.0.0",
     "sass": "^1.47.0",
+    "sharp": "^0.31.0",
     "slick-carousel": "^1.8.1",
     "typeface-roboto": "^1.1.13",
     "uuid": "^9.0.0"
