@@ -2,7 +2,7 @@ import { Avatar, Box, Grid } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/ja";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -213,51 +213,47 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
   );
 };
 
-const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
-  title,
-  dataRecommends,
-  indexFetch,
-  handleOpenMatchingModal,
-  handleAcceptMatchingRequestReceived,
-}) => {
-  const { t } = useTranslation();
-  const [dataElements, setDataElements] = useState([]);
+const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = memo(
+  ({ title, dataRecommends, indexFetch, handleOpenMatchingModal, handleAcceptMatchingRequestReceived }) => {
+    const { t } = useTranslation();
+    const [dataElements, setDataElements] = useState([]);
 
-  useEffect(() => {
-    setDataElements(
-      dataRecommends?.map((item, index) => (
-        <RecommendItem
-          data={item}
-          key={index}
-          handleOpenMatchingModal={handleOpenMatchingModal}
-          handleAcceptMatchingRequestReceived={handleAcceptMatchingRequestReceived}
-          indexKey={indexFetch}
-        />
-      )),
+    useEffect(() => {
+      setDataElements(
+        dataRecommends?.map((item, index) => (
+          <RecommendItem
+            data={item}
+            key={index}
+            handleOpenMatchingModal={handleOpenMatchingModal}
+            handleAcceptMatchingRequestReceived={handleAcceptMatchingRequestReceived}
+            indexKey={indexFetch}
+          />
+        )),
+      );
+    }, [dataRecommends]);
+    return (
+      <Grid container className={styles.recommendList} sx={{ display: dataRecommends.length > 0 ? "block" : "none" }}>
+        <div className="div-title">
+          <span className="title">{title}</span>
+          <Link href="/search_user">
+            <a className="link-see-more content-pc">
+              {t("home:see-more")} <img src="/assets/images/icon/icon_seemore.png" alt="" />
+            </a>
+          </Link>
+        </div>
+        <div className="content">
+          <SlickSliderRecommendComponent items={dataElements} />
+        </div>
+        <div style={{ textAlign: "center" }}>
+          <Link href="/search_user">
+            <a className="link-see-more content-mobile">
+              {t("home:see-more")} <img src="/assets/images/icon/icon_seemore.png" alt="" />
+            </a>
+          </Link>
+        </div>
+      </Grid>
     );
-  }, [dataRecommends]);
-  return (
-    <Grid container className={styles.recommendList} sx={{ display: dataRecommends.length > 0 ? "block" : "none" }}>
-      <div className="div-title">
-        <span className="title">{title}</span>
-        <Link href="/search_user">
-          <a className="link-see-more content-pc">
-            {t("home:see-more")} <img src="/assets/images/icon/icon_seemore.png" alt="" />
-          </a>
-        </Link>
-      </div>
-      <div className="content">
-        <SlickSliderRecommendComponent items={dataElements} />
-      </div>
-      <div style={{ textAlign: "center" }}>
-        <Link href="/search_user">
-          <a className="link-see-more content-mobile">
-            {t("home:see-more")} <img src="/assets/images/icon/icon_seemore.png" alt="" />
-          </a>
-        </Link>
-      </div>
-    </Grid>
-  );
-};
+  },
+);
 
 export default RecommendMembersComponent;

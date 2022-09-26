@@ -13,10 +13,15 @@ export default class MyDocument extends Document {
           {/* PWA primary color */}
           <meta name="theme-color" content={theme.palette.primary.main} />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
-          {/* <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" /> */}
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
           <link
+            as="style"
+            rel="preload"
             href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap"
+          />
+          <link
             rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400;500;700;900&display=swap"
           />
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
         </Head>
