@@ -160,7 +160,7 @@ export const USER_REPORT_OPTIONS = [
     value: "project-broker",
   },
   {
-    label: "他の",
+    label: "その他　",
     value: "other",
   },
 ];
@@ -287,6 +287,10 @@ export const JOBS = [
     label: "マークアップエンジニア",
     value: "markup-engineer",
   },
+  {
+    label: "モバイルアプリエンジニア ",
+    value: "mobile-engineer",
+  },
 ];
 
 export const EMPLOYEE_STATUS = [
@@ -393,6 +397,7 @@ export const TYPE_OF_NOTIFICATIONS = [
   "new_comment_in_post",
   "new_recommend_user",
   "community_join_request_rejected",
+  "tagged_in_comment"
 ];
 export const CONTENT_OF_NOTIFICATIONS = {
   new_matching_request: { label: "さんからマッチングリクエストが届きました。", label2: "" },
@@ -402,7 +407,13 @@ export const CONTENT_OF_NOTIFICATIONS = {
   new_comment_in_post: { label: " さんが", label2: "にコメントしました。" },
   new_recommend_user: { label: "さんがgoodhubに参加しました。コンタクトをとってみましょう！", label2: "" },
   community_join_request_rejected: { label: "コミュニティ加が承認されませんでした。", label2: "" },
+  tagged_in_comment: { label: "さんがコメントであなたをメンションしました。", label2: "" },
 };
 
 export const USER_ONLINE_STATUS = "online";
 export const USER_OFFLINE_STATUS = "offline";
+
+export const MODE_ROOM_CHAT = {
+  personal: "personal",
+  community: "community"
+}

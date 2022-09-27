@@ -1,5 +1,5 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Avatar, Box } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import dayjs from "dayjs";
 import "dayjs/locale/ja";
@@ -58,8 +58,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, hideReviewer, rating, c
                 color: "black",
               }}
             >
-              <Box
-                component="img"
+              <Avatar
                 sx={{
                   width: { xs: "32px", lg: "56px" },
                   height: { xs: "32px", lg: "56px" },

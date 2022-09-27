@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 import { Backdrop, Box, CircularProgress, Grid } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, Suspense, useCallback } from "react";
 import { useQuery } from "react-query";
+import dynamic from "next/dynamic";
 
 import { REACT_QUERY_KEYS } from "src/constants/constants";
 import ContentComponent from "src/components/layouts/ContentComponent";
@@ -18,11 +19,26 @@ import theme from "src/theme";
 import { getListCommunityHome } from "src/services/community";
 
 import BannerComponent from "./blocks/BannerComponent";
-import MatchingComponent from "./blocks/MatchingComponent";
-import ModalMatchingComponent from "./blocks/ModalMatchingComponent";
-import NotificationComponent from "./blocks/NotificationsComponent";
-import RecommendCommunityComponent from "./blocks/RecommendCommunityComponent";
-import RecommendMembersComponent from "./blocks/RecommendMembersComponent";
+
+const NotificationComponent = dynamic(() => import("./blocks/NotificationsComponent"), {
+  ssr: true,
+}) as any;
+
+const ModalMatchingComponent = dynamic(() => import("./blocks/ModalMatchingComponent"), {
+  ssr: true,
+}) as any;
+
+const MatchingComponent = dynamic(() => import("./blocks/MatchingComponent"), {
+  ssr: true,
+}) as any;
+
+const RecommendCommunityComponent = dynamic(() => import("./blocks/RecommendCommunityComponent"), {
+  ssr: true,
+}) as any;
+
+const RecommendMembersComponent = dynamic(() => import("./blocks/RecommendMembersComponent"), {
+  ssr: true,
+}) as any;
 
 const LIMIT = 20;
 
@@ -177,25 +193,34 @@ const HomeIndexComponents = () => {
     }
   };
 
-  const handleSendMatchingRequest = async (matchingRequest: any) => {
-    const res = await sendMatchingRequest(userRequestMatching?.id, matchingRequest);
-    await addUserFavorite(userRequestMatching?.id);
-    setOpenModal(false);
-    handleRefetchData();
-    return res;
-  };
+  const handleSendMatchingRequest = useCallback(
+    async (matchingRequest: any) => {
+      const res = await sendMatchingRequest(userRequestMatching?.id, matchingRequest);
+      await addUserFavorite(userRequestMatching?.id);
+      setOpenModal(false);
+      handleRefetchData();
+      return res;
+    },
+    [userRequestMatching?.id],
+  );
 
-  const handleOpenMatchingModal = (userMatching: any, index: number) => {
-    setOpenModal(true);
-    setUserRequestMatching(userMatching);
-    indexRefetch.current = index;
-  };
+  const handleOpenMatchingModal = useCallback(
+    (userMatching: any, index: number) => {
+      setOpenModal(true);
+      setUserRequestMatching(userMatching);
+      indexRefetch.current = index;
+    },
+    [indexRefetch],
+  );
 
-  const handleAcceptMatchingRequestReceived = async (userSendMatching: any, index: number) => {
-    await acceptMatchingRequestReceived(userSendMatching?.match_request?.id);
-    indexRefetch.current = index;
-    handleRefetchData();
-  };
+  const handleAcceptMatchingRequestReceived = useCallback(
+    async (userSendMatching: any, index: number) => {
+      await acceptMatchingRequestReceived(userSendMatching?.match_request?.id);
+      indexRefetch.current = index;
+      handleRefetchData();
+    },
+    [indexRefetch],
+  );
 
   return (
     <ContentComponent>

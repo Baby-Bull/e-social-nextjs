@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Box, Tabs, Typography, Avatar, Select, MenuItem, SelectChangeEvent, Grid } from "@mui/material";
@@ -14,6 +15,8 @@ import { getMatchedRequest } from "src/services/matching";
 import { TAB_VALUE_BY_KEY } from "src/constants/matching";
 
 import PaginationCustomComponent from "../common/PaginationCustomComponent";
+import { getUserFavorite } from "src/services/user";
+import { getListCommunities } from "src/services/community";
 
 // interface IData {
 //   avatar: string;
@@ -60,84 +63,106 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
   const router = useRouter();
   const viewPort = useViewport();
   const isMobile = viewPort.width <= 992;
-  const LIMITAPIMATCHED = 20;
   const LIMITCOUNTPERPAGE = 10;
   const LIMITCOUNTPAGECOMMUNITY = isMobile ? 4 : 8;
 
   const onChangeParentTab = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
-  const [checkLoadingMatched, setCheckLoadingMatched] = useState(false);
 
   const [optionSelected, setOption] = React.useState("newest");
   const handleChange = (event: SelectChangeEvent) => {
     setOption(event.target.value);
   };
 
-  const [matchedUsers, setMatchUsers] = useState([]);
-  useEffect(() => {
-    if (tabValue === TAB_VALUE_BY_KEY.matched) {
-      const fetchMatchedUsers = async () => {
-        const res = await getMatchedRequest(LIMITAPIMATCHED, "", optionSelected);
-        setMatchUsers(res?.items);
-        setCheckLoadingMatched(true);
-      };
-      fetchMatchedUsers();
-    }
-  }, [optionSelected, tabValue]);
-
   const handleRedirectCommunity = (idComm: string) => {
     router.push(`/community/${idComm}`);
   };
 
-  // const [keyForTabTitle, setKeyForTabTitle] = useState();
-  const [pagePagination, setPagePagination] = useState({
-    pageFavorite: 1,
-    perPageFavorite: 10000,
-    pageMatched: 1,
-    perPageMatched: 10000,
-    pageCommunity: 1,
-    perPageCommunity: 10000,
-  });
-
-  const handleCallbackChangePaginationFavorite = (event, value) => {
-    setPagePagination({
-      ...pagePagination,
-      pageFavorite: value,
-    });
-    if (pagePagination?.perPageFavorite <= value) {
-      setPagePagination({
-        ...pagePagination,
-        perPageFavorite: pagePagination.perPageFavorite + 1,
-      });
+  // Block render user-favorites ***** paginated
+  const [allFavoritesRef, setAllFavoritesRef] = useState(data[2]?.data);
+  const [cursorFavorite, setCursorFavorite] = useState(data[2]?.cursor);
+  const [hasMoreFavorite, setHasMoreFavorite] = useState(data[2]?.hasMore);
+  const [pageFavorite, setPageFavorite] = useState(1);
+  const [countCurrentPagesFavorite, setCountCurrentPagesFavorite] = useState(2);
+  const fetchUserFavorite = async () => {
+    const res1 = await getUserFavorite(LIMITCOUNTPERPAGE, cursorFavorite);
+    setCursorFavorite(res1?.cursor);
+    setHasMoreFavorite(res1?.hasMore);
+    setAllFavoritesRef([...allFavoritesRef, ...res1?.items]);
+    return res1;
+  };
+  const handleCallbackChangePaginationFavorites = (event, value) => {
+    setPageFavorite(value);
+    if (countCurrentPagesFavorite <= value && hasMoreFavorite) {
+      setCountCurrentPagesFavorite(countCurrentPagesFavorite + 1);
+      fetchUserFavorite();
     }
+  }; // end block paginate for user favorites
+
+  // Block render user-matched ***** paginated
+  const [allMatchedRef, setAllMatchedRef] = useState([]);
+  const [cursorMatched, setCursorMatched] = useState('');
+  const [hasMoreMatched, setHasMoreMatched] = useState(true);
+  const [pageMatched, setPageMatched] = useState(1);
+  const [countCurrentPagesMatched, setCountCurrentPagesMatched] = useState(2);
+  const fetchUserMatched = async () => {
+    const res2 = await getMatchedRequest(11, cursorMatched, optionSelected);
+    setCursorMatched(JSON.stringify(res2?.cursor) === "null" ? "" : res2?.cursor);
+    setHasMoreMatched(res2?.hasMore);
+    hasMoreMatched && setAllMatchedRef([...allMatchedRef, ...res2?.items]);
+    return res2;
   };
 
   const handleCallbackChangePaginationMatched = (event, value) => {
-    setPagePagination({
-      ...pagePagination,
-      pageMatched: value,
-    });
-    if (pagePagination?.perPageMatched <= value) {
-      setPagePagination({
-        ...pagePagination,
-        perPageMatched: pagePagination.perPageMatched + 1,
-      });
+    setPageMatched(value);
+    if (countCurrentPagesMatched <= value && hasMoreMatched) {
+      setCountCurrentPagesMatched(countCurrentPagesMatched + 1);
+      fetchUserMatched();
     }
-  };
+  }; // end block paginate for user Matched
 
-  const handleCallbackChangePaginationCommunity = (event, value) => {
-    setPagePagination({
-      ...pagePagination,
-      pageCommunity: value,
-    });
-    if (pagePagination?.perPageCommunity <= value) {
-      setPagePagination({
-        ...pagePagination,
-        perPageCommunity: pagePagination.perPageCommunity + 1,
-      });
-    }
+  // Block render user-Community ***** paginated
+  const [allCommunityRef, setAllCommunityRef] = useState(data[4]?.data);
+  const [cursorCommunity, setCursorCommunity] = useState(data[4]?.cursor);
+  const [hasMoreCommunity, setHasMoreCommunity] = useState(data[4]?.hasMore);
+  const [pageCommunity, setPageCommunity] = useState(1);
+  const [countCurrentPagesCommunity, setCountCurrentPagesCommunity] = useState(2);
+  const fetchUserCommunity = async () => {
+    const res3 = await getListCommunities(LIMITCOUNTPERPAGE, cursorCommunity);
+    setCursorCommunity(res3?.cursor);
+    setHasMoreCommunity(res3?.hasMore);
+    setAllCommunityRef([...allCommunityRef, ...res3?.items]);
+    return res3;
   };
+  const handleCallbackChangePaginationCommunity = (event, value) => {
+    setPageCommunity(value);
+    if (countCurrentPagesCommunity <= value && hasMoreCommunity) {
+      setCountCurrentPagesCommunity(countCurrentPagesCommunity + 1);
+      fetchUserCommunity();
+    }
+  }; // end block paginate for user community
+
+  useEffect(() => {
+    if (tabValue === TAB_VALUE_BY_KEY.matched) {
+      fetchUserMatched()
+    }
+  }, [optionSelected, tabValue]);
+
+  useEffect(() => {
+    setAllFavoritesRef(data[2]?.data);
+    setCursorFavorite(data[2]?.cursor);
+    setHasMoreFavorite(data[2]?.hasMore);
+    setPageFavorite(1);
+    setCountCurrentPagesFavorite(2);
+  }, [data[2]?.data, data[2]?.cursor, data[2]?.hasMore])
+  useEffect(() => {
+    setAllCommunityRef(data[4]?.data);
+    setCursorCommunity(data[4]?.cursor);
+    setHasMoreCommunity(data[4]?.hasMore);
+    setPageCommunity(1);
+    setCountCurrentPagesCommunity(2);
+  }, [data[4]?.data, data[4]?.cursor, data[4]?.hasMore])
 
   return (
     <React.Fragment>
@@ -207,10 +232,10 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
           >
             {data[2]?.data?.length ? (
               <React.Fragment>
-                {data[2]?.data
+                {allFavoritesRef
                   ?.slice(
-                    (pagePagination.pageFavorite - 1) * LIMITCOUNTPERPAGE,
-                    pagePagination.pageFavorite * LIMITCOUNTPERPAGE,
+                    (pageFavorite - 1) * LIMITCOUNTPERPAGE,
+                    pageFavorite * LIMITCOUNTPERPAGE,
                   )
                   .map((tab, tabIndex) => (
                     <React.Fragment key={tabIndex.toString()}>
@@ -234,14 +259,15 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
                     justifyContent: "center",
                   }}
                 >
-                  {data[2]?.data?.length > LIMITCOUNTPERPAGE && (
+                  {data[2]?.hasMore && (
                     <PaginationCustomComponent
-                      handleCallbackChangePagination={handleCallbackChangePaginationFavorite}
-                      page={pagePagination.pageFavorite}
-                      perPage={pagePagination.perPageFavorite}
-                      totalPage={Math.ceil(data[2]?.data?.length > 0 ? data[2].data.length / LIMITCOUNTPERPAGE : 1)}
+                      handleCallbackChangePagination={handleCallbackChangePaginationFavorites}
+                      page={pageFavorite}
+                      perPage={countCurrentPagesFavorite}
+                      totalPage={hasMoreFavorite ? countCurrentPagesFavorite : countCurrentPagesFavorite - 1}
                     />
                   )}
+                  {hasMoreFavorite}
                 </Box>
               </React.Fragment>
             ) : (
@@ -251,93 +277,90 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
         </TabPanel>
       )}
 
-      {checkLoadingMatched && (
-        <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.matched}>
-          <Box
-            sx={{
-              pb: ["120px", "98px"],
-              backgroundColor: theme.whiteBlue,
-            }}
-          >
-            {matchedUsers?.length ? (
-              <React.Fragment>
-                <Box
+      <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.matched}>
+        <Box
+          sx={{
+            pb: ["120px", "98px"],
+            backgroundColor: theme.whiteBlue,
+          }}
+        >
+          {allMatchedRef?.length ? (
+            <React.Fragment>
+              <Box
+                sx={{
+                  py: "20px",
+                  pl: { sm: "40px" },
+                  display: ["flex", "inherit"],
+                  justifyContent: "center",
+                  backgroundColor: { sm: "white" },
+                }}
+              >
+                <Select
+                  value={optionSelected}
+                  onChange={handleChange}
+                  inputProps={{ "aria-label": "Without label" }}
                   sx={{
-                    py: "20px",
-                    pl: { sm: "40px" },
-                    display: ["flex", "inherit"],
-                    justifyContent: "center",
-                    backgroundColor: { sm: "white" },
+                    fontSize: 14,
+                    fontWeight: 500,
+                    color: theme.navy,
+                    width: ["320px", "240px"],
+                    height: "40px",
+                    backgroundColor: "white",
+                    fieldset: {
+                      borderColor: [theme.lightGray, theme.gray],
+                    },
                   }}
                 >
-                  <Select
-                    value={optionSelected}
-                    onChange={handleChange}
-                    inputProps={{ "aria-label": "Without label" }}
-                    sx={{
-                      fontSize: 14,
-                      fontWeight: 500,
-                      color: theme.navy,
-                      width: ["320px", "240px"],
-                      height: "40px",
-                      backgroundColor: "white",
-                      fieldset: {
-                        borderColor: [theme.lightGray, theme.gray],
-                      },
-                    }}
-                  >
-                    {OPTIONS &&
-                      OPTIONS.map((option, index) => (
-                        <MenuItem key={index.toString()} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                  </Select>
-                </Box>
+                  {OPTIONS &&
+                    OPTIONS.map((option, index) => (
+                      <MenuItem key={index.toString()} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </Box>
 
-                {matchedUsers
-                  ?.slice(
-                    (pagePagination.pageMatched - 1) * LIMITCOUNTPERPAGE,
-                    pagePagination.pageMatched * LIMITCOUNTPERPAGE,
-                  )
-                  .map((tab, tabIndex) => (
-                    <React.Fragment key={tabIndex.toString()}>
-                      <Box
-                        sx={{
-                          px: [0, "40px"],
-                          backgroundColor: "white",
-                          "&:last-of-type": {
-                            borderBottom: { sm: `2px solid ${theme.lightGray}` },
-                          },
-                        }}
-                      >
-                        <ThreadComponent data={tab} type="matched" />
-                      </Box>
-                    </React.Fragment>
-                  ))}
-                <Box
-                  sx={{
-                    py: "40px",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  {matchedUsers?.length > LIMITCOUNTPERPAGE && (
-                    <PaginationCustomComponent
-                      handleCallbackChangePagination={handleCallbackChangePaginationMatched}
-                      page={pagePagination?.pageMatched}
-                      perPage={pagePagination?.perPageFavorite}
-                      totalPage={Math.ceil(matchedUsers?.length > 0 ? matchedUsers.length / LIMITCOUNTPERPAGE : 1)}
-                    />
-                  )}
-                </Box>
-              </React.Fragment>
-            ) : (
-              <EmptyMatchingComponent text={t("matching:text-empty.tab-4")} />
-            )}
-          </Box>
-        </TabPanel>
-      )}
+              {allMatchedRef
+                ?.slice(
+                  (pageMatched - 1) * LIMITCOUNTPERPAGE, pageMatched * LIMITCOUNTPERPAGE,
+                )
+                .map((tab, tabIndex) => (
+                  <React.Fragment key={tabIndex.toString()}>
+                    <Box
+                      sx={{
+                        px: [0, "40px"],
+                        backgroundColor: "white",
+                        "&:last-of-type": {
+                          borderBottom: { sm: `2px solid ${theme.lightGray}` },
+                        },
+                      }}
+                    >
+                      <ThreadComponent data={tab} type="matched" />
+                    </Box>
+                  </React.Fragment>
+                ))}
+              <Box
+                sx={{
+                  py: "40px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {(allMatchedRef?.length > LIMITCOUNTPERPAGE) && (
+                  <PaginationCustomComponent
+                    handleCallbackChangePagination={handleCallbackChangePaginationMatched}
+                    page={pageMatched}
+                    perPage={countCurrentPagesMatched}
+                    totalPage={hasMoreMatched ? countCurrentPagesMatched : countCurrentPagesMatched - 1}
+                  />
+                )}
+              </Box>
+            </React.Fragment>
+          ) : (
+            <EmptyMatchingComponent text={t("matching:text-empty.tab-4")} />
+          )}
+        </Box>
+      </TabPanel>
 
       {checkLoadingCommunity && (
         <TabPanel value={tabValue} index={TAB_VALUE_BY_KEY.community}>
@@ -359,10 +382,10 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
                     backgroundColor: "white",
                   }}
                 >
-                  {data[4]?.data
+                  {allCommunityRef
                     ?.slice(
-                      (pagePagination.pageCommunity - 1) * LIMITCOUNTPAGECOMMUNITY,
-                      pagePagination.pageCommunity * LIMITCOUNTPAGECOMMUNITY,
+                      (pageCommunity - 1) * LIMITCOUNTPAGECOMMUNITY,
+                      pageCommunity * LIMITCOUNTPAGECOMMUNITY,
                     )
                     .map((tab, tabIndex) => (
                       <React.Fragment key={tabIndex.toString()}>
@@ -433,14 +456,12 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
                     justifyContent: "center",
                   }}
                 >
-                  {data[4]?.data?.length > LIMITCOUNTPAGECOMMUNITY && (
+                  {data[4]?.hasMore && (
                     <PaginationCustomComponent
                       handleCallbackChangePagination={handleCallbackChangePaginationCommunity}
-                      page={pagePagination?.pageCommunity}
-                      perPage={pagePagination?.perPageCommunity}
-                      totalPage={Math.ceil(
-                        data[4]?.data?.length > 0 ? data[4].data.length / LIMITCOUNTPAGECOMMUNITY : 1,
-                      )}
+                      page={pageCommunity}
+                      perPage={countCurrentPagesCommunity}
+                      totalPage={hasMoreCommunity ? countCurrentPagesCommunity : countCurrentPagesCommunity - 1}
                     />
                   )}
                 </Box>

@@ -2,7 +2,8 @@ import { Avatar, Box, Grid, Link } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
+import Image from "next/image";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import { HOMEPAGE_RECOMMEND_COMMUNITY_STATUS } from "src/components/constants/constants";
@@ -70,15 +71,22 @@ const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data 
         </Grid>
         <div className="image-community">
           <Avatar
-            src={data?.profile_image}
-            alt={data?.name}
             sx={{
               width: "124px",
               height: "124px",
               border: "1px solid #eee",
-              ".MuiAvatar-img": { objectFit: "contain !important" },
+              backgroundColor: "#fff !important",
             }}
-          />
+          >
+            <Image
+              loader={() => data?.profile_image}
+              width={124}
+              height={124}
+              src={data?.profile_image}
+              alt={data?.name}
+              objectFit="contain"
+            />
+          </Avatar>
         </div>
         <div className="name">{data?.name}</div>
         <div className="label-number-of-members">
@@ -106,9 +114,8 @@ const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data 
   );
 };
 
-const RecommendCommunityComponent: React.SFC<IRecommendCommunityProps> = ({ recommendCommunity }) => {
+const RecommendCommunityComponent: React.SFC<IRecommendCommunityProps> = memo(({ recommendCommunity }) => {
   const { t } = useTranslation();
-
   const [recommendCommunityItems, setRecommendCommunityItems] = useState([]);
 
   useEffect(() => {
@@ -121,7 +128,7 @@ const RecommendCommunityComponent: React.SFC<IRecommendCommunityProps> = ({ reco
       <div className="div-title">
         <span className="title">{t("home:recommend-community")}</span>
         <Link className="link-see-more content-pc" href="/search_community" underline="none">
-          {t("home:see-more")}
+          {t("home:see-more")} <img src="/assets/images/icon/icon_seemore.png" alt="" />
         </Link>
       </div>
 
@@ -130,11 +137,11 @@ const RecommendCommunityComponent: React.SFC<IRecommendCommunityProps> = ({ reco
       </div>
       <div style={{ textAlign: "center", width: "100%" }}>
         <Link className="link-see-more content-mobile" href="/search_community" underline="none">
-          {t("home:see-more")}
+          {t("home:see-more")} <img src="/assets/images/icon/icon_seemore.png" alt="" />
         </Link>
       </div>
     </Grid>
   );
-};
+});
 
 export default RecommendCommunityComponent;

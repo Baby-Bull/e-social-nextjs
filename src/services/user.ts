@@ -250,9 +250,9 @@ export const getOrtherUserProfile = async (userId: string | string[]) => {
   }
 };
 
-export const getUserCommunites = async (userId: string | string[]) => {
+export const getUserCommunites = async (userId: string | string[], limit: number | null = null, cursor: string = null) => {
   try {
-    const res = await api.get(`/user/${userId}/communities?limit=40`);
+    const res = await api.get(`/user/${userId}/communities?limit=${limit}&cursor=${cursor}`);
     return res?.data;
   } catch (error) {
     return error;
@@ -333,3 +333,19 @@ export const readNotification = async (notificationId: string) => {
     return error;
   }
 };
+
+export const readMessagePersonal = async (userId: string) => {
+  try {
+    await api.post(`/user/${userId}/messages/read`);
+  } catch (error) {
+    return error;
+  }
+}
+
+export const readMessageCommunity = async (communityId: string) => {
+  try {
+    await api.post(`user/communities/chat-rooms/${communityId}/messages/read`);
+  } catch (error) {
+    return error;
+  }
+}

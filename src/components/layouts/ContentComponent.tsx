@@ -1,10 +1,17 @@
 import React from "react";
 import { Box } from "@mui/material";
 import Head from "next/head";
+import dynamic from "next/dynamic";
 
-import FooterComponent from "src/components/layouts/FooterComponent";
-import HeaderComponent from "src/components/layouts/HeaderComponent";
 import theme from "src/theme";
+
+const HeaderComponent = dynamic(() => import("src/components/layouts/HeaderComponent"), {
+  ssr: true,
+}) as any;
+
+const FooterComponent = dynamic(() => import("src/components/layouts/FooterComponent"), {
+  ssr: true,
+}) as any;
 
 interface IContentComponentProps {
   children: any;

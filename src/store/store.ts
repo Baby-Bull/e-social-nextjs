@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { applyMiddleware, createStore } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -35,7 +34,7 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, reducer);
 
 function makeStore(initialState = exampleInitialState) {
-  return createStore(persistedReducer, initialState, composeWithDevTools(applyMiddleware()));
+  return createStore(persistedReducer, initialState, applyMiddleware());
 }
 
 export const initializeStore = (preloadedState) => {

@@ -1,4 +1,5 @@
 import * as React from "react";
+import Script from "next/script";
 import Head from "next/head";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { AppProps } from "next/app";
@@ -19,8 +20,6 @@ import { refreshToken } from "src/services/auth";
 // eslint-disable-next-line import/order
 import theme from "src/theme";
 
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import "react-toastify/dist/ReactToastify.css";
 import "src/styles/index.scss";
 import * as gtag from "lib/gtag";
@@ -162,11 +161,14 @@ const MyApp = (props: MyAppProps) => {
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`} />
-        <script
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{
-            __html: `
+      </Head>
+      <Script src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`} strategy="afterInteractive" />
+      <Script
+        id="google-analytics"
+        strategy="afterInteractive"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
@@ -174,9 +176,8 @@ const MyApp = (props: MyAppProps) => {
               page_path: window.location.pathname,
             });
           `,
-          }}
-        />
-      </Head>
+        }}
+      />
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           {isServerRendering ? (
@@ -196,7 +197,6 @@ const MyApp = (props: MyAppProps) => {
                 <ThemeProvider theme={theme}>
                   {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
                   <CssBaseline />
-
                   <Hydrate state={pageProps.dehydratedState}>
                     <Component {...pageProps} />
                   </Hydrate>

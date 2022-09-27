@@ -2,12 +2,13 @@ import { Avatar, Box, Grid } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/ja";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
+import Image from "next/image";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import {
@@ -145,14 +146,22 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
             </div>
 
             <div className="info-summary">
-              <Avatar
-                src={
-                  data?.profile_image ??
-                  "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
-                }
-                alt={data?.username}
-                sx={{ width: "56px", height: "56px", mr: "13px" }}
-              />
+              <Avatar sx={{ width: "56px", height: "56px", mr: "13px" }}>
+                <Image
+                  loader={() =>
+                    data?.profile_image ??
+                    "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
+                  }
+                  width={56}
+                  height={56}
+                  src={
+                    data?.profile_image ??
+                    "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
+                  }
+                  alt={data?.username}
+                  objectFit="contain"
+                />
+              </Avatar>
               <div className="member-info">
                 <div className="name">{data?.username}</div>
                 <div className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? "情報なし"}</div>
@@ -204,47 +213,47 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
   );
 };
 
-const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = ({
-  title,
-  dataRecommends,
-  indexFetch,
-  handleOpenMatchingModal,
-  handleAcceptMatchingRequestReceived,
-}) => {
-  const { t } = useTranslation();
-  const [dataElements, setDataElements] = useState([]);
+const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = memo(
+  ({ title, dataRecommends, indexFetch, handleOpenMatchingModal, handleAcceptMatchingRequestReceived }) => {
+    const { t } = useTranslation();
+    const [dataElements, setDataElements] = useState([]);
 
-  useEffect(() => {
-    setDataElements(
-      dataRecommends?.map((item, index) => (
-        <RecommendItem
-          data={item}
-          key={index}
-          handleOpenMatchingModal={handleOpenMatchingModal}
-          handleAcceptMatchingRequestReceived={handleAcceptMatchingRequestReceived}
-          indexKey={indexFetch}
-        />
-      )),
+    useEffect(() => {
+      setDataElements(
+        dataRecommends?.map((item, index) => (
+          <RecommendItem
+            data={item}
+            key={index}
+            handleOpenMatchingModal={handleOpenMatchingModal}
+            handleAcceptMatchingRequestReceived={handleAcceptMatchingRequestReceived}
+            indexKey={indexFetch}
+          />
+        )),
+      );
+    }, [dataRecommends]);
+    return (
+      <Grid container className={styles.recommendList} sx={{ display: dataRecommends.length > 0 ? "block" : "none" }}>
+        <div className="div-title">
+          <span className="title">{title}</span>
+          <Link href="/search_user">
+            <a className="link-see-more content-pc">
+              {t("home:see-more")} <img src="/assets/images/icon/icon_seemore.png" alt="" />
+            </a>
+          </Link>
+        </div>
+        <div className="content">
+          <SlickSliderRecommendComponent items={dataElements} />
+        </div>
+        <div style={{ textAlign: "center" }}>
+          <Link href="/search_user">
+            <a className="link-see-more content-mobile">
+              {t("home:see-more")} <img src="/assets/images/icon/icon_seemore.png" alt="" />
+            </a>
+          </Link>
+        </div>
+      </Grid>
     );
-  }, [dataRecommends]);
-  return (
-    <Grid container className={styles.recommendList} sx={{ display: dataRecommends.length > 0 ? "block" : "none" }}>
-      <div className="div-title">
-        <span className="title">{title}</span>
-        <Link href="/search_user">
-          <a className="link-see-more content-pc">{t("home:see-more")}</a>
-        </Link>
-      </div>
-      <div className="content">
-        <SlickSliderRecommendComponent items={dataElements} />
-      </div>
-      <div style={{ textAlign: "center" }}>
-        <Link href="/search_user">
-          <a className="link-see-more content-mobile">{t("home:see-more")}</a>
-        </Link>
-      </div>
-    </Grid>
-  );
-};
+  },
+);
 
 export default RecommendMembersComponent;

@@ -2,7 +2,7 @@
 import React, { useCallback, useRef, useState } from "react";
 import { Box, Grid, Paper, Typography, IconButton, Menu, MenuItem, Tabs, Tab, Avatar } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import _ from "lodash";
+import lodashDebounce from "lodash/debounce";
 import InfiniteScroll from "react-infinite-scroller";
 import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
@@ -125,7 +125,7 @@ const ChatBoxLeftComponent = ({
   const inputSearchRef = useRef(null);
 
   const debounce = useCallback(
-    _.debounce((_searchVal: string) => {
+    lodashDebounce((_searchVal: string) => {
       setSearchChatRoom({
         search: _searchVal,
         cursor: null,
@@ -158,7 +158,7 @@ const ChatBoxLeftComponent = ({
   return (
     <Grid item className={styles.chatBoxLeft}>
       <Box className="box-title">
-        <TabsCustom value={1} aria-label="chat-tab" variant="fullWidth">
+        <TabsCustom value={1} aria-label="chat-tab" variant="fullWidth" sx={{ border: "1px solid #e4e6eb" }}>
           <Tab label={t("chat:box-left-title")} value={1} />
           <Tab label={t("chat:community-box-left-title")} value={2} onClick={() => router.push("/chat/community")} />
         </TabsCustom>
@@ -203,11 +203,17 @@ const ChatBoxLeftComponent = ({
                     </div>
                     <div className="thread-content">
                       <Typography className="name">{thread?.user?.username}</Typography>
-                      {thread?.last_message_content_type === "text" ? (
-                        <Typography className="message-hide">{thread?.last_chat_message_received}</Typography>
-                      ) : (
-                        <Typography className="message-hide">添付ファイル</Typography>
-                      )}
+                      <Typography
+                        className="message-hide"
+                        sx={{
+                          color: thread?.unread_message_count > 0 ? "black!important" : "#989ea8",
+                          fontWeight: thread?.unread_message_count > 0 ? "700!important" : "400",
+                        }}
+                      >
+                        {thread?.last_message_content_type === "text"
+                          ? thread?.last_chat_message_received
+                          : "添付ファイル"}
+                      </Typography>
                     </div>
                     <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
                     {!isMobile && (

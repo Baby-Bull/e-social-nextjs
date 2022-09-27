@@ -13,7 +13,7 @@ export const HOMEPAGE_RECOMMEND_COMMUNITY_STATUS = {
     mode: "orange",
   },
   4: {
-    label: "コミュニティに参加した",
+    label: "メッセージを開",
     mode: "info",
   },
 };
@@ -69,7 +69,7 @@ export const USER_SEARCH_STATUS = {
 
 export const JOBS = {
   frontend: { label: "フロントエンドエンジニア" },
-  backend: { label: "データサイエンティスト" },
+  backend: { label: "バックエンドエンジニア" },
   "data-scientist": { label: "データサイエンティスト" },
   "project-manager": { label: "プロジェクトマネージャー" },
   "project-leader": { label: "プロジェクトリーダー" },
@@ -82,6 +82,7 @@ export const JOBS = {
   "support-engineer": { label: "サポートエンジニア" },
   "help-desk": { label: "ヘルプデスク" },
   "markup-engineer": { label: "マークアップエンジニア" },
+  "mobile-engineer": { label: "モバイルアプリエンジニア " },
 };
 
 export const EMPLOYEES = {

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import classNames from "classnames";
+import { isMobile } from "react-device-detect";
 
 import styles from "src/components/home/home.module.scss";
 
@@ -37,7 +40,7 @@ const BannerComponent = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true,
+    autoplay: !isMobile,
     autoplaySpeed: 2000,
     variableWidth: true,
     centerMode: true,

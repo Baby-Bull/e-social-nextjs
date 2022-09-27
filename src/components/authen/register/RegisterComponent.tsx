@@ -39,7 +39,7 @@ const RegisterComponents = () => {
       if (resAuth?.data?.access_token) {
         dispatch(login(resAuth?.data?.user));
         if (resAuth?.data?.user?.is_profile_edited) {
-          router.push("/");
+          router.push(`/${router.query?.oldUrl || ""}`);
         } else {
           router.push("/register/form");
         }

@@ -8,7 +8,7 @@ import { IS_PROFILE_EDITED, USER_TOKEN } from "src/helpers/storage";
 
 const Community: NextPage = () => <DetailPostComponent />;
 
-export const getServerSideProps = async (ctx) => {
+export const getServerSideProps = async (ctx: any) => {
   const { locale } = ctx;
   const cookies = parseCookies(ctx);
   if (cookies[IS_PROFILE_EDITED] === "false") {
@@ -23,7 +23,7 @@ export const getServerSideProps = async (ctx) => {
   if (!cookies[USER_TOKEN]) {
     return {
       redirect: {
-        destination: "/login",
+        destination: `${process.env.NEXT_PUBLIC_URL_LANDING_PAGE}?oldUrl=${ctx.resolvedUrl}`,
         permanent: false,
       },
     };
