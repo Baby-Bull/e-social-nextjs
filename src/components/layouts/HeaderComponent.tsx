@@ -223,13 +223,13 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     lodashDebounce((searchValue: string, mode: string) => {
       mode === MODE_ROOM_CHAT.community
         ? setSearchChatRoomCommunity({
-            search: searchValue,
-            cursor: null,
-          })
+          search: searchValue,
+          cursor: null,
+        })
         : setSearchChatRoomPersonal({
-            search: searchValue,
-            cursor: null,
-          });
+          search: searchValue,
+          cursor: null,
+        });
     }, 700),
     [],
   );
@@ -306,7 +306,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
         payload: {
           ...listRoomsChatTemp,
           itemsCommunity: listRoomTemp,
-          unread_count: listRoomsChatTemp?.unread_count + 1,
+          //unread_count: listRoomsChatTemp?.unread_count + 1,
         },
       });
     } else {
@@ -315,7 +315,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
         payload: {
           ...listRoomsChatTemp,
           itemsPersonal: listRoomTemp,
-          unread_count: listRoomsChatTemp?.unread_count + 1,
+          //unread_count: listRoomsChatTemp?.unread_count + 1,
         },
       });
     }
@@ -336,7 +336,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
           payload: {
             ...listRoomsChatTemp,
             itemsCommunity: listRoomTemp,
-            unread_count: listRoomsChatTemp?.unread_count + 1,
+            //unread_count: listRoomsChatTemp?.unread_count + 1,
           },
         });
       } else {
@@ -354,7 +354,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
           payload: {
             ...listRoomsChatTemp,
             itemsPersonal: listRoomTemp,
-            unread_count: listRoomsChatTemp?.unread_count + 1,
+            //unread_count: listRoomsChatTemp?.unread_count + 1,
           },
         });
       }
@@ -401,7 +401,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
       setMenuChatAnchorEl(event.currentTarget);
       setStatusChatMenu(true);
     }
-    dispatch({ type: actionTypes.REMOVE_UNREAD_LISTROOMS_COUNT });
+    //dispatch({ type: actionTypes.REMOVE_UNREAD_LISTROOMS_COUNT });
   };
   const handleChangeTabMessage = (event, newValue) => {
     setValueTabChatMessage(newValue);
@@ -536,7 +536,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
           payload: {
             ...notifications,
             items: [message, ...notifications?.items],
-            unread_count: notifications?.unread_count + 1,
+            //unread_count: notifications?.unread_count + 1,
           },
         });
         if (!isMobile) {
@@ -556,12 +556,18 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
         }
       }
     };
-    const handleWSlog = (message: any) => {
-      console.log(message);
+    const handleUpdateUnreadMessages = (newMessage: any) => {
+      dispatch({
+        type: actionTypes.UPDATE_LIST_ROOMS,
+        payload: {
+          ...listRoomsChatTemp,
+          unread_count: newMessage.chat_room_with_unread_messages,
+        },
+      });
     };
     websocket.on(`get.chatRoom.message`, wsHandler);
-    websocket.on(`get.chatRoom.new_unread`, handleWSlog);
-    websocket.on(`get.user.chat_room_with_unread_messages`, handleWSlog);
+    websocket.on(`chatRoom.new_unread`, handleUpdateUnreadMessages);
+    websocket.on(`user.chat_room_with_unread_messages`, handleUpdateUnreadMessages);
     websocket.on(`get.community.chatRoom.message`, wsHandler);
     // eslint-disable-next-line array-callback-return
     TYPE_OF_NOTIFICATIONS.map((notificationType) => {
@@ -578,8 +584,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
     }
     return () => {
       websocket.off("get.chatRoom.message", wsHandler);
-      websocket.off(`get.chatRoom.new_unread`, handleWSlog);
-      websocket.off(`get.user.chat_room_with_unread_messages`, handleWSlog);
+      websocket.off(`get.chatRoom.new_unread`, handleUpdateUnreadMessages);
+      websocket.off(`get.user.chat_room_with_unread_messages`, handleUpdateUnreadMessages);
       websocket.off("get.community.chatRoom.message", wsHandler);
       // eslint-disable-next-line array-callback-return
       TYPE_OF_NOTIFICATIONS.map((notificationType) => {
@@ -609,7 +615,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
   // end block function Menu ***********************************
 
   // block search **************************************************
-  const [typeSearch, setTypeSearch] = React.useState(typeSearchs[0].label);
+  const [typeSearch, setTypeSearch] = React.useState(typeSearchs[1].label);
   const [valueSearch, setValueSearch] = useState(fullText);
   const handleChange = (event: any) => {
     setTypeSearch(event.target.value);
@@ -838,12 +844,12 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                           {
                             // eslint-disable-next-line no-unsafe-optional-chaining
                             (dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name) +
-                              // eslint-disable-next-line no-unsafe-optional-chaining
-                              CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label +
-                              " " +
-                              (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") +
-                              " " +
-                              CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
+                            // eslint-disable-next-line no-unsafe-optional-chaining
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label +
+                            " " +
+                            (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") +
+                            " " +
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
                           }
                         </div>
                       ) : (
@@ -851,12 +857,12 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
                           {
                             // eslint-disable-next-line no-unsafe-optional-chaining
                             (dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name) +
-                              // eslint-disable-next-line no-unsafe-optional-chaining
-                              CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label +
-                              " " +
-                              (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") +
-                              " " +
-                              CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
+                            // eslint-disable-next-line no-unsafe-optional-chaining
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label +
+                            " " +
+                            (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") +
+                            " " +
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
                           }
                         </div>
                       )}
