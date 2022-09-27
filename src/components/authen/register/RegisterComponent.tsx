@@ -154,7 +154,7 @@ const RegisterComponents = () => {
                   }}
                   onError={onLogoutFailure}
                 >
-                  <ButtonComponent props={{ mode: "google" }}>{t("login:right.register-google")}</ButtonComponent>
+                  <ButtonComponent props={{ mode: "google" }}>{t("register:register-google")}</ButtonComponent>
                 </LoginSocialGoogle>
               </Box>
 
