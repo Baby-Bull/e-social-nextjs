@@ -3,8 +3,8 @@ import { InputLabel, InputBase, FormControl, Select, MenuItem, Box, Grid, Typogr
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DesktopDatePicker from "@mui/lab/DatePicker";
 import { styled } from "@mui/material/styles";
-import AdapterDayjs from "@mui/lab/AdapterDayjs";
-import "dayjs/locale/ja";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import { ja } from "date-fns/locale";
 
 import theme from "src/theme";
 
@@ -195,7 +195,7 @@ export const Field: React.SFC<FieldProps> = ({
                 </InputLabel>
               </Grid>
               <Grid item md={9} xs={12}>
-                <LocalizationProvider dateAdapter={AdapterDayjs} locale="ja">
+                <LocalizationProvider dateAdapter={AdapterDateFns} locale={ja}>
                   <DesktopDatePicker
                     minDate={new Date()}
                     value={date}

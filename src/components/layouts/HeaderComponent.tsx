@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback, memo } from "react";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -191,7 +191,7 @@ const typeSearchs = [
   },
 ];
 
-const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
+const HeaderComponent: React.FC<IHeaderComponentProps> = memo(({ authPage }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -1422,6 +1422,6 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
       {renderNotificationMenu}
     </Box>
   );
-};
+});
 
 export default HeaderComponent;

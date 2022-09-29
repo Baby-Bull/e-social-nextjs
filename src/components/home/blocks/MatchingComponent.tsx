@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { Grid, Box } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
@@ -64,7 +64,7 @@ const MatchingItemMobile: React.SFC<IMatchingItemMobileProps> = ({ label, icon, 
   );
 };
 
-const MatchingComponent = () => {
+const MatchingComponent = memo(() => {
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
   useEffect(() => {
@@ -238,6 +238,6 @@ const MatchingComponent = () => {
       </Grid>
     </Grid>
   );
-};
+});
 
 export default MatchingComponent;

@@ -14,10 +14,11 @@ import {
   Paper,
   Avatar,
 } from "@mui/material";
-import AdapterDayjs from "@mui/lab/AdapterDayjs";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DesktopDatePicker from "@mui/lab/DatePicker";
 import { styled } from "@mui/material/styles";
+import { ja } from "date-fns/locale";
 
 import theme from "src/theme";
 import { VALIDATE_MESSAGE_FORM_REGISTER } from "src/messages/validate";
@@ -551,7 +552,7 @@ export const Field: React.SFC<IFieldProps> = ({
                 />
               </Box>
             </InputLabel>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <LocalizationProvider dateAdapter={AdapterDateFns} locale={ja}>
               <DesktopDatePicker
                 maxDate={new Date()}
                 value={date}

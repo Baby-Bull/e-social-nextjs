@@ -287,6 +287,10 @@ export const JOBS = [
     label: "マークアップエンジニア",
     value: "markup-engineer",
   },
+  {
+    label: "モバイルアプリエンジニア ",
+    value: "mobile-engineer",
+  },
 ];
 
 export const EMPLOYEE_STATUS = [
