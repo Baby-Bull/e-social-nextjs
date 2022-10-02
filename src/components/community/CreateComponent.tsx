@@ -24,7 +24,6 @@ import theme, { themeSelect } from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabVerticalComponent";
 import { Field, InputCustom } from "src/components/community/blocks/Form/InputComponent";
 import { TextArea } from "src/components/community/blocks/Form/TextAreaComponent";
-import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
 import { VALIDATE_FORM_COMMUNITY, REGEX_RULES } from "src/messages/validate";
@@ -289,7 +288,7 @@ const CreateComponent = () => {
   };
 
   return (
-    <ContentComponent>
+    <React.Fragment>
       <Box
         sx={{
           mt: ["20px", "38px"],
@@ -737,7 +736,7 @@ const CreateComponent = () => {
         handleCancel={handleDialogCancel}
         handleOK={handleDialogOK}
       />
-    </ContentComponent>
+    </React.Fragment>
   );
 };
 export default CreateComponent;

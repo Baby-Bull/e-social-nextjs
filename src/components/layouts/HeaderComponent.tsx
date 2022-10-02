@@ -191,7 +191,7 @@ const typeSearchs = [
   },
 ];
 
-const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
+const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -1422,6 +1422,6 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = ({ authPage }) => {
       {renderNotificationMenu}
     </Box>
   );
-};
+});
 
 export default HeaderComponent;

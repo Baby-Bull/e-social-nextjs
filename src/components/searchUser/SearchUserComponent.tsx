@@ -21,7 +21,6 @@ import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 
 import styles from "src/components/searchUser/search_user.module.scss";
-import ContentComponent from "src/components/layouts/ContentComponent";
 import theme from "src/theme";
 import { jobs, employeeStatus, lastLogins, reviews } from "src/constants/searchUserConstants";
 import useViewport from "src/helpers/useViewport";
@@ -169,7 +168,7 @@ const SearchUserComponent = () => {
   const [showPopupSearchUser, setShowPopupSearchUser] = useState(false);
 
   return (
-    <ContentComponent>
+    <React.Fragment>
       {isLoading && (
         <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
           <CircularProgress color="inherit" />
@@ -395,7 +394,7 @@ const SearchUserComponent = () => {
         setInputTags={setInputTags}
         setFormSearch={setFormSearch}
       />
-    </ContentComponent>
+    </React.Fragment>
   );
 };
 

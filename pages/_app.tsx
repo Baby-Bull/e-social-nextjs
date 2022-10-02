@@ -26,6 +26,7 @@ import * as gtag from "lib/gtag";
 import { useStore } from "src/store/store";
 import { setApiAuth } from "src/helpers/api";
 import socket from "src/helpers/socket";
+import ContentComponent from "src/components/layouts/ContentComponent";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -188,9 +189,10 @@ const MyApp = (props: MyAppProps) => {
               <ThemeProvider theme={theme}>
                 {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
                 <CssBaseline />
-
                 <Hydrate state={pageProps.dehydratedState}>
-                  <Component {...pageProps} />
+                  <ContentComponent>
+                    <Component {...pageProps} />
+                  </ContentComponent>
                 </Hydrate>
               </ThemeProvider>
             </CacheProvider>
@@ -201,7 +203,9 @@ const MyApp = (props: MyAppProps) => {
                   {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
                   <CssBaseline />
                   <Hydrate state={pageProps.dehydratedState}>
-                    <Component {...pageProps} />
+                    <ContentComponent>
+                      <Component {...pageProps} />
+                    </ContentComponent>
                   </Hydrate>
                 </ThemeProvider>
               </CacheProvider>

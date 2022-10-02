@@ -25,7 +25,6 @@ import { styled } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import { useDispatch, useSelector } from "react-redux";
 
-import ContentComponent from "src/components/layouts/ContentComponent";
 import theme from "src/theme";
 import { VALIDATE_FORM_UPDATE_PROFILE, REGEX_RULES } from "src/messages/validate";
 import { Field } from "src/components/profile/form/InputProfileComponent";
@@ -1049,7 +1048,7 @@ const ProfileSkillComponent = () => {
   };
 
   return (
-    <ContentComponent>
+    <React.Fragment>
       {isLoading && (
         <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
           <CircularProgress color="inherit" />
@@ -1992,7 +1991,7 @@ const ProfileSkillComponent = () => {
           </Box>
         </Grid>
       </Box>
-    </ContentComponent>
+    </React.Fragment>
   );
 };
 export default ProfileSkillComponent;
