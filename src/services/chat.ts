@@ -1,4 +1,4 @@
-import { LIMIT_PER_PAGE } from "src/constants/constants";
+import { LIMIT_ROOMS_PER_PAGE, LIMIT_MESSAGES_PER_PAGE } from "src/constants/constants";
 import { api } from "src/helpers/api";
 
 interface IParamsListChatRooms {
@@ -7,7 +7,7 @@ interface IParamsListChatRooms {
   limit: number;
 }
 
-export const getListChatRooms = async (search: string = "", cursor: string = "", limit: number = LIMIT_PER_PAGE) => {
+export const getListChatRooms = async (search: string = "", cursor: string = "", limit: number = LIMIT_ROOMS_PER_PAGE) => {
   try {
     let params: IParamsListChatRooms;
     if (!search) {
@@ -25,7 +25,7 @@ export const getListChatRooms = async (search: string = "", cursor: string = "",
   }
 };
 
-export const getMessages = async (userId: string, cursor: string = "", limit: number = LIMIT_PER_PAGE) => {
+export const getMessages = async (userId: string, cursor: string = "", limit: number = LIMIT_MESSAGES_PER_PAGE) => {
   try {
     const res = await api.get(`/user/${userId}/messages?limit=${limit}&cursor=${cursor}`);
     return res.data;
@@ -37,7 +37,7 @@ export const getMessages = async (userId: string, cursor: string = "", limit: nu
 export const getListChatRoomsCommunity = async (
   search: string = "",
   cursor: string = "",
-  limit: number = LIMIT_PER_PAGE,
+  limit: number = LIMIT_ROOMS_PER_PAGE,
 ) => {
   try {
     let params: IParamsListChatRooms;
@@ -59,7 +59,7 @@ export const getListChatRoomsCommunity = async (
 export const getMessagesCommunity = async (
   communityId: string,
   cursor: string = "",
-  limit: number = LIMIT_PER_PAGE,
+  limit: number = LIMIT_MESSAGES_PER_PAGE,
 ) => {
   try {
     const res = await api.get(`/user/communities/chat-rooms/${communityId}/messages?limit=${limit}&cursor=${cursor}`);

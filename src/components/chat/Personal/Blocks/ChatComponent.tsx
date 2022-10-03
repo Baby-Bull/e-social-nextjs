@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "src/components/chat/chat.module.scss";
 import useViewport from "src/helpers/useViewport";
 import { getListChatRooms } from "src/services/chat";
-import { REACT_QUERY_KEYS } from "src/constants/constants";
+import { LIMIT_ROOMS_PER_PAGE } from "src/constants/constants";
 import { sortListRoomChat } from "src/helpers/helper";
 import ChatBoxLeftComponent from "src/components/chat/Personal/Blocks/ChatBoxLeftComponent";
 import websocket from "src/helpers/socket";
@@ -30,15 +30,9 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   const dispatch = useDispatch();
   const listRoomsChatTemp = useSelector((state: IStoreState) => state.listrooms);
 
-  const [listRooms, setListRooms] = useState([]);
   const [userId, setUserId] = useState(roomQuery);
   const [user, setUser] = useState({});
   const [roomSelect, setRoomSelect] = useState(null);
-
-  const [hasMoreChatRoom, setHasMoreChatRoom] = useState({
-    cursor: null,
-    hasMore: false,
-  });
 
   const [newMessageOfRoom, setNewMessageOfRoom] = useState(null);
 
@@ -50,17 +44,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
 
   const listRoomRef = useRef([]);
   const chatRoomIdRef = useRef(null);
-
-  const { data: listRoomResQuery } = useQuery(
-    [REACT_QUERY_KEYS.PERSONAL_CHAT.LIST_CHAT_ROOMS, searchChatRoom],
-    async () => {
-      const res = await getListChatRooms(searchChatRoom?.search, searchChatRoom?.cursor);
-      return res;
-    },
-    {
-      refetchOnWindowFocus: false,
-    },
-  );
 
   const updateLastMessageOfListRooms = async (message: any) => {
     let hasChatRoomExist = false;
@@ -78,7 +61,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
         return item;
       }),
     );
-    setListRooms(listRoomsSorted);
     dispatch({
       type: actionTypes.UPDATE_LIST_ROOMS,
       payload: {
@@ -96,7 +78,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
         },
         ...listRoomRef.current,
       ]);
-      setListRooms(listRoomsSorted2);
       dispatch({
         type: actionTypes.UPDATE_LIST_ROOMS,
         payload: {
@@ -108,11 +89,11 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   };
 
   useEffect(() => {
-    listRoomRef.current = listRooms;
-    if (!hasData && listRooms?.length) {
+    listRoomRef.current = listRoomsChatTemp?.itemsPersonal;
+    if (!hasData && listRoomsChatTemp?.itemsPersonal?.length) {
       setHasData(true);
     }
-  }, [listRooms]);
+  }, [listRoomsChatTemp?.itemsPersonal]);
 
   useEffect(() => {
     chatRoomIdRef.current = roomSelect?.id || null;
@@ -134,15 +115,15 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     };
   }, []);
 
-  useEffect(() => {
-    const listRoomSort = sortListRoomChat(listRoomResQuery?.items || []);
-    setListRooms(listRoomSort);
-  }, [listRoomResQuery]);
+  // useEffect(() => {
+  //   const listRoomSort = sortListRoomChat(listRoomResQuery?.items || []);
+  //   setListRooms(listRoomSort);
+  // }, [listRoomResQuery]);
 
   useEffect(() => {
     // setListRooms(sortListRoomChat(listRoomResQuery?.items || []));
     if (!roomSelect?.id) {
-      const roomQuerySelect = listRoomResQuery?.items?.find(
+      const roomQuerySelect = listRoomsChatTemp?.itemsPersonal?.find(
         (item: any) => item.id === roomQuery || item?.user?.id === roomQuery,
       );
       if (roomQuerySelect) {
@@ -150,26 +131,25 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
         setUserId(roomQuerySelect?.user?.id);
         setUser(roomQuerySelect?.user);
       } else {
-        setRoomSelect(listRoomResQuery?.items?.[0] || {});
-        setUserId(listRoomResQuery?.items?.[0]?.user?.id);
-        setUser(listRoomResQuery?.items?.[0]?.user);
+        setRoomSelect(listRoomsChatTemp?.itemsPersonal?.[0] || {});
+        setUserId(listRoomsChatTemp?.itemsPersonal?.[0]?.user?.id);
+        setUser(listRoomsChatTemp?.itemsPersonal?.[0]?.user);
       }
     }
-    setHasMoreChatRoom({
-      cursor: listRoomResQuery?.cursor,
-      hasMore: listRoomResQuery?.hasMore,
-    });
-  }, [listRoomResQuery, roomSelect?.id]);
+  }, [listRoomsChatTemp?.itemsPersonal, roomSelect?.id]);
 
-  const loadMoreChatRooms = async () => {
-    if (hasMoreChatRoom.cursor?.length) {
-      const listRoomRes = await getListChatRooms(searchChatRoom?.search, hasMoreChatRoom.cursor);
-      setListRooms(sortListRoomChat([...listRooms, ...(listRoomRes?.items || [])]));
-      setHasMoreChatRoom({
-        cursor: listRoomRes?.cursor,
-        hasMore: listRoomRes?.hasMore,
-      });
-    }
+  const loadMoreMessagePersonal = async () => {
+    const res = await getListChatRooms(searchChatRoom?.search, listRoomsChatTemp?.cursorPersonal, LIMIT_ROOMS_PER_PAGE);
+    dispatch({
+      type: actionTypes.UPDATE_LIST_ROOMS,
+      payload: {
+        ...listRoomsChatTemp,
+        // eslint-disable-next-line no-unsafe-optional-chaining
+        itemsPersonal: [...listRoomsChatTemp.itemsPersonal, ...res?.items],
+        cursorPersonal: res?.cursor,
+        hasMorePersonal: res?.hasMore,
+      },
+    });
   };
 
   const sendMessage = (message: string, type: string = "text", fileName: string = "", fileSize: any = "") => {
@@ -198,18 +178,18 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
 
   const onSelectRoom = async (index: number) => {
     if (isMobile) setIsRenderRightSide(!isRenderRightSide);
-    (listRooms[index]?.unread_message_count > 0) && await readMessagePersonal(listRooms[index]?.user?.id);
-    if (listRooms[index]?.user?.id !== userId) {
-      setRoomSelect(listRooms[index]);
-      setUserId(listRooms[index]?.user?.id);
-      setUser(listRooms[index]?.user);
+    (listRoomsChatTemp?.itemsPersonal[index]?.unread_message_count > 0) && await readMessagePersonal(listRoomsChatTemp?.itemsPersonal[index]?.user?.id);
+    if (listRoomsChatTemp?.itemsPersonal[index]?.user?.id !== userId) {
+      setRoomSelect(listRoomsChatTemp?.itemsPersonal[index]);
+      setUserId(listRoomsChatTemp?.itemsPersonal[index]?.user?.id);
+      setUser(listRoomsChatTemp?.itemsPersonal[index]?.user);
     }
   };
 
   const transferUserToLeftMobile = (index: number) => {
-    if (listRooms[index]?.user?.id !== userId) {
-      setUserId(listRooms[index]?.user?.id);
-      setUser(listRooms[index]?.user);
+    if (listRoomsChatTemp?.itemsPersonal[index]?.user?.id !== userId) {
+      setUserId(listRoomsChatTemp?.itemsPersonal[index]?.user?.id);
+      setUser(listRoomsChatTemp?.itemsPersonal[index]?.user);
     }
   };
 
@@ -219,14 +199,14 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     <Grid container className={classNames(styles.chatContainerPC)}>
       {!isMobile || (isMobile && !isRenderRightSide && hasData) ? (
         <ChatBoxLeftComponent
-          listRooms={listRooms}
+          listRooms={listRoomsChatTemp?.itemsPersonal}
           userId={userId}
           user={user}
           onSelectRoom={onSelectRoom}
           transferUserToLeftMobile={transferUserToLeftMobile}
           setSearchChatRoom={setSearchChatRoom}
-          hasMoreChatRoom={hasMoreChatRoom}
-          loadMoreChatRooms={loadMoreChatRooms}
+          hasMoreChatRoom={listRoomsChatTemp?.hasMorePersonal}
+          loadMoreChatRooms={loadMoreMessagePersonal}
           isMobile={isMobile}
         />
       ) : null}
