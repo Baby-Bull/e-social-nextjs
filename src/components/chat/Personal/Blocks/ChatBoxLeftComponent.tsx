@@ -1,9 +1,21 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { useCallback, useRef, useState } from "react";
-import { Box, Grid, Paper, Typography, IconButton, Menu, MenuItem, Tabs, Tab, Avatar } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Paper,
+  Typography,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tabs,
+  Tab,
+  Avatar,
+  CircularProgress,
+} from "@mui/material";
 import { useTranslation } from "next-i18next";
 import lodashDebounce from "lodash/debounce";
-import InfiniteScroll from "react-infinite-scroller";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
 
@@ -177,7 +189,18 @@ const ChatBoxLeftComponent = ({
       </Box>
       <Box className="box-content">
         <ul className={styles.boxThreads}>
-          <InfiniteScroll loadMore={loadMoreChatRooms} hasMore={hasMoreChatRoom.hasMore} loader="" useWindow={false}>
+          <InfiniteScroll
+            style={{ overflowX: "hidden" }}
+            dataLength={listRooms?.length || 0}
+            next={loadMoreChatRooms}
+            hasMore={hasMoreChatRoom}
+            height={730}
+            loader={
+              <Box sx={{ display: "flex", py: "15px", justifyContent: "center" }}>
+                <CircularProgress sx={{ color: theme.blue }} size={30} />
+              </Box>
+            }
+          >
             {listRooms?.map((thread, index: number) => (
               <React.Fragment key={index}>
                 <li
