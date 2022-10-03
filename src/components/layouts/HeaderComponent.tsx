@@ -223,13 +223,13 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = memo(({ authPage }) => 
     lodashDebounce((searchValue: string, mode: string) => {
       mode === MODE_ROOM_CHAT.community
         ? setSearchChatRoomCommunity({
-            search: searchValue,
-            cursor: null,
-          })
+          search: searchValue,
+          cursor: null,
+        })
         : setSearchChatRoomPersonal({
-            search: searchValue,
-            cursor: null,
-          });
+          search: searchValue,
+          cursor: null,
+        });
     }, 700),
     [],
   );
@@ -838,12 +838,12 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = memo(({ authPage }) => 
                           {
                             // eslint-disable-next-line no-unsafe-optional-chaining
                             (dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name) +
-                              // eslint-disable-next-line no-unsafe-optional-chaining
-                              CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label +
-                              " " +
-                              (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") +
-                              " " +
-                              CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
+                            // eslint-disable-next-line no-unsafe-optional-chaining
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label +
+                            " " +
+                            (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") +
+                            " " +
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
                           }
                         </div>
                       ) : (
@@ -851,12 +851,12 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = memo(({ authPage }) => 
                           {
                             // eslint-disable-next-line no-unsafe-optional-chaining
                             (dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name) +
-                              // eslint-disable-next-line no-unsafe-optional-chaining
-                              CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label +
-                              " " +
-                              (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") +
-                              " " +
-                              CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
+                            // eslint-disable-next-line no-unsafe-optional-chaining
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label +
+                            " " +
+                            (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") +
+                            " " +
+                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
                           }
                         </div>
                       )}
