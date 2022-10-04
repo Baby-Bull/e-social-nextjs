@@ -7,11 +7,16 @@ import { useSelector } from "react-redux";
 
 import { IStoreState } from "src/constants/interface";
 import useViewport from "src/helpers/useViewport";
-import ContentComponent from "src/components/layouts/ContentComponent";
 import ProfileSkillComponent from "src/components/profile/ProfileSkillComponent";
 import ReviewComponent from "src/components/profile/ReviewComponent";
 import ParticipatingCommunityComponent from "src/components/profile/ParticipatingCommunityComponent";
-import { addUserFavorite, getUserReviews } from "src/services/user";
+import {
+  getUserCommunites,
+  getOrtherUserProfile,
+  getUserReviews,
+  getUserRecommended,
+  addUserFavorite,
+} from "src/services/user";
 import BoxItemUserComponent from "src/components/profile/BoxItemUserComponent";
 import BoxNoDataComponent from "src/components/profile/BoxNoDataComponent";
 import TopProfileComponent from "src/components/profile/TopProfileComponent";
@@ -140,7 +145,7 @@ const ProfileHaveDataComponent: FC<Props> = ({
   }; // end block paginate for user reviews
 
   return (
-    <ContentComponent>
+    <>
       {isLoading && (
         <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
           <CircularProgress color="inherit" />
@@ -283,7 +288,7 @@ const ProfileHaveDataComponent: FC<Props> = ({
         setOpen={setModalMatching}
         handleSendMatchingRequest={handleSendMatchingRequest}
       />
-    </ContentComponent>
+    </>
   );
 };
 export default ProfileHaveDataComponent;

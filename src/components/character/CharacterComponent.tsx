@@ -3,7 +3,6 @@ import React from "react";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 
-import ContentComponent from "src/components/layouts/ContentComponent";
 import styles from "src/components/character/character.module.scss";
 
 import LinearProgressBar from "./LinerProgressBar";
@@ -33,7 +32,7 @@ const CharacterComponent = () => {
   };
 
   return (
-    <ContentComponent>
+    <React.Fragment>
       {modalNo === 1 && (
         <Modal
           aria-labelledby="transition-modal-title"
@@ -224,7 +223,7 @@ const CharacterComponent = () => {
           </div>
         </Modal>
       )}
-    </ContentComponent>
+    </React.Fragment>
   );
 };
 export default CharacterComponent;

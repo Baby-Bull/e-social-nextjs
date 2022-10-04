@@ -3,7 +3,6 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { Avatar, Box } from "@mui/material";
 
-import ContentComponent from "src/components/layouts/ContentComponent";
 import GridViewComponent from "src/components/community/blocks/GridViewComponent";
 import { CommunityMembers } from "src/services/community";
 import PaginationCustomComponent from "src/components/common/PaginationCustomComponent";
@@ -48,50 +47,48 @@ const MemberComponent = () => {
   };
 
   return (
-    <ContentComponent>
-      <Box sx={{ pt: "100px" }}>
-        <GridViewComponent
-          data={communityMembers?.slice((page - 1) * LIMIT, page * LIMIT)}
-          title={t("community:community-members")}
-        />
-        <Box
-          sx={{
-            pb: "40px",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          {countCommunity > LIMIT && (
-            <PaginationCustomComponent
-              handleCallbackChangePagination={handleCallbackChangePaginationMember}
-              page={page}
-              perPage={perPage}
-              totalPage={
-                Math.floor(countCommunity / LIMIT) < countCommunity / LIMIT
-                  ? Math.floor(countCommunity / LIMIT) + 1
-                  : Math.floor(countCommunity / LIMIT)
-              }
-            />
-          )}
-        </Box>
-        <Box
-          sx={{
-            fontWeight: 700,
-            lineHeight: "14px",
-            fontSize: "14px",
-            mb: "80px",
-            color: "#03BCDB",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          onClick={handleRedirectCommunityDetail}
-        >
-          <Avatar src="/assets/images/icon/left.svg" sx={{ width: "8px", height: "16px", mr: "14px" }} />
-          {t("community:setting.member.back-community")}
-        </Box>
+    <Box sx={{ pt: "100px" }}>
+      <GridViewComponent
+        data={communityMembers?.slice((page - 1) * LIMIT, page * LIMIT)}
+        title={t("community:community-members")}
+      />
+      <Box
+        sx={{
+          pb: "40px",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        {countCommunity > LIMIT && (
+          <PaginationCustomComponent
+            handleCallbackChangePagination={handleCallbackChangePaginationMember}
+            page={page}
+            perPage={perPage}
+            totalPage={
+              Math.floor(countCommunity / LIMIT) < countCommunity / LIMIT
+                ? Math.floor(countCommunity / LIMIT) + 1
+                : Math.floor(countCommunity / LIMIT)
+            }
+          />
+        )}
       </Box>
-    </ContentComponent>
+      <Box
+        sx={{
+          fontWeight: 700,
+          lineHeight: "14px",
+          fontSize: "14px",
+          mb: "80px",
+          color: "#03BCDB",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onClick={handleRedirectCommunityDetail}
+      >
+        <Avatar src="/assets/images/icon/left.svg" sx={{ width: "8px", height: "16px", mr: "14px" }} />
+        {t("community:setting.member.back-community")}
+      </Box>
+    </Box>
   );
 };
 export default MemberComponent;

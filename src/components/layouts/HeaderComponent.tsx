@@ -191,7 +191,7 @@ const typeSearchs = [
   },
 ];
 
-const HeaderComponent: React.FC<IHeaderComponentProps> = memo(({ authPage }) => {
+const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const dispatch = useDispatch();

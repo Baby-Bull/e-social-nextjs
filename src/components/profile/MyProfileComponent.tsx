@@ -5,7 +5,6 @@ import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
 
 import useViewport from "src/helpers/useViewport";
-import ContentComponent from "src/components/layouts/ContentComponent";
 import ProfileSkillComponent from "src/components/profile/ProfileSkillComponent";
 import ReviewComponent from "src/components/profile/ReviewComponent";
 import ParticipatingCommunityComponent from "src/components/profile/ParticipatingCommunityComponent";
@@ -130,7 +129,7 @@ const ProfileHaveDataComponent = () => {
   }, [recommended]);
 
   return (
-    <ContentComponent>
+    <>
       {isLoading && (
         <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
           <CircularProgress color="inherit" />
@@ -234,7 +233,7 @@ const ProfileHaveDataComponent = () => {
         setOpen={setModalMatching}
         handleSendMatchingRequest={handleSendMatchingRequest}
       />
-    </ContentComponent>
+    </>
   );
 };
 export default ProfileHaveDataComponent;
