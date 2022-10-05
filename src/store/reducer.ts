@@ -1,4 +1,4 @@
-import { refreshToken } from "src/services/auth";
+import { fetchToken } from "src/helpers/api";
 
 import actionTypes from "./actionTypes";
 
@@ -82,15 +82,15 @@ const reducer = (state, action: any) => {
           ...state?.user,
           community_count: (state?.user?.community_count || 0) + 1,
         },
-      }
+      };
     case actionTypes.REMOVE_COMMUNITY_COUNT:
       return {
         ...state,
         user: {
           ...state?.user,
           community_count: (state?.user?.community_count || 0) - 1,
-        }
-      }
+        },
+      };
     case actionTypes.UPDATE_NOTIFICATIONS:
       return {
         ...state,
@@ -102,31 +102,31 @@ const reducer = (state, action: any) => {
           unread_count: action?.payload?.unread_count || 0,
           items_count: action?.payload?.items_count || 0,
         },
-      }
+      };
     case actionTypes.ADD_UNREAD_NOTIFICATIONS_COUNT:
       return {
         ...state,
         notifications: {
           ...state?.items,
-          unread_count: (state?.notifications?.unread_count || 0) + 1
-        }
-      }
+          unread_count: (state?.notifications?.unread_count || 0) + 1,
+        },
+      };
     case actionTypes.REMOVE_UNREAD_NOTIFICATIONS_COUNT:
       return {
         ...state,
         notifications: {
           ...state?.notifications,
-          unread_count: 0
-        }
-      }
+          unread_count: 0,
+        },
+      };
     case actionTypes.UPDATE_PERMISSION_NOTIFICATION:
       return {
         ...state,
         notifications: {
           ...state?.notifications,
           askPermissionNotification: false,
-        }
-      }
+        },
+      };
     case actionTypes.UPDATE_LIST_ROOMS:
       return {
         ...state,
@@ -139,28 +139,27 @@ const reducer = (state, action: any) => {
           cursorPersonal: action?.payload?.cursorPersonal ?? "",
           cursorCommunity: action?.payload?.cursorCommunity ?? "",
           unread_count: action?.payload?.unread_count || 0,
-        }
-      }
+        },
+      };
     case actionTypes.ADD_UNREAD_LISTROOMS_COUNT:
       return {
         ...state,
         listrooms: {
           ...state?.listrooms,
-          unread_count: (state?.listrooms?.unread_count || 0) + 1
-        }
-      }
+          unread_count: (state?.listrooms?.unread_count || 0) + 1,
+        },
+      };
     case actionTypes.REMOVE_UNREAD_LISTROOMS_COUNT:
       return {
         ...state,
         listrooms: {
           ...state?.listrooms,
-          unread_count: 0
-        }
-      }
-
+          unread_count: 0,
+        },
+      };
 
     case actionTypes.REFRESH_TOKEN:
-      refreshToken();
+      fetchToken();
       return state;
     default:
       return state;

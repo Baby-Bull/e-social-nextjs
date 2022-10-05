@@ -20,8 +20,7 @@ export const getItem = (key: string) => {
 export const setToken = (value: string, expiresIn?: number) => {
   setItem(USER_TOKEN, value);
   if (expiresIn) {
-    const date = new Date();
-    setItem(EXPIRES_IN, date.getTime() + expiresIn * 1000);
+    setItem(EXPIRES_IN, expiresIn);
   }
 };
 

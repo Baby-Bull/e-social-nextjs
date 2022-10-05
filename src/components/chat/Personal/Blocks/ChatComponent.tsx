@@ -198,7 +198,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
 
   const onSelectRoom = async (index: number) => {
     if (isMobile) setIsRenderRightSide(!isRenderRightSide);
-    (listRooms[index]?.unread_message_count > 0) && await readMessagePersonal(listRooms[index]?.user?.id);
+    listRooms[index]?.unread_message_count > 0 && (await readMessagePersonal(listRooms[index]?.user?.id));
     if (listRooms[index]?.user?.id !== userId) {
       setRoomSelect(listRooms[index]);
       setUserId(listRooms[index]?.user?.id);

@@ -10,37 +10,82 @@ import {
   getToken,
   getRefreshToken,
   setRefreshToken,
-  setIsProfileEdited,
 } from "./storage";
 
-let isRefreshing = false;
-let failedQueue = [];
-
-const processQueue = (error, token = null) => {
-  failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token);
-    }
-  });
-
-  failedQueue = [];
-};
+let fetchTokenPromise = Promise.resolve(null);
+let isFetchingToken = false;
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API,
 });
 
+export const apiAuth = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API,
+});
+
 export const setApiAuth = (token: string) => {
+  fetchTokenPromise = Promise.resolve(token);
   api.defaults.headers.common.Authorization = `Bearer ${token}`;
   axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 };
 
 export function setToken(token: string, expiresIn?: number) {
-  setTokenStorage(token, expiresIn);
+  setTokenStorage(token, expiresIn ?? null);
   setApiAuth(token);
 }
+
+export const fetchToken = async () => {
+  if (!isFetchingToken) {
+    isFetchingToken = true;
+    fetchTokenPromise = apiAuth
+      .post("/auth/tokens", { access_token: getToken(), refresh_token: getRefreshToken() })
+      .then(({ data }) => {
+        const {
+          access_token: accessToken,
+          access_token_expires_in_seconds: accessTokenExpiresInSeconds,
+          refresh_token: refreshToken,
+        } = data;
+        setToken(accessToken, accessTokenExpiresInSeconds);
+        setRefreshToken(refreshToken);
+        isFetchingToken = false;
+        return accessToken;
+      })
+      .catch((err) => {
+        console.log(err);
+        return null;
+      });
+  }
+
+  return fetchTokenPromise;
+};
+
+apiAuth.interceptors.response.use(
+  (response) => response.data,
+  async (err: any) => {
+    if (err.response.status === 422 || err.response.status === 401) {
+      setToken("");
+      setRefreshToken("");
+      if (typeof window !== "undefined") {
+        window.location.href = `/login?oldUrl=${window.location.pathname}`;
+      }
+    }
+    return Promise.reject(err);
+  },
+);
+
+api.interceptors.request.use(
+  async (config) => {
+    let token = await fetchTokenPromise;
+    if (!token) {
+      token = await fetchToken();
+    }
+    api.defaults.headers.common.Authorization = `Bearer ${token}`;
+    return config;
+  },
+  (error) => {
+    Promise.reject(error);
+  },
+);
 
 api.interceptors.response.use(
   (response) => response,
@@ -59,59 +104,17 @@ api.interceptors.response.use(
       if (!err?.response?.data?.message?.email && !err.response.data?.message?.access_token) {
         toast.error(SERVER_ERROR);
       }
-      //window.location.href = "/";
     }
+
     const originalRequest = err.config;
     if (originalRequest.url !== "/auth/tokens") {
-      if (err.response.status === 401 && !originalRequest._retry) {
-        // toast.error("セッションの有効期限が切れました。");
-        if (isRefreshing) {
-          return new Promise((resolve, reject) => {
-            failedQueue.push({ resolve, reject });
-          })
-            .then((token) => {
-              originalRequest.headers.Authorization = `Bearer ${token}`;
-              return axios(originalRequest);
-            })
-            .catch((error) => Promise.reject(error));
-        }
-
-        originalRequest._retry = true;
-        isRefreshing = true;
-
-        try {
-          const res = await api.post("/auth/tokens", { access_token: getToken(), refresh_token: getRefreshToken() });
-          if (res?.data?.access_token) {
-            setToken(res?.data?.access_token, res?.data?.access_token_expires_in_seconds);
-            setRefreshToken(res?.data?.refresh_token);
-            setIsProfileEdited(res?.data?.user?.is_profile_edited);
-            api.defaults.headers.common.Authorization = `Bearer ${res.data?.access_token}`;
-            originalRequest.headers.Authorization = `Bearer ${res.data?.access_token}`;
-            processQueue(null, res.data.access_token);
-            isRefreshing = false;
-            Promise.resolve(api(originalRequest));
-          }
-        } catch (_error) {
-          processQueue(_error, null);
-          setToken("");
-          setRefreshToken("");
-          setIsProfileEdited("");
-          if (typeof window !== "undefined") {
-            window.location.href = `/login?oldUrl=${window.location.pathname}`;
-          }
-          return Promise.reject(_error);
-        }
-      }
-      return Promise.reject(err);
-    }
-    if (err.response.status === 401) {
-      setToken("");
-      setRefreshToken("");
-      setIsProfileEdited("");
-      if (typeof window !== "undefined") {
-        window.location.href = `/login?oldUrl=${window.location.pathname}`;
+      if (err.response.status === 401) {
+        const token = await fetchToken();
+        originalRequest.headers.Authorization = `Bearer ${token}`;
+        return api(originalRequest).then((result) => ({ data: result }));
       }
     }
+    return Promise.reject(err);
   },
 );
 

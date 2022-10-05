@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { api, setToken } from "src/helpers/api";
+import { api, apiAuth, setToken } from "src/helpers/api";
 import { getRefreshToken, getToken, setIsProfileEdited, setRefreshToken } from "src/helpers/storage";
 
 type TwitterAccessToken = {
@@ -28,7 +28,7 @@ export const getAuthUrlTwitter = async (redirectUrl: string) => {
 };
 export const authWithProvider = async (provider: string, accessToken: string | TwitterAccessToken) => {
   try {
-    const res = await api.post(`/auth/${provider}`, { access_token: accessToken });
+    const res = await apiAuth.post(`/auth/${provider}`, { access_token: accessToken });
     if (res?.data?.access_token) {
       setToken(res?.data?.access_token, res?.data?.access_token_expires_in_seconds);
       setRefreshToken(res?.data?.refresh_token);
@@ -42,7 +42,7 @@ export const authWithProvider = async (provider: string, accessToken: string | T
 
 export const logout = async () => {
   try {
-    const res = await api.post("/auth/logout");
+    const res = await apiAuth.post("/auth/logout");
     setToken("");
     setIsProfileEdited("");
     return res;
@@ -54,7 +54,7 @@ export const logout = async () => {
 export const refreshToken = async () => {
   try {
     if (getToken()) {
-      const res = await api.post("/auth/tokens", { access_token: getToken(), refresh_token: getRefreshToken() });
+      const res = await apiAuth.post("/auth/tokens", { access_token: getToken(), refresh_token: getRefreshToken() });
       if (res?.data?.access_token) {
         setToken(res?.data?.access_token, res?.data?.access_token_expires_in_seconds);
         setRefreshToken(res?.data?.refresh_token);
