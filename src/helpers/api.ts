@@ -63,7 +63,7 @@ apiAuth.interceptors.response.use(
   (response) => response.data,
   async (err: any) => {
     if (err.response.status === 422 || err.response.status === 401) {
-      setToken("");
+      setToken("", null);
       setRefreshToken("");
       if (typeof window !== "undefined") {
         window.location.href = `/login?oldUrl=${window.location.pathname}`;

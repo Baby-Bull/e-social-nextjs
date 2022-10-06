@@ -20,23 +20,23 @@ dayjs.locale("ja");
 
 interface ICommunityDataProps {
   data?: any;
-  createPost?: any;
+  // createPost?: any;
 }
 
-const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createPost }) => {
+const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
   const { t } = useTranslation();
   const auth = useSelector((state: IStoreState) => state.user);
   const router = useRouter();
-  const RoleAdmin = ["admin", "owner"];
-  const redirectCreatePost = () => {
+  // const RoleAdmin = ["admin", "owner"];
+  const redirectToCommunityTopPage = () => {
     const communityId = router.query;
-    router.push(`/community/${communityId?.id}/post/create`);
+    router.push(`/community/${communityId?.id}`);
   };
 
-  const checkRoleCreatPost =
-    RoleAdmin.includes(data?.community_role) ||
-    data?.post_permission === data?.community_role ||
-    data?.post_permission === "all";
+  // const checkRoleCreatPost =
+  //   RoleAdmin.includes(data?.community_role) ||
+  //   data?.post_permission === data?.community_role ||
+  //   data?.post_permission === "all";
 
   const redirectGatherUrl = () => {
     if (data?.gather_url) {
@@ -180,29 +180,27 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
           </Box>
         )}
       </Box>
-      {createPost && checkRoleCreatPost && (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <ButtonComponent
+          props={{
+            square: true,
+            mode: "gradient",
+            dimension: "medium",
           }}
+          sx={{
+            mt: ["20px", "40px"],
+            height: "54px",
+          }}
+          onClick={redirectToCommunityTopPage}
         >
-          <ButtonComponent
-            props={{
-              square: true,
-              mode: "gradient",
-              dimension: "medium",
-            }}
-            sx={{
-              mt: ["20px", "40px"],
-              height: "54px",
-            }}
-            onClick={redirectCreatePost}
-          >
-            {t("community:button.intro.create-post")}
-          </ButtonComponent>
-        </Box>
-      )}
+          {t("community:button.intro.create-post")}
+        </ButtonComponent>
+      </Box>
     </React.Fragment>
   );
 };

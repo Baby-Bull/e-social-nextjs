@@ -112,7 +112,11 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
       handleOpenMatchingModal(data, indexKey);
     } else if (tempValue === "received_pending") {
       handleAcceptMatchingRequestReceived(data, indexKey);
-    } else router.push("/chat/personal");
+    } else if (tempValue === "confirmed") {
+      router.push(`/chat/personal?room=${data.id}`);
+    } else if (tempValue === "sent_pending") {
+      return null;
+    }
   };
 
   const handleClickFavoriteButton = () => {

@@ -58,7 +58,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
     if (!matchStatus) {
       setModalMatching(true);
     } else if (matchStatus === "confirmed") {
-      router.push("/chat/personal");
+      router.push(`/chat/personal?room=${data.id}`);
     } else if (matchStatus === "received_pending") {
       await acceptMatchingRequestReceived(data?.match_request?.id);
       callbackHandleIsRefresh(!isRefresh);

@@ -19,7 +19,7 @@ export const getItem = (key: string) => {
 
 export const setToken = (value: string, expiresIn?: number) => {
   setItem(USER_TOKEN, value);
-  if (expiresIn) {
+  if (expiresIn !== undefined) {
     setItem(EXPIRES_IN, expiresIn);
   }
 };
