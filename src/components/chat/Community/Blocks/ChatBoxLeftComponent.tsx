@@ -149,7 +149,7 @@ const ChatBoxLeftComponent = ({
       <Box className="box-content">
         <ul className={styles.boxThreads}>
           <InfiniteScroll
-            style={{ overflowX: "hidden" }}
+            style={{ overflowY: "auto" }}
             dataLength={listRooms?.length || 0}
             next={loadMoreChatRooms}
             hasMore={hasMoreChatRoom}
@@ -225,19 +225,7 @@ const ChatBoxLeftComponent = ({
                 </li>
                 {isMobile && (
                   <div className="more-options-SP">
-                    <IconButton
-                      aria-label="more"
-                      aria-haspopup="true"
-                      sx={{
-                        position: "absolute",
-                        right: "2em",
-                        marginTop: "-2.4em",
-                        height: "40px",
-                        width: "40px",
-                        background: "white",
-                        boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
-                      }}
-                    >
+                    <IconButton className="more-option-item" aria-label="more" aria-haspopup="true">
                       <img alt="more-options" src="/assets/images/chat/more_options.svg" />
                     </IconButton>
                   </div>
