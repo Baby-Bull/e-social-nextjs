@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "src/components/chat/chat.module.scss";
 import useViewport from "src/helpers/useViewport";
 import { getListChatRoomsCommunity } from "src/services/chat";
-import { REACT_QUERY_KEYS } from "src/constants/constants";
+import { LIMIT_ROOMS_PER_PAGE, REACT_QUERY_KEYS } from "src/constants/constants";
 import { sortListRoomChat } from "src/helpers/helper";
 import ChatBoxLeftComponent from "src/components/chat/Community/Blocks/ChatBoxLeftComponent";
 import websocket from "src/helpers/socket";
@@ -30,14 +30,8 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   const dispatch = useDispatch();
   const listRoomsChatTemp = useSelector((state: IStoreState) => state.listrooms);
 
-  const [listRooms, setListRooms] = useState([]);
   const [communityId, setCommunityId] = useState(roomQuery);
   const [roomSelect, setRoomSelect] = useState(null);
-
-  const [hasMoreChatRoom, setHasMoreChatRoom] = useState({
-    cursor: null,
-    hasMore: false,
-  });
 
   const [newMessageOfRoom, setNewMessageOfRoom] = useState(null);
 
@@ -66,7 +60,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
         return item;
       }),
     );
-    setListRooms(listRoomsSorted);
     dispatch({
       type: actionTypes.UPDATE_LIST_ROOMS,
       payload: {
@@ -85,7 +78,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
         },
         ...listRoomRef.current,
       ]);
-      setListRooms(listRoomsSorted2);
       dispatch({
         type: actionTypes.UPDATE_LIST_ROOMS,
         payload: {
@@ -97,11 +89,11 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   };
 
   useEffect(() => {
-    listRoomRef.current = listRooms;
-    if (!hasData && listRooms?.length) {
+    listRoomRef.current = listRoomsChatTemp?.itemsCommunity;
+    if (!hasData && listRoomsChatTemp?.itemsCommunity?.length) {
       setHasData(true);
     }
-  }, [listRooms]);
+  }, [listRoomsChatTemp?.itemsCommunity]);
 
   useEffect(() => {
     chatRoomIdRef.current = roomSelect?.id || null;
@@ -138,47 +130,50 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     },
   );
 
-  useEffect(() => {
-    const listRoomSort = sortListRoomChat(listRoomResQuery?.items || []);
-    setListRooms(
-      listRoomSort?.map((room) => ({
-        ...room,
-        community: {
-          ...room?.community,
-          profile_image: room?.community?.profile_image || "/assets/images/logo/logo.png",
-        },
-      })),
-    );
-  }, [listRoomResQuery]);
+  // useEffect(() => {
+  //   const listRoomSort = sortListRoomChat(listRoomResQuery?.items || []);
+  //   setListRooms(
+  //     listRoomSort?.map((room) => ({
+  //       ...room,
+  //       community: {
+  //         ...room?.community,
+  //         profile_image: room?.community?.profile_image || "/assets/images/logo/logo.png",
+  //       },
+  //     })),
+  //   );
+  // }, [listRoomResQuery]);
 
   useEffect(() => {
     if (!roomSelect?.id) {
-      const roomQuerySelect = listRoomResQuery?.items?.find(
+      const roomQuerySelect = listRoomsChatTemp?.itemsCommunity?.find(
         (item: any) => item.id === roomQuery || item?.community?.id === roomQuery,
       );
       if (roomQuerySelect) {
         setRoomSelect(roomQuerySelect);
         setCommunityId(roomQuerySelect?.id);
       } else {
-        setRoomSelect(listRoomResQuery?.items?.[0] || {});
-        setCommunityId(listRoomResQuery?.items?.[0]?.community?.id ?? roomQuery);
+        setRoomSelect(listRoomsChatTemp?.itemsCommunity?.[0] || {});
+        setCommunityId(listRoomsChatTemp?.itemsCommunity?.[0]?.community?.id ?? roomQuery);
       }
     }
-    setHasMoreChatRoom({
-      cursor: listRoomResQuery?.cursor,
-      hasMore: listRoomResQuery?.hasMore,
-    });
-  }, [listRoomResQuery, roomSelect?.id]);
+  }, [listRoomsChatTemp?.itemsCommunity, roomSelect?.id]);
 
-  const loadMoreChatRooms = async () => {
-    if (hasMoreChatRoom.cursor?.length) {
-      const listRoomRes = await getListChatRoomsCommunity(searchChatRoom?.search, hasMoreChatRoom.cursor);
-      setListRooms(sortListRoomChat([...listRooms, ...(listRoomRes?.items || [])]));
-      setHasMoreChatRoom({
-        cursor: listRoomRes?.cursor,
-        hasMore: listRoomRes?.hasMore,
-      });
-    }
+  const loadMoreMessageCommunity = async () => {
+    const res = await getListChatRoomsCommunity(
+      searchChatRoom?.search,
+      listRoomsChatTemp?.cursorCommunity,
+      LIMIT_ROOMS_PER_PAGE,
+    );
+    dispatch({
+      type: actionTypes.UPDATE_LIST_ROOMS,
+      payload: {
+        ...listRoomsChatTemp,
+        // eslint-disable-next-line no-unsafe-optional-chaining
+        itemsCommunity: [...listRoomsChatTemp.itemsCommunity, ...res?.items],
+        cursorCommunity: res?.cursor,
+        hasMoreCommunity: res?.hasMore,
+      },
+    });
   };
 
   const sendMessage = (message: string, type: string = "text", fileName: string = "", fileSize: any = "") => {
@@ -206,10 +201,10 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   };
   const onSelectRoom = async (index: number) => {
     if (isMobile) setIsRenderRightSide(!isRenderRightSide);
-    (listRooms[index]?.unread_message_count > 0) && await readMessageCommunity(listRooms[index]?.community?.id);
-    if (listRooms[index]?.community?.id !== communityId) {
-      setRoomSelect(listRooms[index]);
-      setCommunityId(listRooms[index]?.community?.id);
+    (listRoomsChatTemp?.itemsCommunity[index]?.unread_message_count > 0) && await readMessageCommunity(listRoomsChatTemp?.itemsCommunity[index]?.community?.id);
+    if (listRoomsChatTemp?.itemsCommunity[index]?.community?.id !== communityId) {
+      setRoomSelect(listRoomsChatTemp?.itemsCommunity[index]);
+      setCommunityId(listRoomsChatTemp?.itemsCommunity[index]?.community?.id);
     }
   };
 
@@ -219,12 +214,12 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     <Grid container className={classNames(styles.chatContainerPC)}>
       {!isMobile || (isMobile && !isRenderRightSide) ? (
         <ChatBoxLeftComponent
-          listRooms={listRooms}
+          listRooms={listRoomsChatTemp?.itemsCommunity}
           communityId={communityId}
           onSelectRoom={onSelectRoom}
           setSearchChatRoom={setSearchChatRoom}
-          hasMoreChatRoom={hasMoreChatRoom}
-          loadMoreChatRooms={loadMoreChatRooms}
+          hasMoreChatRoom={listRoomsChatTemp?.hasMoreCommunity}
+          loadMoreChatRooms={loadMoreMessageCommunity}
           isMobile={isMobile}
         />
       ) : null}

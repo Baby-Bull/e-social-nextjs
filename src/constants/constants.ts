@@ -165,7 +165,8 @@ export const USER_REPORT_OPTIONS = [
   },
 ];
 
-export const LIMIT_PER_PAGE = 20;
+export const LIMIT_ROOMS_PER_PAGE = 15;
+export const LIMIT_MESSAGES_PER_PAGE = 20;
 
 export const MESSAGE_CONTENT_TYPES = {
   TEXT: "text",

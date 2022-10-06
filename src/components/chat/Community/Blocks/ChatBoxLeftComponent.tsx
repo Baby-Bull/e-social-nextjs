@@ -1,9 +1,21 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { useCallback, useRef } from "react";
-import { Box, Grid, Paper, Typography, IconButton, Tabs, Tab, MenuItem, Menu, Avatar } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Paper,
+  Typography,
+  IconButton,
+  Tabs,
+  Tab,
+  MenuItem,
+  Menu,
+  Avatar,
+  CircularProgress,
+} from "@mui/material";
 import { useTranslation } from "next-i18next";
 import lodashDebounce from "lodash/debounce";
-import InfiniteScroll from "react-infinite-scroller";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
 
@@ -136,7 +148,18 @@ const ChatBoxLeftComponent = ({
       </Box>
       <Box className="box-content">
         <ul className={styles.boxThreads}>
-          <InfiniteScroll loadMore={loadMoreChatRooms} hasMore={hasMoreChatRoom.hasMore} loader="" useWindow={false}>
+          <InfiniteScroll
+            style={{ overflowY: "auto" }}
+            dataLength={listRooms?.length || 0}
+            next={loadMoreChatRooms}
+            hasMore={hasMoreChatRoom}
+            height={730}
+            loader={
+              <Box sx={{ display: "flex", py: "15px", justifyContent: "center" }}>
+                <CircularProgress sx={{ color: theme.blue }} size={30} />
+              </Box>
+            }
+          >
             {listRooms?.map((thread, index: number) => (
               <React.Fragment key={index}>
                 <li
@@ -202,19 +225,7 @@ const ChatBoxLeftComponent = ({
                 </li>
                 {isMobile && (
                   <div className="more-options-SP">
-                    <IconButton
-                      aria-label="more"
-                      aria-haspopup="true"
-                      sx={{
-                        position: "absolute",
-                        right: "2em",
-                        marginTop: "-2.4em",
-                        height: "40px",
-                        width: "40px",
-                        background: "white",
-                        boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
-                      }}
-                    >
+                    <IconButton className="more-option-item" aria-label="more" aria-haspopup="true">
                       <img alt="more-options" src="/assets/images/chat/more_options.svg" />
                     </IconButton>
                   </div>
