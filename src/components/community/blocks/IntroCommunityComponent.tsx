@@ -20,7 +20,6 @@ dayjs.locale("ja");
 
 interface ICommunityDataProps {
   data?: any;
-  // createPost?: any;
 }
 
 const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
@@ -32,6 +31,23 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
     const communityId = router.query;
     router.push(`/community/${communityId?.id}`);
   };
+
+  const redirectToCreatePost = () => {
+    const communityId = router.query;
+    router.push(`/community/${communityId?.id}/post/create`);
+  };
+
+  const RoleAdmin = ["admin", "owner"];
+  const checkRoleCreatPost =
+    RoleAdmin.includes(data?.community_role) ||
+    data?.post_permission === data?.community_role ||
+    data?.post_permission === "all";
+  const isCommunityDetailPage = router.pathname === "/community/[id]";
+  const showIntroButton = isCommunityDetailPage ? checkRoleCreatPost : true;
+  const redirectFn = isCommunityDetailPage && checkRoleCreatPost ? redirectToCreatePost : redirectToCommunityTopPage;
+  const introBtnText = isCommunityDetailPage
+    ? t("community:button.intro.create-post")
+    : t("community:button.intro.redirect-to-community");
 
   // const checkRoleCreatPost =
   //   RoleAdmin.includes(data?.community_role) ||
@@ -180,27 +196,29 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
           </Box>
         )}
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <ButtonComponent
-          props={{
-            square: true,
-            mode: "gradient",
-            dimension: "medium",
-          }}
+      {showIntroButton && (
+        <Box
           sx={{
-            mt: ["20px", "40px"],
-            height: "54px",
+            display: "flex",
+            justifyContent: "center",
           }}
-          onClick={redirectToCommunityTopPage}
         >
-          {t("community:button.intro.create-post")}
-        </ButtonComponent>
-      </Box>
+          <ButtonComponent
+            props={{
+              square: true,
+              mode: "gradient",
+              dimension: "medium",
+            }}
+            sx={{
+              mt: ["20px", "40px"],
+              height: "54px",
+            }}
+            onClick={redirectFn}
+          >
+            {introBtnText}
+          </ButtonComponent>
+        </Box>
+      )}
     </React.Fragment>
   );
 };
