@@ -65,6 +65,12 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
     setShowPopupAnalysis(true);
   };
 
+  useEffect(() => {
+    if (user?.ogp_image_version) {
+      window.history.replaceState(null, null, `${window.location.pathname}?v=${user.ogp_image_version}`);
+    }
+  }, [user]);
+
   const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
     if (isFavorite) deleteUserFavorite(tempData);
     else addUserFavorite(tempData);

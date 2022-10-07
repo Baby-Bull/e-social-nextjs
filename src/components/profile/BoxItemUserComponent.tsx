@@ -61,7 +61,9 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
       router.push(`/chat/personal?room=${data.id}`);
     } else if (matchStatus === "received_pending") {
       await acceptMatchingRequestReceived(data?.match_request?.id);
-      callbackHandleIsRefresh(!isRefresh);
+      if (callbackHandleIsRefresh) {
+        callbackHandleIsRefresh(!isRefresh);
+      }
     } else {
       return 1;
     }
@@ -72,7 +74,9 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
     setStatusBtnSendMatching("sent_pending");
     await addUserFavorite(data?.id);
     setModalMatching(false);
-    callbackHandleIsRefresh(!isRefresh);
+    if (callbackHandleIsRefresh) {
+      callbackHandleIsRefresh(!isRefresh);
+    }
     return res;
   };
 
@@ -104,7 +108,9 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
   const handleClickToProfile = () => {
     // router.push(`/profile/${data.id}`);
     window.location.href = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${data.id}`;
-    callbackHandleIsRefresh(!isRefresh);
+    if (callbackHandleIsRefresh) {
+      callbackHandleIsRefresh(!isRefresh);
+    }
   };
 
   return (

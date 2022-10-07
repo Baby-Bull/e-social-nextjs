@@ -108,7 +108,8 @@ api.interceptors.response.use(
 
     const originalRequest = err.config;
     if (originalRequest.url !== "/auth/tokens") {
-      if (err.response.status === 401) {
+      if (err.response.status === 401 && typeof window !== "undefined") {
+        // only refresh on client
         const token = await fetchToken();
         originalRequest.headers.Authorization = `Bearer ${token}`;
         return api(originalRequest).then((result) => ({ data: result }));

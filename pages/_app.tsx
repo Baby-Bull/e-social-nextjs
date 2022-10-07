@@ -221,7 +221,6 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   const { query, pathname, res } = ctx;
 
   const cookies = parseCookies(ctx);
-
   if (!AUTH_PAGE_PATHS.includes(pathname)) {
     if (!cookies[USER_TOKEN]) {
       if (!res) {

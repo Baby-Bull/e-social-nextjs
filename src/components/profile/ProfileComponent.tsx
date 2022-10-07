@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { Backdrop, Box, CircularProgress } from "@mui/material";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -29,62 +29,90 @@ import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "../../services/matching";
 import PaginationCustomComponent from "../common/PaginationCustomComponent";
 interface Props {
-  // isAuth: boolean;
   userId: string;
-  profileSkill: any;
-
-  countAllCommunities: number;
-
-  initialReviews: any[];
-  initialCursorReview: string;
-  countAllReviews: number;
-
-  recommended?: any[];
 }
 
-const ProfileHaveDataComponent: FC<Props> = ({
-  // isAuth,
-  userId,
-  profileSkill,
-
-  countAllCommunities,
-
-  initialReviews,
-  initialCursorReview,
-  countAllReviews,
-
-  recommended,
-}) => {
+const ProfileHaveDataComponent: FC<Props> = ({ userId }) => {
   const { t } = useTranslation();
   const viewPort = useViewport();
   const router = useRouter();
   const auth = useSelector((state: IStoreState) => state.user);
   const isMobile = viewPort.width <= 992;
+  const LIMIT = 20;
   const NumberOfReviewsPerPage = isMobile ? 5 : 10;
   const NumberOfCommunitiesPerPage = isMobile ? 2 : 8;
 
   const [isDisableBtn, setIsDisableBtn] = useState(false);
-  const [isRefresh, setIsRefresh] = useState(false);
-  const [isLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [showModalMatching, setModalMatching] = React.useState(false);
+  const [profileSkill, setProfileSkill] = useState<any>([]);
+  const [communities, setCommunities] = useState([]);
+  const [communityCursor, setCommunityCursor] = useState("");
+  const [countAllCommunities, setCountAllCommunities] = useState(0);
+  const [recommended, setRecommended] = useState([]);
 
-  const callbackHandleIsRefresh = (status: any) => {
-    setIsRefresh(status);
+  // Block render user-reviews ***** paginated
+  const [allReviewsRef, setAllReviewsRef] = useState([]);
+  const [cursorReviews, setCursorReviews] = useState("");
+  const [page, setPage] = useState(1);
+  const [countCurrentPages, setCountCurrentPages] = useState(2);
+  const [countAllReviews, setCountAllReviews] = useState(0);
+  const fetchUserReviews = async () => {
+    const data = await getUserReviews(userId, NumberOfReviewsPerPage, cursorReviews);
+    setCursorReviews(data?.cursor);
+    setCountAllReviews(data.items_count);
+    setAllReviewsRef([...allReviewsRef, ...data?.items]);
+    return data;
+  };
+  const handleCallbackChangePaginationReviews = (event, value) => {
+    setPage(value);
+    if (countCurrentPages <= value && countAllReviews > allReviewsRef?.length) {
+      setCountCurrentPages(countCurrentPages + 1);
+      fetchUserReviews();
+    }
+  }; // end block paginate for user reviews
+
+  const fetchProfileSkill = async () => {
+    setIsLoading(true);
+    const data = await getOrtherUserProfile(userId);
+    setProfileSkill(data);
+    setIsLoading(false);
+    return data;
+  };
+
+  const fetchCommunities = async () => {
+    setIsLoading(true);
+    const data = await getUserCommunites(userId);
+    setCommunities(data?.items);
+    setCommunityCursor(data.cursor);
+    setCountAllCommunities(data.items_count);
+    setIsLoading(false);
+    return data;
+  };
+
+  const fetchRecommended = async () => {
+    setIsLoading(true);
+    const data = await getUserRecommended(LIMIT);
+    setRecommended(data?.items?.filter((item: any) => item?.match_status !== "confirmed"));
+    setIsLoading(false);
+    return data;
   };
 
   const handleSendMatchingRequest = async (matchingRequest) => {
     const res = await sendMatchingRequest(userId, matchingRequest);
     await addUserFavorite(userId);
     setModalMatching(false);
-    // setIsRefresh(!isRefresh);
     setIsDisableBtn(true);
+    setProfileSkill({
+      ...profileSkill,
+      is_favorite: true,
+    });
     return res;
   };
 
   const handleClickMatchingButton = async (statusValue: string) => {
     if (statusValue === "received_pending") {
       await acceptMatchingRequestReceived(profileSkill?.match_request?.id);
-      // setIsRefresh(!isRefresh);
     } else {
       setModalMatching(true);
     }
@@ -109,40 +137,16 @@ const ProfileHaveDataComponent: FC<Props> = ({
     }
   }, []);
 
-  const [dataElements, setDataElements] = useState(
-    recommended?.map((item, index) => <BoxItemUserComponent data={item} key={index} />),
-  );
   useEffect(() => {
-    setDataElements(
-      recommended?.map((item, index) => (
-        <BoxItemUserComponent
-          data={item}
-          key={index}
-          isRefresh={isRefresh}
-          callbackHandleIsRefresh={callbackHandleIsRefresh}
-        />
-      )),
-    );
-  }, [recommended]);
+    fetchProfileSkill();
+    fetchUserReviews();
+    fetchCommunities();
+    fetchRecommended();
+  }, [userId]);
 
-  // Block render user-reviews ***** paginated
-  const [allReviewsRef, setAllReviewsRef] = useState(initialReviews);
-  const [cursorReviews, setCursorReviews] = useState(initialCursorReview);
-  const [page, setPage] = useState(1);
-  const [countCurrentPages, setCountCurrentPages] = useState(2);
-  const fetchUserReviews = async () => {
-    const data = await getUserReviews(userId, NumberOfReviewsPerPage, cursorReviews);
-    setCursorReviews(data?.cursor)
-    setAllReviewsRef([...allReviewsRef, ...data?.items])
-    return data;
-  };
-  const handleCallbackChangePaginationReviews = (event, value) => {
-    setPage(value);
-    if (countCurrentPages <= value && countAllReviews > allReviewsRef?.length) {
-      setCountCurrentPages(countCurrentPages + 1);
-      fetchUserReviews();
-    }
-  }; // end block paginate for user reviews
+  const dataElements = useMemo(() => {
+    return recommended?.map((item) => <BoxItemUserComponent data={item} key={item.id} />);
+  }, [recommended]);
 
   return (
     <>
@@ -172,7 +176,9 @@ const ProfileHaveDataComponent: FC<Props> = ({
           {countAllCommunities > 0 ? (
             <ParticipatingCommunityComponent
               userId={userId}
-              countAllCommunities={countAllCommunities}
+              initCountAllCommunities={countAllCommunities}
+              initCommunities={communities}
+              initCursor={communityCursor}
               NumberOfCommunitiesPerPage={NumberOfCommunitiesPerPage}
             />
           ) : (
@@ -189,25 +195,27 @@ const ProfileHaveDataComponent: FC<Props> = ({
           }}
         >
           {t("profile:title-review")}（{countAllReviews}）
-          {(countAllReviews > NumberOfReviewsPerPage) &&
+          {countAllReviews > NumberOfReviewsPerPage && (
             <PaginationCustomComponent
               handleCallbackChangePagination={handleCallbackChangePaginationReviews}
               page={page}
               perPage={countCurrentPages}
               totalPage={Math.ceil(countAllReviews / NumberOfReviewsPerPage)}
             />
-          }
+          )}
           {countAllReviews > 0 ? (
-            allReviewsRef.slice((page - 1) * NumberOfReviewsPerPage, page * NumberOfReviewsPerPage)?.map((item, key) => (
-              <ReviewComponent
-                user={item?.user}
-                hideReviewer={item?.hide_reviewer}
-                rating={item?.rating}
-                comment={item?.comment}
-                createdAt={item?.created_at}
-                key={key}
-              />
-            ))
+            allReviewsRef
+              .slice((page - 1) * NumberOfReviewsPerPage, page * NumberOfReviewsPerPage)
+              ?.map((item, key) => (
+                <ReviewComponent
+                  user={item?.user}
+                  hideReviewer={item?.hide_reviewer}
+                  rating={item?.rating}
+                  comment={item?.comment}
+                  createdAt={item?.created_at}
+                  key={key}
+                />
+              ))
           ) : (
             <BoxNoDataComponent content="まだレビューがありません" />
           )}
