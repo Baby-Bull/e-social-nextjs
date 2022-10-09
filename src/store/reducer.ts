@@ -1,6 +1,6 @@
 import { fetchToken } from "src/helpers/api";
 
-import actionTypes from "./actionTypes";
+import actionTypes, { searchUserActions } from "./actionTypes";
 
 // REDUCERS
 const reducer = (state, action: any) => {
@@ -157,6 +157,42 @@ const reducer = (state, action: any) => {
           unread_count: 0,
         },
       };
+
+    case searchUserActions.UPDATE_SCROLL_POSITION: {
+      return {
+        ...state,
+        search_users: {
+          ...state.search_users,
+          scrollPosition: action.payload.scrollPosition,
+        },
+      };
+    }
+
+    case searchUserActions.UPDATE_RESULT: {
+      return {
+        ...state,
+        search_users: {
+          ...state.search_users,
+          result: {
+            ...state.search_users.result,
+            ...action.payload,
+          },
+        },
+      };
+    }
+
+    case searchUserActions.UPDATE_FORM: {
+      return {
+        ...state,
+        search_users: {
+          ...state.search_users,
+          form: {
+            ...state.search_users.form,
+            ...action.payload,
+          },
+        },
+      };
+    }
 
     case actionTypes.REFRESH_TOKEN:
       fetchToken();

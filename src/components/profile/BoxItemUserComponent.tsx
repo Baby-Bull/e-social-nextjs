@@ -107,7 +107,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
 
   const handleClickToProfile = () => {
     // router.push(`/profile/${data.id}`);
-    window.location.href = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${data.id}`;
+    router.push(`/profile/${data.id}`);
     if (callbackHandleIsRefresh) {
       callbackHandleIsRefresh(!isRefresh);
     }

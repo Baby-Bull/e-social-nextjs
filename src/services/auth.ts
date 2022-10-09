@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { api, apiAuth, setToken } from "src/helpers/api";
-import { getRefreshToken, getToken, setIsProfileEdited, setRefreshToken } from "src/helpers/storage";
+import { setIsProfileEdited, setRefreshToken } from "src/helpers/storage";
 
 type TwitterAccessToken = {
   oauth_token: string;
@@ -46,21 +46,6 @@ export const logout = async () => {
     setToken("");
     setIsProfileEdited("");
     return res;
-  } catch (error) {
-    return error;
-  }
-};
-
-export const refreshToken = async () => {
-  try {
-    if (getToken()) {
-      const res = await apiAuth.post("/auth/tokens", { access_token: getToken(), refresh_token: getRefreshToken() });
-      if (res?.data?.access_token) {
-        setToken(res?.data?.access_token, res?.data?.access_token_expires_in_seconds);
-        setRefreshToken(res?.data?.refresh_token);
-      }
-      return res;
-    }
   } catch (error) {
     return error;
   }

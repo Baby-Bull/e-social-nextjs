@@ -16,15 +16,17 @@ import {
   Typography,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useLayoutEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
+import { connect } from "react-redux";
 
 import styles from "src/components/searchUser/search_user.module.scss";
 import theme from "src/theme";
 import { jobs, employeeStatus, lastLogins, reviews } from "src/constants/searchUserConstants";
 import useViewport from "src/helpers/useViewport";
 import { UserSearch } from "src/services/user";
+import { searchUserActions } from "src/store/actionTypes";
 
 import BoxItemUserComponent from "./BoxItemUserComponent";
 import PopupSearchUser from "./block/PopupSearchUser";
@@ -64,7 +66,51 @@ const FormControlLabelCustom = styled(FormControlLabel)({
   },
 });
 
-const SearchUserComponent = () => {
+const initalFormData = {
+  job: jobs[0]?.value,
+  employeeStatus: employeeStatus[0]?.value,
+  lastLogin: lastLogins[0]?.value,
+  review: reviews[0]?.value,
+  statusCanTalk: false,
+  statusLookingForFriend: false,
+  statusNeedConsult: false,
+};
+
+type Props = {
+  scrollPosition: number;
+  form: {
+    job: string | number;
+    employeeStatus: string | number;
+    lastLogin: number;
+    review: number;
+    statusCanTalk: boolean;
+    statusLookingForFriend: boolean;
+    statusNeedConsult: boolean;
+    tags: string[];
+  };
+  result: {
+    limit: number;
+    cursor: string;
+    items: any[];
+    sort: string;
+    hasMore: boolean;
+  };
+  // eslint-disable-next-line no-unused-vars
+  updateForm: (formData: any) => void;
+  // eslint-disable-next-line no-unused-vars
+  updateResult: (result: any) => void;
+  // eslint-disable-next-line no-unused-vars
+  updateScrollPosition: (position: number) => void;
+};
+
+const SearchUserComponent: FC<Props> = ({
+  scrollPosition,
+  form,
+  result,
+  updateForm,
+  updateResult,
+  updateScrollPosition,
+}) => {
   const { t } = useTranslation();
   // Responsive
   const viewPort = useViewport();
@@ -73,28 +119,35 @@ const SearchUserComponent = () => {
   // const query = useQuery();
   const LIMIT = 6;
   const [isLoading, setIsLoading] = useState(false);
-  const [inputTags, setInputTags] = useState([]);
-  const [resultSearch, setResultSearch] = useState([]);
+  const [inputTags, setInputTags] = useState(form.tags);
+  const [resultSearch, setResultSearch] = useState(result.items);
   // const [isRefresh, setIsRefresh] = useState(false);
-  const [isSort, setIsSort] = useState("recommended");
-  const [showMore, setShowMore] = useState({ cursor: "", hasMore: false });
+  const [isSort, setIsSort] = useState(result.sort);
+  const [showMore, setShowMore] = useState({ cursor: result.cursor, hasMore: result.hasMore });
   const [formSearch, setFormSearch] = useState({
-    job: jobs[0]?.value,
-    employeeStatus: employeeStatus[0]?.value,
-    lastLogin: lastLogins[0]?.value,
-    review: reviews[0]?.value,
-    statusCanTalk: false,
-    statusLookingForFriend: false,
-    statusNeedConsult: false,
+    job: form.job,
+    employeeStatus: form.employeeStatus,
+    lastLogin: form.lastLogin,
+    review: form.review,
+    statusCanTalk: form.statusCanTalk,
+    statusLookingForFriend: form.statusLookingForFriend,
+    statusNeedConsult: form.statusNeedConsult,
   });
   const fullText = router.query?.fulltext;
 
   const fetchData = async (typeSort: string = "", arrayResult: Array<any> = [], cursor: string = "") => {
     setIsLoading(true);
     const res = await UserSearch(formSearch, inputTags, fullText, typeSort, LIMIT, cursor);
-    setResultSearch(arrayResult.concat(res?.items));
+    const items = arrayResult.concat(res?.items);
+    setResultSearch(items);
     setShowMore({ cursor: res?.cursor, hasMore: res?.hasMore });
     setIsLoading(false);
+    updateResult({
+      items,
+      cursor: res?.cursor,
+      hasMore: res?.hasMore,
+      sort: typeSort,
+    });
   };
 
   const handleSort = async (typeSort: string) => {
@@ -102,68 +155,78 @@ const SearchUserComponent = () => {
     setIsSort(typeSort);
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [fullText]);
-
   const removeSearchTag = (indexRemove) => {
-    setInputTags(inputTags.filter((_, index) => index !== indexRemove));
+    const tags = inputTags.filter((_, index) => index !== indexRemove);
+    setInputTags(tags);
+    updateForm({ tags });
   };
 
   const onKeyPress = (e: any) => {
     if (e.key === "Enter" && e.target.value) {
-      setInputTags([...inputTags, e.target.value]);
+      const tags = [...inputTags, e.target.value];
+      setInputTags(tags);
+      updateForm({ tags });
       (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
     }
   };
 
   const handleChangeInputSearch = (e, key) => {
-    setFormSearch({
+    const formSearchData = {
       ...formSearch,
       [key]: e.target.value,
-    });
+    };
+    setFormSearch(formSearchData);
+    updateForm(formSearchData);
   };
 
   const clearFormSearch = async () => {
     setFormSearch({
-      job: jobs[0]?.value,
-      employeeStatus: employeeStatus[0]?.value,
-      lastLogin: lastLogins[0]?.value,
-      review: reviews[0]?.value,
-      statusCanTalk: false,
-      statusLookingForFriend: false,
-      statusNeedConsult: false,
+      ...initalFormData,
     });
     setInputTags([]);
     setIsLoading(true);
-    const res = await UserSearch(
-      {
-        job: jobs[0]?.value,
-        employeeStatus: employeeStatus[0]?.value,
-        lastLogin: lastLogins[0]?.value,
-        review: reviews[0]?.value,
-        statusCanTalk: false,
-        statusLookingForFriend: false,
-        statusNeedConsult: false,
-      },
-      [],
-      fullText,
-      "",
-      LIMIT,
-      "",
-    );
+    const res = await UserSearch(initalFormData, [], fullText, "", LIMIT, "");
     setResultSearch(res?.items);
     setShowMore({ cursor: res?.cursor, hasMore: res?.hasMore });
     setIsSort("recommended");
+    updateForm({
+      ...initalFormData,
+      tags: [],
+    });
+    updateResult({
+      items: res?.items,
+      cursor: res?.cursor,
+      hasMore: res?.hasMore,
+      sort: "recommended",
+    });
     setIsLoading(false);
-    router.push(
-      {
-        pathname: "/search_user",
-      },
-      undefined,
-      { shallow: false },
-    );
   };
+
+  const onPopupSetInput = (tags) => {
+    setInputTags(tags);
+    updateForm({ tags });
+  };
+
+  const onPopupSetFormSearch = (formData) => {
+    setFormSearch(formData);
+    updateForm(formData);
+  };
+
+  useEffect(() => {
+    if (fullText !== undefined) {
+      clearFormSearch();
+    }
+  }, [fullText]);
+
+  useLayoutEffect(() => {
+    window.scrollTo({
+      top: scrollPosition,
+      behavior: "smooth",
+    });
+    return () => {
+      updateScrollPosition(document.documentElement.scrollTop);
+    };
+  }, []);
 
   const [showPopupSearchUser, setShowPopupSearchUser] = useState(false);
 
@@ -257,7 +320,9 @@ const SearchUserComponent = () => {
                     value="can-talk"
                     checked={formSearch?.statusCanTalk}
                     onChange={() => {
-                      setFormSearch({ ...formSearch, statusCanTalk: !formSearch?.statusCanTalk });
+                      const data = { ...formSearch, statusCanTalk: !formSearch?.statusCanTalk };
+                      setFormSearch(data);
+                      updateForm(data);
                     }}
                   />
                 }
@@ -269,7 +334,9 @@ const SearchUserComponent = () => {
                     checked={formSearch?.statusLookingForFriend}
                     value="looking-for-friend"
                     onChange={() => {
-                      setFormSearch({ ...formSearch, statusLookingForFriend: !formSearch?.statusLookingForFriend });
+                      const data = { ...formSearch, statusLookingForFriend: !formSearch?.statusLookingForFriend };
+                      setFormSearch(data);
+                      updateForm(data);
                     }}
                   />
                 }
@@ -281,7 +348,9 @@ const SearchUserComponent = () => {
                     checked={formSearch?.statusNeedConsult}
                     value="needConsult"
                     onChange={() => {
-                      setFormSearch({ ...formSearch, statusNeedConsult: !formSearch?.statusNeedConsult });
+                      const data = { ...formSearch, statusNeedConsult: !formSearch?.statusNeedConsult };
+                      setFormSearch(data);
+                      updateForm(data);
                     }}
                   />
                 }
@@ -391,11 +460,23 @@ const SearchUserComponent = () => {
         showPopup={showPopupSearchUser}
         fetchData={fetchData}
         setShowPopup={setShowPopupSearchUser}
-        setInputTags={setInputTags}
-        setFormSearch={setFormSearch}
+        setInputTags={onPopupSetInput}
+        setFormSearch={onPopupSetFormSearch}
       />
     </React.Fragment>
   );
 };
 
-export default SearchUserComponent;
+export default connect(
+  (state: any) => ({
+    form: state.search_users.form,
+    scrollPosition: state.search_users.scrollPosition,
+    result: state.search_users.result,
+  }),
+  (dispatch) => ({
+    updateForm: (formData) => dispatch({ type: searchUserActions.UPDATE_FORM, payload: formData }),
+    updateResult: (result) => dispatch({ type: searchUserActions.UPDATE_RESULT, payload: result }),
+    updateScrollPosition: (position) =>
+      dispatch({ type: searchUserActions.UPDATE_SCROLL_POSITION, payload: { scrollPosition: position } }),
+  }),
+)(SearchUserComponent);

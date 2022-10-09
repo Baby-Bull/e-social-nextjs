@@ -33,7 +33,6 @@ const FooterComponent: React.FC<IFooterComponentProps> = ({ authPage = false }) 
   const handleLogout = async () => {
     await logout();
     dispatch({ type: actionTypes.LOGOUT });
-    window.location.href = "/login";
     router.push("/login");
   };
 

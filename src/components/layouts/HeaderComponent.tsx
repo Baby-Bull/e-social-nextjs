@@ -647,7 +647,6 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
   const handleLogout = async () => {
     await logout();
     dispatch({ type: actionTypes.LOGOUT });
-    window.location.href = "/login";
     router.push("/login");
   };
 
