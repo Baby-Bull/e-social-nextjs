@@ -32,7 +32,7 @@ const ContentComponent: React.SFC<IContentComponentProps> = ({
     }}
   >
     <Head>
-      <title>Good Tech Hub</title>
+      <title>goodhub</title>
     </Head>
     {showHeader && <HeaderComponent authPage={authPage} />}
     {children}

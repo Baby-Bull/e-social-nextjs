@@ -288,7 +288,7 @@ const DetailPostComponent = () => {
                 width: { md: "20%" },
               }}
             >
-              <IntroCommunityComponent data={dataCommunityDetail} createPost />
+              <IntroCommunityComponent data={dataCommunityDetail} />
             </Box>
 
             <Box

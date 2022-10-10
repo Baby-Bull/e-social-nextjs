@@ -26,7 +26,6 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 import theme from "src/theme";
-import FooterComponent from "src/components/layouts/FooterComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 import { updateProfile } from "src/services/user";
@@ -358,7 +357,6 @@ const FormRegisterComponents = () => {
             </Grid>
           </Grid>
         </Box>
-        <FooterComponent />
       </React.Fragment>
 
       <Dialog

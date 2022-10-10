@@ -3,9 +3,9 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Head from "next/head";
 
 import CommunityComponent from "src/components/community/IndexComponent";
-import { CommunityMembers, getCommunity } from "src/services/community";
+import { getCommunity } from "src/services/community";
 
-const Community = ({ communityInfo, communityMembers, url }) => (
+const Community = ({ communityInfo, url }) => (
   <React.Fragment>
     <Head>
       <meta property="og:type" content="article" key="og-type" />
@@ -23,16 +23,15 @@ const Community = ({ communityInfo, communityMembers, url }) => (
       <meta name="twitter:description" content={communityInfo.description} key="twitter-description" />
       {/* Inject MUI styles first to match with the prepend: true configuration. */}
     </Head>
-    <CommunityComponent communityInfo={communityInfo} communityMembers={communityMembers} />
+    <CommunityComponent />
   </React.Fragment>
 );
 
 export const getServerSideProps = async (ctx) => {
   const { locale } = ctx;
   const { id } = ctx.params;
-  const [community, communityMembers, translations] = await Promise.all([
+  const [community, translations] = await Promise.all([
     getCommunity(id),
-    CommunityMembers(id, 4, ""),
     serverSideTranslations(locale, ["common", "community"]),
   ]);
 
@@ -40,7 +39,6 @@ export const getServerSideProps = async (ctx) => {
     props: {
       ...translations,
       communityInfo: community,
-      communityMembers: communityMembers?.items || [],
       url: `${process.env.NEXT_PUBLIC_URL_PROFILE}${ctx.resolvedUrl}`,
       fallback: true, // 上記以外のパスでアクセスした場合は 404 ページにしない
     },

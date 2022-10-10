@@ -191,7 +191,7 @@ const typeSearchs = [
   },
 ];
 
-const HeaderComponent: React.FC<IHeaderComponentProps> = memo(({ authPage }) => {
+const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -306,7 +306,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = memo(({ authPage }) => 
         payload: {
           ...listRoomsChatTemp,
           itemsCommunity: listRoomTemp,
-          unread_count: listRoomsChatTemp?.unread_count + 1,
+          //unread_count: listRoomsChatTemp?.unread_count + 1,
         },
       });
     } else {
@@ -315,7 +315,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = memo(({ authPage }) => 
         payload: {
           ...listRoomsChatTemp,
           itemsPersonal: listRoomTemp,
-          unread_count: listRoomsChatTemp?.unread_count + 1,
+          //unread_count: listRoomsChatTemp?.unread_count + 1,
         },
       });
     }
@@ -336,7 +336,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = memo(({ authPage }) => 
           payload: {
             ...listRoomsChatTemp,
             itemsCommunity: listRoomTemp,
-            unread_count: listRoomsChatTemp?.unread_count + 1,
+            //unread_count: listRoomsChatTemp?.unread_count + 1,
           },
         });
       } else {
@@ -354,7 +354,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = memo(({ authPage }) => 
           payload: {
             ...listRoomsChatTemp,
             itemsPersonal: listRoomTemp,
-            unread_count: listRoomsChatTemp?.unread_count + 1,
+            //unread_count: listRoomsChatTemp?.unread_count + 1,
           },
         });
       }
@@ -401,7 +401,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = memo(({ authPage }) => 
       setMenuChatAnchorEl(event.currentTarget);
       setStatusChatMenu(true);
     }
-    dispatch({ type: actionTypes.REMOVE_UNREAD_LISTROOMS_COUNT });
+    //dispatch({ type: actionTypes.REMOVE_UNREAD_LISTROOMS_COUNT });
   };
   const handleChangeTabMessage = (event, newValue) => {
     setValueTabChatMessage(newValue);
@@ -536,7 +536,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = memo(({ authPage }) => 
           payload: {
             ...notifications,
             items: [message, ...notifications?.items],
-            unread_count: notifications?.unread_count + 1,
+            //unread_count: notifications?.unread_count + 1,
           },
         });
         if (!isMobile) {
@@ -556,12 +556,18 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = memo(({ authPage }) => 
         }
       }
     };
-    const handleWSlog = (message: any) => {
-      console.log(message);
+    const handleUpdateUnreadMessages = (newMessage: any) => {
+      dispatch({
+        type: actionTypes.UPDATE_LIST_ROOMS,
+        payload: {
+          ...listRoomsChatTemp,
+          unread_count: newMessage.chat_room_with_unread_messages,
+        },
+      });
     };
     websocket.on(`get.chatRoom.message`, wsHandler);
-    websocket.on(`get.chatRoom.new_unread`, handleWSlog);
-    websocket.on(`get.user.chat_room_with_unread_messages`, handleWSlog);
+    websocket.on(`chatRoom.new_unread`, handleUpdateUnreadMessages);
+    websocket.on(`user.chat_room_with_unread_messages`, handleUpdateUnreadMessages);
     websocket.on(`get.community.chatRoom.message`, wsHandler);
     // eslint-disable-next-line array-callback-return
     TYPE_OF_NOTIFICATIONS.map((notificationType) => {
@@ -578,8 +584,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = memo(({ authPage }) => 
     }
     return () => {
       websocket.off("get.chatRoom.message", wsHandler);
-      websocket.off(`get.chatRoom.new_unread`, handleWSlog);
-      websocket.off(`get.user.chat_room_with_unread_messages`, handleWSlog);
+      websocket.off(`get.chatRoom.new_unread`, handleUpdateUnreadMessages);
+      websocket.off(`get.user.chat_room_with_unread_messages`, handleUpdateUnreadMessages);
       websocket.off("get.community.chatRoom.message", wsHandler);
       // eslint-disable-next-line array-callback-return
       TYPE_OF_NOTIFICATIONS.map((notificationType) => {
@@ -609,7 +615,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = memo(({ authPage }) => 
   // end block function Menu ***********************************
 
   // block search **************************************************
-  const [typeSearch, setTypeSearch] = React.useState(typeSearchs[0].label);
+  const [typeSearch, setTypeSearch] = React.useState(typeSearchs[1].label);
   const [valueSearch, setValueSearch] = useState(fullText);
   const handleChange = (event: any) => {
     setTypeSearch(event.target.value);
@@ -641,7 +647,6 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = memo(({ authPage }) => 
   const handleLogout = async () => {
     await logout();
     dispatch({ type: actionTypes.LOGOUT });
-    window.location.href = "/login";
     router.push("/login");
   };
 
