@@ -3,6 +3,8 @@ import { applyMiddleware, createStore } from "redux";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
+import { SearchUserFormStatus } from "src/constants/constants";
+
 import actionTypes from "./actionTypes";
 import reducer from "./reducer";
 
@@ -12,6 +14,7 @@ interface IStoreState {
   listrooms: any;
   search_users: {
     scrollPosition: number;
+    formStatus: SearchUserFormStatus;
     form: {
       job: string | number;
       employeeStatus: string | number;
@@ -37,6 +40,7 @@ let store: any;
 const exampleInitialState: IStoreState = {
   user: {},
   search_users: {
+    formStatus: SearchUserFormStatus.Init,
     scrollPosition: 0,
     form: {
       job: 0,

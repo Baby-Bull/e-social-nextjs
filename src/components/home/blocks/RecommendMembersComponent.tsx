@@ -20,7 +20,8 @@ import styles from "src/components/home/home.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import { IStoreState } from "src/constants/interface";
-import actionTypes from "src/store/actionTypes";
+import actionTypes, { searchUserActions } from "src/store/actionTypes";
+import UserTag from "src/components/profile/UserTagComponent";
 
 import SlickSliderRecommendComponent from "./SlickSliderRecommendComponent";
 
@@ -126,75 +127,80 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
     setLiked(!liked);
   };
 
+  const handleClickToProfile = () => {
+    router.push(`/profile/${data.id}`);
+  };
+
+  const onUserTagClicked = (tag: string) => {
+    dispatch({ type: searchUserActions.SEARCH_TAG_ONLY, payload: [tag] });
+    router.push("/search_user");
+  };
+
   return (
     <Grid item xs={12} className={classNames(styles.boxRecommend)}>
       <Box className={styles.boxRecommendMember}>
-        <Link href={`/profile/${data.id}`}>
-          <Box sx={{ cursor: "pointer" }}>
-            <div className="status-summary">
-              <ButtonComponent
-                mode={HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.mode}
-                size="small"
-                style={{ borderRadius: "4px", width: "130px" }}
-              >
-                {HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.label}
-              </ButtonComponent>
-              <span className="label-login-status">
-                {data?.activity_status !== USER_ONLINE_STATUS
-                  ? replaceLabelByTranslate(
-                      t("home:box-member-recommend.last-login"),
-                      dayjs(data?.last_login_at).fromNow(),
-                    )
-                  : t("home:box-member-recommend.no-login")}
-              </span>
-            </div>
+        <Box>
+          <div onClick={handleClickToProfile} className="status-summary">
+            <ButtonComponent
+              mode={HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.mode}
+              size="small"
+              style={{ borderRadius: "4px", width: "130px" }}
+            >
+              {HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.label}
+            </ButtonComponent>
+            <span className="label-login-status">
+              {data?.activity_status !== USER_ONLINE_STATUS
+                ? replaceLabelByTranslate(
+                    t("home:box-member-recommend.last-login"),
+                    dayjs(data?.last_login_at).fromNow(),
+                  )
+                : t("home:box-member-recommend.no-login")}
+            </span>
+          </div>
 
-            <div className="info-summary">
-              <Avatar sx={{ width: "56px", height: "56px", mr: "13px" }}>
-                <Image
-                  loader={() =>
-                    data?.profile_image ??
-                    "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
-                  }
-                  width={56}
-                  height={56}
-                  src={
-                    data?.profile_image ??
-                    "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
-                  }
-                  alt={data?.username}
-                  objectFit="contain"
-                />
-              </Avatar>
-              <div className="member-info">
-                <div className="name">{data?.username}</div>
-                <div className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? "情報なし"}</div>
-                <div className="review">
-                  {t("home:box-member-recommend.review")}: {data?.review_count ?? 0}
-                </div>
+          <div onClick={handleClickToProfile} className="info-summary">
+            <Avatar sx={{ width: "56px", height: "56px", mr: "13px" }}>
+              <Image
+                loader={() =>
+                  data?.profile_image ??
+                  "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
+                }
+                width={56}
+                height={56}
+                src={
+                  data?.profile_image ??
+                  "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
+                }
+                alt={data?.username}
+                objectFit="contain"
+              />
+            </Avatar>
+            <div className="member-info">
+              <div className="name">{data?.username}</div>
+              <div className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? "情報なし"}</div>
+              <div className="review">
+                {t("home:box-member-recommend.review")}: {data?.review_count ?? 0}
               </div>
             </div>
+          </div>
 
-            <div className="introduce">{data?.hitokoto ?? "情報なし"}</div>
+          <div onClick={handleClickToProfile} className="introduce">
+            {data?.hitokoto ?? "情報なし"}
+          </div>
 
-            <div className="tags">
-              <ul>
-                {data?.tags?.map((tag, index) => (
-                  <li key={index}>{tag}</li>
-                ))}
-              </ul>
-            </div>
+          <div className="tags">
+            <UserTag tags={data.tags} onClick={onUserTagClicked} />
+          </div>
 
-            <div className="label-description">
-              <img alt="" src="/assets/images/home_page/ic_chat.svg" />
-              {t("home:box-member-recommend.label-description")}
-            </div>
+          <div className="label-description">
+            <img alt="" src="/assets/images/home_page/ic_chat.svg" />
+            {t("home:box-member-recommend.label-description")}
+          </div>
 
-            <div className="description">
-              {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
-            </div>
-          </Box>
-        </Link>
+          <div className="description">
+            {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
+          </div>
+        </Box>
         <div className="div-review" onClick={handleClickFavoriteButton}>
           <img
             alt="ic-like"

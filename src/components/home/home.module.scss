@@ -503,6 +503,7 @@
       display: flex;
       justify-content: space-between;
       margin-bottom: 20px;
+      cursor: pointer;
 
       .label-login-status {
         font-size: 10px;
@@ -513,6 +514,7 @@
     }
 
     .info-summary {
+      cursor: pointer;
       display: flex;
 
       img {
@@ -555,6 +557,7 @@
     }
 
     .introduce {
+      cursor: pointer;
       margin-top: 11px;
       margin-bottom: 20px;
       border-radius: 12px;
@@ -603,6 +606,11 @@
           margin-left: 2px;
           margin-right: 2px;
           margin-top: 4px;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #dcf9ff;
+          }
         }
       }
     }
