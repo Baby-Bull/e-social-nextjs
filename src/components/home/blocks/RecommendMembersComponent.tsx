@@ -128,7 +128,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
   };
 
   const handleClickToProfile = () => {
-    router.push(`/profile/${data.id}`);
+    router.push(`/profile/${data.id}`, undefined, { shallow: true });
   };
 
   const onUserTagClicked = (tag: string) => {

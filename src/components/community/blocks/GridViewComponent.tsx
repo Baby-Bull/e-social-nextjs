@@ -36,7 +36,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) 
   const auth = useSelector((state: IStoreState) => state.user);
 
   const handleRedirectToProfile = (stringId: string) => {
-    router.push(stringId === auth?.id ? `/my-profile` : `/profile/${stringId}`);
+    router.push(stringId === auth?.id ? `/my-profile` : `/profile/${stringId}`, undefined, { shallow: true });
   };
 
   return (

@@ -223,13 +223,13 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
     lodashDebounce((searchValue: string, mode: string) => {
       mode === MODE_ROOM_CHAT.community
         ? setSearchChatRoomCommunity({
-          search: searchValue,
-          cursor: null,
-        })
+            search: searchValue,
+            cursor: null,
+          })
         : setSearchChatRoomPersonal({
-          search: searchValue,
-          cursor: null,
-        });
+            search: searchValue,
+            cursor: null,
+          });
     }, 700),
     [],
   );
@@ -247,8 +247,10 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
           cursor: "",
         });
       if (auth?.community_count !== undefined) {
-        draftList1 = await getListChatRooms(searchChatRoomPersonal?.search, searchChatRoomPersonal?.cursor);
-        draftList2 = await getListChatRoomsCommunity(searchChatRoomCommunity?.search, searchChatRoomCommunity?.cursor);
+        [draftList1, draftList2] = await Promise.all([
+          getListChatRooms(searchChatRoomPersonal?.search, searchChatRoomPersonal?.cursor),
+          getListChatRoomsCommunity(searchChatRoomCommunity?.search, searchChatRoomCommunity?.cursor),
+        ]);
       }
       return {
         roomsPersonal: draftList1,
@@ -483,7 +485,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
         router.push(`/community/${dataOfMessage?.community_id}/post/detail/${dataOfMessage?.post_id}`);
         break;
       case "new_recommend_user":
-        router.push(`/profile/${dataOfMessage?.user?.id}`);
+        router.push(`/profile/${dataOfMessage?.user?.id}`, undefined, { shallow: true });
         break;
       case "tagged_in_comment":
         router.push(`/community/${dataOfMessage?.community_id}/post/detail/${dataOfMessage?.post_id}`);
@@ -843,12 +845,12 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
                           {
                             // eslint-disable-next-line no-unsafe-optional-chaining
                             (dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name) +
-                            // eslint-disable-next-line no-unsafe-optional-chaining
-                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label +
-                            " " +
-                            (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") +
-                            " " +
-                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
+                              // eslint-disable-next-line no-unsafe-optional-chaining
+                              CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label +
+                              " " +
+                              (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") +
+                              " " +
+                              CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
                           }
                         </div>
                       ) : (
@@ -856,12 +858,12 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
                           {
                             // eslint-disable-next-line no-unsafe-optional-chaining
                             (dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name) +
-                            // eslint-disable-next-line no-unsafe-optional-chaining
-                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label +
-                            " " +
-                            (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") +
-                            " " +
-                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
+                              // eslint-disable-next-line no-unsafe-optional-chaining
+                              CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label +
+                              " " +
+                              (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") +
+                              " " +
+                              CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
                           }
                         </div>
                       )}

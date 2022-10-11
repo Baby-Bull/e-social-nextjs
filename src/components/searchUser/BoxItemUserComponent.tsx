@@ -106,7 +106,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
 
   const handleClickToProfile = () => {
     if (auth?.id === data?.id) router.push(`/my-profile`);
-    else router.push(`/profile/${data.id}`);
+    else router.push(`/profile/${data.id}`, undefined, { shallow: true });
   };
 
   const onUserTagClicked = (tag: string) => {

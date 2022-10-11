@@ -109,7 +109,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
 
   const handleClickToProfile = () => {
     // router.push(`/profile/${data.id}`);
-    router.push(`/profile/${data.id}`);
+    router.push(`/profile/${data.id}`, undefined, { shallow: true });
     if (callbackHandleIsRefresh) {
       callbackHandleIsRefresh(!isRefresh);
     }
