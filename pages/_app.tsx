@@ -225,8 +225,13 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
     if (!cookies[USER_TOKEN]) {
       if (!res) {
         Router.push("/login");
+        return {};
       }
-      return {};
+      res.writeHead(301, {
+        Location: `${process.env.NEXT_PUBLIC_URL_LANDING_PAGE}?oldUrl=${ctx.resolvedUrl}`,
+      });
+      res.end();
+      return;
     }
     setApiAuth(cookies[USER_TOKEN]);
   }

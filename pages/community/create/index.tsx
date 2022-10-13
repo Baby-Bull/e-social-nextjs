@@ -11,14 +11,6 @@ const Community: NextPage = () => <CreateComponent />;
 export const getServerSideProps = async (ctx) => {
   const { locale } = ctx;
   const cookies = parseCookies(ctx);
-  if (cookies[IS_PROFILE_EDITED] === "false") {
-    return {
-      redirect: {
-        destination: "/register/form",
-        permanent: false,
-      },
-    };
-  }
 
   if (!cookies[USER_TOKEN]) {
     return {
@@ -29,6 +21,14 @@ export const getServerSideProps = async (ctx) => {
     };
   }
 
+  if (cookies[IS_PROFILE_EDITED] === "false") {
+    return {
+      redirect: {
+        destination: "/register/form",
+        permanent: false,
+      },
+    };
+  }
   return {
     props: {
       ...(await serverSideTranslations(locale, ["common", "community"])),
