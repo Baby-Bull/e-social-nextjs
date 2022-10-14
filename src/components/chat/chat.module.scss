@@ -26,7 +26,7 @@
     :global {
       .box-title {
         height: 54px;
-        padding: 12px 9px;
+        padding: 1.3em 0;
         position: relative;
 
         .title {
@@ -53,7 +53,7 @@
       }
 
       .box-content {
-        overflow: auto;
+        // overflow-y: auto;
         flex-grow: 1;
         border: 1px solid #e4e6eb;
         border-top: none;
@@ -128,7 +128,7 @@
         flex-grow: 1;
         border: 1px solid #e4e6eb;
         border-top: none;
-        overflow-y: auto;
+        //overflow-y: auto;
         position: relative;
 
         @media screen and (max-width: 992px) {
@@ -452,6 +452,20 @@
   margin: 0;
 
   :global {
+    .more-options-SP {
+      .more-option-item {
+        margin: -4.5em 0 0 11.5em;
+        height: 40px;
+        width: 40px;
+        background: white;
+        box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+
+        @media screen and (min-width : 468px) {
+          margin: -4.5em 0 0 80%;
+        }
+      }
+    }
+
     .thread-item {
       border-bottom: 1px solid #e4e6eb;
       padding: 10px 19px;
@@ -573,6 +587,6 @@
 }
 
 .tagDownload {
-  color: #1A2944;
-  text-decoration: none
+  color: #1a2944;
+  text-decoration: none;
 }

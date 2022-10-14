@@ -1,10 +1,22 @@
 import React from "react";
 
 const SplashScreen = () => (
-  <img
-    alt="splash"
-    src="/assets/images/bg_loading.gif"
-    style={{ top: "40vh", bottom: 0, right: 0, left: "40%", width: "20%", position: "fixed" }}
-  />
+  <div
+    style={{
+      width: "100%",
+      height: "100%",
+      position: "fixed",
+      top: 0,
+      left: 0,
+      display: "flex",
+      zIndex: 999,
+      backgroundColor: "#fff",
+      justifyContent: "center",
+      alignContent: "center",
+      alignItems: "center",
+    }}
+  >
+    <img alt="splash" src="/assets/images/bg_loading.gif" style={{ width: "20%" }} />
+  </div>
 );
 export default SplashScreen;

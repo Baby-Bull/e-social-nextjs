@@ -53,7 +53,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
     if (auth?.id === userId) {
       router.push(`/my-profile`);
     } else {
-      router.push(`/profile/${userId}`);
+      router.push(`/profile/${userId}`, undefined, { shallow: true });
     }
   };
   return (

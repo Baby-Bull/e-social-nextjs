@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 
 import { logout } from "src/services/auth";
+import styles from "src/components/layouts/layout.module.scss";
 
 import actionTypes from "../../store/actionTypes";
 
@@ -33,12 +34,11 @@ const FooterComponent: React.FC<IFooterComponentProps> = ({ authPage = false }) 
   const handleLogout = async () => {
     await logout();
     dispatch({ type: actionTypes.LOGOUT });
-    window.location.href = "/login";
     router.push("/login");
   };
 
   return (
-    <Box sx={{ backgroundColor: "#1A2944" }}>
+    <Box className={styles.footerComp}>
       <Box
         sx={{
           display: { xs: "block", lg: "flex" },

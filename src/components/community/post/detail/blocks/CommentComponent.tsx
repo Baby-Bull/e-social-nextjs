@@ -19,6 +19,7 @@ import { IStoreState } from "src/constants/interface";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import { VALIDATE_FORM_COMMUNITY_POST } from "src/messages/validate";
 import { searchMemberCommunity, updatePostComment } from "src/services/community";
+import Link from "next/link";
 
 dayjs.extend(localizedFormat);
 dayjs.locale("ja");
@@ -117,7 +118,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
     if (itemData?.user?.id === auth?.id) {
       router.push("/my-profile");
     } else {
-      router.push(`/profile/${itemData?.user?.id}`);
+      router.push(`/profile/${itemData?.user?.id}`, undefined, { shallow: true });
     }
   };
 
@@ -143,7 +144,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
       highlighter: {
         substring: {
           visibility: isUpdateComment ? "hidden" : "visible",
-          color: "black"
+          color: "black",
         },
         position: "",
         padding: 9.3,
@@ -349,30 +350,27 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
             >
               <Mention
                 displayTransform={(id: string, display: any) => (
-                  <a
-                    style={{ textDecoration: "none", color: "#03BCDB" }}
-                    href={`/profile/${id}`}
-                  >
-                    {display}
-                  </a>
+                  <Link href={`/profile/${id}`} shallow>
+                    <a style={{ textDecoration: "none", color: "#03BCDB" }}>{display}</a>
+                  </Link>
                 )}
                 markup="@{__id__|__display__}"
-                style={{ backgroundColor: "#fff", cursor: "pointer !important" }} />
+                style={{ backgroundColor: "#fff", cursor: "pointer !important" }}
+              />
               <Mention
                 displayTransform={(id: string, display: any) => {
                   return (
-                  <a
-                    target="_blank"
-                    style={{ textDecoration: "none", color: "#03BCDB" }}
-                    href={id}
-                  >
-                    {id}
-                  </a>
-                )
+                    <a target="_blank" style={{ textDecoration: "none", color: "#03BCDB" }} href={id}>
+                      {id}
+                    </a>
+                  );
                 }}
                 markup="__id__"
-                regex={/((?:http|https):\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*))/}
-                style={{ backgroundColor: "#fff", cursor: "pointer !important" }} />
+                regex={
+                  /((?:http|https):\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*))/
+                }
+                style={{ backgroundColor: "#fff", cursor: "pointer !important" }}
+              />
             </MentionsInput>
           </>
         )}

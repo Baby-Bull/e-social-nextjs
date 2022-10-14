@@ -11,9 +11,9 @@ import copy from "copy-to-clipboard";
 import { FacebookShareButton, TwitterShareButton } from "react-share";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 
 import { COPY_SUCCESSFUL } from "src/messages/notification";
-import PopupChartProfileComponent from "src/components/profile/PopupChartProfileComponent";
 import theme from "src/theme";
 import styles from "src/components/profile/profile.module.scss";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
@@ -29,6 +29,8 @@ interface TopProfileComponentProps {
   user: any;
   myProfile: boolean;
 }
+
+const PopupChartProfileComponent = dynamic(() => import("src/components/profile/PopupChartProfileComponent"));
 
 const BoxInfoProfile = styled(Box)`
   display: flex;
@@ -64,6 +66,12 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
   const handleShowPopupAnalysis = () => {
     setShowPopupAnalysis(true);
   };
+
+  useEffect(() => {
+    if (user?.ogp_image_version) {
+      window.history.replaceState(null, null, `${window.location.pathname}?v=${user.ogp_image_version}`);
+    }
+  }, [user]);
 
   const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
     if (isFavorite) deleteUserFavorite(tempData);
@@ -962,7 +970,9 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
           </Box>
         </Grid>
       </Grid>
-      <PopupChartProfileComponent showPopup={showPopupAnalysis} setShowPopup={setShowPopupAnalysis} />
+      {showPopupAnalysis && (
+        <PopupChartProfileComponent showPopup={showPopupAnalysis} setShowPopup={setShowPopupAnalysis} />
+      )}
     </Box>
   );
 };

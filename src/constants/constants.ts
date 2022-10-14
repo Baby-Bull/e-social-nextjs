@@ -180,6 +180,7 @@ export const REACT_QUERY_KEYS = {
   HOMEPAGE_GET_USER_NEW_MEMBERS: "HOMEPAGE_GET_USER_NEW_MEMBERS",
   HOMEPAGE_GET_USER_FAVORITE_TAGS: "HOMEPAGE_GET_USER_FAVORITE_TAGS",
   LIST_ROOMS: "PERSONAL_AND_COMMUNITY_CHAT_ROOMS",
+  LIST_NOTIFICATIONS: "LIST_NOTIFICATIONS",
 
   PERSONAL_CHAT: {
     LIST_CHAT_ROOMS_FIRST: "PERSONAL_CHAT_LIST_CHAT_ROOMS_FIRST",
@@ -398,7 +399,7 @@ export const TYPE_OF_NOTIFICATIONS = [
   "new_comment_in_post",
   "new_recommend_user",
   "community_join_request_rejected",
-  "tagged_in_comment"
+  "tagged_in_comment",
 ];
 export const CONTENT_OF_NOTIFICATIONS = {
   new_matching_request: { label: "さんからマッチングリクエストが届きました。", label2: "" },
@@ -416,5 +417,13 @@ export const USER_OFFLINE_STATUS = "offline";
 
 export const MODE_ROOM_CHAT = {
   personal: "personal",
-  community: "community"
+  community: "community",
+};
+
+// eslint-disable-next-line no-shadow
+export enum SearchUserFormStatus {
+  // eslint-disable-next-line no-unused-vars
+  Init = "init",
+  // eslint-disable-next-line no-unused-vars
+  Cached = "cached",
 }

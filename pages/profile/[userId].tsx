@@ -5,13 +5,12 @@ import { parseCookies } from "nookies";
 import Head from "next/head";
 
 import { IS_PROFILE_EDITED, USER_TOKEN } from "src/helpers/storage";
-import { getOrtherUserProfile, getUserCommunites, getUserRecommended, getUserReviews } from "src/services/user";
-import { isMobile } from "react-device-detect";
+import { getOrtherUserProfile } from "src/services/user";
 import ProfileComponent from "../../src/components/profile/ProfileComponent";
 
 const sampleUserId = "624cf8551b8a720009e2e1db";
 
-const Profile = ({ url, userId, profileSkill, countAllCommunities, initialReviews, initialCursorReview, countAllReviews, recommended }) => (
+const Profile = ({ url, profileSkill, userId }) => (
   <React.Fragment>
     <Head>
       <meta property="og:type" content="article" key="og-type" />
@@ -29,19 +28,7 @@ const Profile = ({ url, userId, profileSkill, countAllCommunities, initialReview
       <meta name="twitter:description" content={profileSkill.self_description} key="twitter-description" />
       {/* Inject MUI styles first to match with the prepend: true configuration. */}
     </Head>
-    <ProfileComponent
-      // isAuth={isAuth}
-      userId={userId}
-      profileSkill={profileSkill}
-
-      countAllCommunities={countAllCommunities}
-
-      initialReviews={initialReviews}
-      initialCursorReview={initialCursorReview}
-      countAllReviews={countAllReviews}
-
-      recommended={recommended}
-    />
+    <ProfileComponent userId={userId} />
   </React.Fragment>
 );
 
@@ -58,28 +45,17 @@ export const getServerSideProps = async (ctx) => {
       },
     };
   }
-  const [profileSkill, communities, allReviews, recommended] = await Promise.all([
+  const [profileSkill, translation] = await Promise.all([
     getOrtherUserProfile(userId),
-    getUserCommunites(userId, isMobile ? 2 : 10, ""),
-    getUserReviews(userId, isMobile ? 5 : 10, ""),
-    ...(isAuth ? [getUserRecommended(20)] : [Promise.resolve(undefined)]),
+    serverSideTranslations(locale, ["common", "profile", "user-search", "home"]),
   ]);
 
   return {
     props: {
-      ...(await serverSideTranslations(locale, ["common", "profile", "user-search", "home"])),
+      ...translation,
       url: `${process.env.NEXT_PUBLIC_URL_PROFILE}${ctx.resolvedUrl}`,
-      isAuth,
       userId,
       profileSkill,
-
-      countAllCommunities: communities?.items_count || 0,
-
-      initialReviews: allReviews?.items || [],
-      initialCursorReview: allReviews?.cursor || "",
-      countAllReviews: allReviews?.items_count || 0,
-
-      recommended: recommended?.items || [],
       paths: [{ params: { userId: sampleUserId } }],
       fallback: true, // 上記以外のパスでアクセスした場合は 404 ページにしない
     },

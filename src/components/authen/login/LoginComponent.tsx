@@ -5,7 +5,6 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 
-import FooterComponent from "src/components/layouts/FooterComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import theme from "src/theme";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
@@ -37,9 +36,9 @@ const LoginComponent = () => {
       if (resAuth?.data?.access_token) {
         dispatch(login(resAuth?.data?.user));
         dispatch({
-          type: actionTypes.UPDATE_LIST_ROOMS,
+          type: actionTypes.UPDATE_UNREAD_LISTROOMS_COUNT,
           payload: {
-            unread_count: resAuth?.data?.user?.profile?.chat_room_with_unread_messages,
+            count: resAuth?.data?.user?.profile?.chat_room_with_unread_messages,
           },
         });
         if (resAuth?.data?.user?.is_profile_edited) {
@@ -190,7 +189,6 @@ const LoginComponent = () => {
               </Grid>
             </Grid>
           </Box>
-          <FooterComponent authPage />
         </React.Fragment>
       )}
     </React.Fragment>

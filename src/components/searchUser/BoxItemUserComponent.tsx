@@ -16,8 +16,10 @@ import { replaceLabelByTranslate } from "src/utils/utils";
 import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
-import actionTypes from "src/store/actionTypes";
+import actionTypes, { searchUserActions } from "src/store/actionTypes";
 import { IStoreState } from "src/constants/interface";
+
+import UserTag from "../profile/UserTagComponent";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
@@ -58,7 +60,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
     if (!matchStatus) {
       setModalMatching(true);
     } else if (matchStatus === "confirmed") {
-      router.push("/chat/personal");
+      router.push(`/chat/personal?room=${data.id}`);
     } else if (matchStatus === "received_pending") {
       await acceptMatchingRequestReceived(data?.match_request?.id);
       // callbackHandleIsRefresh(!isRefresh);
@@ -104,15 +106,19 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
 
   const handleClickToProfile = () => {
     if (auth?.id === data?.id) router.push(`/my-profile`);
-    else router.push(`/profile/${data.id}`);
+    else router.push(`/profile/${data.id}`, undefined, { shallow: true });
+  };
+
+  const onUserTagClicked = (tag: string) => {
+    dispatch({ type: searchUserActions.APPEND_TAG, payload: [tag] });
   };
 
   return (
     <React.Fragment>
       <Grid item xs={12} className={classNames(styles.boxItemUser)}>
         <Box className={styles.boxItemSearchUser}>
-          <Box onClick={handleClickToProfile} sx={{ cursor: "pointer" }}>
-            <div className="status-summary">
+          <Box>
+            <div onClick={handleClickToProfile} className="status-summary">
               <ButtonComponent
                 mode={USER_SEARCH_STATUS[data?.status]?.mode}
                 size="small"
@@ -130,7 +136,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
               </span>
             </div>
 
-            <div className="info-summary">
+            <div onClick={handleClickToProfile} className="info-summary">
               <Avatar
                 src={data?.profile_image}
                 alt={data?.username}
@@ -146,14 +152,12 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
               </div>
             </div>
 
-            <div className="introduce">{data?.hitokoto ? data?.hitokoto : "情報なし"}</div>
+            <div onClick={handleClickToProfile} className="introduce">
+              {data?.hitokoto ? data?.hitokoto : "情報なし"}
+            </div>
 
             <div className="tags">
-              <ul>
-                {data?.tags?.map((tag, index) => (
-                  <li key={index}>{tag}</li>
-                ))}
-              </ul>
+              <UserTag tags={data.tags} onClick={onUserTagClicked} />
             </div>
 
             <p className="label-description">

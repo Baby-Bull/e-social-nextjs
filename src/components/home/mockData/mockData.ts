@@ -17,10 +17,10 @@ export const notificationMockData = {
   title: "お知らせ",
   data: [
     {
-      content: "【コミュニティ機能など】2021年10月にRebaseがリニューアルしました🎉",
+      content: "【コミュニティ機能など】2022年10月にgoodhubがリリースしました🎉",
     },
     {
-      content: "【コミュニティ機能など】2021年10月にRebaseがリニューアルしました🎉",
+      content: "【コミュニティ機能など】2022年10月にgoodhubがリリースしました🎉",
     },
   ],
 };
