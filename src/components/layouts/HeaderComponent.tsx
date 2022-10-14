@@ -1,5 +1,4 @@
-/* eslint-disable */
-import React, { useEffect, useRef, useState, useCallback, memo } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -9,70 +8,35 @@ import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import Tab from "@mui/material/Tab";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
 import { useRouter } from "next/router";
-import { Button, Select, Avatar, Typography, Paper, CircularProgress } from "@mui/material";
+import Button from "@mui/material/Button";
+import Select from "@mui/material/Select";
+import Avatar from "@mui/material/Avatar";
+import Typography from "@mui/material/Typography";
 import { useTranslation } from "next-i18next";
 import { ToastContainer } from "react-toastify";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import styles from "src/components/layouts/layout.module.scss";
-// eslint-disable-next-line import/order
+import { isMobile } from "react-device-detect";
+import dynamic from "next/dynamic";
+
 import theme from "src/theme";
 import websocket from "src/helpers/socket";
 import "react-toastify/dist/ReactToastify.css";
 import { IStoreState } from "src/constants/interface";
-// eslint-disable-next-line import/order
-import InfiniteScroll from "react-infinite-scroll-component";
-import InputCustom from "../chat/ElementCustom/InputCustom";
-import { getListChatRooms, getListChatRoomsCommunity } from "src/services/chat";
-import { formatChatDateRoom, sortListRoomChat } from "src/helpers/helper";
-import {
-  CONTENT_OF_NOTIFICATIONS,
-  MODE_ROOM_CHAT,
-  REACT_QUERY_KEYS,
-  TYPE_OF_NOTIFICATIONS,
-} from "src/constants/constants";
-// eslint-disable-next-line import/order
-import dayjs from "dayjs";
-import {
-  getListnotifications,
-  readAllNotifications,
-  readMessageCommunity,
-  readMessagePersonal,
-  readNotification,
-} from "src/services/user";
+import { CONTENT_OF_NOTIFICATIONS, TYPE_OF_NOTIFICATIONS } from "src/constants/constants";
+import { readAllNotifications } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
 import { logout } from "src/services/auth";
-import { useQuery } from "react-query";
-import { isMobile } from "react-device-detect";
-import lodashDebounce from "lodash/debounce";
+import { customizeContentNotificationBrowser, notify } from "src/utils/utils";
+import { ChatMessage } from "src/types/models/ChatMessage";
 
 interface IHeaderComponentProps {
   authPage?: boolean;
 }
-type UserDataInNotification = {
-  id: string;
-  username: string;
-  profile_image: string;
-};
-type CommunityDataInNotification = {
-  id: string;
-  name: string;
-  profile_image: string;
-};
-type DataRedirectNotification = {
-  match_request_id?: string;
-  user?: UserDataInNotification;
-  community_join_request_id?: string;
-  community_id?: string;
-  community?: CommunityDataInNotification;
-  comment_id?: string;
-  post_id?: string;
-};
+
+const HeaderNotificationComponent = dynamic(() => import("./HeaderNotificationComponent"));
+const HeaderChatComponent = dynamic(() => import("./HeaderChatComponent"));
 
 const Search = styled("div")({
   marginRight: theme.spacing(2),
@@ -161,25 +125,6 @@ const TypoLabel = styled(Typography)({
   marginLeft: "4px",
 });
 
-const TabsCustom = styled(TabList)(() => ({
-  padding: 0,
-  color: "black",
-  fontSize: "20px",
-  fontWeight: 500,
-
-  "& .MuiTab-root": {
-    fontSize: "20px",
-    fontWeight: 500,
-    whiteSpace: "nowrap",
-  },
-  "& .Mui-selected": {
-    color: theme.blue,
-  },
-  "& .MuiTabs-indicator": {
-    backgroundColor: theme.blue,
-  },
-}));
-
 const typeSearchs = [
   {
     value: "エンジニア",
@@ -198,202 +143,18 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
   const fullText = router.query?.fulltext;
   const auth = useSelector((state: IStoreState) => state.user);
   const notifications = useSelector((state: IStoreState) => state.notifications);
-  const listRoomsChatTemp = useSelector((state: IStoreState) => state.listrooms);
+  const listRoomsChatUnread = useSelector((state: IStoreState) => state.listrooms.unread_count);
 
-  //block function Messages ***********************************************************
-  const listRoomsPersonalRef = useRef([]);
-  const listRoomsCommunityRef = useRef([]);
-  const [menuChatAnchorEl, setMenuChatAnchorEl] = React.useState(null);
+  // block function Messages ***********************************************************
   const [statusChatMenu, setStatusChatMenu] = useState(false);
-  const isMenuChatOpen = Boolean(menuChatAnchorEl);
-  const [valueTabChatMessage, setValueTabChatMessage] = React.useState("1");
-  const [statusAuthPage, setStatusAuthPage] = React.useState(false);
-  const inputSearchMenuChatPersonal = useRef(null);
-  const inputSearchMenuChatCommunity = useRef(null);
+  const [menuChatAnchorEl, setMenuChatAnchorEl] = React.useState(null);
 
-  const [searchChatRoomPersonal, setSearchChatRoomPersonal] = useState({
-    search: null,
-    cursor: null,
-  });
-  const [searchChatRoomCommunity, setSearchChatRoomCommunity] = useState({
-    search: null,
-    cursor: null,
-  });
-  const debounceSearchRooms = useCallback(
-    lodashDebounce((searchValue: string, mode: string) => {
-      mode === MODE_ROOM_CHAT.community
-        ? setSearchChatRoomCommunity({
-          search: searchValue,
-          cursor: null,
-        })
-        : setSearchChatRoomPersonal({
-          search: searchValue,
-          cursor: null,
-        });
-    }, 700),
-    [],
-  );
-  const handleTypingForInputSearch = (valueInputSearchTemp: any, mode: string) => {
-    debounceSearchRooms(valueInputSearchTemp, mode);
-  };
+  const statusAuthPage = !auth || authPage;
 
-  const { data: listRoomsChatResQuery } = useQuery(
-    [REACT_QUERY_KEYS.LIST_ROOMS, searchChatRoomCommunity, searchChatRoomPersonal],
-    async () => {
-      let draftList1,
-        draftList2 = (draftList1 = {
-          items: [],
-          hasMore: false,
-          cursor: "",
-        });
-      if (auth?.community_count !== undefined) {
-        draftList1 = await getListChatRooms(searchChatRoomPersonal?.search, searchChatRoomPersonal?.cursor);
-        draftList2 = await getListChatRoomsCommunity(searchChatRoomCommunity?.search, searchChatRoomCommunity?.cursor);
-      }
-      return {
-        roomsPersonal: draftList1,
-        roomsCommunity: draftList2,
-      };
-    },
-    { refetchOnWindowFocus: false },
-  );
-  useEffect(() => {
-    const user = auth?.username;
-    if (user === undefined || authPage === true) {
-      setStatusAuthPage(true);
-    }
-    const listRoomsPersonalSorted = sortListRoomChat(listRoomsChatResQuery?.roomsPersonal?.items || []);
-    const listRoomsCommunitySorted = sortListRoomChat(listRoomsChatResQuery?.roomsCommunity?.items || []);
-    dispatch({
-      type: actionTypes.UPDATE_LIST_ROOMS,
-      payload: {
-        ...listRoomsChatTemp,
-        itemsPersonal: listRoomsPersonalSorted,
-        itemsCommunity: listRoomsCommunitySorted,
-        hasMorePersonal: listRoomsChatResQuery?.roomsPersonal?.hasMore,
-        hasMoreCommunity: listRoomsChatResQuery?.roomsCommunity?.hasMore,
-        cursorPersonal: listRoomsChatResQuery?.roomsPersonal?.cursor,
-        cursorCommunity: listRoomsChatResQuery?.roomsCommunity?.cursor,
-      },
-    });
-  }, [listRoomsChatResQuery, auth]);
-
-  useEffect(() => {
-    listRoomsPersonalRef.current = listRoomsChatTemp?.itemsPersonal;
-    listRoomsCommunityRef.current = listRoomsChatTemp?.itemsCommunity;
-  }, [listRoomsChatTemp?.itemsPersonal, listRoomsChatTemp?.itemsCommunity]);
-
-  const updateLastMessageOfListRooms = async (message: any) => {
-    let hasChatRoomExist = false;
-    const sourceRoomsTemp = message?.community ? listRoomsCommunityRef : listRoomsPersonalRef;
-    const listRoomTemp = sortListRoomChat(
-      sourceRoomsTemp.current?.map((item) => {
-        if (item.id === message.chat_room_id) {
-          hasChatRoomExist = true;
-          return {
-            ...item,
-            last_chat_message_at: new Date().toISOString(),
-            last_chat_message_received: message.content,
-            last_message_content_type: message.content_type,
-          };
-        }
-        return item;
-      }),
-    );
-    if (message?.community) {
-      dispatch({
-        type: actionTypes.UPDATE_LIST_ROOMS,
-        payload: {
-          ...listRoomsChatTemp,
-          itemsCommunity: listRoomTemp,
-          //unread_count: listRoomsChatTemp?.unread_count + 1,
-        },
-      });
-    } else {
-      dispatch({
-        type: actionTypes.UPDATE_LIST_ROOMS,
-        payload: {
-          ...listRoomsChatTemp,
-          itemsPersonal: listRoomTemp,
-          //unread_count: listRoomsChatTemp?.unread_count + 1,
-        },
-      });
-    }
-    if (!hasChatRoomExist) {
-      if (message?.community) {
-        const listRoomTemp = sortListRoomChat([
-          {
-            id: message.chat_room_id,
-            user: message?.user || {},
-            community: message?.community || {},
-            last_chat_message_at: new Date().toISOString(),
-            last_chat_message_received: message.content,
-          },
-          ...listRoomsCommunityRef.current,
-        ]);
-        dispatch({
-          type: actionTypes.UPDATE_LIST_ROOMS,
-          payload: {
-            ...listRoomsChatTemp,
-            itemsCommunity: listRoomTemp,
-            //unread_count: listRoomsChatTemp?.unread_count + 1,
-          },
-        });
-      } else {
-        const listRoomTemp = sortListRoomChat([
-          {
-            id: message.chat_room_id,
-            user: message?.user || {},
-            last_chat_message_at: new Date().toISOString(),
-            last_chat_message_received: message.content,
-          },
-          ...listRoomsPersonalRef.current,
-        ]);
-        dispatch({
-          type: actionTypes.UPDATE_LIST_ROOMS,
-          payload: {
-            ...listRoomsChatTemp,
-            itemsPersonal: listRoomTemp,
-            //unread_count: listRoomsChatTemp?.unread_count + 1,
-          },
-        });
-      }
-    }
-  };
-  const loadMoreMessagePersonal = async () => {
-    const res = await getListChatRooms(searchChatRoomPersonal?.search, listRoomsChatTemp?.cursorPersonal, 10);
-    dispatch({
-      type: actionTypes.UPDATE_LIST_ROOMS,
-      payload: {
-        ...listRoomsChatTemp,
-        // eslint-disable-next-line no-unsafe-optional-chaining
-        itemsPersonal: [...listRoomsChatTemp.itemsPersonal, ...res?.items],
-        cursorPersonal: res?.cursor,
-        hasMorePersonal: res?.hasMore,
-      },
-    });
-  };
-  const loadMoreMessageCommunity = async () => {
-    const res = await getListChatRoomsCommunity(
-      searchChatRoomCommunity?.search,
-      listRoomsChatTemp?.cursorCommunity,
-      10,
-    );
-    dispatch({
-      type: actionTypes.UPDATE_LIST_ROOMS,
-      payload: {
-        ...listRoomsChatTemp,
-        // eslint-disable-next-line no-unsafe-optional-chaining
-        itemsCommunity: [...listRoomsChatTemp.itemsCommunity, ...res?.items],
-        cursorCommunity: res?.cursor,
-        hasMoreCommunity: res?.hasMore,
-      },
-    });
-  };
-  const handleMenuChatClose = () => {
+  const handleMenuChatClose = useCallback(() => {
     setMenuChatAnchorEl(null);
     setStatusChatMenu(false);
-  };
+  }, []);
   const handleOpenMenuChat = (event: any) => {
     if (isMobile) {
       router.push("/chat/personal");
@@ -401,177 +162,73 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
       setMenuChatAnchorEl(event.currentTarget);
       setStatusChatMenu(true);
     }
-    //dispatch({ type: actionTypes.REMOVE_UNREAD_LISTROOMS_COUNT });
+    // dispatch({ type: actionTypes.REMOVE_UNREAD_LISTROOMS_COUNT });
   };
-  const handleChangeTabMessage = (event, newValue) => {
-    setValueTabChatMessage(newValue);
-  };
-  //end block function Messages *************************************************
 
-  //block function Notifications ********************************************
-  const [notifyAnchorEl, setNotifyAnchorEl] = React.useState(null);
+  // Notifications ********************************************
   const [statusNotify, setStatusNotify] = useState(false);
-  const isNotifyMenuOpen = Boolean(notifyAnchorEl);
-  useEffect(() => {
-    if (auth?.community_count !== undefined) {
-      const getNotis = async () => {
-        const res = await getListnotifications(10, "");
-        dispatch({ type: actionTypes.UPDATE_NOTIFICATIONS, payload: res });
-      };
-      !notifications?.items_count && getNotis();
-    }
-  }, [auth]);
-  const handleNotifyMenuClose = () => {
+  const [notifyAnchorEl, setNotifyAnchorEl] = React.useState(null);
+
+  const handleNotifyMenuClose = useCallback(() => {
     setNotifyAnchorEl(null);
     setStatusNotify(false);
-  };
+  }, []);
   const handleNotifyOpenMenu = async (event: any) => {
     setNotifyAnchorEl(event.currentTarget);
     setStatusNotify(true);
-    notifications?.unread_count > 0 && (await readAllNotifications());
+    if (notifications?.unread_count > 0) await readAllNotifications();
     dispatch({
-      type: actionTypes.UPDATE_NOTIFICATIONS,
-      payload: {
-        ...notifications,
-        unread_count: 0,
-      },
+      type: actionTypes.REMOVE_UNREAD_NOTIFICATIONS_COUNT,
     });
   };
-  const loadMoreNotifications = async () => {
-    const res = await getListnotifications(10, notifications?.cursor);
-    dispatch({
-      type: actionTypes.UPDATE_NOTIFICATIONS,
-      payload: {
-        ...notifications,
-        // eslint-disable-next-line no-unsafe-optional-chaining
-        items: [...notifications.items, ...res?.items],
-        cursor: res?.cursor,
-        hasMore: res?.hasMore,
-      },
-    });
-  };
-  const handleReadNotification = async (idNoti: string, index: number) => {
-    await readNotification(idNoti);
-    let tempArray = notifications?.items;
-    tempArray[index] = {
-      ...tempArray[index],
-      is_read: true,
-    };
-    dispatch({
-      type: actionTypes.UPDATE_NOTIFICATIONS,
-      payload: {
-        ...notifications,
-        items: tempArray,
-      },
-    });
-  };
-  const handleRedirectNotification = (typeOfMessage: string, dataOfMessage: DataRedirectNotification) => {
-    switch (typeOfMessage) {
-      case "new_matching_request":
-        router.push("/matching?type=received");
-        break;
-      case "matching_request_accepted":
-        router.push("/matching?type=matched");
-        break;
-      case "new_community_join_request":
-        router.push(`/community/setting/${dataOfMessage?.community_id}`);
-        break;
-      case "community_join_request_accepted":
-        router.push(`/community/${dataOfMessage?.community?.id}`);
-        break;
-      case "new_comment_in_post":
-        router.push(`/community/${dataOfMessage?.community_id}/post/detail/${dataOfMessage?.post_id}`);
-        break;
-      case "new_recommend_user":
-        router.push(`/profile/${dataOfMessage?.user?.id}`);
-        break;
-      case "tagged_in_comment":
-        router.push(`/community/${dataOfMessage?.community_id}/post/detail/${dataOfMessage?.post_id}`);
-        break;
-      default:
-        break;
-    }
-  };
-  //end block function Notifications ***************************************
 
-  // notification browser ******************************************
-  function notify(title: string, body: any, image: any) {
-    new Notification(title, {
-      body,
-      icon: image,
-    });
-  }
-  const customizeContentNotificationBrowser = (
-    typeOfNotification: string,
-    userName: string,
-    postName: string,
-    label1: string,
-    label2: string,
-  ) => {
-    // add labels or other arguments for this function if have more than 2 labels to create string content
-    // add other cases to modify notifications's content
-    switch (typeOfNotification) {
-      case TYPE_OF_NOTIFICATIONS[4]:
-        return userName + label1 + postName + label2;
-      default:
-        return label1;
-    }
-  };
   useEffect(() => {
-    const wsHandler = (message: any) => {
-      if (!message?.metadata) {
-        updateLastMessageOfListRooms(message);
-        if (!isMobile) {
-          if (Notification.permission === "granted") {
-            notify(
-              `${message?.user?.username}`,
-              message?.content_type === "text" ? `${message.content}` : "添付ファイル",
-              `${message?.user?.profile_image}`,
-            );
-          }
-        }
-      } else {
-        dispatch({
-          type: actionTypes.UPDATE_NOTIFICATIONS,
-          payload: {
-            ...notifications,
-            items: [message, ...notifications?.items],
-            //unread_count: notifications?.unread_count + 1,
-          },
-        });
-        if (!isMobile) {
-          if (Notification.permission === "granted") {
-            notify(
-              `${message?.metadata?.user?.username || message?.metadata?.community?.name}`,
-              customizeContentNotificationBrowser(
-                message?.notification_type,
-                message?.metadata?.user?.username || message?.metadata?.community?.name,
-                message?.metadata?.post_id,
-                CONTENT_OF_NOTIFICATIONS[message?.notification_type]?.label,
-                CONTENT_OF_NOTIFICATIONS[message?.notification_type]?.label2,
-              ),
-              `${message?.metadata?.user?.profile_image || message?.metadata?.community?.profile_image}`,
-            );
-          }
+    const handleNewChatMessageNotify = (chatMessage: ChatMessage) => {
+      if (!isMobile) {
+        if (Notification.permission === "granted") {
+          notify(
+            `${chatMessage?.user?.username}`,
+            chatMessage?.content_type === "text" ? `${chatMessage.content}` : "添付ファイル",
+            `${chatMessage?.user?.profile_image}`,
+          );
         }
       }
     };
-    const handleUpdateUnreadMessages = (newMessage: any) => {
+    const handleNewNotification = (notification) => {
       dispatch({
-        type: actionTypes.UPDATE_LIST_ROOMS,
+        type: actionTypes.ADD_NOTIFICATION,
         payload: {
-          ...listRoomsChatTemp,
-          unread_count: newMessage.chat_room_with_unread_messages,
+          notification,
         },
       });
+      if (!isMobile) {
+        if (Notification.permission === "granted") {
+          notify(
+            `${notification?.metadata?.user?.username || notification?.metadata?.community?.name}`,
+            customizeContentNotificationBrowser(
+              notification?.notification_type,
+              notification?.metadata?.user?.username || notification?.metadata?.community?.name,
+              notification?.metadata?.post_id,
+              CONTENT_OF_NOTIFICATIONS[notification?.notification_type]?.label,
+              CONTENT_OF_NOTIFICATIONS[notification?.notification_type]?.label2,
+            ),
+            `${notification?.metadata?.user?.profile_image || notification?.metadata?.community?.profile_image}`,
+          );
+        }
+      }
     };
-    websocket.on(`get.chatRoom.message`, wsHandler);
-    websocket.on(`chatRoom.new_unread`, handleUpdateUnreadMessages);
+    const handleUpdateUnreadMessages = ({ chat_room_with_unread_messages: count }) => {
+      dispatch({
+        type: actionTypes.UPDATE_UNREAD_LISTROOMS_COUNT,
+        payload: { count },
+      });
+    };
+    websocket.on(`get.chatRoom.message`, handleNewChatMessageNotify);
     websocket.on(`user.chat_room_with_unread_messages`, handleUpdateUnreadMessages);
-    websocket.on(`get.community.chatRoom.message`, wsHandler);
+    websocket.on(`get.community.chatRoom.message`, handleNewChatMessageNotify);
     // eslint-disable-next-line array-callback-return
     TYPE_OF_NOTIFICATIONS.map((notificationType) => {
-      websocket.on(`get.notification.${notificationType}`, wsHandler);
+      websocket.on(`get.notification.${notificationType}`, handleNewNotification);
     });
     if (!isMobile) {
       if (Notification.permission === "denied" && notifications?.askPermissionNotification) {
@@ -583,18 +240,17 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
       }
     }
     return () => {
-      websocket.off("get.chatRoom.message", wsHandler);
-      websocket.off(`get.chatRoom.new_unread`, handleUpdateUnreadMessages);
+      websocket.off("get.chatRoom.message", handleNewChatMessageNotify);
       websocket.off(`get.user.chat_room_with_unread_messages`, handleUpdateUnreadMessages);
-      websocket.off("get.community.chatRoom.message", wsHandler);
+      websocket.off("get.community.chatRoom.message", handleNewChatMessageNotify);
       // eslint-disable-next-line array-callback-return
       TYPE_OF_NOTIFICATIONS.map((notificationType) => {
-        websocket.off(`get.notification.${notificationType}`, wsHandler);
+        websocket.off(`get.notification.${notificationType}`, handleNewNotification);
       });
     };
   }, []);
 
-  //block function Menu ****************************************
+  // block function Menu ****************************************
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -772,446 +428,6 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
       </Box>
     </Menu>
   );
-  const notifyMenuId = "primary-search-account-menu-notification";
-  const renderNotificationMenu = (
-    <Box>
-      {statusNotify && (
-        <Menu
-          className={styles.notificationMenu}
-          anchorEl={notifyAnchorEl}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          id={notifyMenuId}
-          keepMounted
-          open={isNotifyMenuOpen}
-          onClose={handleNotifyMenuClose}
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          sx={{
-            zIndex: 10001,
-            ".MuiPaper-root": {
-              borderRadius: "12px !important",
-            },
-          }}
-        >
-          <InfiniteScroll
-            dataLength={notifications?.items?.length || 0}
-            next={loadMoreNotifications}
-            hasMore={notifications?.hasMore}
-            height={650}
-            loader={
-              <Box sx={{ display: "flex", py: "15px", justifyContent: "center" }}>
-                <CircularProgress sx={{ color: theme.blue }} size={30} />
-              </Box>
-            }
-          >
-            <div className={styles.notificationMenuHeader}>お知らせ</div>
-            <Box sx={{ paddingTop: "50px" }}>
-              {notifications?.items?.length ? (
-                notifications?.items?.map((dataMap: any, index: number) => (
-                  <MenuItem
-                    key={dataMap.id}
-                    className={styles.notificationMenuItem}
-                    onClick={async () => {
-                      handleReadNotification(dataMap?.id, index);
-                      handleRedirectNotification(dataMap?.notification_type, dataMap?.metadata);
-                    }}
-                  >
-                    <div className={styles.notificationImage}>
-                      <Avatar
-                        alt={dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name}
-                        src={dataMap?.metadata?.user?.profile_image || dataMap?.metadata?.community?.profile_image}
-                        sx={{
-                          width: "50px",
-                          height: "50px",
-                          ".MuiAvatar-img": {
-                            objectFit:
-                              dataMap?.metadata?.community?.profile_image == "/assets/images/logo/logo.png"
-                                ? "contain!important"
-                                : "cover",
-                          },
-                        }}
-                      />
-                    </div>
-                    <div className={styles.notificationContents}>
-                      {!dataMap.is_read ? (
-                        <div className={styles.notificationContent}>
-                          {
-                            // eslint-disable-next-line no-unsafe-optional-chaining
-                            (dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name) +
-                            // eslint-disable-next-line no-unsafe-optional-chaining
-                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label +
-                            " " +
-                            (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") +
-                            " " +
-                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
-                          }
-                        </div>
-                      ) : (
-                        <div>
-                          {
-                            // eslint-disable-next-line no-unsafe-optional-chaining
-                            (dataMap?.metadata?.user?.username || dataMap?.metadata?.community?.name) +
-                            // eslint-disable-next-line no-unsafe-optional-chaining
-                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label +
-                            " " +
-                            (dataMap?.metadata?.post_id ? dataMap?.metadata?.post_id : "") +
-                            " " +
-                            CONTENT_OF_NOTIFICATIONS[dataMap?.notification_type]?.label2
-                          }
-                        </div>
-                      )}
-                      <div className={styles.createdTime}>
-                        {new Date(dataMap?.created_at).getDate() === new Date().getDate()
-                          ? dayjs(dataMap?.created_at).format("HH:mm")
-                          : dayjs(dataMap?.created_at).format("YYYY/MM/DD")}
-                      </div>
-                    </div>
-                  </MenuItem>
-                ))
-              ) : (
-                <Box
-                  sx={{
-                    width: "328px",
-                    display: "flex",
-                    height: "550px",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <b>通知はありません。</b>
-                </Box>
-              )}
-            </Box>
-          </InfiniteScroll>
-        </Menu>
-      )}
-    </Box>
-  );
-
-  const menuChatId = "primary-search-account-menu-chat";
-  const renderChatMenu = (
-    <Box>
-      {statusChatMenu && (
-        <Menu
-          anchorEl={menuChatAnchorEl}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          id={menuChatId}
-          keepMounted
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          open={isMenuChatOpen}
-          onClose={handleMenuChatClose}
-          className={styles.menuChatDropDown}
-          sx={{
-            zIndex: 10001,
-            "& .MuiMenu-paper": {
-              borderRadius: "12px",
-              height: "40em",
-              overflowY: "hidden",
-            },
-          }}
-        >
-          <Box sx={{ width: "100%", typography: "body1" }}>
-            <TabContext value={valueTabChatMessage}>
-              <Box
-                sx={{
-                  borderBottom: 1,
-                  borderColor: "divider",
-                  position: "sticky",
-                  top: "0",
-                  background: "white",
-                  zIndex: "1",
-                }}
-              >
-                <TabsCustom variant="fullWidth" onChange={handleChangeTabMessage}>
-                  <Tab label={"メッセージ"} value="1" />
-                  <Tab label={"グループチャット"} value="2" />
-                </TabsCustom>
-              </Box>
-              <TabPanel sx={{ padding: "0", width: "365px" }} value="1">
-                <Box className={styles.boxSearch}>
-                  <Paper
-                    className={styles.inputSearch}
-                    sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}
-                  >
-                    <img alt="search" src="/assets/images/svg/ic_search.svg" />
-                    <InputCustom
-                      inputRef={inputSearchMenuChatPersonal}
-                      sx={{ ml: 1, flex: 1 }}
-                      // placeholder={t("chat:box-left-input-search-placeholder")}
-                      // inputProps={{ "aria-label": t("chat:box-left-input-search-placeholder") }}
-                      placeholder={"アカウントを検索"}
-                      inputProps={{ "aria-label": "アカウントを検索" }}
-                      onKeyUp={() =>
-                        handleTypingForInputSearch(inputSearchMenuChatPersonal.current.value, MODE_ROOM_CHAT.personal)
-                      }
-                    />
-                  </Paper>
-                </Box>
-                <Box className="box-content">
-                  <ul className={styles.boxThreads}>
-                    <InfiniteScroll
-                      dataLength={listRoomsChatTemp?.itemsPersonal?.length || 0}
-                      next={loadMoreMessagePersonal}
-                      hasMore={listRoomsChatTemp?.hasMorePersonal}
-                      height={495}
-                      loader={
-                        <Box sx={{ display: "flex", py: "15px", justifyContent: "center" }}>
-                          <CircularProgress sx={{ color: theme.blue }} size={30} />
-                        </Box>
-                      }
-                    >
-                      {listRoomsChatTemp?.itemsPersonal?.length ? (
-                        listRoomsChatTemp?.itemsPersonal?.map((thread, index: number) => (
-                          <React.Fragment key={index}>
-                            <li
-                              onClick={async () => {
-                                await readMessagePersonal(thread?.user?.id);
-                                router.push(
-                                  {
-                                    pathname: "/chat/personal",
-                                    query: { room: thread?.user?.id },
-                                  },
-                                  undefined,
-                                  { shallow: false },
-                                );
-                                //onSelectRoom(index);
-                              }}
-                            >
-                              <div className={`thread-item ${thread?.user?.id === "userId" ? "active" : ""}`}>
-                                <div className="avatar">
-                                  <Avatar
-                                    alt={thread?.user?.username}
-                                    src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"}
-                                    sx={{ width: "50px", height: "50px", mr: "13px" }}
-                                  />
-                                </div>
-                                <div className="thread-content">
-                                  <Typography className="name">{thread?.user?.username}</Typography>
-                                  <Typography
-                                    className="message-hide"
-                                    sx={{
-                                      color: thread?.unread_message_count > 0 ? "black!important" : "#989ea8",
-                                      fontWeight: thread?.unread_message_count > 0 ? "700!important" : "400",
-                                    }}
-                                  >
-                                    {thread?.last_message_content_type === "text"
-                                      ? thread?.last_chat_message_received
-                                      : "添付ファイル"}
-                                  </Typography>
-                                </div>
-                                <div className="thread-last-time">
-                                  {formatChatDateRoom(thread?.last_chat_message_at)}
-                                </div>
-                                {/* {!isMobile && (
-                                <div className="more-options">
-                                  <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
-                                    <img alt="more-options" src="/assets/images/chat/more_options.svg" />
-                                  </IconButton>
-                                  <ThreadDropdown
-                                    open={open}
-                                    handleClose={handleClose}
-                                    setShowPopupReport={setShowPopupReport}
-                                    setShowPopupReview={setShowPopupReview}
-                                    anchorEl={anchorEl}
-                                    redirectToProfile={redirectToProfile}
-                                  />
-                                </div>
-                              )} */}
-                              </div>
-                            </li>
-                            {/* {isMobile && (
-                            <div className="more-options-SP">
-                              <IconButton
-                                onClick={(event: React.MouseEvent<HTMLElement>) => {
-                                  handleClick(event);
-                                  transferUserToLeftMobile(index);
-                                }}
-                                aria-label="more"
-                                aria-haspopup="true"
-                                sx={{
-                                  position: "absolute",
-                                  right: "2em",
-                                  marginTop: "-2.4em",
-                                  height: "40px",
-                                  width: "40px",
-                                  background: "white",
-                                  boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
-                                }}
-                              >
-                                <img alt="more-options" src="/assets/images/chat/more_options.svg" />
-                              </IconButton>
-                              <ThreadDropdown
-                                open={open}
-                                handleClose={handleClose}
-                                setShowPopupReport={setShowPopupReport}
-                                setShowPopupReview={setShowPopupReview}
-                                anchorEl={anchorEl}
-                                redirectToProfile={redirectToProfile}
-                              />
-                            </div>
-                          )} */}
-                          </React.Fragment>
-                        ))
-                      ) : (
-                        <Box
-                          sx={{
-                            width: "365px",
-                            display: "flex",
-                            height: "550px",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <b>会話なし</b>
-                        </Box>
-                      )}
-                    </InfiniteScroll>
-                  </ul>
-                </Box>
-              </TabPanel>
-              <TabPanel sx={{ padding: "0", width: "365px" }} value="2">
-                <Box className={styles.boxSearch}>
-                  <Paper
-                    className={styles.inputSearch}
-                    sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}
-                  >
-                    <img alt="search" src="/assets/images/svg/ic_search.svg" />
-                    <InputCustom
-                      inputRef={inputSearchMenuChatCommunity}
-                      sx={{ ml: 1, flex: 1 }}
-                      placeholder={"アカウントを検索"}
-                      inputProps={{ "aria-label": "アカウントを検索" }}
-                      onKeyUp={() =>
-                        handleTypingForInputSearch(inputSearchMenuChatCommunity.current.value, MODE_ROOM_CHAT.community)
-                      }
-                    />
-                  </Paper>
-                </Box>
-                <Box className="box-content">
-                  <ul className={styles.boxThreads}>
-                    <InfiniteScroll
-                      dataLength={listRoomsChatTemp?.itemsCommunity?.length || 0}
-                      next={loadMoreMessageCommunity}
-                      hasMore={listRoomsChatTemp?.hasMoreCommunity}
-                      height={495}
-                      loader={
-                        <Box sx={{ display: "flex", py: "15px", justifyContent: "center" }}>
-                          <CircularProgress sx={{ color: theme.blue }} size={30} />
-                        </Box>
-                      }
-                    >
-                      {listRoomsChatTemp?.itemsCommunity?.length ? (
-                        listRoomsChatTemp?.itemsCommunity?.map((thread, index: number) => (
-                          <React.Fragment key={index}>
-                            <li
-                              onClick={async () => {
-                                await readMessageCommunity(thread?.community?.id);
-                                router.push(
-                                  {
-                                    pathname: "/chat/community",
-                                    query: { room: thread?.community?.id },
-                                  },
-                                  undefined,
-                                  { shallow: false },
-                                );
-                              }}
-                            >
-                              <div className={`thread-item ${thread?.community?.id === "communityId" ? "active" : ""}`}>
-                                <div
-                                  className="avatar background"
-                                  style={{
-                                    backgroundImage: `url(${thread?.community?.profile_image})`,
-                                  }}
-                                />
-                                <div className="thread-content" style={{ maxWidth: "70%" }}>
-                                  <Typography className="name">
-                                    {thread?.community?.name}({thread?.community?.member_count})
-                                  </Typography>
-                                  <Typography
-                                    className="message-hide"
-                                    sx={{
-                                      color: thread?.unread_message_count > 0 ? "black!important" : "#989ea8",
-                                      fontWeight: thread?.unread_message_count > 0 ? "700!important" : "400",
-                                    }}
-                                  >
-                                    {thread?.last_message_content_type === "text"
-                                      ? thread?.last_chat_message_received
-                                      : "添付ファイル"}
-                                  </Typography>
-                                </div>
-                                <div className="thread-last-time">
-                                  {thread?.last_chat_message_at ? formatChatDateRoom(thread?.last_chat_message_at) : ""}
-                                </div>
-                                {/* {!isMobile && (
-                                <div className="more-options">
-                                  <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
-                                    <img alt="more-options" src="/assets/images/chat/more_options.svg" />
-                                  </IconButton>
-                                  <ThreadDropdown
-                                    open={open}
-                                    handleClose={handleClose}
-                                    anchorEl={anchorEl}
-                                    redirectToCommunity={() => redirectToCommunity(thread?.id)}
-                                  />
-                                </div>
-                              )} */}
-                              </div>
-                            </li>
-                            {/* {isMobile && (
-                            <div className="more-options-SP">
-                              <IconButton
-                                aria-label="more"
-                                aria-haspopup="true"
-                                sx={{
-                                  position: "absolute",
-                                  right: "2em",
-                                  marginTop: "-2.4em",
-                                  height: "40px",
-                                  width: "40px",
-                                  background: "white",
-                                  boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
-                                }}
-                              >
-                                <img alt="more-options" src="/assets/images/chat/more_options.svg" />
-                              </IconButton>
-                            </div>
-                          )} */}
-                          </React.Fragment>
-                        ))
-                      ) : (
-                        <Box
-                          sx={{
-                            width: "365px",
-                            display: "flex",
-                            height: "550px",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <b>会話なし</b>
-                        </Box>
-                      )}
-                    </InfiniteScroll>
-                  </ul>
-                </Box>
-              </TabPanel>
-            </TabContext>
-          </Box>
-        </Menu>
-      )}
-    </Box>
-  );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -1310,7 +526,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
                 sx={{ p: "12px 16px" }}
                 onClick={handleOpenMenuChat}
               >
-                <Badge badgeContent={listRoomsChatTemp?.unread_count} color="error">
+                <Badge badgeContent={listRoomsChatUnread} color="error">
                   <img style={{ width: "24px", height: "20px" }} src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
                 </Badge>
               </IconButton>
@@ -1356,7 +572,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
                 sx={{ p: "12px 16px" }}
                 onClick={handleOpenMenuChat}
               >
-                <Badge badgeContent={listRoomsChatTemp?.unread_count} color="error">
+                <Badge badgeContent={listRoomsChatUnread} color="error">
                   <img style={{ width: "24px", height: "20px" }} src="/assets/images/icon/ic_mess.png" alt="ic_mess" />
                 </Badge>
               </IconButton>
@@ -1417,8 +633,10 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
-      {renderChatMenu}
-      {renderNotificationMenu}
+      <Box>{statusChatMenu && <HeaderChatComponent onClose={handleMenuChatClose} anchor={menuChatAnchorEl} />}</Box>
+      <Box>
+        {statusNotify && <HeaderNotificationComponent onClose={handleNotifyMenuClose} anchor={notifyAnchorEl} />}
+      </Box>
     </Box>
   );
 });

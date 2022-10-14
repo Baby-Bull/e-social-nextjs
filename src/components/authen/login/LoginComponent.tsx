@@ -36,9 +36,9 @@ const LoginComponent = () => {
       if (resAuth?.data?.access_token) {
         dispatch(login(resAuth?.data?.user));
         dispatch({
-          type: actionTypes.UPDATE_LIST_ROOMS,
+          type: actionTypes.UPDATE_UNREAD_LISTROOMS_COUNT,
           payload: {
-            unread_count: resAuth?.data?.user?.profile?.chat_room_with_unread_messages,
+            count: resAuth?.data?.user?.profile?.chat_room_with_unread_messages,
           },
         });
         if (resAuth?.data?.user?.is_profile_edited) {

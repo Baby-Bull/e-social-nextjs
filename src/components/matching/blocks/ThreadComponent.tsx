@@ -200,6 +200,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
             >
               <Link
                 href={type === "favorite" || type === "matched" ? `/profile/${data?.id}` : `/profile/${data?.user?.id}`}
+                shallow
               >
                 <a
                   style={{
@@ -304,6 +305,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   href={
                     type === "favorite" || type === "matched" ? `/profile/${data?.id}` : `/profile/${data?.user?.id}`
                   }
+                  shallow
                 >
                   <a
                     style={{
