@@ -303,9 +303,9 @@ export const getUserProfile = async () => {
 };
 
 export const updateProfile = async (body: any) => {
+  toast.configure();
   try {
     const res = await api.patch(`/user/profile`, body);
-
     if (!res.data) {
       toast.error(SERVER_ERROR);
     } else if (res?.data?.message?.email[0]?.message === "email is not unique") {
