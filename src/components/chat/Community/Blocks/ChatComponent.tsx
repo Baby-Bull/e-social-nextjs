@@ -47,15 +47,15 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   useQuery(
     [`${REACT_QUERY_KEYS.LIST_ROOMS}/community`, searchChatRoom],
     async () => {
-      const communityChatRoomTemp = await getListChatRoomsCommunity(searchChatRoom?.search, searchChatRoom?.cursor, 10);
+      const communityChatRoomTemp = await getListChatRoomsCommunity(searchChatRoom?.search, searchChatRoom?.cursor, 12);
       const updatedList = searchChatRoom?.cursor
         ? unionBy(communityChatRoomTemp.items, listRoomsChatTemp, "id")
         : communityChatRoomTemp.items;
       dispatch({
         type: actionTypes.UPDATE_LIST_COMMUNITY_CHAT_ROOMS,
         payload: {
-          items: sortListRoomChat(updatedList),
-          hasMorel: communityChatRoomTemp.hasMore,
+          items: updatedList,
+          hasMore: communityChatRoomTemp.hasMore,
           cursor: communityChatRoomTemp.cursor,
         },
       });
@@ -158,17 +158,16 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   // }, [listRoomResQuery]);
 
   useEffect(() => {
+    let selectedRoom = null;
     if (roomSelect?.id !== roomQuery) {
-      const roomQuerySelect = listRoomsChatTemp.find(
-        (item: any) => item.id === roomQuery || item?.community?.id === roomQuery,
-      );
-      if (roomQuerySelect) {
-        setRoomSelect(roomQuerySelect);
-        setCommunityId(roomQuerySelect?.id);
-      } else {
-        setRoomSelect(listRoomsChatTemp[0] || {});
-        setCommunityId(listRoomsChatTemp[0]?.community?.id);
-      }
+      selectedRoom = listRoomsChatTemp.find((item: any) => item.id === roomQuery || item?.community?.id === roomQuery);
+    }
+    if (selectedRoom) {
+      setRoomSelect(selectedRoom);
+      setCommunityId(selectedRoom?.id);
+    } else {
+      setRoomSelect(listRoomsChatTemp[0] || {});
+      setCommunityId(listRoomsChatTemp[0]?.community?.id);
     }
   }, [listRoomsChatTemp]);
 
@@ -219,6 +218,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   };
 
   const toggleRenderSide = () => setIsRenderRightSide(!isRenderRightSide);
+  console.log("RE_RENDER", hasMoreChatRooms);
 
   return (
     <Grid container className={classNames(styles.chatContainerPC)}>
