@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 
 import { logout } from "src/services/auth";
+import styles from "src/components/layouts/layout.module.scss";
 
 import actionTypes from "../../store/actionTypes";
 
@@ -37,7 +38,7 @@ const FooterComponent: React.FC<IFooterComponentProps> = ({ authPage = false }) 
   };
 
   return (
-    <Box sx={{ backgroundColor: "#1A2944" }}>
+    <Box className={styles.footerComp}>
       <Box
         sx={{
           display: { xs: "block", lg: "flex" },
