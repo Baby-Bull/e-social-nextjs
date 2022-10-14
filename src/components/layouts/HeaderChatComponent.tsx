@@ -162,40 +162,43 @@ const HeaderChatComponent: FC<Props> = ({
     { refetchOnWindowFocus: false },
   );
 
-  const updateLastMessageOfListRooms = async (message: any) => {
-    let sourceRoomsTemp = message?.community ? [...communityChatRooms] : [...personalChatRooms];
-    const chatroomIndex = sourceRoomsTemp.findIndex((room) => room.id === message.chat_room_id);
-    if (chatroomIndex > -1) {
-      // chatroom exists
-      sourceRoomsTemp[chatroomIndex] = {
-        ...sourceRoomsTemp[chatroomIndex],
-        last_chat_message_at: message.created_at,
-        last_chat_message_received: message.content,
-        last_message_content_type: message.content_type,
-      };
-    } else {
-      sourceRoomsTemp = [
-        {
-          id: message.chat_room_id,
-          user: message?.user || {},
-          community: message?.community || {},
+  const updateLastMessageOfListRooms = useCallback(
+    async (message: any) => {
+      let sourceRoomsTemp = message?.community ? [...communityChatRooms] : [...personalChatRooms];
+      const chatroomIndex = sourceRoomsTemp.findIndex((room) => room.id === message.chat_room_id);
+      if (chatroomIndex > -1) {
+        // chatroom exists
+        sourceRoomsTemp[chatroomIndex] = {
+          ...sourceRoomsTemp[chatroomIndex],
           last_chat_message_at: message.created_at,
           last_chat_message_received: message.content,
-        },
-        ...sourceRoomsTemp,
-      ];
-    }
-    const listRoomTemp = sortListRoomChat(sourceRoomsTemp);
-    if (message?.community) {
-      updateCommunityChatRoomList({
-        items: listRoomTemp,
-      });
-    } else {
-      updatePersonalChatRoomList({
-        items: listRoomTemp,
-      });
-    }
-  };
+          last_message_content_type: message.content_type,
+        };
+      } else {
+        sourceRoomsTemp = [
+          {
+            id: message.chat_room_id,
+            user: message?.user || {},
+            community: message?.community || {},
+            last_chat_message_at: message.created_at,
+            last_chat_message_received: message.content,
+          },
+          ...sourceRoomsTemp,
+        ];
+      }
+      const listRoomTemp = sortListRoomChat(sourceRoomsTemp);
+      if (message?.community) {
+        updateCommunityChatRoomList({
+          items: listRoomTemp,
+        });
+      } else {
+        updatePersonalChatRoomList({
+          items: listRoomTemp,
+        });
+      }
+    },
+    [communityChatRooms, personalChatRooms],
+  );
 
   const loadMoreMessagePersonal = () => {
     setSearchChatRoomPersonal((currentState) => ({
@@ -267,7 +270,7 @@ const HeaderChatComponent: FC<Props> = ({
       websocket.off(`chatRoom.community.new_unread`, handleUpdateCommunityChatroomUnreadMessages);
       websocket.off("get.community.chatRoom.message", handleNewMessage);
     };
-  }, []);
+  }, [updateLastMessageOfListRooms, updatePersonalChatRoomCount, updateCommunityChatRoomCount]);
 
   return (
     <Menu

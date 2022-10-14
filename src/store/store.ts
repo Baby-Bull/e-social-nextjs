@@ -63,7 +63,15 @@ const exampleInitialState: IStoreState = {
   notifications: {
     items: [],
   },
-  listrooms: {},
+  listrooms: {
+    itemsPersonal: [],
+    itemsCommunity: [],
+    hasMorePersonal: false,
+    hasMoreCommunity: false,
+    cursorPersonal: "",
+    cursorCommunity: "",
+    unread_count: 0,
+  },
 };
 
 export const login = (user: any) => ({ type: actionTypes.LOGIN, user });
