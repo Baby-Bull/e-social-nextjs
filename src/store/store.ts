@@ -3,6 +3,8 @@ import { applyMiddleware, createStore } from "redux";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
+import { SearchUserFormStatus } from "src/constants/constants";
+
 import actionTypes from "./actionTypes";
 import reducer from "./reducer";
 
@@ -10,12 +12,54 @@ interface IStoreState {
   user: any;
   notifications: any;
   listrooms: any;
+  search_users: {
+    scrollPosition: number;
+    formStatus: SearchUserFormStatus;
+    form: {
+      job: string | number;
+      employeeStatus: string | number;
+      lastLogin: number;
+      review: number;
+      statusCanTalk: boolean;
+      statusLookingForFriend: boolean;
+      statusNeedConsult: boolean;
+      tags: string[];
+    };
+    result: {
+      limit: number;
+      cursor: string;
+      items: any[];
+      sort: string;
+      hasMore: boolean;
+    };
+  };
 }
 
 let store: any;
 
 const exampleInitialState: IStoreState = {
   user: {},
+  search_users: {
+    formStatus: SearchUserFormStatus.Init,
+    scrollPosition: 0,
+    form: {
+      job: 0,
+      employeeStatus: 0,
+      lastLogin: 0,
+      review: 0,
+      statusCanTalk: false,
+      statusLookingForFriend: false,
+      statusNeedConsult: false,
+      tags: [],
+    },
+    result: {
+      sort: "recommended",
+      limit: 6,
+      cursor: "",
+      hasMore: false,
+      items: [],
+    },
+  },
   notifications: {
     items: [],
   },

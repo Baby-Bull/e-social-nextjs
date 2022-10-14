@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 
 import theme from "src/theme";
-import FooterComponent from "src/components/layouts/FooterComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 import { authWithProvider } from "src/services/auth";
@@ -154,7 +153,7 @@ const RegisterComponents = () => {
                   }}
                   onError={onLogoutFailure}
                 >
-                  <ButtonComponent props={{ mode: "google" }}>{t("login:right.register-google")}</ButtonComponent>
+                  <ButtonComponent props={{ mode: "google" }}>{t("register:register-google")}</ButtonComponent>
                 </LoginSocialGoogle>
               </Box>
 
@@ -202,7 +201,6 @@ const RegisterComponents = () => {
           </Grid>
         </Grid>
       </Box>
-      <FooterComponent authPage />
     </React.Fragment>
   );
 };

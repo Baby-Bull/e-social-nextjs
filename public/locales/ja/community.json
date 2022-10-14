@@ -26,7 +26,8 @@
     "create-post": "投稿を作成",
     "go-to-virtual-room": "バーチャルルーム入室",
     "intro": {
-      "create-post": "新規投稿を作成"
+      "create-post": "新規投稿を作成",
+      "redirect-to-community": "コミュニティトップに戻る"
     },
     "dropdown": {
       "edit": "編集する",

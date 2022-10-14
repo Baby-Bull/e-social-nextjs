@@ -16,8 +16,10 @@ import { replaceLabelByTranslate } from "src/utils/utils";
 import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
-import actionTypes from "src/store/actionTypes";
+import actionTypes, { searchUserActions } from "src/store/actionTypes";
 import { IStoreState } from "src/constants/interface";
+
+import UserTag from "./UserTagComponent";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
@@ -58,10 +60,12 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
     if (!matchStatus) {
       setModalMatching(true);
     } else if (matchStatus === "confirmed") {
-      router.push("/chat/personal");
+      router.push(`/chat/personal?room=${data.id}`);
     } else if (matchStatus === "received_pending") {
       await acceptMatchingRequestReceived(data?.match_request?.id);
-      callbackHandleIsRefresh(!isRefresh);
+      if (callbackHandleIsRefresh) {
+        callbackHandleIsRefresh(!isRefresh);
+      }
     } else {
       return 1;
     }
@@ -72,7 +76,9 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
     setStatusBtnSendMatching("sent_pending");
     await addUserFavorite(data?.id);
     setModalMatching(false);
-    callbackHandleIsRefresh(!isRefresh);
+    if (callbackHandleIsRefresh) {
+      callbackHandleIsRefresh(!isRefresh);
+    }
     return res;
   };
 
@@ -103,16 +109,23 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
 
   const handleClickToProfile = () => {
     // router.push(`/profile/${data.id}`);
-    window.location.href = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${data.id}`;
-    callbackHandleIsRefresh(!isRefresh);
+    router.push(`/profile/${data.id}`);
+    if (callbackHandleIsRefresh) {
+      callbackHandleIsRefresh(!isRefresh);
+    }
+  };
+
+  const onUserTagClicked = (tag: string) => {
+    dispatch({ type: searchUserActions.SEARCH_TAG_ONLY, payload: [tag] });
+    router.push("/search_user");
   };
 
   return (
     <React.Fragment>
       <Grid item xs={12} className={classNames(styles.boxItemUser)}>
         <Box className={styles.boxItemRecommend}>
-          <Box onClick={handleClickToProfile} sx={{ cursor: "pointer" }}>
-            <div className="status-summary">
+          <Box>
+            <div onClick={handleClickToProfile} className="status-summary">
               <ButtonComponent
                 mode={USER_SEARCH_STATUS[data?.status]?.mode}
                 size="small"
@@ -130,7 +143,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
               </span>
             </div>
 
-            <div className="info-summary">
+            <div onClick={handleClickToProfile} className="info-summary">
               <Avatar
                 src={data?.profile_image}
                 alt={data?.username}
@@ -145,14 +158,12 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
               </div>
             </div>
 
-            <div className="introduce">{data?.hitokoto ? data?.hitokoto : "情報なし"}</div>
+            <div onClick={handleClickToProfile} className="introduce">
+              {data?.hitokoto ? data?.hitokoto : "情報なし"}
+            </div>
 
             <div className="tags">
-              <ul>
-                {data?.tags?.map((tag, index) => (
-                  <li key={index}>{tag}</li>
-                ))}
-              </ul>
+              <UserTag tags={data.tags} onClick={onUserTagClicked} />
             </div>
 
             <p className="label-description">

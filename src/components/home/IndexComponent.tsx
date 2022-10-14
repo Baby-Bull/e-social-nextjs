@@ -6,7 +6,6 @@ import { useQuery } from "react-query";
 import dynamic from "next/dynamic";
 
 import { REACT_QUERY_KEYS } from "src/constants/constants";
-import ContentComponent from "src/components/layouts/ContentComponent";
 import {
   getUserFavoriteTags,
   getUserProvince,
@@ -223,7 +222,7 @@ const HomeIndexComponents = () => {
   );
 
   return (
-    <ContentComponent>
+    <React.Fragment>
       {isLoading && (
         <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
           <CircularProgress color="inherit" />
@@ -269,7 +268,7 @@ const HomeIndexComponents = () => {
           )}
         </Grid>
       </Box>
-    </ContentComponent>
+    </React.Fragment>
   );
 };
 export default HomeIndexComponents;

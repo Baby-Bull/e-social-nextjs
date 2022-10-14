@@ -5,7 +5,6 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 
-import FooterComponent from "src/components/layouts/FooterComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import theme from "src/theme";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
@@ -190,7 +189,6 @@ const LoginComponent = () => {
               </Grid>
             </Grid>
           </Box>
-          <FooterComponent authPage />
         </React.Fragment>
       )}
     </React.Fragment>

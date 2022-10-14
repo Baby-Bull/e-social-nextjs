@@ -1,16 +1,18 @@
 import * as React from "react";
-import type { NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import dynamic from "next/dynamic";
 import { parseCookies } from "nookies";
 
+import { NextPageWithLayout } from "pages/_app";
 import { IS_PROFILE_EDITED, USER_TOKEN } from "src/helpers/storage";
 
 const PersonalChatComponent = dynamic(() => import("src/components/chat/Personal/PersonalChatComponent"), {
   ssr: false,
 });
 
-const ChatPersonalPage: NextPage = () => <PersonalChatComponent />;
+const ChatPersonalPage: NextPageWithLayout = () => <PersonalChatComponent />;
+
+ChatPersonalPage.getLayout = React.Fragment;
 
 export const getServerSideProps = async (ctx) => {
   const { locale } = ctx;

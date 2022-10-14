@@ -250,9 +250,17 @@ export const getOrtherUserProfile = async (userId: string | string[]) => {
   }
 };
 
-export const getUserCommunites = async (userId: string | string[], limit: number | null = null, cursor: string = null) => {
+export const getUserCommunites = async (
+  userId: string | string[],
+  limit: number | null = null,
+  cursor: string = null,
+) => {
   try {
-    const res = await api.get(`/user/${userId}/communities?limit=${limit}&cursor=${cursor}`);
+    const queryString = new URLSearchParams({
+      ...(limit ? { limit: `${limit}` } : {}),
+      ...(cursor ? { cursor } : {}),
+    }).toString();
+    const res = await api.get(`/user/${userId}/communities?${queryString}`);
     return res?.data;
   } catch (error) {
     return error;
@@ -261,7 +269,11 @@ export const getUserCommunites = async (userId: string | string[], limit: number
 
 export const getUserRecommended = async (limit: number, cursor: string = "") => {
   try {
-    const res = await api.get(`/user/recommended-users/?limit=${limit}&cursor=${cursor}`);
+    const queryString = new URLSearchParams({
+      ...(limit ? { limit: `${limit}` } : {}),
+      ...(cursor ? { cursor } : {}),
+    }).toString();
+    const res = await api.get(`/user/recommended-users/?${queryString}`);
     return res?.data;
   } catch (error) {
     return error;
@@ -340,7 +352,7 @@ export const readMessagePersonal = async (userId: string) => {
   } catch (error) {
     return error;
   }
-}
+};
 
 export const readMessageCommunity = async (communityId: string) => {
   try {
@@ -348,4 +360,4 @@ export const readMessageCommunity = async (communityId: string) => {
   } catch (error) {
     return error;
   }
-}
+};
