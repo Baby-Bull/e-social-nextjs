@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/ja";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 
 import { IStoreState } from "src/constants/interface";
 
@@ -51,24 +52,25 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, hideReviewer, rating, c
               src="/assets/images/svg/goodhub.svg "
             />
           ) : (
-            <a
-              href={auth.id === user?.id ? `/my-profile` : `/profile/${user?.id}`}
-              style={{
-                textDecoration: "none",
-                color: "black",
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: { xs: "32px", lg: "56px" },
-                  height: { xs: "32px", lg: "56px" },
-                  objectFit: "cover",
-                  borderRadius: "50%",
+            <Link href={auth.id === user?.id ? `/my-profile` : `/profile/${user?.id}`} shallow>
+              <a
+                style={{
+                  textDecoration: "none",
+                  color: "black",
                 }}
-                alt={user?.username}
-                src={user?.profile_image}
-              />
-            </a>
+              >
+                <Avatar
+                  sx={{
+                    width: { xs: "32px", lg: "56px" },
+                    height: { xs: "32px", lg: "56px" },
+                    objectFit: "cover",
+                    borderRadius: "50%",
+                  }}
+                  alt={user?.username}
+                  src={user?.profile_image}
+                />
+              </a>
+            </Link>
           )}
           {rating ? (
             <Box
@@ -147,15 +149,16 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, hideReviewer, rating, c
                     display: { xs: "none", lg: "block" },
                   }}
                 >
-                  <a
-                    href={auth.id === user?.id ? `/my-profile` : `/profile/${user?.id}`}
-                    style={{
-                      textDecoration: "none",
-                      color: "black",
-                    }}
-                  >
-                    {user?.username}
-                  </a>
+                  <Link href={auth.id === user?.id ? `/my-profile` : `/profile/${user?.id}`} shallow>
+                    <a
+                      style={{
+                        textDecoration: "none",
+                        color: "black",
+                      }}
+                    >
+                      {user?.username}
+                    </a>
+                  </Link>
                 </Box>
               ) : (
                 <Box

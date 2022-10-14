@@ -161,7 +161,7 @@ const ChatBoxLeftComponent = ({
   };
 
   const redirectToProfile = () => {
-    router.push(`/profile/${userId}`);
+    router.push(`/profile/${userId}`, undefined, { shallow: true });
     handleClose();
   };
   const [showPopupReport, setShowPopupReport] = useState(false);

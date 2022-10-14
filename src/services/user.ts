@@ -323,7 +323,11 @@ export const updateProfile = async (body: any) => {
 
 export const getListnotifications = async (limit: number, cursor: string) => {
   try {
-    const res = await api.get(`/user/notifications?limit=${limit}&cursor=${cursor}`);
+    const queryString = new URLSearchParams({
+      ...(limit ? { limit: `${limit}` } : {}),
+      ...(cursor ? { cursor } : {}),
+    }).toString();
+    const res = await api.get(`/user/notifications?${queryString}`);
     return res?.data;
   } catch (error) {
     return error;

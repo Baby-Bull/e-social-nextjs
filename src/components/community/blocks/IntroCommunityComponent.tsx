@@ -62,9 +62,9 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
 
   const redirectProfile = (userId) => {
     if (auth?.id === userId) {
-      router.push(`/my-profile`);
+      router.push(`/my-profile`, undefined, { shallow: true });
     } else {
-      router.push(`/profile/${userId}`);
+      router.push(`/profile/${userId}`, undefined, { shallow: true });
     }
   };
   return (
