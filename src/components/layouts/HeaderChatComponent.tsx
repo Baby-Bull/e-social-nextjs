@@ -134,7 +134,7 @@ const HeaderChatComponent: FC<Props> = ({
         : personalChatRoomTemp.items;
 
       updatePersonalChatRoomList({
-        items: updatedList,
+        items: sortListRoomChat(updatedList),
         hasMorel: personalChatRoomTemp.hasMore,
         cursor: personalChatRoomTemp.cursor,
       });
@@ -154,7 +154,7 @@ const HeaderChatComponent: FC<Props> = ({
         ? unionBy(communityChatRoomTemp.items, communityChatRooms, "id")
         : communityChatRoomTemp.items;
       updateCommunityChatRoomList({
-        items: updatedList,
+        items: sortListRoomChat(updatedList),
         hasMore: communityChatRoomTemp.hasMore,
         cursor: communityChatRoomTemp.cursor,
       });

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable */
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import { Grid } from "@mui/material";
 import classNames from "classnames";
@@ -11,7 +11,7 @@ import unionBy from "lodash/unionBy";
 import styles from "src/components/chat/chat.module.scss";
 import useViewport from "src/helpers/useViewport";
 import { getListChatRooms } from "src/services/chat";
-import { LIMIT_ROOMS_PER_PAGE, REACT_QUERY_KEYS } from "src/constants/constants";
+import { REACT_QUERY_KEYS } from "src/constants/constants";
 import { sortListRoomChat } from "src/helpers/helper";
 import ChatBoxLeftComponent from "src/components/chat/Personal/Blocks/ChatBoxLeftComponent";
 import websocket from "src/helpers/socket";
@@ -45,15 +45,10 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     cursor: null,
   });
 
-
   useQuery(
     [`${REACT_QUERY_KEYS.LIST_ROOMS}/personal`, searchChatRoom],
     async () => {
-      const personalChatRoomTemp = await getListChatRooms(
-        searchChatRoom?.search,
-        searchChatRoom?.cursor,
-        10,
-      );
+      const personalChatRoomTemp = await getListChatRooms(searchChatRoom?.search, searchChatRoom?.cursor, 10);
       const updatedList = searchChatRoom?.cursor
         ? unionBy(personalChatRoomTemp.items, listRoomsChatTemp, "id")
         : personalChatRoomTemp.items;
@@ -61,16 +56,16 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
       dispatch({
         type: actionTypes.UPDATE_LIST_PERSONAL_CHAT_ROOMS,
         payload: {
-          items: updatedList,
+          items: sortListRoomChat(updatedList),
           hasMorel: personalChatRoomTemp.hasMore,
           cursor: personalChatRoomTemp.cursor,
-        }
+        },
       });
     },
     { refetchOnWindowFocus: false },
   );
 
- const updateLastMessageOfListRooms = useCallback(
+  const updateLastMessageOfListRooms = useCallback(
     async (message: any) => {
       let tempList = [...listRoomsChatTemp];
       const chatroomIndex = tempList.findIndex((room) => room.id === message.chat_room_id);
@@ -99,14 +94,14 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
         type: actionTypes.UPDATE_LIST_PERSONAL_CHAT_ROOMS,
         payload: {
           items: listRoomTemp,
-        }
+        },
       });
       if (roomSelect?.id === message.chat_room_id) {
         await readMessagePersonal(roomSelect.user.id);
         dispatch({
           type: actionTypes.UPDATE_PERSONAL_CHATROOM_UNREAD_COUNT,
-          payload: { chatRoomId: message.chat_room_id, count: 0 }
-        })
+          payload: { chatRoomId: message.chat_room_id, count: 0 },
+        });
       }
     },
     [listRoomsChatTemp, roomSelect?.id],
@@ -128,22 +123,22 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
       }
       updateLastMessageOfListRooms(message);
     };
-        const handleUpdatePersonalChatroomUnreadMessages = ({
+    const handleUpdatePersonalChatroomUnreadMessages = ({
       chat_room_id: chatRoomId,
       chat_message_unread_count: count,
     }) => {
       if (roomSelect?.id !== chatRoomId) {
         dispatch({
           type: actionTypes.UPDATE_PERSONAL_CHATROOM_UNREAD_COUNT,
-          payload: { chatRoomId, count }
+          payload: { chatRoomId, count },
         });
       }
     };
     websocket.on("get.chatRoom.message", wsHandler);
-        websocket.on(`chatRoom.personal.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
+    websocket.on(`chatRoom.personal.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
     return () => {
       websocket.off("get.chatRoom.message", wsHandler);
-            websocket.off(`chatRoom.personal.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
+      websocket.off(`chatRoom.personal.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
     };
   }, [listRoomsChatTemp, roomSelect?.id, updateLastMessageOfListRooms, roomSelect?.id]);
 
@@ -168,7 +163,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
         setUser(listRoomsChatTemp[0]?.user);
       }
     }
-  }, [listRoomsChatTemp, roomSelect?.id]);
+  }, [listRoomsChatTemp]);
 
   const loadMoreMessagePersonal = async () => {
     setSearchChatRoom((currentState) => ({
@@ -210,12 +205,11 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
       setUser(listRoomsChatTemp[index]?.user);
     }
     if (listRoomsChatTemp[index]?.unread_message_count > 0) {
-      console.log(listRoomsChatTemp[index]);
-        await readMessagePersonal(listRoomsChatTemp[index].user.id);
-        dispatch({
-          type: actionTypes.UPDATE_PERSONAL_CHATROOM_UNREAD_COUNT,
-          payload: { chatRoomId: listRoomsChatTemp[index].id, count: 0 }
-        })
+      await readMessagePersonal(listRoomsChatTemp[index].user.id);
+      dispatch({
+        type: actionTypes.UPDATE_PERSONAL_CHATROOM_UNREAD_COUNT,
+        payload: { chatRoomId: listRoomsChatTemp[index].id, count: 0 },
+      });
     }
   };
 

@@ -16,7 +16,7 @@ const SplashScreen = () => (
       alignItems: "center",
     }}
   >
-    <img alt="splash" src="/assets/images/bg_loading.gif" />
+    <img alt="splash" src="/assets/images/bg_loading.gif" style={{ width: "20%" }} />
   </div>
 );
 export default SplashScreen;
