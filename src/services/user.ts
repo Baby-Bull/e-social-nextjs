@@ -302,7 +302,7 @@ export const getUserProfile = async () => {
   }
 };
 
-export const updateProfile = async (body: any) => {
+export const updateProfile = async (body: any, showToast = true) => {
   toast.configure();
   try {
     const res = await api.patch(`/user/profile`, body);
@@ -312,7 +312,9 @@ export const updateProfile = async (body: any) => {
       toast.error(EMAIL_EXISTS);
     } else {
       setIsProfileEdited("true");
-      toast.success(UPDATE_PROFILE);
+      if (showToast) {
+        toast.success(UPDATE_PROFILE);
+      }
     }
     return res.data;
   } catch (error) {

@@ -50,14 +50,14 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     async () => {
       const personalChatRoomTemp = await getListChatRooms(searchChatRoom?.search, searchChatRoom?.cursor, 10);
       const updatedList = searchChatRoom?.cursor
-        ? unionBy(personalChatRoomTemp.items, listRoomsChatTemp, "id")
+        ? sortListRoomChat(unionBy(personalChatRoomTemp.items, listRoomsChatTemp, "id"))
         : personalChatRoomTemp.items;
 
       dispatch({
         type: actionTypes.UPDATE_LIST_PERSONAL_CHAT_ROOMS,
         payload: {
-          items: sortListRoomChat(updatedList),
-          hasMorel: personalChatRoomTemp.hasMore,
+          items: updatedList,
+          hasMore: personalChatRoomTemp.hasMore,
           cursor: personalChatRoomTemp.cursor,
         },
       });
@@ -148,20 +148,18 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   // }, [listRoomResQuery]);
 
   useEffect(() => {
-    // setListRooms(sortListRoomChat(listRoomResQuery?.items || []));
+    let selectedRoom = null;
     if (roomSelect?.id !== roomQuery) {
-      const roomQuerySelect = listRoomsChatTemp.find(
-        (item: any) => item.id === roomQuery || item?.user?.id === roomQuery,
-      );
-      if (roomQuerySelect) {
-        setRoomSelect(roomQuerySelect);
-        setUserId(roomQuerySelect?.user?.id);
-        setUser(roomQuerySelect?.user);
-      } else {
-        setRoomSelect(listRoomsChatTemp[0] || {});
-        setUserId(listRoomsChatTemp[0]?.user?.id);
-        setUser(listRoomsChatTemp[0]?.user);
-      }
+      selectedRoom = listRoomsChatTemp.find((item: any) => item.id === roomQuery || item?.user?.id === roomQuery);
+    }
+    if (selectedRoom) {
+      setRoomSelect(selectedRoom);
+      setUserId(selectedRoom?.user?.id);
+      setUser(selectedRoom?.user);
+    } else {
+      setRoomSelect(listRoomsChatTemp[0] || {});
+      setUserId(listRoomsChatTemp[0]?.user?.id);
+      setUser(listRoomsChatTemp[0]?.user);
     }
   }, [listRoomsChatTemp]);
 

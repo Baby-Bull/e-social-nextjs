@@ -130,12 +130,12 @@ const HeaderChatComponent: FC<Props> = ({
         10,
       );
       const updatedList = searchChatRoomPersonal?.cursor
-        ? unionBy(personalChatRoomTemp.items, personalChatRooms, "id")
+        ? sortListRoomChat(unionBy(personalChatRoomTemp.items, personalChatRooms, "id"))
         : personalChatRoomTemp.items;
 
       updatePersonalChatRoomList({
-        items: sortListRoomChat(updatedList),
-        hasMorel: personalChatRoomTemp.hasMore,
+        items: updatedList,
+        hasMore: personalChatRoomTemp.hasMore,
         cursor: personalChatRoomTemp.cursor,
       });
     },
@@ -154,7 +154,7 @@ const HeaderChatComponent: FC<Props> = ({
         ? unionBy(communityChatRoomTemp.items, communityChatRooms, "id")
         : communityChatRoomTemp.items;
       updateCommunityChatRoomList({
-        items: sortListRoomChat(updatedList),
+        items: updatedList,
         hasMore: communityChatRoomTemp.hasMore,
         cursor: communityChatRoomTemp.cursor,
       });

@@ -11,7 +11,7 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 /* eslint-disable */
 import TabsUnstyled from "@mui/base/TabsUnstyled";
@@ -19,6 +19,7 @@ import TabsListUnstyled from "@mui/base/TabsListUnstyled";
 import TabPanelUnstyled from "@mui/base/TabPanelUnstyled";
 import TabUnstyled, { tabUnstyledClasses } from "@mui/base/TabUnstyled";
 /* eslint-enable */
+import { toast } from "react-toastify";
 import MenuItem from "@mui/material/MenuItem";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
@@ -43,6 +44,7 @@ import {
 import { getUserProfile, updateProfile } from "src/services/user";
 import { IStoreState } from "src/constants/interface";
 import actionTypes from "src/store/actionTypes";
+import { SERVER_ERROR, UPDATE_PROFILE } from "src/messages/notification";
 
 const BoxContentTab = styled(Box)`
   display: flex;
@@ -240,6 +242,7 @@ const ProfileSkillComponent = () => {
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
   const router = useRouter();
+  const profileImgData = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [checkLoading, setCheckLoading] = useState(false);
   const [username, setUsername] = useState(null);
@@ -1028,19 +1031,10 @@ const ProfileSkillComponent = () => {
       e.currentTarget.files[0].type === "image/png" ||
       e.currentTarget.files[0].type === "image/jpeg"
     ) {
-      setIsLoading(true);
-      const formData = new FormData();
-      formData.append("profile_image", e.currentTarget.files[0]);
-      const res = await updateProfile(formData);
-      if (res) {
-        // @ts-ignore
-        document.getElementById("avatar").value = null;
-        auth.profile_image = res.profile_image;
-        dispatch({ type: actionTypes.UPDATE_PROFILE, payload: auth });
-        setTimeout(() => router.push("/my-profile"), 1000);
-        setIsLoading(false);
-        return res.data;
-      }
+      setProfileImage(URL.createObjectURL(e.target.files[0]));
+      // eslint-disable-next-line prefer-destructuring
+      profileImgData.current = e.target.files[0];
+      return;
     }
     errorMessages.image_profile = VALIDATE_FORM_UPDATE_PROFILE.image_profile.format;
     setErrorValidates(errorMessages);
@@ -1106,13 +1100,30 @@ const ProfileSkillComponent = () => {
         };
         const skills = { skills: dataUpdate };
         const tags = { tags: inputTags };
-        const res = await updateProfile({ ...profileRequest, ...profileSocialRequest, ...tags, ...skills });
-        if (res) {
+        const profileUpdateRes = updateProfile(
+          { ...profileRequest, ...profileSocialRequest, ...tags, ...skills },
+          false,
+        ).then(() => {
           auth.username = profileSocialRequest.username;
-          dispatch({ type: actionTypes.UPDATE_PROFILE, payload: auth });
-          setIsLoading(false);
-          router.push("/my-profile");
+        });
+        let profileImgUpdateRes = Promise.resolve(null);
+        if (profileImgData.current) {
+          const formData = new FormData();
+          formData.append("profile_image", profileImgData.current);
+          profileImgUpdateRes = updateProfile(formData, false).then((res) => {
+            auth.profile_image = res.profile_image;
+          });
         }
+        try {
+          await Promise.all([profileUpdateRes, profileImgUpdateRes]);
+        } catch (err) {
+          toast.error(SERVER_ERROR);
+          return;
+        }
+        dispatch({ type: actionTypes.UPDATE_PROFILE, payload: auth });
+        setIsLoading(false);
+        toast.success(UPDATE_PROFILE);
+        router.push("/my-profile");
       }
     }
   };
