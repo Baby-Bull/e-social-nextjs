@@ -141,7 +141,7 @@ const SearchCommunityComponent = () => {
     setFormSearch({
       login_count: numberOfLogins[0]?.value,
       member_count: numberOfParticipants[0]?.value,
-      excludejoinedCommunities: true,
+      excludejoinedCommunities: false,
     });
     setInputTags([]);
     const res = await getListCommunitySearch(
@@ -151,7 +151,7 @@ const SearchCommunityComponent = () => {
       {
         login_count: numberOfLogins[0]?.value,
         member_count: numberOfParticipants[0]?.value,
-        excludejoinedCommunities: true,
+        excludejoinedCommunities: false,
       },
       [],
       fullText,
