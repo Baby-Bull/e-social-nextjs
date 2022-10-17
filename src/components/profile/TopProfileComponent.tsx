@@ -8,7 +8,6 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { toast } from "react-toastify";
 import copy from "copy-to-clipboard";
-import { FacebookShareButton, TwitterShareButton } from "react-share";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -20,6 +19,8 @@ import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
 import { IStoreState } from "src/constants/interface";
 import { USER_ONLINE_STATUS } from "src/constants/constants";
+import TwitterShareButton from "lib/ShareButtons/TwitterShareButton";
+import FacebookShareButton from "lib/ShareButtons/FacebookShareButton";
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);

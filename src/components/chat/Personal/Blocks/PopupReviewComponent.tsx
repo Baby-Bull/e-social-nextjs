@@ -9,11 +9,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import { useTranslation } from "next-i18next";
-import { TwitterShareButton } from "react-share";
 
 import { userReview } from "src/services/user";
 import theme from "src/theme";
 import { VALIDATE_FORM_USER_REVIEW } from "src/messages/validate";
+import TwitterShareButton from "lib/ShareButtons/TwitterShareButton";
 
 interface IReportUserProps {
   showPopup: boolean;

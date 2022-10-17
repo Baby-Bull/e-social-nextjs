@@ -7,7 +7,11 @@ interface IParamsListChatRooms {
   limit: number;
 }
 
-export const getListChatRooms = async (search: string = "", cursor: string = "", limit: number = LIMIT_ROOMS_PER_PAGE) => {
+export const getListChatRooms = async (
+  search: string = "",
+  cursor: string = "",
+  limit: number = LIMIT_ROOMS_PER_PAGE,
+) => {
   try {
     let params: IParamsListChatRooms;
     if (!search) {

@@ -180,9 +180,9 @@ const reducer = (state, action: any) => {
           itemsPersonal: state.listrooms.itemsPersonal.map((chatroom) =>
             chatroom.id === action.payload.chatRoomId
               ? {
-                ...chatroom,
-                unread_message_count: action.payload.count,
-              }
+                  ...chatroom,
+                  unread_message_count: action.payload.count,
+                }
               : chatroom,
           ),
         },
@@ -196,9 +196,9 @@ const reducer = (state, action: any) => {
           itemsCommunity: state.listrooms.itemsCommunity.map((chatroom) =>
             chatroom.id === action.payload.chatRoomId
               ? {
-                ...chatroom,
-                unread_message_count: action.payload.count,
-              }
+                  ...chatroom,
+                  unread_message_count: action.payload.count,
+                }
               : chatroom,
           ),
         },
