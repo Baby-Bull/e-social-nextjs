@@ -30,9 +30,9 @@ const LoginComponent = () => {
   const onLoginStart = () => {};
 
   useEffect(() => {
-    const registerAccount = async (providerAuth: string, accessToken: any) => {
+    const registerAccount = async (providerAuth: string, credentials: any) => {
       setIsLoading(true);
-      const resAuth = await authWithProvider(providerAuth, accessToken);
+      const resAuth = await authWithProvider(providerAuth, credentials);
       if (resAuth?.data?.access_token) {
         dispatch(login(resAuth?.data?.user));
         dispatch({
@@ -52,8 +52,8 @@ const LoginComponent = () => {
       }
       return resAuth;
     };
-    if (profile?.access_token) {
-      registerAccount(provider, profile?.access_token);
+    if (profile?.credentials) {
+      registerAccount(provider, profile);
     }
     return () => {
       setProfile(null);

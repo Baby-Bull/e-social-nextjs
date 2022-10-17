@@ -90,7 +90,7 @@ export const LoginSocialTwitterV2 = forwardRef(
             setIsProcessing(false);
             if (response.access_token) {
               setIsLogged(true);
-              onResolve({ provider: "twitter", data: { ...response } });
+              onResolve({ provider: "twitter", data: { credentials: { ...response } } });
             } else onReject("no data");
           })
           .catch((err) => {
