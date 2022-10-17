@@ -13,7 +13,7 @@ type Props = {
 
 const GoogleLogin: FC<Props> = ({ onSuccess, onError, redirectUrl, children }) => {
   const loginGoogle = useGoogleLogin({
-    onSuccess: (credentials: any) => onSuccess({ provider: "google", data: credentials }),
+    onSuccess: (credentials: any) => onSuccess({ provider: "google", data: { credentials } }),
     onError,
     redirect_uri: redirectUrl,
   });
