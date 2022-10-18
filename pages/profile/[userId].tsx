@@ -10,7 +10,7 @@ import ProfileComponent from "../../src/components/profile/ProfileComponent";
 
 const sampleUserId = "624cf8551b8a720009e2e1db";
 
-const Profile = ({ url, profileSkill, userId }) => (
+const Profile = ({ url, profileSkill, userId, isAuth }) => (
   <React.Fragment>
     <Head>
       <meta property="og:type" content="article" key="og-type" />
@@ -28,7 +28,7 @@ const Profile = ({ url, profileSkill, userId }) => (
       <meta name="twitter:description" content={profileSkill.self_description} key="twitter-description" />
       {/* Inject MUI styles first to match with the prepend: true configuration. */}
     </Head>
-    <ProfileComponent userId={userId} />
+    <ProfileComponent userId={userId} isAuth={isAuth} />
   </React.Fragment>
 );
 
@@ -56,6 +56,7 @@ export const getServerSideProps = async (ctx) => {
       url: `${process.env.NEXT_PUBLIC_URL_PROFILE}${ctx.resolvedUrl}`,
       userId,
       profileSkill,
+      isAuth,
       paths: [{ params: { userId: sampleUserId } }],
       fallback: true, // 上記以外のパスでアクセスした場合は 404 ページにしない
     },

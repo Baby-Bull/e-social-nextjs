@@ -8,4 +8,4 @@ export interface ManyRelationship<Key = string> {
   ids: Key[];
 }
 
-export interface PaginatedRelationship<Key = string> extends ManyRelationship<Key>, PaginationMetadata { }
+export interface PaginatedRelationship<Key = string> extends ManyRelationship<Key>, PaginationMetadata {}

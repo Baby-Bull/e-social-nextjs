@@ -7,9 +7,9 @@ import { FORBIDDEN, NOT_FOUND, SERVER_ERROR } from "src/messages/notification";
 import {
   setToken as setTokenStorage,
   getToken as getTokenStorage,
+  setRefreshToken,
   getToken,
   getRefreshToken,
-  setRefreshToken,
 } from "./storage";
 
 let fetchTokenPromise = Promise.resolve(null);
@@ -25,7 +25,9 @@ export const apiAuth = axios.create({
 
 export const setApiAuth = (token: string) => {
   fetchTokenPromise = Promise.resolve(token);
-  api.defaults.headers.common.Authorization = `Bearer ${token}`;
+  if (token) {
+    api.defaults.headers.common.Authorization = `Bearer ${token}`;
+  }
   axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 };
 
@@ -34,11 +36,11 @@ export function setToken(token: string, expiresIn?: number) {
   setApiAuth(token);
 }
 
-export const fetchToken = async () => {
+export const fetchToken = async ({ accessToken, refreshToken }) => {
   if (!isFetchingToken) {
     isFetchingToken = true;
     fetchTokenPromise = apiAuth
-      .post("/auth/tokens", { access_token: getToken(), refresh_token: getRefreshToken() })
+      .post("/auth/tokens", { access_token: accessToken, refresh_token: refreshToken })
       .then(({ data }) => {
         const {
           access_token: accessToken,
@@ -69,17 +71,21 @@ apiAuth.interceptors.response.use(
         window.location.href = `/login?oldUrl=${window.location.pathname}`;
       }
     }
-    return Promise.reject(err);
+    Promise.reject(err);
   },
 );
 
 api.interceptors.request.use(
   async (config) => {
+    const accessToken = getToken();
+    const refreshToken = getRefreshToken();
     let token = await fetchTokenPromise;
-    if (!token) {
-      token = await fetchToken();
+    if (!token && accessToken && refreshToken) {
+      token = await fetchToken({ accessToken, refreshToken });
     }
-    api.defaults.headers.common.Authorization = `Bearer ${token}`;
+    if (token) {
+      api.defaults.headers.common.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {
@@ -110,9 +116,21 @@ api.interceptors.response.use(
     if (originalRequest.url !== "/auth/tokens") {
       if (err.response.status === 401 && typeof window !== "undefined") {
         // only refresh on client
-        const token = await fetchToken();
-        originalRequest.headers.Authorization = `Bearer ${token}`;
-        return api(originalRequest).then((result) => ({ data: result }));
+        const accessToken = getToken();
+        const refreshToken = getRefreshToken();
+        if (accessToken && refreshToken) {
+          const token = await fetchToken({
+            accessToken,
+            refreshToken,
+          });
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return api(originalRequest).then((result) => ({ data: result }));
+        }
+        setToken("", null);
+        setRefreshToken("");
+        if (typeof window !== "undefined") {
+          window.location.href = `/login?oldUrl=${window.location.pathname}`;
+        }
       }
     }
     return Promise.reject(err);

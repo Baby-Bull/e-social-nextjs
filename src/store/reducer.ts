@@ -1,5 +1,4 @@
 import { SearchUserFormStatus } from "src/constants/constants";
-import { fetchToken } from "src/helpers/api";
 
 import actionTypes, { searchUserActions } from "./actionTypes";
 
@@ -318,10 +317,6 @@ const reducer = (state, action: any) => {
         },
       };
     }
-
-    case actionTypes.REFRESH_TOKEN:
-      fetchToken();
-      return state;
     default:
       return state;
   }
