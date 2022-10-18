@@ -4,11 +4,7 @@
     "es2021": true,
     "node": true
   },
-  "extends": [
-    "plugin:react/recommended",
-    "airbnb",
-    "prettier"
-  ],
+  "extends": ["plugin:react/recommended", "airbnb", "prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -17,12 +13,9 @@
     "ecmaVersion": 13,
     "sourceType": "module"
   },
-  "plugins": [
-    "react",
-    "@typescript-eslint",
-    "prettier"
-  ],
+  "plugins": ["react", "@typescript-eslint", "prettier"],
   "rules": {
+    "no-shadow": "off",
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
     "react/no-array-index-key": "off",
@@ -30,10 +23,7 @@
     "jsx-a11y/no-static-element-interactions": 0,
     "eslint-disable-next-line no-use-before-define": 0,
     "eslint-disable-next-line no-unsafe-optional-chaining": "off",
-    "react/jsx-fragments": [
-      "error",
-      "element"
-    ],
+    "react/jsx-fragments": ["error", "element"],
     "import/extensions": [
       "error",
       {
@@ -47,10 +37,7 @@
     "react/jsx-filename-extension": [
       "error",
       {
-        "extensions": [
-          ".jsx",
-          ".tsx"
-        ]
+        "extensions": [".jsx", ".tsx"]
       }
     ],
     "@typescript-eslint/no-use-before-define": [
@@ -66,19 +53,14 @@
         "namedComponents": "arrow-function"
       }
     ],
-    "react/require-default-props": [
-      0
-    ],
+    "react/require-default-props": [0],
     // "react/jsx-props-no-spreading": [
     //   2,
     //   {
     //     "custom": "ignore"
     //   }
     // ],
-    "func-names": [
-      "error",
-      "as-needed"
-    ],
+    "func-names": ["error", "as-needed"],
     "max-len": [
       "error",
       {
@@ -89,14 +71,7 @@
     "import/order": [
       2,
       {
-        "groups": [
-          "builtin",
-          "external",
-          "internal",
-          "parent",
-          "sibling",
-          "index"
-        ],
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
         "newlines-between": "always"
       }
     ],
@@ -126,15 +101,8 @@
     },
     "import/resolver": {
       "node": {
-        "paths": [
-          "."
-        ],
-        "extensions": [
-          ".js",
-          ".jsx",
-          ".ts",
-          ".tsx"
-        ]
+        "paths": ["."],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
     }
   }
