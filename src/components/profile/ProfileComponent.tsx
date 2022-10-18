@@ -30,9 +30,10 @@ import { acceptMatchingRequestReceived, sendMatchingRequest } from "../../servic
 import PaginationCustomComponent from "../common/PaginationCustomComponent";
 interface Props {
   userId: string;
+  isAuth: boolean;
 }
 
-const ProfileHaveDataComponent: FC<Props> = ({ userId }) => {
+const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
   const { t } = useTranslation();
   const viewPort = useViewport();
   const router = useRouter();
@@ -141,7 +142,9 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId }) => {
     fetchProfileSkill();
     fetchUserReviews();
     fetchCommunities();
-    fetchRecommended();
+    if (isAuth) {
+      fetchRecommended();
+    }
   }, [userId]);
 
   const dataElements = useMemo(() => {

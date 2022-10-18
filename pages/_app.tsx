@@ -17,7 +17,7 @@ import { Provider } from "react-redux";
 
 import createEmotionCache from "src/createEmotionCache";
 import { AUTH_PAGE_PATHS } from "src/constants/constants";
-import { USER_TOKEN } from "src/helpers/storage";
+import { getRefreshToken, getToken, USER_TOKEN } from "src/helpers/storage";
 // eslint-disable-next-line import/order
 import theme from "src/theme";
 
@@ -55,7 +55,10 @@ const SplashScreen = () => (
 const MyApp = (props: MyAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps, pathname } = props;
   const [queryClient] = React.useState(() => new QueryClient());
-  const Layout = Component.getLayout !== undefined ? Component.getLayout : ContentComponent;
+  const Layout =
+    Component.getLayout !== undefined
+      ? Component.getLayout
+      : ({ children, isAuth }) => <ContentComponent authPage={!isAuth}>{children}</ContentComponent>;
   const cookies = parseCookies();
   const isAuth = cookies[USER_TOKEN];
 
@@ -102,7 +105,10 @@ const MyApp = (props: MyAppProps) => {
       if (cookies.EXPIRES_IN) {
         const timeOutFreshToken = (parseInt(cookies.EXPIRES_IN, 10) - 30) * 1000;
         const intervalRef = setInterval(() => {
-          fetchToken();
+          fetchToken({
+            accessToken: getToken(),
+            refreshToken: getRefreshToken(),
+          });
         }, timeOutFreshToken);
         return () => {
           clearInterval(intervalRef);
@@ -189,7 +195,7 @@ const MyApp = (props: MyAppProps) => {
                 {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
                 <CssBaseline />
                 <Hydrate state={pageProps.dehydratedState}>
-                  <Layout>
+                  <Layout isAuth={isAuth}>
                     <Component {...pageProps} />
                   </Layout>
                 </Hydrate>
@@ -202,7 +208,7 @@ const MyApp = (props: MyAppProps) => {
                   {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
                   <CssBaseline />
                   <Hydrate state={pageProps.dehydratedState}>
-                    <Layout>
+                    <Layout isAuth={isAuth}>
                       <Component {...pageProps} />
                     </Layout>
                   </Hydrate>
