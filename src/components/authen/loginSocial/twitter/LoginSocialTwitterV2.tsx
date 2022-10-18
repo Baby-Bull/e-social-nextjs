@@ -90,7 +90,7 @@ export const LoginSocialTwitterV2 = forwardRef(
             setIsProcessing(false);
             if (response.access_token) {
               setIsLogged(true);
-              onResolve({ provider: "twitter", data: { credentials: { ...response } } });
+              onResolve({ provider: "twitter/v2", data: { credentials: { ...response } } });
             } else onReject("no data");
           })
           .catch((err) => {
@@ -102,14 +102,14 @@ export const LoginSocialTwitterV2 = forwardRef(
     );
 
     const handlePostMessage = useCallback(
-      async ({ type, code, provider }) => type === "code" && provider === "twitter" && code && getAccessToken(code),
+      async ({ type, code, provider }) => type === "code" && provider === "twitter/v2" && code && getAccessToken(code),
       [getAccessToken],
     );
     const onChangeLocalStorage = useCallback(() => {
       // window.removeEventListener("storage", onChangeLocalStorage, false);
       const code = localStorage.getItem("twitter");
       setIsProcessing(true);
-      handlePostMessage({ provider: "twitter", type: "code", code });
+      handlePostMessage({ provider: "twitter/v2", type: "code", code });
       localStorage.removeItem("twitter");
     }, [handlePostMessage]);
 
