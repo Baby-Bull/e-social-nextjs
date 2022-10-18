@@ -98,7 +98,7 @@ export const LoginSocialGithub = forwardRef(
             if (response.access_token) {
               setIsLogged(true);
               setIsProcessing(false);
-              onResolve({ provider: "github", data: response });
+              onResolve({ provider: "github", data: { credentials: response } });
             } else {
               setIsProcessing(false);
               onReject("no data");

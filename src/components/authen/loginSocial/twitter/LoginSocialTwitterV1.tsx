@@ -65,13 +65,17 @@ export const LoginSocialTwitterV1 = forwardRef(
       }
     }, []);
 
-    const getAccessToken = (code: any) => {
+    const getAccessToken = ({ oauth_token, oauth_verifier, oauth_token_secret }) => {
       setIsProcessing(false);
       setIsLogged(true);
       onResolve({
         provider: "twitter",
         data: {
-          access_token: code,
+          credentials: {
+            oauth_token,
+            oauth_verifier,
+            oauth_token_secret,
+          },
         },
       });
     };
