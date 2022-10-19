@@ -81,7 +81,7 @@ export const logout = () => ({ type: actionTypes.LOGIN, user: {} });
 const persistConfig = {
   key: "primary",
   storage,
-  whitelist: ["user", "is_profile_edited"], // place to select which state you want to persist
+  whitelist: ["user", "is_profile_edited", "listrooms"], // place to select which state you want to persist
 };
 const persistedReducer = persistReducer(persistConfig, reducer);
 

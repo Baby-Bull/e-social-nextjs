@@ -114,9 +114,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   }, [listRoomsChatTemp]);
 
   useEffect(() => {
-    if (isMobile) {
-      setIsRenderRightSide(true);
-    }
     const wsHandler = (message) => {
       if (roomSelect?.id === message.chat_room_id) {
         setNewMessageOfRoom(message);
@@ -146,22 +143,25 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   //   const listRoomSort = sortListRoomChat(listRoomResQuery?.items || []);
   //   setListRooms(listRoomSort);
   // }, [listRoomResQuery]);
-
   useEffect(() => {
-    let selectedRoom = null;
-    if (roomSelect?.id !== roomQuery) {
-      selectedRoom = listRoomsChatTemp.find((item: any) => item.id === roomQuery || item?.user?.id === roomQuery);
+    if (viewPort.width) {
+      let selectedRoom = null;
+      if (roomSelect?.id !== roomQuery) {
+        selectedRoom = listRoomsChatTemp.find((item: any) => item.id === roomQuery || item?.user?.id === roomQuery);
+      }
+      if (selectedRoom) {
+        setIsRenderRightSide(true);
+        setRoomSelect(selectedRoom);
+        setUserId(selectedRoom?.user?.id);
+        setUser(selectedRoom?.user);
+      } else if (!isMobile) {
+        setIsRenderRightSide(true);
+        setRoomSelect(listRoomsChatTemp[0] || {});
+        setUserId(listRoomsChatTemp[0]?.user?.id);
+        setUser(listRoomsChatTemp[0]?.user);
+      }
     }
-    if (selectedRoom) {
-      setRoomSelect(selectedRoom);
-      setUserId(selectedRoom?.user?.id);
-      setUser(selectedRoom?.user);
-    } else {
-      setRoomSelect(listRoomsChatTemp[0] || {});
-      setUserId(listRoomsChatTemp[0]?.user?.id);
-      setUser(listRoomsChatTemp[0]?.user);
-    }
-  }, [listRoomsChatTemp]);
+  }, [listRoomsChatTemp, viewPort]);
 
   const loadMoreMessagePersonal = async () => {
     setSearchChatRoom((currentState) => ({

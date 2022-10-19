@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, FC } from "react";
 import { Editable, withReact, Slate } from "slate-react";
 import { createEditor } from "slate";
 
@@ -8,13 +8,46 @@ import BlockButton from "./Atoms/BlockButton";
 import MarkButton from "./Atoms/MarkButton";
 import Toolbar from "./Atoms/Toolbar";
 
-const TextEditor = () => {
+interface Props {
+  placeholder: string;
+  // eslint-disable-next-line no-unused-vars
+  initialValue?: string;
+  // eslint-disable-next-line no-unused-vars
+  onChange: (value: string) => void;
+}
+
+const defaultValue = [
+  {
+    type: "paragraph",
+    children: [{ text: "" }],
+  },
+];
+const TextEditor: FC<Props> = ({ placeholder, onChange, initialValue = null }) => {
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withReact(createEditor()), []);
+  const initialValueParse = useMemo(() => {
+    try {
+      return initialValue ? JSON.parse(initialValue) : defaultValue;
+    } catch (e) {
+      return defaultValue;
+    }
+  }, []);
 
   return (
-    <Slate editor={editor} value={null}>
+    <Slate
+      editor={editor}
+      value={initialValueParse}
+      onChange={(value) => {
+        const isAstChange = editor.operations.some((op) => op.type !== "set_selection");
+        if (isAstChange && onChange) {
+          // Save the value to Local Storage.
+          const content = JSON.stringify(value);
+          console.log("Content change", content);
+          onChange(content);
+        }
+      }}
+    >
       <Toolbar>
         <MarkButton format="bold" icon="format_bold" />
         <MarkButton format="italic" icon="format_italic" />
@@ -31,9 +64,9 @@ const TextEditor = () => {
         <BlockButton format="justify" icon="format_align_justify" />
       </Toolbar>
       <Editable
+        placeholder={placeholder}
         renderElement={renderElement}
         renderLeaf={renderLeaf}
-        placeholder="Enter some rich text…"
         spellCheck
         autoFocus
         // onKeyDown={(event) => {

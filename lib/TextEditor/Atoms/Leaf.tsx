@@ -5,18 +5,27 @@ const Leaf = ({ attributes, children, leaf }) => {
   let _children;
   if (leaf.bold) {
     _children = <strong>{children}</strong>;
-  }
-
-  if (leaf.code) {
-    _children = <code>{children}</code>;
-  }
-
-  if (leaf.italic) {
+  } else if (leaf.code) {
+    _children = (
+      <pre>
+        <code
+          style={{
+            backgroundColor: "#eee",
+            border: "1px solid #999",
+            display: "block",
+            padding: "20px",
+          }}
+        >
+          {children}
+        </code>
+      </pre>
+    );
+  } else if (leaf.italic) {
     _children = <em>{children}</em>;
-  }
-
-  if (leaf.underline) {
+  } else if (leaf.underline) {
     _children = <u>{children}</u>;
+  } else {
+    _children = children;
   }
 
   return <span {...attributes}>{_children}</span>;
