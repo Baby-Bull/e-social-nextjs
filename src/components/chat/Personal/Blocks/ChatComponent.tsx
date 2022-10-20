@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable */
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useLayoutEffect } from "react";
 import { useRouter } from "next/router";
 import { Grid } from "@mui/material";
 import classNames from "classnames";
@@ -46,7 +46,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   });
 
   useQuery(
-    [`${REACT_QUERY_KEYS.LIST_ROOMS}/personal`, searchChatRoom],
+    [`${REACT_QUERY_KEYS.LIST_ROOMS}/personal`, searchChatRoom.search, searchChatRoom.cursor],
     async () => {
       const personalChatRoomTemp = await getListChatRooms(searchChatRoom?.search, searchChatRoom?.cursor, 10);
       const updatedList = searchChatRoom?.cursor
@@ -61,8 +61,9 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
           cursor: personalChatRoomTemp.cursor,
         },
       });
+      return updatedList;
     },
-    { refetchOnWindowFocus: false },
+    { refetchOnWindowFocus: false, staleTime: 60000 },
   );
 
   const updateLastMessageOfListRooms = useCallback(
@@ -137,25 +138,26 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
       websocket.off("get.chatRoom.message", wsHandler);
       websocket.off(`chatRoom.personal.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
     };
-  }, [listRoomsChatTemp, roomSelect?.id, updateLastMessageOfListRooms, roomSelect?.id]);
+  }, [listRoomsChatTemp, roomSelect?.id, updateLastMessageOfListRooms]);
 
   // useEffect(() => {
   //   const listRoomSort = sortListRoomChat(listRoomResQuery?.items || []);
   //   setListRooms(listRoomSort);
   // }, [listRoomResQuery]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (viewPort.width) {
       let selectedRoom = null;
+      console.log("selected room", roomSelect, roomQuery);
       if (roomSelect?.id !== roomQuery) {
         selectedRoom = listRoomsChatTemp.find((item: any) => item.id === roomQuery || item?.user?.id === roomQuery);
       }
+      console.log(selectedRoom);
       if (selectedRoom) {
-        setIsRenderRightSide(true);
+        if (isMobile) setIsRenderRightSide(true);
         setRoomSelect(selectedRoom);
         setUserId(selectedRoom?.user?.id);
         setUser(selectedRoom?.user);
       } else if (!isMobile) {
-        setIsRenderRightSide(true);
         setRoomSelect(listRoomsChatTemp[0] || {});
         setUserId(listRoomsChatTemp[0]?.user?.id);
         setUser(listRoomsChatTemp[0]?.user);

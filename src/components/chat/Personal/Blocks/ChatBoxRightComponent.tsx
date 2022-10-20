@@ -378,9 +378,10 @@ const ChatBoxRightComponent = ({
       hasMore: listMessageResQuery?.hasMore,
     });
     // inputChatRef.current.focus();
-    setTimeout(() => {
+    const timeoutRef = setTimeout(() => {
       scrollEl(boxMessageRef.current);
-    }, 0);
+    }, 300);
+    return () => clearTimeout(timeoutRef);
   }, [listMessageResQuery]);
 
   const fetchData = async () => {
@@ -397,9 +398,10 @@ const ChatBoxRightComponent = ({
   useEffect(() => {
     if (newMessageOfRoom && newMessageOfRoom?.chat_room_id === roomSelect.id) {
       setListMessages([...listMessages, newMessageOfRoom]);
-      setTimeout(() => {
+      const timeoutRef = setTimeout(() => {
         scrollEl(boxMessageRef.current);
       }, 300);
+      return () => clearTimeout(timeoutRef);
     }
   }, [newMessageOfRoom]);
 

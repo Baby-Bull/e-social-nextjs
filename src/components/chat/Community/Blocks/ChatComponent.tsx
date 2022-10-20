@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable */
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Grid } from "@mui/material";
 import classNames from "classnames";
@@ -45,11 +45,11 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   });
 
   useQuery(
-    [`${REACT_QUERY_KEYS.LIST_ROOMS}/community`, searchChatRoom],
+    [`${REACT_QUERY_KEYS.LIST_ROOMS}/community`, searchChatRoom.search, searchChatRoom.cursor],
     async () => {
       const communityChatRoomTemp = await getListChatRoomsCommunity(searchChatRoom?.search, searchChatRoom?.cursor, 12);
       const updatedList = searchChatRoom?.cursor
-        ? unionBy(communityChatRoomTemp.items, listRoomsChatTemp, "id")
+        ? sortListRoomChat(unionBy(communityChatRoomTemp.items, listRoomsChatTemp, "id"))
         : communityChatRoomTemp.items;
       dispatch({
         type: actionTypes.UPDATE_LIST_COMMUNITY_CHAT_ROOMS,
@@ -60,7 +60,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
         },
       });
     },
-    { refetchOnWindowFocus: false },
+    { refetchOnWindowFocus: false, staleTime: 60000 },
   );
 
   const updateLastMessageOfListRooms = useCallback(
@@ -112,10 +112,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   }, [listRoomsChatTemp]);
 
   useEffect(() => {
-    if (isMobile) {
-      setIsRenderRightSide(true);
-    }
-
     const wsHandler = (message) => {
       if (roomSelect?.id === message.chat_room_id) {
         setNewMessageOfRoom(message);
@@ -157,19 +153,27 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   //   );
   // }, [listRoomResQuery]);
 
-  useEffect(() => {
-    let selectedRoom = null;
-    if (roomSelect?.id !== roomQuery) {
-      selectedRoom = listRoomsChatTemp.find((item: any) => item.id === roomQuery || item?.community?.id === roomQuery);
+  useLayoutEffect(() => {
+    if (viewPort.width) {
+      let selectedRoom = null;
+      console.log("selected room", roomSelect, roomQuery);
+
+      if (roomSelect?.id !== roomQuery) {
+        selectedRoom = listRoomsChatTemp.find(
+          (item: any) => item.id === roomQuery || item?.community?.id === roomQuery,
+        );
+      }
+      console.log(selectedRoom);
+      if (selectedRoom) {
+        if (isMobile) setIsRenderRightSide(true);
+        setRoomSelect(selectedRoom);
+        setCommunityId(selectedRoom?.id);
+      } else if (!isMobile) {
+        setRoomSelect(listRoomsChatTemp[0] || {});
+        setCommunityId(listRoomsChatTemp[0]?.community?.id);
+      }
     }
-    if (selectedRoom) {
-      setRoomSelect(selectedRoom);
-      setCommunityId(selectedRoom?.id);
-    } else {
-      setRoomSelect(listRoomsChatTemp[0] || {});
-      setCommunityId(listRoomsChatTemp[0]?.community?.id);
-    }
-  }, [listRoomsChatTemp]);
+  }, [listRoomsChatTemp, viewPort]);
 
   const loadMoreMessageCommunity = async () => {
     setSearchChatRoom((currentState) => ({
@@ -218,7 +222,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   };
 
   const toggleRenderSide = () => setIsRenderRightSide(!isRenderRightSide);
-  console.log("RE_RENDER", hasMoreChatRooms);
 
   return (
     <Grid container className={classNames(styles.chatContainerPC)}>

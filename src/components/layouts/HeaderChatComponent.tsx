@@ -122,7 +122,7 @@ const HeaderChatComponent: FC<Props> = ({
     debounceSearchRooms(valueInputSearchTemp, mode);
   };
   useQuery(
-    [`${REACT_QUERY_KEYS.LIST_ROOMS}/personal`, searchChatRoomPersonal],
+    [`${REACT_QUERY_KEYS.LIST_ROOMS}/personal`, searchChatRoomPersonal.cursor, searchChatRoomPersonal.search],
     async () => {
       const personalChatRoomTemp = await getListChatRooms(
         searchChatRoomPersonal?.search,
@@ -139,11 +139,11 @@ const HeaderChatComponent: FC<Props> = ({
         cursor: personalChatRoomTemp.cursor,
       });
     },
-    { refetchOnWindowFocus: false },
+    { refetchOnWindowFocus: false, staleTime: 60000 },
   );
 
   useQuery(
-    [`${REACT_QUERY_KEYS.LIST_ROOMS}/community`, searchChatRoomCommunity],
+    [`${REACT_QUERY_KEYS.LIST_ROOMS}/community`, searchChatRoomCommunity.cursor, searchChatRoomCommunity.search],
     async () => {
       const communityChatRoomTemp = await getListChatRoomsCommunity(
         searchChatRoomCommunity?.search,
@@ -151,7 +151,7 @@ const HeaderChatComponent: FC<Props> = ({
         10,
       );
       const updatedList = searchChatRoomCommunity?.cursor
-        ? unionBy(communityChatRoomTemp.items, communityChatRooms, "id")
+        ? sortListRoomChat(unionBy(communityChatRoomTemp.items, communityChatRooms, "id"))
         : communityChatRoomTemp.items;
       updateCommunityChatRoomList({
         items: updatedList,
@@ -159,7 +159,7 @@ const HeaderChatComponent: FC<Props> = ({
         cursor: communityChatRoomTemp.cursor,
       });
     },
-    { refetchOnWindowFocus: false },
+    { refetchOnWindowFocus: false, staleTime: 60000 },
   );
 
   const updateLastMessageOfListRooms = useCallback(
