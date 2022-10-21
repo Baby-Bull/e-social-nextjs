@@ -146,12 +146,10 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   // }, [listRoomResQuery]);
   useLayoutEffect(() => {
     if (viewPort.width) {
-      let selectedRoom = null;
-      console.log("selected room", roomSelect, roomQuery);
-      if (roomSelect?.id !== roomQuery) {
+      let selectedRoom = roomSelect;
+      if (roomSelect?.user?.id !== roomQuery) {
         selectedRoom = listRoomsChatTemp.find((item: any) => item.id === roomQuery || item?.user?.id === roomQuery);
       }
-      console.log(selectedRoom);
       if (selectedRoom) {
         if (isMobile) setIsRenderRightSide(true);
         setRoomSelect(selectedRoom);
