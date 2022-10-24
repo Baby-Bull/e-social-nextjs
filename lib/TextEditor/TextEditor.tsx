@@ -1,15 +1,19 @@
 import React, { FC } from "react";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "highlight.js/styles/github-dark.css";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import hljs from "highlight.js/lib/common";
 import { styled } from "@mui/material/styles";
+import dynamic from "next/dynamic";
 
 import theme from "src/theme";
 
 import styles from "./textEditor.module.scss";
+
+const ReactQuill = dynamic(() => import("react-quill"), {
+  ssr: false,
+});
 
 const BoxTextValidate = styled(Box)({
   color: "#FF9458",
