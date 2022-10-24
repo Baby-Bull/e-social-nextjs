@@ -1,0 +1,26 @@
+.quillContainerEditable :global(.ql-toolbar) {
+      background-color: #F4FDFF !important;
+      border: none !important;
+      border-bottom: 1px solid #ccc !important;
+}
+
+.quillContainerEditable :global(.ql-container) {
+  background-color: #F4FDFF !important;
+  border: none !important;
+}
+
+.quillContainerEditable :global(.ql-syntax) {
+    font-family: Noto Sans JP, sans-serif;
+}
+
+.quillContainerReadonly :global(.ql-toolbar) {
+  display: none;
+}
+
+.quillContainerReadonly :global(.ql-container) {
+  border: none !important;
+}
+
+.quillContainerReadonly :global(.ql-syntax) {
+  font-family: Noto Sans JP, sans-serif;
+}
