@@ -57,7 +57,8 @@ const MyApp = (props: MyAppProps) => {
   const [queryClient] = React.useState(() => new QueryClient());
   const Layout =
     Component.getLayout !== undefined
-      ? Component.getLayout
+      ? // eslint-disable-next-line react/jsx-pascal-case, no-unused-vars
+        ({ children, isAuth }) => <Component.getLayout>{children}</Component.getLayout>
       : ({ children, isAuth }) => <ContentComponent authPage={!isAuth}>{children}</ContentComponent>;
   const cookies = parseCookies();
   const isAuth = cookies[USER_TOKEN];
