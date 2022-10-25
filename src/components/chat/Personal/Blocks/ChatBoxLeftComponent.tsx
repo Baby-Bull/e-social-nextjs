@@ -190,7 +190,7 @@ const ChatBoxLeftComponent = ({
       <Box className="box-content">
         <ul className={styles.boxThreads}>
           <InfiniteScroll
-            style={{ overflowY: "auto" }}
+            className={styles.listRoomsChatLeftSide}
             dataLength={listRooms?.length || 0}
             next={loadMoreChatRooms}
             hasMore={hasMoreChatRoom}
