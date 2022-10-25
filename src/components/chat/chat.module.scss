@@ -453,7 +453,7 @@
   margin: 0;
 
   .listRoomsChatLeftSide {
-    overflow-y: scroll !important;
+    overflow-y: auto !important;
     overflow-x: hidden !important;
 
     &::-webkit-scrollbar-track {

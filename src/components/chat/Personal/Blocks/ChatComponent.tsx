@@ -21,7 +21,6 @@ import actionTypes from "src/store/actionTypes";
 import ChatBoxRightComponent from "./ChatBoxRightComponent";
 import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
 import { readMessagePersonal } from "src/services/user";
-import BlockNoDataComponent from "./NoDataComponent";
 
 const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, setHasData }) => {
   const router = useRouter();
@@ -239,7 +238,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
           isMobile={isMobile}
         />
       ) : null}
-      {(!hasData && isMobile) && <BlockNoDataComponent />}
       {(!hasData && !isMobile) && <ChatBoxRightNoDataComponent />}
       {hasData && (!isMobile || (isMobile && isRenderRightSide)) ? (
         <ChatBoxRightComponent

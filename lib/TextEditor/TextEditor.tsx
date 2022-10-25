@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, memo } from "react";
 import "react-quill/dist/quill.snow.css";
 import "highlight.js/styles/github-dark.css";
 import Box from "@mui/material/Box";
@@ -56,34 +56,36 @@ interface Props {
   readOnly?: boolean;
   error?: string;
 }
-const TextEditor: FC<Props> = ({ value, placeholder, error, onChange = null, readOnly = false }) => (
-  <Box>
-    <Box
-      sx={{
-        flexGrow: 1,
-        backgroundColor: "white",
-        color: theme.navy,
-        borderRadius: "12px",
-        width: "100%",
-      }}
-    >
-      <Grid container>
-        <Grid item xs={12} sm={12}>
-          <ReactQuill
-            theme="snow"
-            className={readOnly ? styles.quillContainerReadonly : styles.quillContainerEditable}
-            formats={format}
-            readOnly={readOnly}
-            modules={modules}
-            value={value}
-            placeholder={placeholder}
-            onChange={(content, delta, source, editor) => onChange && onChange(editor.getHTML(), editor.getLength())}
-          />
+const TextEditor: FC<Props> = memo(({ value, placeholder, error, onChange = null, readOnly = false }) => {
+  console.log(value);
+  return (
+    <Box>
+      <Box
+        sx={{
+          flexGrow: 1,
+          backgroundColor: "white",
+          color: theme.navy,
+          borderRadius: "12px",
+          width: "100%",
+        }}
+      >
+        <Grid container>
+          <Grid item xs={12} sm={12}>
+            <ReactQuill
+              theme="snow"
+              className={readOnly ? styles.quillContainerReadonly : styles.quillContainerEditable}
+              formats={format}
+              readOnly={readOnly}
+              modules={modules}
+              defaultValue={value}
+              placeholder={placeholder}
+              onChange={(content, delta, source, editor) => onChange && onChange(editor.getHTML(), editor.getLength())}
+            />
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
+      {error ? <BoxTextValidate>{error}</BoxTextValidate> : null}
     </Box>
-    {error ? <BoxTextValidate>{error}</BoxTextValidate> : null}
-  </Box>
-);
-
+  );
+});
 export default TextEditor;

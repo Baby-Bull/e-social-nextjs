@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "next-i18next";
 import { Box, Grid, Typography, Avatar, Paper, ListItem, Chip, CircularProgress, Backdrop } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -35,11 +35,12 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [contentLength, setContentLength] = useState(undefined);
+  const [contentLength, setContentLength] = useState(0);
   const [referenceUrl, setReferenceUrl] = useState("");
   const [address, setAddress] = useState("");
   const [tags, setTags] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showEditor, setShowEditor] = useState(false);
 
   const [tagDataValidate, setTagDataValidate] = useState(false);
 
@@ -98,14 +99,14 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
     });
   };
 
-  const onChangeContent = (htmlValue, textLenght) => {
+  const onChangeContent = useCallback((htmlValue, textLenght) => {
     setContent(htmlValue);
     setContentLength(textLenght);
     setCommunityPostRequest((previous) => ({
       ...previous,
       content: htmlValue,
     }));
-  };
+  }, []);
 
   const handleValidateFormCommunityPost = () => {
     let isValidForm = true;
@@ -119,14 +120,12 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
       errorMessages.title = VALIDATE_FORM_COMMUNITY_POST.title.required;
     }
 
-    if (!content || (contentLength && contentLength > 1000)) {
-      isValidForm = false;
-      errorMessages.content = VALIDATE_FORM_COMMUNITY_POST.content.max_length;
-    }
-
-    if (!communityPostRequest?.content?.length || communityPostRequest?.content?.length === 0) {
+    if (!content || contentLength < 1) {
       isValidForm = false;
       errorMessages.content = VALIDATE_FORM_COMMUNITY_POST.content.required;
+    } else if (contentLength > 1000) {
+      isValidForm = false;
+      errorMessages.content = VALIDATE_FORM_COMMUNITY_POST.content.max_length;
     }
 
     if (communityPostRequest?.reference_url?.length > 0 && !REGEX_RULES.url.test(communityPostRequest?.reference_url)) {
@@ -181,6 +180,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
       });
       setIsLoading(false);
     }
+    setShowEditor(true);
   };
 
   useEffect(() => {
@@ -272,12 +272,14 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
             </Box>
           </Grid>
           <Grid item xs={12} sm={9} sx={{ padding: "0" }}>
-            <TextEditor
-              error={errorValidates.content}
-              value={content}
-              placeholder={t("community:place-holder")}
-              onChange={onChangeContent}
-            />
+            {showEditor && (
+              <TextEditor
+                error={errorValidates.content}
+                value={content}
+                placeholder={t("community:place-holder")}
+                onChange={onChangeContent}
+              />
+            )}
             {/* <TextArea
               id="content"
               placeholder={t("community:place-holder")}
