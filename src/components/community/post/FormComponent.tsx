@@ -3,17 +3,13 @@ import { useTranslation } from "next-i18next";
 import { Box, Grid, Typography, Avatar, Paper, ListItem, Chip, CircularProgress, Backdrop } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
-import dynamic from "next/dynamic";
 
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import { Field, InputCustom } from "src/components/community/blocks/Form/InputComponent";
 import { REGEX_RULES, VALIDATE_FORM_COMMUNITY_POST } from "src/messages/validate";
 import { createCommunityPost, detailCommunityPost, updateCommunityPost } from "src/services/community";
-
-const TextEditor = dynamic(() => import("lib/TextEditor/TextEditor"), {
-  ssr: false,
-});
+import TextEditor from "lib/TextEditor/TextEditor";
 
 const BoxTitle = styled(Box)({
   fontSize: 18,

@@ -9,6 +9,10 @@
   border: none !important;
 }
 
+.quillContainerEditable :global(.ql-tooltip) {
+  z-index: 1;
+}
+
 .quillContainerEditable :global(.ql-syntax) {
     font-family: Noto Sans JP, sans-serif;
 }
