@@ -43,14 +43,14 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     search: null,
     cursor: null,
   });
-
   useQuery(
-    [`${REACT_QUERY_KEYS.LIST_ROOMS}/community`, searchChatRoom.search, searchChatRoom.cursor],
+    [`${REACT_QUERY_KEYS.LIST_ROOMS}/community`, searchChatRoom.search, searchChatRoom.cursor, hasData],
     async () => {
       const communityChatRoomTemp = await getListChatRoomsCommunity(searchChatRoom?.search, searchChatRoom?.cursor, 12);
       const updatedList = searchChatRoom?.cursor
         ? sortListRoomChat(unionBy(communityChatRoomTemp.items, listRoomsChatTemp, "id"))
         : communityChatRoomTemp.items;
+      setHasData(true);
       dispatch({
         type: actionTypes.UPDATE_LIST_COMMUNITY_CHAT_ROOMS,
         payload: {
@@ -59,8 +59,9 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
           cursor: communityChatRoomTemp.cursor,
         },
       });
+      return { hasLoaded: true };
     },
-    { refetchOnWindowFocus: false  },
+    { refetchOnWindowFocus: false, enabled: !hasData },
   );
 
   const updateLastMessageOfListRooms = useCallback(
@@ -106,12 +107,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   );
 
   useEffect(() => {
-    if (!hasData && listRoomsChatTemp.length) {
-      setHasData(true);
-    }
-  }, [listRoomsChatTemp]);
-
-  useEffect(() => {
     const wsHandler = (message) => {
       if (roomSelect?.id === message.chat_room_id) {
         setNewMessageOfRoom(message);
@@ -135,10 +130,10 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     websocket.on("get.community.chatRoom.message", wsHandler);
     websocket.on(`chatRoom.community.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
     return () => {
-      websocket.off("get.chatRoom.message", wsHandler);
-      websocket.off(`chatRoom.personal.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
+      websocket.off("get.community.chatRoom.message", wsHandler);
+      websocket.off(`chatRoom.community.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
     };
-  }, [listRoomsChatTemp, roomSelect?.id, updateLastMessageOfListRooms, roomSelect?.id]);
+  }, [roomSelect?.id, updateLastMessageOfListRooms]);
 
   // useEffect(() => {
   //   const listRoomSort = sortListRoomChat(listRoomResQuery?.items || []);
@@ -157,9 +152,9 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     if (viewPort.width) {
       let selectedRoom = roomSelect;
 
-      if (roomSelect?.id !== roomQuery) {
+      if (roomSelect?.id !== communityId) {
         selectedRoom = listRoomsChatTemp.find(
-          (item: any) => item.id === roomQuery || item?.community?.id === roomQuery,
+          (item: any) => item.id === communityId || item?.community?.id === communityId,
         );
       }
       if (selectedRoom) {
@@ -171,9 +166,10 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
         setCommunityId(listRoomsChatTemp[0]?.community?.id);
       }
     }
-  }, [listRoomsChatTemp, viewPort]);
+  }, [listRoomsChatTemp, viewPort, communityId]);
 
-  const loadMoreMessageCommunity = async () => {
+  const loadMoreMessageCommunity = () => {
+    setHasData(false);
     setSearchChatRoom((currentState) => ({
       ...currentState,
       cursor: listRoomsChatCursor,
