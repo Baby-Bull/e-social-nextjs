@@ -52,7 +52,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
       const updatedList = searchChatRoom?.cursor
         ? sortListRoomChat(unionBy(personalChatRoomTemp.items, listRoomsChatTemp, "id"))
         : personalChatRoomTemp.items;
-
+      setHasData(true);
       dispatch({
         type: actionTypes.UPDATE_LIST_PERSONAL_CHAT_ROOMS,
         payload: {
@@ -65,6 +65,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     },
     {
       refetchOnWindowFocus: false,
+      enabled: !hasData
     },
   );
 
@@ -111,12 +112,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   );
 
   useEffect(() => {
-    if (!hasData && listRoomsChatTemp.length) {
-      setHasData(true);
-    }
-  }, [listRoomsChatTemp]);
-
-  useEffect(() => {
     const wsHandler = (message) => {
       if (roomSelect?.id === message.chat_room_id) {
         setNewMessageOfRoom(message);
@@ -140,7 +135,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
       websocket.off("get.chatRoom.message", wsHandler);
       websocket.off(`chatRoom.personal.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
     };
-  }, [listRoomsChatTemp, roomSelect?.id, updateLastMessageOfListRooms]);
+  }, [roomSelect?.id, updateLastMessageOfListRooms]);
 
   // useEffect(() => {
   //   const listRoomSort = sortListRoomChat(listRoomResQuery?.items || []);
@@ -149,8 +144,8 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
   useLayoutEffect(() => {
     if (viewPort.width) {
       let selectedRoom = roomSelect;
-      if (roomSelect?.user?.id !== roomQuery) {
-        selectedRoom = listRoomsChatTemp.find((item: any) => item.id === roomQuery || item?.user?.id === roomQuery);
+      if (roomSelect?.user?.id !== userId) {
+        selectedRoom = listRoomsChatTemp.find((item: any) => item.id === userId || item?.user?.id === userId);
       }
       if (selectedRoom) {
         if (isMobile) setIsRenderRightSide(true);
@@ -163,9 +158,10 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
         setUser(listRoomsChatTemp[0]?.user);
       }
     }
-  }, [listRoomsChatTemp, viewPort]);
+  }, [listRoomsChatTemp, viewPort, userId]);
 
   const loadMoreMessagePersonal = async () => {
+    setHasData(false);
     setSearchChatRoom((currentState) => ({
       ...currentState,
       cursor: listRoomsChatCursor,

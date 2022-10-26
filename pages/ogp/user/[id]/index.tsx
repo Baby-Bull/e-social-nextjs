@@ -1,4 +1,9 @@
+import React from "react";
+
+import { NextPageWithLayout } from "pages/_app";
 import ProfileOgp from "src/components/ogp/ProfileOgpComponent";
+
+(ProfileOgp as NextPageWithLayout).getLayout = React.Fragment;
 
 export const getServerSideProps = async (ctx) => {
   const {

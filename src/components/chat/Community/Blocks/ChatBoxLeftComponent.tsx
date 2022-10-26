@@ -164,14 +164,8 @@ const ChatBoxLeftComponent = ({
               <React.Fragment key={index}>
                 <li
                   onClick={() => {
-                    router.push(
-                      {
-                        pathname: "/chat/community",
-                        query: { room: thread?.community?.id },
-                      },
-                      undefined,
-                      { shallow: false },
-                    );
+                    const newUrl = `/chat/community?room=${thread?.community?.id}`;
+                    window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, "", newUrl);
                     onSelectRoom(index);
                   }}
                 >
