@@ -132,7 +132,8 @@
         position: relative;
 
         @media screen and (max-width: 992px) {
-          margin-top: 54px;
+          //margin-top: 54px;
+          margin-top: -1.5em;
         }
 
         .box-chat {
@@ -213,7 +214,7 @@
 
       @media screen and (max-width: 992px) {
         height: calc(100vh - 40px) !important;
-        padding-bottom: 60px;
+        //padding-bottom: 60px;
       }
 
       .itemMsgOther {
@@ -355,7 +356,7 @@
 
   .boxChat {
     border-top: 1px solid #e4e6eb;
-    position: absolute;
+    // position: absolute;
     bottom: 0;
     right: 0;
     left: 0;
@@ -363,7 +364,7 @@
     background: white;
 
     @media screen and (max-width: 768px) {
-      position: fixed;
+      //position: fixed;
     }
 
     :global {
@@ -450,6 +451,30 @@
   list-style: none;
   padding: 0;
   margin: 0;
+
+  .listRoomsChatLeftSide {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    &::-webkit-scrollbar-track {
+      -webkit-box-shadow: inset 0 0 6px #6666664d;
+      border-radius: 10px;
+      background-color: #f5f5f5;
+    }
+
+    &::-webkit-scrollbar {
+      width: 12px;
+      background-color: #f5f5f5;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+      background-color: #c1c1c1;
+    }
+
+  }
+
 
   :global {
     .more-options-SP {

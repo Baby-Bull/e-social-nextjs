@@ -63,7 +63,10 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
       });
       return updatedList;
     },
-    { refetchOnWindowFocus: false, staleTime: 60000 },
+    {
+      refetchOnWindowFocus: false,
+      staleTime: 60000
+    },
   );
 
   const updateLastMessageOfListRooms = useCallback(
@@ -235,7 +238,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
           isMobile={isMobile}
         />
       ) : null}
-      {!hasData && <ChatBoxRightNoDataComponent />}
+      {(!hasData && !isMobile) && <ChatBoxRightNoDataComponent />}
       {hasData && (!isMobile || (isMobile && isRenderRightSide)) ? (
         <ChatBoxRightComponent
           isMobile={isMobile}

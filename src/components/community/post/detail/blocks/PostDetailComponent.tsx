@@ -229,9 +229,7 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
         }}
       />
 
-      <Box mt="20px">
-        <TextEditor value={data?.content} readOnly />
-      </Box>
+      <Box mt="20px">{data?.content !== undefined && <TextEditor value={data?.content} readOnly />}</Box>
     </Box>
   );
 };
