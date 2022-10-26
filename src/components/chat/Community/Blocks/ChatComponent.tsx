@@ -60,7 +60,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
         },
       });
     },
-    { refetchOnWindowFocus: false, staleTime: 60000 },
+    { refetchOnWindowFocus: false  },
   );
 
   const updateLastMessageOfListRooms = useCallback(

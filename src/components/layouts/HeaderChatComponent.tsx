@@ -139,7 +139,7 @@ const HeaderChatComponent: FC<Props> = ({
         cursor: personalChatRoomTemp.cursor,
       });
     },
-    { refetchOnWindowFocus: false, staleTime: 60000 },
+    { refetchOnWindowFocus: false },
   );
 
   useQuery(
@@ -159,7 +159,7 @@ const HeaderChatComponent: FC<Props> = ({
         cursor: communityChatRoomTemp.cursor,
       });
     },
-    { refetchOnWindowFocus: false, staleTime: 60000 },
+    { refetchOnWindowFocus: false },
   );
 
   const updateLastMessageOfListRooms = useCallback(

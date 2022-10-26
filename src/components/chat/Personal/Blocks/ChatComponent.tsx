@@ -65,7 +65,6 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     },
     {
       refetchOnWindowFocus: false,
-      staleTime: 60000
     },
   );
 
