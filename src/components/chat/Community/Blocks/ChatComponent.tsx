@@ -22,7 +22,7 @@ import ChatBoxRightComponent from "./ChatBoxRightComponent";
 import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
 import { readMessageCommunity } from "src/services/user";
 
-const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, setHasData }) => {
+const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   const router = useRouter();
   const { room: roomQuery } = router.query;
   // Responsive
@@ -43,14 +43,13 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     search: null,
     cursor: null,
   });
-  useQuery(
-    [`${REACT_QUERY_KEYS.LIST_ROOMS}/community`, searchChatRoom.search, searchChatRoom.cursor, hasData],
+  const { refetch: fetchChatrooms } = useQuery(
+    [`${REACT_QUERY_KEYS.LIST_ROOMS}/community`, searchChatRoom.search, searchChatRoom.cursor],
     async () => {
       const communityChatRoomTemp = await getListChatRoomsCommunity(searchChatRoom?.search, searchChatRoom?.cursor, 12);
       const updatedList = searchChatRoom?.cursor
         ? sortListRoomChat(unionBy(communityChatRoomTemp.items, listRoomsChatTemp, "id"))
         : communityChatRoomTemp.items;
-      setHasData(true);
       dispatch({
         type: actionTypes.UPDATE_LIST_COMMUNITY_CHAT_ROOMS,
         payload: {
@@ -61,7 +60,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
       });
       return { hasLoaded: true };
     },
-    { refetchOnWindowFocus: false, enabled: !hasData },
+    { refetchOnWindowFocus: false, keepPreviousData: true, enabled: false },
   );
 
   const updateLastMessageOfListRooms = useCallback(
@@ -168,8 +167,11 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     }
   }, [listRoomsChatTemp, viewPort, communityId]);
 
+  useEffect(() => {
+    fetchChatrooms();
+  }, [searchChatRoom])
+
   const loadMoreMessageCommunity = () => {
-    setHasData(false);
     setSearchChatRoom((currentState) => ({
       ...currentState,
       cursor: listRoomsChatCursor,
@@ -230,8 +232,8 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
           isMobile={isMobile}
         />
       ) : null}
-      {!hasData && <ChatBoxRightNoDataComponent />}
-      {hasData && (!isMobile || (isMobile && isRenderRightSide)) ? (
+      {!listRoomsChatTemp.length && <ChatBoxRightNoDataComponent />}
+      {listRoomsChatTemp.length && (!isMobile || (isMobile && isRenderRightSide)) ? (
         <ChatBoxRightComponent
           isMobile={isMobile}
           toggleRenderSide={toggleRenderSide}

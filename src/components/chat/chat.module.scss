@@ -1,15 +1,13 @@
 .chatContainerPC {
-  height: calc(100% - 64px);
   width: 1039px;
   max-width: 100%;
   margin: auto;
   background: white;
   display: flex;
   flex-direction: row;
-  margin-top: 64px;
 
   @media screen and (max-width: 992px) {
-    height: calc(100% - 56px);
+    // height: calc(100% - 56px);
     margin-top: 80px;
   }
 
@@ -364,7 +362,7 @@
     background: white;
 
     @media screen and (max-width: 768px) {
-      //position: fixed;
+      position: sticky;
     }
 
     :global {
@@ -479,7 +477,7 @@
   :global {
     .more-options-SP {
       .more-option-item {
-        margin: -4.5em 0 0 11.5em;
+        margin: -4.5em 0 0 14em;
         height: 40px;
         width: 40px;
         background: white;
@@ -564,9 +562,16 @@
       }
 
       .thread-last-time {
-        margin-left: auto;
+        margin-left: -10px;
         font-size: 10px;
         color: #1a2944;
+        @media screen and (max-width: 992px) {
+            margin-left: auto;
+        }
+        @media screen and (max-width: 768px) {
+          margin-left: -15px;
+          margin-top: -20px;
+        }
       }
 
       .more-options {
