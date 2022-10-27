@@ -82,20 +82,23 @@ const MyApp = (props: MyAppProps) => {
   }, [Router.events]);
 
   React.useEffect(() => {
-    let updateLastSeenAtInterval = null;
-    socket.on("connected", () => {
-      updateLastSeenAtInterval = setInterval(() => {
-        if (!socket.isClosed()) {
-          socket.emit("user.last_seen_at", null);
-        }
-      }, 60000); // 1minute
-    });
+    if (isAuth) {
+      let updateLastSeenAtInterval = null;
+      socket.on("connected", () => {
+        socket.emit("user.last_seen_at", null);
+        updateLastSeenAtInterval = setInterval(() => {
+          if (!socket.isClosed()) {
+            socket.emit("user.last_seen_at", null);
+          }
+        }, 60000); // 1minute
+      });
 
-    return () => {
-      clearInterval(updateLastSeenAtInterval);
-      updateLastSeenAtInterval = null;
-      socket.off("connected");
-    };
+      return () => {
+        clearInterval(updateLastSeenAtInterval);
+        updateLastSeenAtInterval = null;
+        socket.off("connected");
+      };
+    }
   }, [isAuth]);
 
   React.useEffect(() => {

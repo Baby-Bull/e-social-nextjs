@@ -45,13 +45,14 @@ interface IUserItemProps {
 
 interface IBoxUserComponentProps {
   data: IUserItemProps;
+  index: number;
 }
 
-const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
+const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = React.memo(({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [showModalMatching, setModalMatching] = React.useState(false);
-  const [statusMatching, setStatusMatching] = React.useState(false);
+  const [statusMatching, setStatusMatching] = React.useState(data?.match_status);
   const [liked, setLiked] = useState(data?.is_favorite);
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
@@ -74,7 +75,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
     await addUserFavorite(data?.id);
     setLiked(true);
     setModalMatching(false);
-    setStatusMatching(true);
+    setStatusMatching("sent_pending");
     // callbackHandleIsRefresh(!isRefresh);
     return res;
   };
@@ -182,12 +183,8 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
               <ButtonComponent
                 fullWidth
                 onClick={() => handleShowModalMatching(data?.match_status)}
-                mode={
-                  HOMEPAGE_RECOMMEND_MEMBER_STATUS[
-                    handleMapMatchingStatus(statusMatching ? "sent_pending" : data?.match_status)
-                  ]?.mode
-                }
-                disabled={data?.match_status === "sent_pending" || statusMatching}
+                mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(statusMatching)]?.mode}
+                disabled={statusMatching === "sent_pending"}
                 sx={{
                   "&:disabled": {
                     background: "gray",
@@ -195,11 +192,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
                   },
                 }}
               >
-                {
-                  HOMEPAGE_RECOMMEND_MEMBER_STATUS[
-                    handleMapMatchingStatus(statusMatching ? "sent_pending" : data?.match_status)
-                  ]?.label
-                }
+                {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(statusMatching)]?.label}
               </ButtonComponent>
             </React.Fragment>
           )}
@@ -214,6 +207,6 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
       />
     </React.Fragment>
   );
-};
+});
 
 export default BoxItemUserComponent;

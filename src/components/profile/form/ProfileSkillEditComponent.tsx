@@ -1187,7 +1187,6 @@ const ProfileSkillComponent = () => {
                       height: { xs: "80px", lg: "160px" },
                       mt: { xs: "-40px", lg: "0" },
                       position: { xs: "relative", lg: "unset" },
-                      cursor: "pointer",
                     }}
                   />
                   <Avatar
@@ -1200,6 +1199,11 @@ const ProfileSkillComponent = () => {
                       position: "absolute",
                       display: { xs: "block", lg: "none" },
                       mt: "10px",
+                      cursor: "pointer",
+                      background: "black",
+                      padding: "0.1em",
+                      top: "1em",
+                      marginLeft: "1.5em",
                     }}
                   />
                   <Avatar
@@ -1218,6 +1222,7 @@ const ProfileSkillComponent = () => {
                         width: "20px",
                         height: "18px",
                         m: "0 auto",
+                        cursor: "pointer",
                       }}
                     />
                   </Avatar>
@@ -1298,7 +1303,6 @@ const ProfileSkillComponent = () => {
                     lineHeight: "23.17",
                     width: { xs: "100%", lg: "96px" },
                     height: { xs: "48px", lg: "40px" },
-                    dispaly: "flex",
                     alignItems: "center",
                     borderRadius: { xs: "12px", lg: "4px" },
                     "&:hover": {
@@ -1307,7 +1311,15 @@ const ProfileSkillComponent = () => {
                   }}
                   onClick={submitFormProfile}
                 >
-                  {t("profile:form.save")}
+                  <Typography
+                    sx={{
+                      color: "#fff",
+                      fontWeight: 700,
+                      fontSize: 16,
+                    }}
+                  >
+                    {t("profile:form.save")}
+                  </Typography>
                 </Button>
               </Box>
             </Box>

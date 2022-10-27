@@ -492,3 +492,8 @@
   font-size: 10px;
   color: #989ea8;
 }
+
+.listChatRooms {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}

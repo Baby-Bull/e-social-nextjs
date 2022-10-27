@@ -11,7 +11,7 @@ import { getListCommunities } from "src/services/community";
 import { TAB_VALUE_BY_KEY, TYPE } from "src/constants/matching";
 
 const MatchingComponent = () => {
-  const typeQuery = useRouter()?.query?.type as string;
+  const typeQuery = (useRouter()?.query?.type as string) || "received";
   const { t } = useTranslation();
   const viewPort = useViewport();
   const isMobile = viewPort.width <= 992;

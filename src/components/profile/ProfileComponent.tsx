@@ -61,7 +61,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
   const fetchUserReviews = async () => {
     const data = await getUserReviews(userId, NumberOfReviewsPerPage, cursorReviews);
     setCursorReviews(data?.cursor);
-    setCountAllReviews(data.items_count);
+    setCountAllReviews(data?.items_count ?? 0);
     setAllReviewsRef([...allReviewsRef, ...data?.items]);
     return data;
   };

@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { useEffect, useRef, useState, useCallback, FC } from "react";
 import { connect } from "react-redux";
-import lodashDebounce from "lodash/debounce";
 import unionBy from "lodash/unionBy";
 import { useQuery } from "react-query";
 import Menu from "@mui/material/Menu";
@@ -27,6 +26,7 @@ import { formatChatDateRoom, sortListRoomChat } from "src/helpers/helper";
 import websocket from "src/helpers/socket";
 import { ChatMessage } from "src/types/models/ChatMessage";
 import { readMessageCommunity, readMessagePersonal } from "src/services/user";
+import useDebounce from "src/customHooks/UseDebounce";
 
 import InputCustom from "../chat/ElementCustom/InputCustom";
 
@@ -98,26 +98,24 @@ const HeaderChatComponent: FC<Props> = ({
     setValueTabChatMessage(newValue);
   };
 
-  const debounceSearchRooms = useCallback(
-    lodashDebounce((searchValue: string, mode: string) => {
-      switch (mode) {
-        case MODE_ROOM_CHAT.community:
-          setSearchChatRoomCommunity({
-            search: searchValue,
-            cursor: null,
-          });
-          break;
+  const debounceSearchRooms = useDebounce((searchValue: string, mode: string) => {
+    switch (mode) {
+      case MODE_ROOM_CHAT.community:
+        setSearchChatRoomCommunity({
+          search: searchValue,
+          cursor: null,
+        });
+        break;
 
-        default:
-          setSearchChatRoomPersonal({
-            search: searchValue,
-            cursor: null,
-          });
-          break;
-      }
-    }, 700),
-    [],
-  );
+      default:
+        setSearchChatRoomPersonal({
+          search: searchValue,
+          cursor: null,
+        });
+        break;
+    }
+  }, 500);
+
   const handleTypingForInputSearch = (valueInputSearchTemp: any, mode: string) => {
     debounceSearchRooms(valueInputSearchTemp, mode);
   };
@@ -139,7 +137,7 @@ const HeaderChatComponent: FC<Props> = ({
         cursor: personalChatRoomTemp.cursor,
       });
     },
-    { refetchOnWindowFocus: false },
+    { refetchOnWindowFocus: false, keepPreviousData: true },
   );
 
   useQuery(
@@ -159,7 +157,7 @@ const HeaderChatComponent: FC<Props> = ({
         cursor: communityChatRoomTemp.cursor,
       });
     },
-    { refetchOnWindowFocus: false },
+    { refetchOnWindowFocus: false, keepPreviousData: true },
   );
 
   const updateLastMessageOfListRooms = useCallback(
@@ -328,7 +326,7 @@ const HeaderChatComponent: FC<Props> = ({
                   // inputProps={{ "aria-label": t("chat:box-left-input-search-placeholder") }}
                   placeholder="アカウントを検索"
                   inputProps={{ "aria-label": "アカウントを検索" }}
-                  onKeyUp={() =>
+                  onInput={() =>
                     handleTypingForInputSearch(inputSearchMenuChatPersonal.current.value, MODE_ROOM_CHAT.personal)
                   }
                 />
@@ -337,6 +335,7 @@ const HeaderChatComponent: FC<Props> = ({
             <Box className="box-content">
               <ul className={styles.boxThreads}>
                 <InfiniteScroll
+                  className={styles.listChatRooms}
                   dataLength={personalChatRooms.length || 0}
                   next={loadMoreMessagePersonal}
                   hasMore={hasMorePersonalChatRooms}
