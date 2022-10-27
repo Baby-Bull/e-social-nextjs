@@ -63,7 +63,7 @@ export const TabCustom = styled(Tab)<ITabCustomProps>(({ props }) => ({
     },
     color: "white",
   },
-  "@media (max-width: 425px)": {
+  "@media (max-width: 768px)": {
     justifyContent: "flex-start",
     display: "flex",
     color: props?.xsColor || "black",
