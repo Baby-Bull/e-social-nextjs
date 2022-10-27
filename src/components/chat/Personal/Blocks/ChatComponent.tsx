@@ -236,6 +236,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
         />
       ) : null}
       {(!listRoomsChatTemp.length && !isMobile) && <ChatBoxRightNoDataComponent />}
+      {/* {(!listRoomsChatTemp.length && isMobile) && <BlockNoDataComponent />} */}
       {listRoomsChatTemp.length && (!isMobile || (isMobile && isRenderRightSide)) ? (
         <ChatBoxRightComponent
           isMobile={isMobile}

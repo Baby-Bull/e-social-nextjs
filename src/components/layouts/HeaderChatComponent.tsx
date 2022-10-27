@@ -335,6 +335,7 @@ const HeaderChatComponent: FC<Props> = ({
             <Box className="box-content">
               <ul className={styles.boxThreads}>
                 <InfiniteScroll
+                  className={styles.listChatRooms}
                   dataLength={personalChatRooms.length || 0}
                   next={loadMoreMessagePersonal}
                   hasMore={hasMorePersonalChatRooms}
