@@ -21,8 +21,11 @@ import actionTypes from "src/store/actionTypes";
 import ChatBoxRightComponent from "./ChatBoxRightComponent";
 import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
 import { readMessagePersonal } from "src/services/user";
+import BlockNoDataComponent from "./NoDataComponent";
 
 const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, setHasData }) => {
+  console.log(hasData);
+
   const router = useRouter();
   const { room: roomQuery } = router.query;
   // Responsive
@@ -234,6 +237,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
         />
       ) : null}
       {(!hasData && !isMobile) && <ChatBoxRightNoDataComponent />}
+      {(!hasData && isMobile) && <BlockNoDataComponent />}
       {hasData && (!isMobile || (isMobile && isRenderRightSide)) ? (
         <ChatBoxRightComponent
           isMobile={isMobile}

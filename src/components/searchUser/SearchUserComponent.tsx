@@ -355,7 +355,7 @@ const SearchUserComponent: FC<Props> = ({
           </Button>
         </Box>
 
-        <Grid className={styles.boxContainer}>
+        <Box className={styles.boxContainer}>
           <Box className={styles.boxResultSearch}>
             <Grid container className={styles.titleResultSearch}>
               <Grid item md={6} xs={12}>
@@ -403,15 +403,16 @@ const SearchUserComponent: FC<Props> = ({
                 </Grid>
               )}
             </Grid>
+
             <Grid
               container
               sx={{ minHeight: "30em" }}
               className={styles.resultSearch}
               spacing={{ md: "27px", xs: "20px" }}
             >
-              {users?.map((item, key) => (
-                <Grid item key={key} md={4} xs={12} sm={12}>
-                  <BoxItemUserComponent data={item} />
+              {users?.map((item, index) => (
+                <Grid item key={index} md={4} xs={12} sm={12}>
+                  <BoxItemUserComponent data={item} index={index} />
                 </Grid>
               ))}
             </Grid>
@@ -423,7 +424,7 @@ const SearchUserComponent: FC<Props> = ({
               </Box>
             ) : null}
           </Box>
-        </Grid>
+        </Box>
       </Box>
       <PopupSearchUser
         isSort={sort}

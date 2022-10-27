@@ -151,7 +151,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     textAlign: "center",
                   }}
                 >
-                  <img src="/assets/images/icon/ic_link.png" alt="" width="20" height="22" />
+                  <img src="/assets/images/icon/ic_link.svg" alt="" width="20" height="22" />
                   <Box
                     sx={{
                       ml: 2,
@@ -253,7 +253,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                       textAlign: "center",
                     }}
                   >
-                    <img src="/assets/images/icon/ic_link.png" alt="" width="20" height="22" />
+                    <img src="/assets/images/icon/ic_link.svg" alt="" width="20" height="22" />
                     <Box
                       sx={{
                         ml: 1,
@@ -827,7 +827,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
             </Box>
             <Box
               sx={{
-                display: "flex",
+                display: { xs: "none" },
                 justifyContent: "center",
                 mt: "40px",
               }}
@@ -851,7 +851,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     textAlign: "center",
                   }}
                 >
-                  <img src="/assets/images/icon/ic_link.png" alt="" width="20" height="22" />
+                  <img src="/assets/images/icon/ic_link.svg" alt="" width="20" height="22" />
                   <Box
                     sx={{
                       ml: 2,
@@ -955,7 +955,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                       alignItems: "center",
                     }}
                   >
-                    <img src="/assets/images/icon/ic_link.png" alt="" width="20" height="22" />
+                    <img src="/assets/images/icon/ic_link.svg" alt="" width="20" height="22" />
                     <Box
                       sx={{
                         ml: 1,
