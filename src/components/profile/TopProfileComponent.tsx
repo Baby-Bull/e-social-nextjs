@@ -1,5 +1,5 @@
 import { Box, Button, Avatar, Grid } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 import dayjs from "dayjs";
@@ -29,6 +29,7 @@ dayjs.locale("ja");
 interface TopProfileComponentProps {
   user: any;
   myProfile: boolean;
+  triggerShareTwitterBtn?: boolean;
 }
 
 const PopupChartProfileComponent = dynamic(() => import("src/components/profile/PopupChartProfileComponent"));
@@ -49,8 +50,13 @@ const BoxInfoProfile = styled(Box)`
   margin-right: 20px;
 `;
 
-const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProfile }) => {
+const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
+  user,
+  myProfile,
+  triggerShareTwitterBtn = false,
+}) => {
   const { t } = useTranslation();
+  const twitterShareBtnRef = useRef(null);
   const [liked, setLiked] = useState(user?.is_favorite);
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
@@ -59,7 +65,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
   const [showPopupAnalysis, setShowPopupAnalysis] = useState(false);
   const ogpImageVersionQuery = user.ogp_image_version ? `?v=${user.ogp_image_version}` : "";
   const urlProfile = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${user?.id}${ogpImageVersionQuery}`;
-  // const urlProfile = `https://www.tiktok.com/discover/c%C3%A1c-c%E1%BA%ADu-idol`;
+  const userLoaded = Boolean(user?.id);
 
   useEffect(() => {
     setLiked(user?.is_favorite);
@@ -73,6 +79,12 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
       window.history.replaceState(null, null, `${window.location.pathname}?v=${user.ogp_image_version}`);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (triggerShareTwitterBtn && userLoaded) {
+      twitterShareBtnRef.current.click();
+    }
+  }, [triggerShareTwitterBtn, userLoaded]);
 
   const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
     if (isFavorite) deleteUserFavorite(tempData);
@@ -180,7 +192,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   fontSize: "14px",
                 }}
               >
-                <TwitterShareButton url={urlProfile}>
+                <TwitterShareButton ref={twitterShareBtnRef} url={urlProfile}>
                   <Box
                     sx={{
                       display: "flex",
