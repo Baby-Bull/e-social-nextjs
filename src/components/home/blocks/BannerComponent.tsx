@@ -36,11 +36,12 @@ const BannerComponent = () => {
 
   const banners = useRef([
     {
-      onClick: () => router.push("/search_user"),
+      onClick: () => router.push("/search_community"),
+
       src: "/assets/images/home_page/home_1.svg",
     },
     {
-      onClick: () => router.push("/search_community"),
+      onClick: () => router.push("/search_user"),
       src: "/assets/images/home_page/home_2.svg",
     },
     {
