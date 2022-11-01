@@ -12,6 +12,7 @@ import actionTypes from "../../store/actionTypes";
 
 interface IFooterComponentProps {
   authPage?: boolean;
+  registerPage?: boolean;
 }
 
 const TagA = styled(Link)`
@@ -26,7 +27,7 @@ const TagA = styled(Link)`
     margin-left: 0;
   }
 `;
-const FooterComponent: React.FC<IFooterComponentProps> = ({ authPage = false }) => {
+const FooterComponent: React.FC<IFooterComponentProps> = ({ authPage = false, registerPage = false }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -143,7 +144,7 @@ const FooterComponent: React.FC<IFooterComponentProps> = ({ authPage = false }) 
               </Box>
               <Box
                 sx={{
-                  display: authPage ? "none" : "inherit",
+                  display: registerPage || !authPage ? "inherit" : "none",
                   cursor: "pointer",
                 }}
                 onClick={handleLogout}

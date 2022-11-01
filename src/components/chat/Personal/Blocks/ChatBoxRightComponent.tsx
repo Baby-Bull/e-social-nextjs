@@ -32,6 +32,7 @@ import { getMessages, uploadFile } from "src/services/chat";
 import { formatChatDate, formatListMessages } from "src/helpers/helper";
 import { MESSAGE_CONTENT_TYPES, MATCHING_PURPOSE_OPTIONS, REACT_QUERY_KEYS } from "src/constants/constants";
 import "react-image-lightbox/style.css";
+import useWindowSize from "src/customHooks/UseWindowSize";
 
 interface IBoxChatProps {
   allInfoMessage: any;
@@ -351,6 +352,8 @@ const ChatBoxRightComponent = ({
     hasMore: false,
   });
 
+  const [, windowHeight] = useWindowSize();
+
   const { data: listMessageResQuery } = useQuery(
     [REACT_QUERY_KEYS.PERSONAL_CHAT.LIST_MESSAGES, userId],
     async () => {
@@ -576,6 +579,7 @@ const ChatBoxRightComponent = ({
           className={styles.boxData}
           ref={boxMessageRef}
           style={{
+            height: isMobile ? `${windowHeight - 54 - 61}px` : `${windowHeight - 54 - 61 - 60}px`,
             display: listMessages?.length === 0 ? "flex" : "block",
             justifyContent: listMessages?.length === 0 ? "center" : "initial",
             alignItems: listMessages?.length === 0 ? "center" : "initial",

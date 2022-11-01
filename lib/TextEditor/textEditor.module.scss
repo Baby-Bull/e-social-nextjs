@@ -15,6 +15,10 @@
       }
 }
 
+.quillContainerEditable :global(.ql-editor.ql-blank::before) {
+  font-style: inherit;
+}
+
 .quillContainerReadonly :global(.ql-editor) {
     font-family: Noto Sans JP, sans-serif !important;
     ol:first-of-type {
