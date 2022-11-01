@@ -23,6 +23,7 @@ import styles from "src/components/chat/chat.module.scss";
 import { formatChatDateRoom } from "src/helpers/helper";
 import theme from "src/theme";
 import useDebounce from "src/customHooks/UseDebounce";
+import useWindowSize from "src/customHooks/UseWindowSize";
 
 export const TabsCustom = styled(Tabs)(() => ({
   padding: 0,
@@ -108,7 +109,7 @@ const ChatBoxLeftComponent = ({
     console.log("DAFA");
     debounce(inputSearchRef.current.value);
   };
-
+  const [, windowHeight] = useWindowSize();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -147,6 +148,9 @@ const ChatBoxLeftComponent = ({
         <ul className={styles.boxThreads}>
           <InfiniteScroll
             className={styles.listRoomsChatLeftSide}
+            style={{
+              height: isMobile ? `${windowHeight - 210}px` : `${windowHeight - 93.75 - 54 - 60}px`,
+            }}
             dataLength={listRooms?.length || 0}
             next={loadMoreChatRooms}
             hasMore={hasMoreChatRoom}

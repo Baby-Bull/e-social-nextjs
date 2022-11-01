@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import ContentComponent from "src/components/layouts/ContentComponent";
 import BlockChatComponent from "src/components/chat/Community/Blocks/ChatComponent";
@@ -6,7 +6,7 @@ import BlockChatComponent from "src/components/chat/Community/Blocks/ChatCompone
 const CommunityChatComponent = () => {
   const [isRenderRightSide, setIsRenderRightSide] = useState(false);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!document.body.classList.contains("overflow-hidden")) {
       document.body.classList.add("overflow-hidden");
     }

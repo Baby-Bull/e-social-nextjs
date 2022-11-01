@@ -24,6 +24,7 @@ import styles from "src/components/chat/chat.module.scss";
 import { formatChatDateRoom } from "src/helpers/helper";
 import theme from "src/theme";
 import useDebounce from "src/customHooks/UseDebounce";
+import useWindowSize from "src/customHooks/UseWindowSize";
 
 import PopupReviewComponent from "./PopupReviewComponent";
 
@@ -162,6 +163,7 @@ const ChatBoxLeftComponent = ({
   };
   const [showPopupReport, setShowPopupReport] = useState(false);
   const [showPopupReview, setShowPopupReview] = useState(false);
+  const [, windowHeight] = useWindowSize();
 
   return (
     <Grid item className={styles.chatBoxLeft}>
@@ -187,6 +189,9 @@ const ChatBoxLeftComponent = ({
         <ul className={styles.boxThreads}>
           <InfiniteScroll
             className={styles.listRoomsChatLeftSide}
+            style={{
+              height: isMobile ? `${windowHeight - 210}px` : `${windowHeight - 93.75 - 54 - 60}px`,
+            }}
             dataLength={listRooms?.length || 0}
             next={loadMoreChatRooms}
             hasMore={hasMoreChatRoom}
