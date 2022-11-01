@@ -14,7 +14,11 @@
   height: 100%;
   vertical-align: middle;
   cursor: pointer;
-  margin: 0 33px;
+  margin: auto 33px;
+
+  @media screen and (max-width: 992px) {
+    margin: 0px !important;
+  }
 
   :global {
     img {
@@ -30,6 +34,7 @@
       }
 
       @media screen and (max-width: 992px) {
+        border-radius: 0 !important;
         width: 95vw;
       }
     }
