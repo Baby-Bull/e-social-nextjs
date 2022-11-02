@@ -65,7 +65,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
   const [showPopupAnalysis, setShowPopupAnalysis] = useState(false);
   const ogpImageVersionQuery = user.ogp_image_version ? `?v=${user.ogp_image_version}` : "";
   const urlProfile = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${user?.id}${ogpImageVersionQuery}`;
-  const twitterShareText = `${urlProfile} \n goodhubで気軽に私と話しませんか？`;
+  const twitterShareText = `${urlProfile} \n\n goodhubで気軽に私と話しませんか？ \n\n #goodhub`;
   const userLoaded = Boolean(user?.id);
 
   useEffect(() => {
