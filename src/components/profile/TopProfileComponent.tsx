@@ -65,6 +65,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
   const [showPopupAnalysis, setShowPopupAnalysis] = useState(false);
   const ogpImageVersionQuery = user.ogp_image_version ? `?v=${user.ogp_image_version}` : "";
   const urlProfile = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${user?.id}${ogpImageVersionQuery}`;
+  const twitterShareText = `${urlProfile} \n goodhubで気軽に私と話しませんか？`;
   const userLoaded = Boolean(user?.id);
 
   useEffect(() => {
@@ -192,7 +193,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                   fontSize: "14px",
                 }}
               >
-                <TwitterShareButton ref={twitterShareBtnRef} url={urlProfile}>
+                <TwitterShareButton ref={twitterShareBtnRef} url={twitterShareText}>
                   <Box
                     sx={{
                       display: "flex",
@@ -449,7 +450,9 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                     <Box className={styles.hintIconQuestion} onClick={() => setHint(!hint)}>
                       <img src="/assets/images/icon/ic_question_mark.png" alt="ic_question_mark" />
                     </Box>
-                    <Box className={styles.hint}>キャラクター診断とは説明テキスト説明テキスト説明テキスト</Box>
+                    <Box className={styles.hint}>
+                      いくつかの質問に回答することによってあなたのキャラクターを分析することができます。
+                    </Box>
                   </Box>
                   <Box
                     sx={{
@@ -835,7 +838,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
               }}
               className={styles.hint}
             >
-              キャラクター診断とは説明テキスト説明テキスト説明テキスト
+              いくつかの質問に回答することによってあなたのキャラクターを分析することができます。
             </Box>
             <Box
               sx={{
