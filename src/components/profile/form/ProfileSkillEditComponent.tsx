@@ -1142,7 +1142,7 @@ const ProfileSkillComponent = () => {
             p: "80px 20px",
           },
           p: "80px 120px",
-          marginTop: { xs: "90px", lg: "0" },
+          // marginTop: { xs: "90px", lg: "0" },
           background: "#F4FDFF",
           minHeight: "calc(100vh - 200px)",
         }}
@@ -1193,17 +1193,23 @@ const ProfileSkillComponent = () => {
                     alt="camera"
                     src="/assets/images/icon/ic_camera.png"
                     sx={{
-                      width: "23.33px",
-                      height: "21px",
+                      width: "80px",
+                      height: "80px",
                       opacity: 0.6,
                       position: "absolute",
                       display: { xs: "block", lg: "none" },
-                      mt: "10px",
                       cursor: "pointer",
-                      background: "black",
+                      background: "#00000082",
                       padding: "0.1em",
-                      top: "1em",
-                      marginLeft: "1.5em",
+                      top: "-2em",
+
+                      img: {
+                        width: "30px",
+                        height: "30px",
+                        position: "relative",
+                        top: "1.2em",
+                        left: "1.2em",
+                      },
                     }}
                   />
                   <Avatar

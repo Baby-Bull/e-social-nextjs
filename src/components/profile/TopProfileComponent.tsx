@@ -699,7 +699,6 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     }}
                   >
                     {t("profile:participating-community1")}
-                    <br />
                     {t("profile:participating-community2")}
                   </Box>
                   <Box
@@ -827,9 +826,11 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
             </Box>
             <Box
               sx={{
-                display: { xs: "none" },
+                // display: { xs: "none" },
                 justifyContent: "center",
                 mt: "40px",
+                textAlign: "center",
+                display: myProfile ? "none" : "block",
               }}
             >
               <Button

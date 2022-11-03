@@ -24,7 +24,6 @@ import { readMessagePersonal } from "src/services/user";
 import BlockNoDataComponent from "./NoDataComponent";
 
 const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, setHasData }) => {
-  console.log(hasData);
 
   const router = useRouter();
   const { room: roomQuery } = router.query;

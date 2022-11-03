@@ -412,7 +412,7 @@ const SearchUserComponent: FC<Props> = ({
             >
               {users?.map((item, index) => (
                 <Grid item key={index} md={4} xs={12} sm={12}>
-                  <BoxItemUserComponent data={item} index={index} />
+                  <BoxItemUserComponent data={item} />
                 </Grid>
               ))}
             </Grid>

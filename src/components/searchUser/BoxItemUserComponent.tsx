@@ -45,10 +45,9 @@ interface IUserItemProps {
 
 interface IBoxUserComponentProps {
   data: IUserItemProps;
-  index: number;
 }
 
-const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = React.memo(({ data }) => {
+const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [showModalMatching, setModalMatching] = React.useState(false);
@@ -207,6 +206,6 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = React.memo(({ da
       />
     </React.Fragment>
   );
-});
+};
 
 export default BoxItemUserComponent;

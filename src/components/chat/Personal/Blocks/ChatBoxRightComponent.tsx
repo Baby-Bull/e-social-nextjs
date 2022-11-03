@@ -561,10 +561,16 @@ const ChatBoxRightComponent = ({
         <Typography className="username">
           {isMobile ? <NameOfChatSP name={user?.username} handleClick={toggleRenderSide} /> : user?.username}
         </Typography>
-        <ButtonComponent mode="info" size="medium" className="btn-chat" onClick={handleShow}>
-          {t("chat:btn-report")}
-        </ButtonComponent>
-        <div className="btn-review">
+        <div className="btn-report-review">
+          <ButtonComponent
+            mode="info"
+            size="medium"
+            className="btn-chat"
+            sx={{ marginRight: "1em" }}
+            onClick={handleShow}
+          >
+            {t("chat:btn-report")}
+          </ButtonComponent>
           <ButtonComponent mode="orange" size="medium" className="btn-chat" onClick={handleShowReview}>
             {isMobile ? t("chat:btn-review-sp") : t("chat:btn-review")}
           </ButtonComponent>
