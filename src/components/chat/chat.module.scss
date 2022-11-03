@@ -65,9 +65,10 @@
     flex-direction: column;
     position: relative;
 
-  @media screen and (max-width: 992px) {
-    margin-top: 0px !important;
-  }
+    @media screen and (max-width: 992px) {
+      margin-top: 0px !important;
+    }
+
     :global {
       .box-title {
         height: 54px;
@@ -578,9 +579,11 @@
         margin-left: -10px;
         font-size: 10px;
         color: #1a2944;
+
         @media screen and (max-width: 992px) {
-            margin-left: auto;
+          margin-left: auto;
         }
+
         @media screen and (max-width: 768px) {
           margin-left: -15px;
           margin-top: -20px;
