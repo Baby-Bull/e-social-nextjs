@@ -914,7 +914,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                       <Box
                         sx={{
                           ml: 1,
-                          fontSite: "14px",
+                          fontSize: "14px",
                         }}
                       >
                         {t("profile:share")}
