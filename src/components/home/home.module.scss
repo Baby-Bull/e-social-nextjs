@@ -13,10 +13,17 @@
 .sliderItem {
   height: 100%;
   vertical-align: middle;
+  cursor: pointer;
+  margin: auto 33px;
+
+  @media screen and (max-width: 992px) {
+    margin: 0px !important;
+  }
 
   :global {
     img {
       object-fit: cover;
+      border-radius: 30px;
 
       @media screen and (min-width: 993px) {
         width: 33.33vw;
@@ -27,6 +34,7 @@
       }
 
       @media screen and (max-width: 992px) {
+        border-radius: 0 !important;
         width: 95vw;
       }
     }

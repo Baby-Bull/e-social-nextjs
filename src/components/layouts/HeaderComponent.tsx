@@ -156,13 +156,12 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
     setStatusChatMenu(false);
   }, []);
   const handleOpenMenuChat = (event: any) => {
-    // if (isMobile) {
-    //   router.push("/chat/personal");
-    // } else {
-    setMenuChatAnchorEl(event.currentTarget);
-    setStatusChatMenu(true);
-    // }
-    // dispatch({ type: actionTypes.REMOVE_UNREAD_LISTROOMS_COUNT });
+    if (isMobile) {
+      router.push("/chat/personal");
+    } else {
+      setMenuChatAnchorEl(event.currentTarget);
+      setStatusChatMenu(true);
+    }
   };
 
   // Notifications ********************************************

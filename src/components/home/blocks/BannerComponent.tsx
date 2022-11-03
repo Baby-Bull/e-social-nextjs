@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import classNames from "classnames";
-// import { isMobile } from "react-device-detect";
+import { useRouter } from "next/router";
 
 import styles from "src/components/home/home.module.scss";
 
-import { bannersMockData, notificationMockData } from "../mockData/mockData";
+import { notificationMockData } from "../mockData/mockData";
 
 const NextArrow = (props: any) => {
   const { className, style, onClick } = props;
@@ -31,8 +31,31 @@ const PrevArrow = (props: any) => {
 };
 
 const BannerComponent = () => {
-  const [banners] = useState(bannersMockData);
   const [notification] = useState(notificationMockData);
+  const router = useRouter();
+
+  const banners = useRef([
+    {
+      onClick: () => router.push("/search_community"),
+
+      src: "/assets/images/home_page/home_1.svg",
+    },
+    {
+      onClick: () => router.push("/search_user"),
+      src: "/assets/images/home_page/home_2.svg",
+    },
+    {
+      onClick: () =>
+        router.push(
+          {
+            pathname: "/my-profile",
+            query: { shareTwitter: true },
+          },
+          "/my-profile",
+        ),
+      src: "/assets/images/home_page/home_3.svg",
+    },
+  ]);
 
   const settingsSlick = {
     dots: true,
@@ -85,8 +108,8 @@ const BannerComponent = () => {
   return (
     <div className={classNames(styles.sliderContainer, "homepage-banner")}>
       <Slider {...settingsSlick}>
-        {banners.map((banner, index) => (
-          <div key={index} className={styles.sliderItem}>
+        {banners.current.map((banner, index) => (
+          <div onClick={banner.onClick} key={index} className={styles.sliderItem}>
             <img className="pointer banner-item" alt={banner.src} src={banner.src} />
           </div>
         ))}

@@ -18,12 +18,14 @@ interface IContentComponentProps {
   showFooter?: boolean;
   showHeader?: boolean;
   authPage?: boolean;
+  registerPage?: boolean;
 }
 const ContentComponent: React.SFC<IContentComponentProps> = ({
   children,
   showFooter = true,
   showHeader = true,
   authPage = false,
+  registerPage = false,
 }) => (
   <Box
     className={styles.contentLayout}
@@ -39,9 +41,9 @@ const ContentComponent: React.SFC<IContentComponentProps> = ({
     <Head>
       <title>goodhub</title>
     </Head>
-    {showHeader && <HeaderComponent authPage={authPage} />}
+    {showHeader && !registerPage && <HeaderComponent authPage={authPage} />}
     {children}
-    {showFooter && <FooterComponent authPage={authPage} />}
+    {showFooter && <FooterComponent authPage={authPage} registerPage={registerPage} />}
   </Box>
 );
 export default ContentComponent;

@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import React, { useCallback, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Box,
   Grid,
@@ -14,7 +14,6 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import lodashDebounce from "lodash/debounce";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
@@ -24,6 +23,8 @@ import InputCustom from "src/components/chat/ElementCustom/InputCustom";
 import styles from "src/components/chat/chat.module.scss";
 import { formatChatDateRoom } from "src/helpers/helper";
 import theme from "src/theme";
+import useDebounce from "src/customHooks/UseDebounce";
+import useWindowSize from "src/customHooks/UseWindowSize";
 
 import PopupReviewComponent from "./PopupReviewComponent";
 
@@ -136,16 +137,12 @@ const ChatBoxLeftComponent = ({
   const router = useRouter();
   const inputSearchRef = useRef(null);
 
-  const debounce = useCallback(
-    lodashDebounce((_searchVal: string) => {
-      setSearchChatRoom({
-        search: _searchVal,
-        cursor: null,
-      });
-      // send the server request here
-    }, 1000),
-    [],
-  );
+  const debounce = useDebounce((value) => {
+    setSearchChatRoom({
+      search: value,
+      cursor: null,
+    });
+  }, 500);
 
   const handleOnKeyUpInputSearchRef = () => {
     debounce(inputSearchRef.current.value);
@@ -166,6 +163,7 @@ const ChatBoxLeftComponent = ({
   };
   const [showPopupReport, setShowPopupReport] = useState(false);
   const [showPopupReview, setShowPopupReview] = useState(false);
+  const [, windowHeight] = useWindowSize();
 
   return (
     <Grid item className={styles.chatBoxLeft}>
@@ -183,7 +181,7 @@ const ChatBoxLeftComponent = ({
             sx={{ ml: 1, flex: 1 }}
             placeholder={t("chat:box-left-input-search-placeholder")}
             inputProps={{ "aria-label": t("chat:box-left-input-search-placeholder") }}
-            onKeyUp={handleOnKeyUpInputSearchRef}
+            onChange={handleOnKeyUpInputSearchRef}
           />
         </Paper>
       </Box>
@@ -191,6 +189,9 @@ const ChatBoxLeftComponent = ({
         <ul className={styles.boxThreads}>
           <InfiniteScroll
             className={styles.listRoomsChatLeftSide}
+            style={{
+              height: isMobile ? `${windowHeight - 210}px` : `${windowHeight - 93.75 - 54 - 60}px`,
+            }}
             dataLength={listRooms?.length || 0}
             next={loadMoreChatRooms}
             hasMore={hasMoreChatRoom}

@@ -21,10 +21,8 @@ import actionTypes from "src/store/actionTypes";
 import ChatBoxRightComponent from "./ChatBoxRightComponent";
 import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
 import { readMessagePersonal } from "src/services/user";
-import BlockNoDataComponent from "./NoDataComponent";
 
-const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, setHasData }) => {
-
+const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   const router = useRouter();
   const { room: roomQuery } = router.query;
   // Responsive
@@ -47,14 +45,13 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     cursor: null,
   });
 
-  useQuery(
+  const { refetch: fetchChatrooms } = useQuery(
     [`${REACT_QUERY_KEYS.LIST_ROOMS}/personal`, searchChatRoom.search, searchChatRoom.cursor],
     async () => {
       const personalChatRoomTemp = await getListChatRooms(searchChatRoom?.search, searchChatRoom?.cursor, 10);
       const updatedList = searchChatRoom?.cursor
         ? sortListRoomChat(unionBy(personalChatRoomTemp.items, listRoomsChatTemp, "id"))
         : personalChatRoomTemp.items;
-      setHasData(true);
       dispatch({
         type: actionTypes.UPDATE_LIST_PERSONAL_CHAT_ROOMS,
         payload: {
@@ -63,11 +60,11 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
           cursor: personalChatRoomTemp.cursor,
         },
       });
-      return updatedList;
+      return true;
     },
     {
+      keepPreviousData: true,
       refetchOnWindowFocus: false,
-      enabled: !hasData
     },
   );
 
@@ -162,8 +159,11 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
     }
   }, [listRoomsChatTemp, viewPort, userId]);
 
-  const loadMoreMessagePersonal = async () => {
-    setHasData(false);
+  useEffect(() => {
+    fetchChatrooms();
+  }, [searchChatRoom]);
+
+  const loadMoreMessagePersonal = () => {
     setSearchChatRoom((currentState) => ({
       ...currentState,
       cursor: listRoomsChatCursor,
@@ -222,7 +222,7 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
 
   return (
     <Grid container className={classNames(styles.chatContainerPC)}>
-      {!isMobile || (isMobile && !isRenderRightSide && hasData) ? (
+      {!isMobile || (isMobile && !isRenderRightSide && listRoomsChatTemp.length) ? (
         <ChatBoxLeftComponent
           listRooms={listRoomsChatTemp}
           userId={userId}
@@ -235,9 +235,9 @@ const BlockChatComponent = ({ hasData, isRenderRightSide, setIsRenderRightSide, 
           isMobile={isMobile}
         />
       ) : null}
-      {(!hasData && !isMobile) && <ChatBoxRightNoDataComponent />}
-      {(!hasData && isMobile) && <BlockNoDataComponent />}
-      {hasData && (!isMobile || (isMobile && isRenderRightSide)) ? (
+      {(!listRoomsChatTemp.length && !isMobile) && <ChatBoxRightNoDataComponent />}
+      {/* {(!listRoomsChatTemp.length && isMobile) && <BlockNoDataComponent />} */}
+      {listRoomsChatTemp.length && (!isMobile || (isMobile && isRenderRightSide)) ? (
         <ChatBoxRightComponent
           isMobile={isMobile}
           toggleRenderSide={toggleRenderSide}

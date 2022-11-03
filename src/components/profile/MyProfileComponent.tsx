@@ -25,14 +25,17 @@ import { IStoreState } from "src/constants/interface";
 import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
 import { sendMatchingRequest } from "../../services/matching";
 import PaginationCustomComponent from "../common/PaginationCustomComponent";
+import { useRouter } from "next/router";
 
 const ProfileHaveDataComponent = () => {
   const { t } = useTranslation();
+  const router = useRouter();
   const viewPort = useViewport();
   const isMobile = viewPort.width <= 992;
   const LIMIT = 20;
   const NumberOfReviewsPerPage = isMobile ? 5 : 10;
   const NumberOfCommunitiesPerPage = isMobile ? 2 : 8;
+  const triggerTwitterShareBtn = Boolean(router.query.shareTwitter);
 
   const auth = useSelector((state: IStoreState) => state.user);
 
@@ -126,7 +129,7 @@ const ProfileHaveDataComponent = () => {
           p: { xs: "60px 20px 0 20px", lg: "140px 120px 120px 120px" },
         }}
       >
-        <TopProfileComponent user={profileSkill} myProfile />
+        <TopProfileComponent user={profileSkill} myProfile triggerShareTwitterBtn={triggerTwitterShareBtn} />
         <ProfileSkillComponent data={profileSkill} />
         <Box
           sx={{
