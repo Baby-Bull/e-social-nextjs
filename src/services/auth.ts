@@ -49,7 +49,7 @@ export const authWithProvider = async (provider: string, credentials: OauthCrede
 
 export const logout = async () => {
   try {
-    const res = await apiAuth.post("/auth/logout");
+    const res = await api.post("/auth/logout");
     setToken("");
     setIsProfileEdited("");
     return res;
