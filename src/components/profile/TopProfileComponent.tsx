@@ -57,6 +57,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
 }) => {
   const { t } = useTranslation();
   const twitterShareBtnRef = useRef(null);
+  const twitterMobileBtnRef = useRef(null);
   const [liked, setLiked] = useState(user?.is_favorite);
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
@@ -83,7 +84,12 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
 
   useEffect(() => {
     if (triggerShareTwitterBtn && userLoaded) {
-      twitterShareBtnRef.current.click();
+      if (twitterShareBtnRef) {
+        twitterShareBtnRef.current.click();
+      }
+      if (twitterMobileBtnRef) {
+        twitterMobileBtnRef.current.click();
+      }
     }
   }, [triggerShareTwitterBtn, userLoaded]);
 
@@ -895,7 +901,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                     height: "40px",
                   }}
                 >
-                  <TwitterShareButton url={urlProfile}>
+                  <TwitterShareButton ref={twitterMobileBtnRef} url={twitterShareText}>
                     <Box
                       sx={{
                         display: "flex",
