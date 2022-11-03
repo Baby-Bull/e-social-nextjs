@@ -158,6 +158,8 @@ const MatchingComponent = () => {
   const [checkLoadingFavorite, setCheckLoadingFavorite] = useState(false);
   const [checkLoadingCommunity, setCheckLoadingCommunity] = useState(false);
 
+  console.log(tabValue);
+
   useEffect(() => {
     setTabValue(TAB_VALUE_BY_KEY[typeQuery]);
   }, [typeQuery]);
