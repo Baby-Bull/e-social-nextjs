@@ -222,7 +222,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
 
   return (
     <Grid container className={classNames(styles.chatContainerPC)}>
-      {!isMobile || (isMobile && !isRenderRightSide && listRoomsChatTemp.length) ? (
+      {!isMobile || (isMobile && !isRenderRightSide) ? (
         <ChatBoxLeftComponent
           listRooms={listRoomsChatTemp}
           userId={userId}

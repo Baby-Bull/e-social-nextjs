@@ -720,7 +720,6 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                     }}
                   >
                     {t("profile:participating-community1")}
-                    <br />
                     {t("profile:participating-community2")}
                   </Box>
                   <Box
@@ -848,9 +847,11 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
             </Box>
             <Box
               sx={{
-                display: { xs: "none" },
+                // display: { xs: "none" },
                 justifyContent: "center",
                 mt: "40px",
+                textAlign: "center",
+                display: myProfile ? "none" : "block",
               }}
             >
               <Button
@@ -913,7 +914,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                       <Box
                         sx={{
                           ml: 1,
-                          fontSite: "14px",
+                          fontSize: "14px",
                         }}
                       >
                         {t("profile:share")}

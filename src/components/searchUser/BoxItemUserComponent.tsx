@@ -1,7 +1,7 @@
 import { Box, Grid, Avatar } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/ja";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -45,10 +45,9 @@ interface IUserItemProps {
 
 interface IBoxUserComponentProps {
   data: IUserItemProps;
-  index: number;
 }
 
-const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = React.memo(({ data }) => {
+const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [showModalMatching, setModalMatching] = React.useState(false);
@@ -56,6 +55,11 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = React.memo(({ da
   const [liked, setLiked] = useState(data?.is_favorite);
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
+
+  useEffect(() => {
+    setStatusMatching(data?.match_status);
+    setLiked(data?.is_favorite);
+  }, [data?.match_status, data?.is_favorite]);
 
   const handleShowModalMatching = async (matchStatus) => {
     if (!matchStatus) {
@@ -182,7 +186,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = React.memo(({ da
 
               <ButtonComponent
                 fullWidth
-                onClick={() => handleShowModalMatching(data?.match_status)}
+                onClick={() => handleShowModalMatching(statusMatching)}
                 mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(statusMatching)]?.mode}
                 disabled={statusMatching === "sent_pending"}
                 sx={{
@@ -207,6 +211,6 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = React.memo(({ da
       />
     </React.Fragment>
   );
-});
+};
 
 export default BoxItemUserComponent;

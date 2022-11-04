@@ -81,7 +81,7 @@ const BlockNoDataComponent = () => {
 
       <Grid container className={classNames(styles.chatContainerMobile, "content-mobile")}>
         <Grid item xs={12}>
-          <Box className="box-title">
+          {/* <Box className="box-title">
             <Typography className="title">{t("chat:box-left-title")}</Typography>
           </Box>
           <Box className="box-search">
@@ -97,7 +97,7 @@ const BlockNoDataComponent = () => {
                 inputProps={{ "aria-label": t("chat:box-left-input-search-placeholder") }}
               />
             </Paper>
-          </Box>
+          </Box> */}
           <Box className={styles.boxNoData}>
             <Typography className="title">{t("chat:box-right-no-data-mobile")}</Typography>
             <img alt="no-data" src="/assets/images/chat-no-data.png" width={137} />

@@ -302,7 +302,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
   const handleLogout = async () => {
     await logout();
     dispatch({ type: actionTypes.LOGOUT });
-    router.push("/login");
+    router.push(`/login?oldUrl=${window.location.pathname}`);
   };
 
   const menuId = "primary-search-account-menu";

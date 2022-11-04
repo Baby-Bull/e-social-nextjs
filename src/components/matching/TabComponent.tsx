@@ -70,9 +70,11 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
     setTabValue(newValue);
   };
 
+  const [isFetchedMatchedUser, setIsFetchedMatchedUser] = useState(false);
   const [optionSelected, setOption] = React.useState("newest");
   const handleChange = (event: SelectChangeEvent) => {
     setOption(event.target.value);
+    setIsFetchedMatchedUser(false);
   };
 
   const handleRedirectCommunity = (idComm: string) => {
@@ -113,7 +115,6 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
     hasMoreMatched && setAllMatchedRef([...allMatchedRef, ...res2?.items]);
     return res2;
   };
-
   const handleCallbackChangePaginationMatched = (event, value) => {
     setPageMatched(value);
     if (countCurrentPagesMatched <= value && hasMoreMatched) {
@@ -143,9 +144,11 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
     }
   }; // end block paginate for user community
 
+  //get data matchedUser for the first time.
   useEffect(() => {
-    if (tabValue === TAB_VALUE_BY_KEY.matched) {
-      fetchUserMatched()
+    if (tabValue === TAB_VALUE_BY_KEY.matched && !isFetchedMatchedUser) {
+      fetchUserMatched();
+      setIsFetchedMatchedUser(true)
     }
   }, [optionSelected, tabValue]);
 
