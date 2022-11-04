@@ -94,7 +94,7 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-  (response) => response.data,
+  (response) => response,
   async (err: any) => {
     if (err.response.status === 403) {
       toast.warning(FORBIDDEN);
@@ -137,12 +137,12 @@ api.interceptors.response.use(
   },
 );
 
-// api.interceptors.response.use(
-//   (response) => response.data,
-//   (error) => ({
-//     data: error.response.data,
-//     statusCode: error.response.status,
-//   }),
-// );
+api.interceptors.response.use(
+  (response) => response.data,
+  (error) => ({
+    data: error.response.data,
+    statusCode: error.response.status,
+  }),
+);
 
 setApiAuth(getTokenStorage());
