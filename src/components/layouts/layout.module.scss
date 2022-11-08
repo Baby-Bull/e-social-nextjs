@@ -1,3 +1,12 @@
+.contentLayout {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: "#F4FDFF";
+  color: #1A2944;
+}
+
 .header {
   height: 64px;
   width: 100%;
@@ -74,6 +83,10 @@
       }
     }
   }
+}
+
+.footerComp {
+  background-color: #1A2944;
 }
 
 .footer {
@@ -478,4 +491,9 @@
 .createdTime {
   font-size: 10px;
   color: #989ea8;
+}
+
+.listChatRooms {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
 }

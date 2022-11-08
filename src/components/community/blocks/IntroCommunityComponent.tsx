@@ -20,23 +20,39 @@ dayjs.locale("ja");
 
 interface ICommunityDataProps {
   data?: any;
-  createPost?: any;
 }
 
-const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createPost }) => {
+const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
   const { t } = useTranslation();
   const auth = useSelector((state: IStoreState) => state.user);
   const router = useRouter();
-  const RoleAdmin = ["admin", "owner"];
-  const redirectCreatePost = () => {
+  // const RoleAdmin = ["admin", "owner"];
+  const redirectToCommunityTopPage = () => {
+    const communityId = router.query;
+    router.push(`/community/${communityId?.id}`);
+  };
+
+  const redirectToCreatePost = () => {
     const communityId = router.query;
     router.push(`/community/${communityId?.id}/post/create`);
   };
 
+  const RoleAdmin = ["admin", "owner"];
   const checkRoleCreatPost =
     RoleAdmin.includes(data?.community_role) ||
     data?.post_permission === data?.community_role ||
     data?.post_permission === "all";
+  const isCommunityDetailPage = router.pathname === "/community/[id]";
+  const showIntroButton = isCommunityDetailPage ? checkRoleCreatPost : true;
+  const redirectFn = isCommunityDetailPage && checkRoleCreatPost ? redirectToCreatePost : redirectToCommunityTopPage;
+  const introBtnText = isCommunityDetailPage
+    ? t("community:button.intro.create-post")
+    : t("community:button.intro.redirect-to-community");
+
+  // const checkRoleCreatPost =
+  //   RoleAdmin.includes(data?.community_role) ||
+  //   data?.post_permission === data?.community_role ||
+  //   data?.post_permission === "all";
 
   const redirectGatherUrl = () => {
     if (data?.gather_url) {
@@ -46,9 +62,9 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
 
   const redirectProfile = (userId) => {
     if (auth?.id === userId) {
-      router.push(`/my-profile`);
+      router.push(`/my-profile`, undefined, { shallow: true });
     } else {
-      router.push(`/profile/${userId}`);
+      router.push(`/profile/${userId}`, undefined, { shallow: true });
     }
   };
   return (
@@ -180,7 +196,7 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
           </Box>
         )}
       </Box>
-      {createPost && checkRoleCreatPost && (
+      {showIntroButton && (
         <Box
           sx={{
             display: "flex",
@@ -197,9 +213,9 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data, createP
               mt: ["20px", "40px"],
               height: "54px",
             }}
-            onClick={redirectCreatePost}
+            onClick={redirectFn}
           >
-            {t("community:button.intro.create-post")}
+            {introBtnText}
           </ButtonComponent>
         </Box>
       )}

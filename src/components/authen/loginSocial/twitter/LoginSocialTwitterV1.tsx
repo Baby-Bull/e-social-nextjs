@@ -65,19 +65,23 @@ export const LoginSocialTwitterV1 = forwardRef(
       }
     }, []);
 
-    const getAccessToken = (code: any) => {
+    const getAccessToken = ({ oauth_token, oauth_verifier, oauth_token_secret }) => {
       setIsProcessing(false);
       setIsLogged(true);
       onResolve({
-        provider: "twitter",
+        provider: "twitter/v1",
         data: {
-          access_token: code,
+          credentials: {
+            oauth_token,
+            oauth_verifier,
+            oauth_token_secret,
+          },
         },
       });
     };
 
     const handlePostMessage = async ({ type, code, provider }) =>
-      type === "code" && provider === "twitter" && code && getAccessToken(code);
+      type === "code" && provider === "twitter/v1" && code && getAccessToken(code);
 
     // add parent - child window communication event
     useEffect(() => {
@@ -88,7 +92,7 @@ export const LoginSocialTwitterV1 = forwardRef(
           if (twitterCredentials.current && twitterAuthData.oauth_verifier && twitterAuthData.oauth_token) {
             setIsProcessing(true);
             handlePostMessage({
-              provider: "twitter",
+              provider: "twitter/v1",
               type: "code",
               code: {
                 ...twitterCredentials.current,

@@ -1,5 +1,5 @@
 import { Box, Button, Avatar, Grid } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 import dayjs from "dayjs";
@@ -8,18 +8,19 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import { toast } from "react-toastify";
 import copy from "copy-to-clipboard";
-import { FacebookShareButton, TwitterShareButton } from "react-share";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 
 import { COPY_SUCCESSFUL } from "src/messages/notification";
-import PopupChartProfileComponent from "src/components/profile/PopupChartProfileComponent";
 import theme from "src/theme";
 import styles from "src/components/profile/profile.module.scss";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
 import { IStoreState } from "src/constants/interface";
 import { USER_ONLINE_STATUS } from "src/constants/constants";
+import TwitterShareButton from "lib/ShareButtons/TwitterShareButton";
+import FacebookShareButton from "lib/ShareButtons/FacebookShareButton";
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
@@ -28,7 +29,10 @@ dayjs.locale("ja");
 interface TopProfileComponentProps {
   user: any;
   myProfile: boolean;
+  triggerShareTwitterBtn?: boolean;
 }
+
+const PopupChartProfileComponent = dynamic(() => import("src/components/profile/PopupChartProfileComponent"));
 
 const BoxInfoProfile = styled(Box)`
   display: flex;
@@ -46,8 +50,14 @@ const BoxInfoProfile = styled(Box)`
   margin-right: 20px;
 `;
 
-const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProfile }) => {
+const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
+  user,
+  myProfile,
+  triggerShareTwitterBtn = false,
+}) => {
   const { t } = useTranslation();
+  const twitterShareBtnRef = useRef(null);
+  const twitterMobileBtnRef = useRef(null);
   const [liked, setLiked] = useState(user?.is_favorite);
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
@@ -56,7 +66,8 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
   const [showPopupAnalysis, setShowPopupAnalysis] = useState(false);
   const ogpImageVersionQuery = user.ogp_image_version ? `?v=${user.ogp_image_version}` : "";
   const urlProfile = `${process.env.NEXT_PUBLIC_URL_PROFILE}/profile/${user?.id}${ogpImageVersionQuery}`;
-  // const urlProfile = `https://www.tiktok.com/discover/c%C3%A1c-c%E1%BA%ADu-idol`;
+  const twitterShareText = `${urlProfile} \n\n goodhubで気軽に私と話しませんか？ \n\n #goodhub`;
+  const userLoaded = Boolean(user?.id);
 
   useEffect(() => {
     setLiked(user?.is_favorite);
@@ -64,6 +75,23 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
   const handleShowPopupAnalysis = () => {
     setShowPopupAnalysis(true);
   };
+
+  useEffect(() => {
+    if (user?.ogp_image_version) {
+      window.history.replaceState(null, null, `${window.location.pathname}?v=${user.ogp_image_version}`);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (triggerShareTwitterBtn && userLoaded) {
+      if (twitterShareBtnRef) {
+        twitterShareBtnRef.current.click();
+      }
+      if (twitterMobileBtnRef) {
+        twitterMobileBtnRef.current.click();
+      }
+    }
+  }, [triggerShareTwitterBtn, userLoaded]);
 
   const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
     if (isFavorite) deleteUserFavorite(tempData);
@@ -142,7 +170,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     textAlign: "center",
                   }}
                 >
-                  <img src="/assets/images/icon/ic_link.png" alt="" width="20" height="22" />
+                  <img src="/assets/images/icon/ic_link.svg" alt="" width="20" height="22" />
                   <Box
                     sx={{
                       ml: 2,
@@ -171,7 +199,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                   fontSize: "14px",
                 }}
               >
-                <TwitterShareButton url={urlProfile}>
+                <TwitterShareButton ref={twitterShareBtnRef} url={twitterShareText}>
                   <Box
                     sx={{
                       display: "flex",
@@ -244,7 +272,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                       textAlign: "center",
                     }}
                   >
-                    <img src="/assets/images/icon/ic_link.png" alt="" width="20" height="22" />
+                    <img src="/assets/images/icon/ic_link.svg" alt="" width="20" height="22" />
                     <Box
                       sx={{
                         ml: 1,
@@ -428,7 +456,9 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     <Box className={styles.hintIconQuestion} onClick={() => setHint(!hint)}>
                       <img src="/assets/images/icon/ic_question_mark.png" alt="ic_question_mark" />
                     </Box>
-                    <Box className={styles.hint}>キャラクター診断とは説明テキスト説明テキスト説明テキスト</Box>
+                    <Box className={styles.hint}>
+                      いくつかの質問に回答することによってあなたのキャラクターを分析することができます。
+                    </Box>
                   </Box>
                   <Box
                     sx={{
@@ -690,7 +720,6 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     }}
                   >
                     {t("profile:participating-community1")}
-                    <br />
                     {t("profile:participating-community2")}
                   </Box>
                   <Box
@@ -814,13 +843,15 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
               }}
               className={styles.hint}
             >
-              キャラクター診断とは説明テキスト説明テキスト説明テキスト
+              いくつかの質問に回答することによってあなたのキャラクターを分析することができます。
             </Box>
             <Box
               sx={{
-                display: "flex",
+                // display: { xs: "none" },
                 justifyContent: "center",
                 mt: "40px",
+                textAlign: "center",
+                display: myProfile ? "none" : "block",
               }}
             >
               <Button
@@ -842,7 +873,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     textAlign: "center",
                   }}
                 >
-                  <img src="/assets/images/icon/ic_link.png" alt="" width="20" height="22" />
+                  <img src="/assets/images/icon/ic_link.svg" alt="" width="20" height="22" />
                   <Box
                     sx={{
                       ml: 2,
@@ -871,7 +902,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                     height: "40px",
                   }}
                 >
-                  <TwitterShareButton url={urlProfile}>
+                  <TwitterShareButton ref={twitterMobileBtnRef} url={twitterShareText}>
                     <Box
                       sx={{
                         display: "flex",
@@ -883,7 +914,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                       <Box
                         sx={{
                           ml: 1,
-                          fontSite: "14px",
+                          fontSize: "14px",
                         }}
                       >
                         {t("profile:share")}
@@ -946,7 +977,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
                       alignItems: "center",
                     }}
                   >
-                    <img src="/assets/images/icon/ic_link.png" alt="" width="20" height="22" />
+                    <img src="/assets/images/icon/ic_link.svg" alt="" width="20" height="22" />
                     <Box
                       sx={{
                         ml: 1,
@@ -962,7 +993,9 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({ user, myProf
           </Box>
         </Grid>
       </Grid>
-      <PopupChartProfileComponent showPopup={showPopupAnalysis} setShowPopup={setShowPopupAnalysis} />
+      {showPopupAnalysis && (
+        <PopupChartProfileComponent showPopup={showPopupAnalysis} setShowPopup={setShowPopupAnalysis} />
+      )}
     </Box>
   );
 };

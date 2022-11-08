@@ -1,11 +1,10 @@
 /* eslint-disable */
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Backdrop, Box, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
 
 import useViewport from "src/helpers/useViewport";
-import ContentComponent from "src/components/layouts/ContentComponent";
 import ProfileSkillComponent from "src/components/profile/ProfileSkillComponent";
 import ReviewComponent from "src/components/profile/ReviewComponent";
 import ParticipatingCommunityComponent from "src/components/profile/ParticipatingCommunityComponent";
@@ -26,14 +25,17 @@ import { IStoreState } from "src/constants/interface";
 import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
 import { sendMatchingRequest } from "../../services/matching";
 import PaginationCustomComponent from "../common/PaginationCustomComponent";
+import { useRouter } from "next/router";
 
 const ProfileHaveDataComponent = () => {
   const { t } = useTranslation();
+  const router = useRouter();
   const viewPort = useViewport();
   const isMobile = viewPort.width <= 992;
   const LIMIT = 20;
   const NumberOfReviewsPerPage = isMobile ? 5 : 10;
   const NumberOfCommunitiesPerPage = isMobile ? 2 : 8;
+  const triggerTwitterShareBtn = Boolean(router.query.shareTwitter);
 
   const auth = useSelector((state: IStoreState) => state.user);
 
@@ -41,7 +43,6 @@ const ProfileHaveDataComponent = () => {
 
   const [recommended, setRecommended] = useState([]);
 
-  const [isRefresh, setIsRefresh] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showModalMatching, setModalMatching] = React.useState(false);
   const [userId] = useState(auth?.id);
@@ -52,11 +53,12 @@ const ProfileHaveDataComponent = () => {
   const [cursorReviews, setCursorReviews] = useState("");
   const [page, setPage] = useState(1);
   const [countCurrentPages, setCountCurrentPages] = useState(2);
+
   const fetchUserReviews = async () => {
     setIsLoading(true);
     const data = await getUserReviews(userId, NumberOfReviewsPerPage, cursorReviews);
-    setCursorReviews(data?.cursor)
-    setAllReviewsRef([...allReviewsRef, ...data?.items])
+    setCursorReviews(data?.cursor);
+    setAllReviewsRef([...allReviewsRef, ...data?.items]);
     setCountReviews(data?.items_count ?? 0);
     setIsLoading(false);
     return data;
@@ -70,13 +72,16 @@ const ProfileHaveDataComponent = () => {
   }; // end block paginate for user reviews
 
   // Block render user-communities ***** paginated
+  const [communities, setCommunities] = useState([]);
+  const [communityCursor, setCommunityCursor] = useState("");
   const [countAllCommunities, setCountAllCommunities] = useState(0);
   const fetchCommunities = async () => {
     const data = await getUserCommunites(userId, NumberOfCommunitiesPerPage, "");
-    setCountAllCommunities(data?.items_count)
+    setCountAllCommunities(data?.items_count);
+    setCommunities(data.items);
+    setCommunityCursor(data.cursor);
     return data;
   };
-
 
   const fetchProfileSkill = async () => {
     setIsLoading(true);
@@ -94,15 +99,10 @@ const ProfileHaveDataComponent = () => {
     return data;
   };
 
-  const callbackHandleIsRefresh = (status: any) => {
-    setIsRefresh(status);
-  };
-
   const handleSendMatchingRequest = async (matchingRequest) => {
     const res = await sendMatchingRequest(userId, matchingRequest);
     await addUserFavorite(userId);
     setModalMatching(false);
-    setIsRefresh(!isRefresh);
     return res;
   };
 
@@ -111,26 +111,14 @@ const ProfileHaveDataComponent = () => {
     fetchUserReviews();
     fetchCommunities();
     fetchRecommended();
-  }, [isRefresh, userId]);
+  }, [userId]);
 
-  const [dataElements, setDataElements] = useState(
-    recommended?.map((item, index) => <BoxItemUserComponent data={item} key={index} />),
-  );
-  useEffect(() => {
-    setDataElements(
-      recommended?.map((item, index) => (
-        <BoxItemUserComponent
-          data={item}
-          key={index}
-          isRefresh={isRefresh}
-          callbackHandleIsRefresh={callbackHandleIsRefresh}
-        />
-      )),
-    );
+  const dataElements = useMemo(() => {
+    return recommended?.map((item) => <BoxItemUserComponent data={item} key={item.id} />);
   }, [recommended]);
 
   return (
-    <ContentComponent>
+    <>
       {isLoading && (
         <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
           <CircularProgress color="inherit" />
@@ -141,7 +129,7 @@ const ProfileHaveDataComponent = () => {
           p: { xs: "60px 20px 0 20px", lg: "140px 120px 120px 120px" },
         }}
       >
-        <TopProfileComponent user={profileSkill} myProfile />
+        <TopProfileComponent user={profileSkill} myProfile triggerShareTwitterBtn={triggerTwitterShareBtn} />
         <ProfileSkillComponent data={profileSkill} />
         <Box
           sx={{
@@ -156,7 +144,9 @@ const ProfileHaveDataComponent = () => {
           {countAllCommunities > 0 ? (
             <ParticipatingCommunityComponent
               userId={userId}
-              countAllCommunities={countAllCommunities}
+              initCountAllCommunities={countAllCommunities}
+              initCommunities={communities}
+              initCursor={communityCursor}
               NumberOfCommunitiesPerPage={NumberOfCommunitiesPerPage}
             />
           ) : (
@@ -173,24 +163,27 @@ const ProfileHaveDataComponent = () => {
           }}
         >
           {t("profile:title-review")}（{countReviews}）
-          {(countReviews > NumberOfReviewsPerPage) &&
+          {countReviews > NumberOfReviewsPerPage && (
             <PaginationCustomComponent
               handleCallbackChangePagination={handleCallbackChangePagination}
               page={page}
               perPage={countCurrentPages}
               totalPage={Math.ceil(countReviews / NumberOfReviewsPerPage)}
-            />}
+            />
+          )}
           {countReviews > 0 ? (
-            allReviewsRef.slice((page - 1) * NumberOfReviewsPerPage, page * NumberOfReviewsPerPage)?.map((item, key) => (
-              <ReviewComponent
-                user={item?.user}
-                hideReviewer={item?.hide_reviewer}
-                rating={item?.rating}
-                comment={item?.comment}
-                createdAt={item?.created_at}
-                key={key}
-              />
-            ))
+            allReviewsRef
+              .slice((page - 1) * NumberOfReviewsPerPage, page * NumberOfReviewsPerPage)
+              ?.map((item, key) => (
+                <ReviewComponent
+                  user={item?.user}
+                  hideReviewer={item?.hide_reviewer}
+                  rating={item?.rating}
+                  comment={item?.comment}
+                  createdAt={item?.created_at}
+                  key={key}
+                />
+              ))
           ) : (
             <BoxNoDataComponent content="まだレビューがありません" />
           )}
@@ -234,7 +227,7 @@ const ProfileHaveDataComponent = () => {
         setOpen={setModalMatching}
         handleSendMatchingRequest={handleSendMatchingRequest}
       />
-    </ContentComponent>
+    </>
   );
 };
 export default ProfileHaveDataComponent;

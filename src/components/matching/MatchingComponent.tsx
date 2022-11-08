@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 
 import useViewport from "src/helpers/useViewport";
-import ContentComponent from "src/components/layouts/ContentComponent";
 import TabComponent from "src/components/matching/TabComponent";
 import { getMatchingRequestReceived, getMatchingRequestSent } from "src/services/matching";
 import { getUserFavorite } from "src/services/user";
@@ -12,7 +11,7 @@ import { getListCommunities } from "src/services/community";
 import { TAB_VALUE_BY_KEY, TYPE } from "src/constants/matching";
 
 const MatchingComponent = () => {
-  const typeQuery = useRouter()?.query?.type as string;
+  const typeQuery = (useRouter()?.query?.type as string) || "received";
   const { t } = useTranslation();
   const viewPort = useViewport();
   const isMobile = viewPort.width <= 992;
@@ -233,28 +232,26 @@ const MatchingComponent = () => {
   }, [keyRefetchData, tabValue]);
 
   return (
-    <ContentComponent>
-      <Box
-        sx={{
-          minHeight: `calc(100vh - 19.7em)`,
-          mt: ["88px", "0px"],
-          px: [0, "8.4%"],
-          pt: [0, "148px"],
-          mb: ["0", "114px"],
-        }}
-      >
-        <TabComponent
-          tabValue={tabValue}
-          setTabValue={setTabValue}
-          data={tabs}
-          setKeyRefetchData={setKeyRefetchData}
-          checkLoadingFavorite={checkLoadingFavorite}
-          checkLoadingCommunity={checkLoadingCommunity}
-          checkLoadingReceived={checkLoadingReceived}
-          checkLoadingSend={checkLoadingSend}
-        />
-      </Box>
-    </ContentComponent>
+    <Box
+      sx={{
+        minHeight: `calc(100vh - 19.7em)`,
+        mt: ["88px", "0px"],
+        px: [0, "8.4%"],
+        pt: [0, "148px"],
+        mb: ["0", "114px"],
+      }}
+    >
+      <TabComponent
+        tabValue={tabValue}
+        setTabValue={setTabValue}
+        data={tabs}
+        setKeyRefetchData={setKeyRefetchData}
+        checkLoadingFavorite={checkLoadingFavorite}
+        checkLoadingCommunity={checkLoadingCommunity}
+        checkLoadingReceived={checkLoadingReceived}
+        checkLoadingSend={checkLoadingSend}
+      />
+    </Box>
   );
 };
 

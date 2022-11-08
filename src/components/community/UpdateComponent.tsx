@@ -33,7 +33,6 @@ import theme from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabVerticalComponent";
 import { Field, InputCustom } from "src/components/community/blocks/Form/InputComponent";
 import { TextArea } from "src/components/community/blocks/Form/TextAreaComponent";
-import ContentComponent from "src/components/layouts/ContentComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
 import { REGEX_RULES, VALIDATE_FORM_COMMUNITY } from "src/messages/validate";
@@ -470,7 +469,7 @@ const UpdateComponent = () => {
     }
   };
   return (
-    <ContentComponent>
+    <React.Fragment>
       {isLoading && (
         <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
           <CircularProgress color="inherit" />
@@ -1095,7 +1094,7 @@ const UpdateComponent = () => {
           avatar={srcProfileImage}
         />
       )}
-    </ContentComponent>
+    </React.Fragment>
   );
 };
 export default UpdateComponent;

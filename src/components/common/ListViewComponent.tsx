@@ -37,9 +37,9 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
   };
   const redirectProfile = () => {
     if (data?.user?.id === auth?.id) {
-      router.push("/my-profile");
+      router.push("/my-profile", undefined, { shallow: true });
     } else {
-      router.push(`/profile/${data?.user?.id}`);
+      router.push(`/profile/${data?.user?.id}`, undefined, { shallow: true });
     }
   };
 

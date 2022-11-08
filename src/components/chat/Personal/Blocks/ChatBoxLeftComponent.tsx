@@ -1,9 +1,20 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import React, { useCallback, useRef, useState } from "react";
-import { Box, Grid, Paper, Typography, IconButton, Menu, MenuItem, Tabs, Tab, Avatar } from "@mui/material";
+import React, { useRef, useState } from "react";
+import {
+  Box,
+  Grid,
+  Paper,
+  Typography,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tabs,
+  Tab,
+  Avatar,
+  CircularProgress,
+} from "@mui/material";
 import { useTranslation } from "next-i18next";
-import lodashDebounce from "lodash/debounce";
-import InfiniteScroll from "react-infinite-scroller";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
 
@@ -12,8 +23,11 @@ import InputCustom from "src/components/chat/ElementCustom/InputCustom";
 import styles from "src/components/chat/chat.module.scss";
 import { formatChatDateRoom } from "src/helpers/helper";
 import theme from "src/theme";
+import useDebounce from "src/customHooks/UseDebounce";
+import useWindowSize from "src/customHooks/UseWindowSize";
 
 import PopupReviewComponent from "./PopupReviewComponent";
+import BlockNoDataComponent from "./NoDataComponent";
 
 interface IThreadDropDownProps {
   open: boolean;
@@ -124,16 +138,12 @@ const ChatBoxLeftComponent = ({
   const router = useRouter();
   const inputSearchRef = useRef(null);
 
-  const debounce = useCallback(
-    lodashDebounce((_searchVal: string) => {
-      setSearchChatRoom({
-        search: _searchVal,
-        cursor: null,
-      });
-      // send the server request here
-    }, 1000),
-    [],
-  );
+  const debounce = useDebounce((value) => {
+    setSearchChatRoom({
+      search: value,
+      cursor: null,
+    });
+  }, 500);
 
   const handleOnKeyUpInputSearchRef = () => {
     debounce(inputSearchRef.current.value);
@@ -149,11 +159,12 @@ const ChatBoxLeftComponent = ({
   };
 
   const redirectToProfile = () => {
-    router.push(`/profile/${userId}`);
+    router.push(`/profile/${userId}`, undefined, { shallow: true });
     handleClose();
   };
   const [showPopupReport, setShowPopupReport] = useState(false);
   const [showPopupReview, setShowPopupReview] = useState(false);
+  const [, windowHeight] = useWindowSize();
 
   return (
     <Grid item className={styles.chatBoxLeft}>
@@ -171,104 +182,108 @@ const ChatBoxLeftComponent = ({
             sx={{ ml: 1, flex: 1 }}
             placeholder={t("chat:box-left-input-search-placeholder")}
             inputProps={{ "aria-label": t("chat:box-left-input-search-placeholder") }}
-            onKeyUp={handleOnKeyUpInputSearchRef}
+            onChange={handleOnKeyUpInputSearchRef}
           />
         </Paper>
       </Box>
-      <Box className="box-content">
-        <ul className={styles.boxThreads}>
-          <InfiniteScroll loadMore={loadMoreChatRooms} hasMore={hasMoreChatRoom.hasMore} loader="" useWindow={false}>
-            {listRooms?.map((thread, index: number) => (
-              <React.Fragment key={index}>
-                <li
-                  onClick={() => {
-                    router.push(
-                      {
-                        pathname: "/chat/personal",
-                        query: { room: thread?.user?.id },
-                      },
-                      undefined,
-                      { shallow: false },
-                    );
-                    onSelectRoom(index);
-                  }}
-                >
-                  <div className={`thread-item ${thread?.user?.id === userId ? "active" : ""}`}>
-                    <div className="avatar">
-                      <Avatar
-                        alt={thread?.user?.username}
-                        src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"}
-                        sx={{ width: "56px", height: "56px", mr: "13px" }}
-                      />
-                    </div>
-                    <div className="thread-content">
-                      <Typography className="name">{thread?.user?.username}</Typography>
-                      <Typography
-                        className="message-hide"
-                        sx={{
-                          color: thread?.unread_message_count > 0 ? "black!important" : "#989ea8",
-                          fontWeight: thread?.unread_message_count > 0 ? "700!important" : "400",
-                        }}
-                      >
-                        {thread?.last_message_content_type === "text"
-                          ? thread?.last_chat_message_received
-                          : "添付ファイル"}
-                      </Typography>
-                    </div>
-                    <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
-                    {!isMobile && (
-                      <div className="more-options">
-                        <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
-                          <img alt="more-options" src="/assets/images/chat/more_options.svg" />
-                        </IconButton>
-                        <ThreadDropdown
-                          open={open}
-                          handleClose={handleClose}
-                          setShowPopupReport={setShowPopupReport}
-                          setShowPopupReview={setShowPopupReview}
-                          anchorEl={anchorEl}
-                          redirectToProfile={redirectToProfile}
+      {isMobile && listRooms?.length === 0 ? (
+        <BlockNoDataComponent />
+      ) : (
+        <Box className="box-content">
+          <ul className={styles.boxThreads}>
+            <InfiniteScroll
+              className={styles.listRoomsChatLeftSide}
+              style={{
+                height: isMobile ? `${windowHeight - 210}px` : `${windowHeight - 93.75 - 54 - 60}px`,
+              }}
+              dataLength={listRooms?.length || 0}
+              next={loadMoreChatRooms}
+              hasMore={hasMoreChatRoom}
+              height={730}
+              loader={
+                <Box sx={{ display: "flex", py: "15px", justifyContent: "center" }}>
+                  <CircularProgress sx={{ color: theme.blue }} size={30} />
+                </Box>
+              }
+            >
+              {listRooms?.map((thread, index: number) => (
+                <React.Fragment key={index}>
+                  <li
+                    onClick={() => {
+                      const newUrl = `/chat/personal?room=${thread?.user?.id}`;
+                      window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, "", newUrl);
+                      onSelectRoom(index);
+                    }}
+                  >
+                    <div className={`thread-item ${thread?.user?.id === userId ? "active" : ""}`}>
+                      <div className="avatar">
+                        <Avatar
+                          alt={thread?.user?.username}
+                          src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+                          sx={{ width: "56px", height: "56px", mr: "13px" }}
                         />
                       </div>
-                    )}
-                  </div>
-                </li>
-                {isMobile && (
-                  <div className="more-options-SP">
-                    <IconButton
-                      onClick={(event: React.MouseEvent<HTMLElement>) => {
-                        handleClick(event);
-                        transferUserToLeftMobile(index);
-                      }}
-                      aria-label="more"
-                      aria-haspopup="true"
-                      sx={{
-                        position: "absolute",
-                        right: "2em",
-                        marginTop: "-2.4em",
-                        height: "40px",
-                        width: "40px",
-                        background: "white",
-                        boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
-                      }}
-                    >
-                      <img alt="more-options" src="/assets/images/chat/more_options.svg" />
-                    </IconButton>
-                    <ThreadDropdown
-                      open={open}
-                      handleClose={handleClose}
-                      setShowPopupReport={setShowPopupReport}
-                      setShowPopupReview={setShowPopupReview}
-                      anchorEl={anchorEl}
-                      redirectToProfile={redirectToProfile}
-                    />
-                  </div>
-                )}
-              </React.Fragment>
-            ))}
-          </InfiniteScroll>
-        </ul>
-      </Box>
+                      <div className="thread-content">
+                        <Typography className="name">{thread?.user?.username}</Typography>
+                        <Typography
+                          className="message-hide"
+                          sx={{
+                            color: thread?.unread_message_count > 0 ? "black!important" : "#989ea8",
+                            fontWeight: thread?.unread_message_count > 0 ? "700!important" : "400",
+                          }}
+                        >
+                          {thread?.last_message_content_type === "text"
+                            ? thread?.last_chat_message_received
+                            : "添付ファイル"}
+                        </Typography>
+                      </div>
+                      <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
+                      {!isMobile && (
+                        <div className="more-options">
+                          <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
+                            <img alt="more-options" src="/assets/images/chat/more_options.svg" />
+                          </IconButton>
+                          <ThreadDropdown
+                            open={open}
+                            handleClose={handleClose}
+                            setShowPopupReport={setShowPopupReport}
+                            setShowPopupReview={setShowPopupReview}
+                            anchorEl={anchorEl}
+                            redirectToProfile={redirectToProfile}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </li>
+                  {isMobile && (
+                    <div className="more-options-SP">
+                      <IconButton
+                        className="more-option-item"
+                        onClick={(event: React.MouseEvent<HTMLElement>) => {
+                          handleClick(event);
+                          transferUserToLeftMobile(index);
+                        }}
+                        aria-label="more"
+                        aria-haspopup="true"
+                      >
+                        <img alt="more-options" src="/assets/images/chat/more_options.svg" />
+                      </IconButton>
+                      <ThreadDropdown
+                        open={open}
+                        handleClose={handleClose}
+                        setShowPopupReport={setShowPopupReport}
+                        setShowPopupReview={setShowPopupReview}
+                        anchorEl={anchorEl}
+                        redirectToProfile={redirectToProfile}
+                      />
+                    </div>
+                  )}
+                </React.Fragment>
+              ))}
+            </InfiniteScroll>
+          </ul>
+        </Box>
+      )}
       <PopupReportUser showPopup={showPopupReport} setShowPopup={setShowPopupReport} user={user} />
       <PopupReviewComponent showPopup={showPopupReview} setShowPopup={setShowPopupReview} user={user} />
     </Grid>

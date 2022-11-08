@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
-import { api, setToken } from "src/helpers/api";
-import { getRefreshToken, getToken, setIsProfileEdited, setRefreshToken } from "src/helpers/storage";
+import { api, apiAuth, setToken } from "src/helpers/api";
+import { setIsProfileEdited, setRefreshToken } from "src/helpers/storage";
 
 type TwitterAccessToken = {
   oauth_token: string;
@@ -8,9 +8,16 @@ type TwitterAccessToken = {
   oauth_token_secret: string;
 };
 
+interface AuthCredentials<T> {
+  credentials: T;
+}
+
+type OauthCredentials = AuthCredentials<{ access_token: string }>;
+type TwitterV1Credentails = AuthCredentials<TwitterAccessToken>;
+
 export const getAuthUrlTwitter = async (redirectUrl: string) => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/twitter/authorize`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API}/auth/twitter/v1/authorize`, {
       method: "POST",
       headers: {
         Accept: "application/json, text/plain, */*",
@@ -26,9 +33,9 @@ export const getAuthUrlTwitter = async (redirectUrl: string) => {
     return null;
   }
 };
-export const authWithProvider = async (provider: string, accessToken: string | TwitterAccessToken) => {
+export const authWithProvider = async (provider: string, credentials: OauthCredentials | TwitterV1Credentails) => {
   try {
-    const res = await api.post(`/auth/${provider}`, { access_token: accessToken });
+    const res = await apiAuth.post(`/auth/${provider}`, credentials);
     if (res?.data?.access_token) {
       setToken(res?.data?.access_token, res?.data?.access_token_expires_in_seconds);
       setRefreshToken(res?.data?.refresh_token);
@@ -46,21 +53,6 @@ export const logout = async () => {
     setToken("");
     setIsProfileEdited("");
     return res;
-  } catch (error) {
-    return error;
-  }
-};
-
-export const refreshToken = async () => {
-  try {
-    if (getToken()) {
-      const res = await api.post("/auth/tokens", { access_token: getToken(), refresh_token: getRefreshToken() });
-      if (res?.data?.access_token) {
-        setToken(res?.data?.access_token, res?.data?.access_token_expires_in_seconds);
-        setRefreshToken(res?.data?.refresh_token);
-      }
-      return res;
-    }
   } catch (error) {
     return error;
   }

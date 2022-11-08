@@ -20,7 +20,6 @@ import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
 
 import styles from "src/components/searchCommunity/search_community.module.scss";
-import ContentComponent from "src/components/layouts/ContentComponent";
 import theme from "src/theme";
 // eslint-disable-next-line import/order
 import useViewport from "src/helpers/useViewport";
@@ -142,7 +141,7 @@ const SearchCommunityComponent = () => {
     setFormSearch({
       login_count: numberOfLogins[0]?.value,
       member_count: numberOfParticipants[0]?.value,
-      excludejoinedCommunities: true,
+      excludejoinedCommunities: false,
     });
     setInputTags([]);
     const res = await getListCommunitySearch(
@@ -152,7 +151,7 @@ const SearchCommunityComponent = () => {
       {
         login_count: numberOfLogins[0]?.value,
         member_count: numberOfParticipants[0]?.value,
-        excludejoinedCommunities: true,
+        excludejoinedCommunities: false,
       },
       [],
       fullText,
@@ -175,7 +174,7 @@ const SearchCommunityComponent = () => {
   const [showPopupSearchCommunity, setShowPopupSearchCommunity] = useState(false);
 
   return (
-    <ContentComponent>
+    <React.Fragment>
       {isLoading && (
         <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
           <CircularProgress color="inherit" />
@@ -392,7 +391,7 @@ const SearchCommunityComponent = () => {
         setFormSearch={setFormSearch}
         setInputTags={setInputTags}
       />
-    </ContentComponent>
+    </React.Fragment>
   );
 };
 

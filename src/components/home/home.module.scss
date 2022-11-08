@@ -14,12 +14,17 @@
 .sliderItem {
   height: 100%;
   vertical-align: middle;
+  cursor: pointer;
+  margin: auto 33px;
+
+  @media screen and (max-width: 992px) {
+    margin: 0px !important;
+  }
 
   :global {
     img {
       object-fit: cover;
-      padding: 2em;
-      border-radius: 3em;
+      border-radius: 30px;
 
       @media screen and (min-width: 993px) {
         width: 33.33vw;
@@ -30,8 +35,7 @@
       }
 
       @media screen and (max-width: 992px) {
-        padding: 0.5em;
-        border-radius: 0;
+        border-radius: 0 !important;
         width: 95vw;
       }
     }
@@ -640,6 +644,7 @@
       display: flex;
       justify-content: space-between;
       margin-bottom: 20px;
+      cursor: pointer;
 
       .label-login-status {
         font-size: 10px;
@@ -650,6 +655,7 @@
     }
 
     .info-summary {
+      cursor: pointer;
       display: flex;
 
       .member-info {
@@ -704,6 +710,7 @@
     }
 
     .introduce {
+      cursor: pointer;
       margin-top: 11px;
       margin-bottom: 20px;
       border-radius: 12px;
@@ -752,6 +759,11 @@
           margin-left: 2px;
           margin-right: 2px;
           margin-top: 4px;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #dcf9ff;
+          }
         }
       }
     }

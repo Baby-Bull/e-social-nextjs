@@ -1,10 +1,18 @@
+const { withSentryConfig } = require("@sentry/nextjs");
+
 const { i18n } = require("./next-i18next.config");
 
-/** @type {import('next').NextConfig} */
-module.exports = {
+const nextjsConfig = {
   reactStrictMode: true,
   i18n,
-  images: {
-    domains: ['lh3.googleusercontent.com'],
+  sentry: {
+    hideSourceMaps: true,
   },
 };
+
+const sentryWebpackConfig = {
+  silent: true,
+};
+
+/** @type {import('next').NextConfig} */
+module.exports = withSentryConfig(nextjsConfig, sentryWebpackConfig);

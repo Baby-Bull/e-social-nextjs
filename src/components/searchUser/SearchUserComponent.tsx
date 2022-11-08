@@ -16,16 +16,18 @@ import {
   Typography,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import React, { useEffect, useState } from "react";
+import React, { FC, useEffect, useLayoutEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
+import { connect } from "react-redux";
 
 import styles from "src/components/searchUser/search_user.module.scss";
-import ContentComponent from "src/components/layouts/ContentComponent";
 import theme from "src/theme";
 import { jobs, employeeStatus, lastLogins, reviews } from "src/constants/searchUserConstants";
 import useViewport from "src/helpers/useViewport";
 import { UserSearch } from "src/services/user";
+import { searchUserActions } from "src/store/actionTypes";
+import { SearchUserFormStatus } from "src/constants/constants";
 
 import BoxItemUserComponent from "./BoxItemUserComponent";
 import PopupSearchUser from "./block/PopupSearchUser";
@@ -65,7 +67,55 @@ const FormControlLabelCustom = styled(FormControlLabel)({
   },
 });
 
-const SearchUserComponent = () => {
+const initalFormData = {
+  job: jobs[0]?.value,
+  employeeStatus: employeeStatus[0]?.value,
+  lastLogin: lastLogins[0]?.value,
+  review: reviews[0]?.value,
+  statusCanTalk: false,
+  statusLookingForFriend: false,
+  statusNeedConsult: false,
+};
+
+type Props = {
+  scrollPosition: number;
+  formStatus: SearchUserFormStatus;
+  form: {
+    job: string | number;
+    employeeStatus: string | number;
+    lastLogin: number;
+    review: number;
+    statusCanTalk: boolean;
+    statusLookingForFriend: boolean;
+    statusNeedConsult: boolean;
+    tags: string[];
+  };
+  result: {
+    limit: number;
+    cursor: string;
+    items: any[];
+    sort: string;
+    hasMore: boolean;
+  };
+  // eslint-disable-next-line no-unused-vars
+  updateForm: (formData: any) => void;
+  // eslint-disable-next-line no-unused-vars
+  updateResult: (result: any) => void;
+  // eslint-disable-next-line no-unused-vars
+  updateScrollPosition: (position: number) => void;
+  clearForm: () => void;
+};
+
+const SearchUserComponent: FC<Props> = ({
+  scrollPosition,
+  form,
+  result,
+  formStatus,
+  updateForm,
+  updateResult,
+  updateScrollPosition,
+  clearForm,
+}) => {
   const { t } = useTranslation();
   // Responsive
   const viewPort = useViewport();
@@ -74,102 +124,92 @@ const SearchUserComponent = () => {
   // const query = useQuery();
   const LIMIT = 6;
   const [isLoading, setIsLoading] = useState(false);
-  const [inputTags, setInputTags] = useState([]);
-  const [resultSearch, setResultSearch] = useState([]);
   // const [isRefresh, setIsRefresh] = useState(false);
-  const [isSort, setIsSort] = useState("recommended");
-  const [showMore, setShowMore] = useState({ cursor: "", hasMore: false });
-  const [formSearch, setFormSearch] = useState({
-    job: jobs[0]?.value,
-    employeeStatus: employeeStatus[0]?.value,
-    lastLogin: lastLogins[0]?.value,
-    review: reviews[0]?.value,
-    statusCanTalk: false,
-    statusLookingForFriend: false,
-    statusNeedConsult: false,
-  });
   const fullText = router.query?.fulltext;
+  const { items: users, cursor: nextCursor, hasMore, sort } = result;
+  const { tags, ...formSearch } = form;
 
   const fetchData = async (typeSort: string = "", arrayResult: Array<any> = [], cursor: string = "") => {
     setIsLoading(true);
-    const res = await UserSearch(formSearch, inputTags, fullText, typeSort, LIMIT, cursor);
-    setResultSearch(arrayResult.concat(res?.items));
-    setShowMore({ cursor: res?.cursor, hasMore: res?.hasMore });
+    const res = await UserSearch(formSearch, tags, fullText, typeSort, LIMIT, cursor);
+    const items = arrayResult.concat(res?.items);
     setIsLoading(false);
+    updateResult({
+      items,
+      cursor: res?.cursor,
+      hasMore: res?.hasMore,
+      sort: typeSort,
+    });
   };
 
   const handleSort = async (typeSort: string) => {
     fetchData(typeSort, [], "");
-    setIsSort(typeSort);
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [fullText]);
-
   const removeSearchTag = (indexRemove) => {
-    setInputTags(inputTags.filter((_, index) => index !== indexRemove));
+    const filterdTags = tags.filter((_, index) => index !== indexRemove);
+    updateForm({ tags: filterdTags });
   };
 
   const onKeyPress = (e: any) => {
     if (e.key === "Enter" && e.target.value) {
-      setInputTags([...inputTags, e.target.value]);
+      const newTags = [...tags, e.target.value];
+      updateForm({ tags: newTags });
       (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
     }
   };
 
   const handleChangeInputSearch = (e, key) => {
-    setFormSearch({
+    const formSearchData = {
       ...formSearch,
       [key]: e.target.value,
-    });
+    };
+    updateForm(formSearchData);
   };
 
   const clearFormSearch = async () => {
-    setFormSearch({
-      job: jobs[0]?.value,
-      employeeStatus: employeeStatus[0]?.value,
-      lastLogin: lastLogins[0]?.value,
-      review: reviews[0]?.value,
-      statusCanTalk: false,
-      statusLookingForFriend: false,
-      statusNeedConsult: false,
-    });
-    setInputTags([]);
+    clearForm();
     setIsLoading(true);
-    const res = await UserSearch(
-      {
-        job: jobs[0]?.value,
-        employeeStatus: employeeStatus[0]?.value,
-        lastLogin: lastLogins[0]?.value,
-        review: reviews[0]?.value,
-        statusCanTalk: false,
-        statusLookingForFriend: false,
-        statusNeedConsult: false,
-      },
-      [],
-      fullText,
-      "",
-      LIMIT,
-      "",
-    );
-    setResultSearch(res?.items);
-    setShowMore({ cursor: res?.cursor, hasMore: res?.hasMore });
-    setIsSort("recommended");
+    const res = await UserSearch(initalFormData, [], fullText, "", LIMIT, "");
+    updateResult({
+      items: res?.items,
+      cursor: res?.cursor,
+      hasMore: res?.hasMore,
+      sort: "recommended",
+    });
     setIsLoading(false);
-    router.push(
-      {
-        pathname: "/search_user",
-      },
-      undefined,
-      { shallow: false },
-    );
   };
+
+  const onPopupSetInput = (newTags) => {
+    updateForm({ tags: newTags });
+  };
+
+  const onPopupSetFormSearch = (formData) => {
+    updateForm(formData);
+  };
+
+  useEffect(() => {
+    if (fullText !== undefined) {
+      clearFormSearch();
+    } else if (formStatus === SearchUserFormStatus.Init) {
+      fetchData(sort, [], "");
+    }
+  }, [fullText]);
+
+  useLayoutEffect(() => {
+    window.scrollTo({
+      top: scrollPosition,
+      behavior: "smooth",
+    });
+    return () => {
+      updateScrollPosition(document.documentElement.scrollTop);
+    };
+  }, []);
 
   const [showPopupSearchUser, setShowPopupSearchUser] = useState(false);
 
   return (
-    <ContentComponent>
+    <React.Fragment>
       {isLoading && (
         <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
           <CircularProgress color="inherit" />
@@ -201,7 +241,7 @@ const SearchUserComponent = () => {
                 </Paper>
                 <div className="tags">
                   <ul>
-                    {inputTags?.map((tag, index) => (
+                    {tags?.map((tag, index) => (
                       <li key={index}>
                         {tag}{" "}
                         <IconButton className="button-remove-icon" onClick={() => removeSearchTag(index)}>
@@ -258,7 +298,8 @@ const SearchUserComponent = () => {
                     value="can-talk"
                     checked={formSearch?.statusCanTalk}
                     onChange={() => {
-                      setFormSearch({ ...formSearch, statusCanTalk: !formSearch?.statusCanTalk });
+                      const data = { ...formSearch, statusCanTalk: !formSearch?.statusCanTalk };
+                      updateForm(data);
                     }}
                   />
                 }
@@ -270,7 +311,8 @@ const SearchUserComponent = () => {
                     checked={formSearch?.statusLookingForFriend}
                     value="looking-for-friend"
                     onChange={() => {
-                      setFormSearch({ ...formSearch, statusLookingForFriend: !formSearch?.statusLookingForFriend });
+                      const data = { ...formSearch, statusLookingForFriend: !formSearch?.statusLookingForFriend };
+                      updateForm(data);
                     }}
                   />
                 }
@@ -282,7 +324,8 @@ const SearchUserComponent = () => {
                     checked={formSearch?.statusNeedConsult}
                     value="needConsult"
                     onChange={() => {
-                      setFormSearch({ ...formSearch, statusNeedConsult: !formSearch?.statusNeedConsult });
+                      const data = { ...formSearch, statusNeedConsult: !formSearch?.statusNeedConsult };
+                      updateForm(data);
                     }}
                   />
                 }
@@ -303,7 +346,7 @@ const SearchUserComponent = () => {
               {t("user-search:btn-search-SP")}
             </Button>
           ) : (
-            <Button className="btn-user-search btn-search" fullWidth onClick={() => fetchData(isSort, [], "")}>
+            <Button className="btn-user-search btn-search" fullWidth onClick={() => fetchData(sort, [], "")}>
               {t("user-search:btn-search")}
             </Button>
           )}
@@ -312,14 +355,14 @@ const SearchUserComponent = () => {
           </Button>
         </Box>
 
-        <Grid className={styles.boxContainer}>
+        <Box className={styles.boxContainer}>
           <Box className={styles.boxResultSearch}>
             <Grid container className={styles.titleResultSearch}>
               <Grid item md={6} xs={12}>
                 <Typography className="title-search">
                   {t("user-search:title")}
                   <span className="item-total-result">
-                    {isMobile && <br />} 全{resultSearch?.length ?? 0}件
+                    {isMobile && <br />} 全{users?.length ?? 0}件
                   </span>
                 </Typography>
               </Grid>
@@ -328,14 +371,14 @@ const SearchUserComponent = () => {
                   <Typography className="sort-by-label">{t("user-search:sort-by")}</Typography>
                   <Divider orientation="vertical" flexItem />
                   <Box
-                    onClick={() => isSort !== "recommended" && handleSort("recommended")}
-                    className={isSort === "recommended" ? "sort-link" : "sort-link active"}
+                    onClick={() => sort !== "recommended" && handleSort("recommended")}
+                    className={sort === "recommended" ? "sort-link" : "sort-link active"}
                   >
                     {t("user-search:recommend-order")}
                   </Box>
                   <Box
-                    onClick={() => isSort !== "login_at" && handleSort("login_at")}
-                    className={isSort === "login_at" ? "sort-link" : "sort-link active"}
+                    onClick={() => sort !== "login_at" && handleSort("login_at")}
+                    className={sort === "login_at" ? "sort-link" : "sort-link active"}
                   >
                     {t("user-search:last-login-order")}
                   </Box>
@@ -346,57 +389,69 @@ const SearchUserComponent = () => {
               {isMobile && (
                 <Grid item xs={12} className="sort-by-block-sp">
                   <Link
-                    onClick={() => isSort !== "recommended" && handleSort("recommended")}
-                    className={isSort === "recommended" ? "sort-link" : "sort-link active"}
+                    onClick={() => sort !== "recommended" && handleSort("recommended")}
+                    className={sort === "recommended" ? "sort-link" : "sort-link active"}
                   >
                     {t("user-search:recommend-order")}
                   </Link>
                   <Link
-                    onClick={() => isSort !== "login_at" && handleSort("login_at")}
-                    className={isSort === "login_at" ? "sort-link" : "sort-link active"}
+                    onClick={() => sort !== "login_at" && handleSort("login_at")}
+                    className={sort === "login_at" ? "sort-link" : "sort-link active"}
                   >
                     {t("user-search:last-login-order")}
                   </Link>
                 </Grid>
               )}
             </Grid>
+
             <Grid
               container
               sx={{ minHeight: "30em" }}
               className={styles.resultSearch}
               spacing={{ md: "27px", xs: "20px" }}
             >
-              {resultSearch?.map((item, key) => (
-                <Grid item key={key} md={4} xs={12} sm={12}>
+              {users?.map((item, index) => (
+                <Grid item key={index} md={4} xs={12} sm={12}>
                   <BoxItemUserComponent data={item} />
                 </Grid>
               ))}
             </Grid>
-            {showMore.hasMore ? (
+            {hasMore ? (
               <Box sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-                <Button
-                  onClick={() => fetchData(isSort, resultSearch, showMore.cursor)}
-                  sx={{ color: "rgb(3, 188, 219)" }}
-                >
+                <Button onClick={() => fetchData(sort, users, nextCursor)} sx={{ color: "rgb(3, 188, 219)" }}>
                   {t("common:showMore")}
                 </Button>
               </Box>
             ) : null}
           </Box>
-        </Grid>
+        </Box>
       </Box>
       <PopupSearchUser
-        isSort={isSort}
-        inputTags={inputTags}
+        isSort={sort}
+        inputTags={tags}
         formSearch={formSearch}
         showPopup={showPopupSearchUser}
         fetchData={fetchData}
         setShowPopup={setShowPopupSearchUser}
-        setInputTags={setInputTags}
-        setFormSearch={setFormSearch}
+        setInputTags={onPopupSetInput}
+        setFormSearch={onPopupSetFormSearch}
       />
-    </ContentComponent>
+    </React.Fragment>
   );
 };
 
-export default SearchUserComponent;
+export default connect(
+  (state: any) => ({
+    form: state.search_users.form,
+    scrollPosition: state.search_users.scrollPosition,
+    result: state.search_users.result,
+    formStatus: state.search_users.formStatus,
+  }),
+  (dispatch) => ({
+    updateForm: (formData) => dispatch({ type: searchUserActions.UPDATE_FORM, payload: formData }),
+    clearForm: () => dispatch({ type: searchUserActions.CLEAR_FORM }),
+    updateResult: (result) => dispatch({ type: searchUserActions.UPDATE_RESULT, payload: result }),
+    updateScrollPosition: (position) =>
+      dispatch({ type: searchUserActions.UPDATE_SCROLL_POSITION, payload: { scrollPosition: position } }),
+  }),
+)(SearchUserComponent);

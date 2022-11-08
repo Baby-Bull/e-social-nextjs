@@ -8,7 +8,7 @@ import { TabPanel, a11yProps, ChildTabCustom } from "src/components/common/Tab/B
 import EmptyMatchingComponent from "src/components/matching/blocks/EmptyMatchingComponent";
 import ThreadComponent from "src/components/matching/blocks/ThreadComponent";
 import PaginationCustomComponent from "src/components/common/PaginationCustomComponent";
-import { getMatchingRequestReceived } from "src/services/matching";
+import { getMatchingRequestReceived, getMatchingRequestSent } from "src/services/matching";
 
 export interface IDataChild {
   data: string[];
@@ -41,14 +41,14 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
     setValueChildTab(newValue);
   };
 
-  // Block render user-received_request(pending) ***** paginated
+  // Block render user-request(pending) ***** paginated
   const [allPendingRef, setAllPendingRef] = useState(dataChild[0]?.data);
   const [cursorPending, setCursorPending] = useState(dataChild[0]?.cursor);
   const [hasMorePending, setHasMorePending] = useState(dataChild[0]?.hasMore);
   const [pagePending, setPagePending] = useState(1);
   const [countCurrentPagesPending, setCountCurrentPagesPending] = useState(2);
   const fetchReceivedRequestPending = async () => {
-    const data = await getMatchingRequestReceived(LIMITCOUNTPERPAGE, cursorPending, "pending");
+    const data = (dataType === "1") ? await getMatchingRequestReceived(LIMITCOUNTPERPAGE, cursorPending, "pending") : await getMatchingRequestSent(LIMITCOUNTPERPAGE, cursorPending, "pending");
     setCursorPending(data?.cursor);
     setHasMorePending(data?.hasMore);
     setAllPendingRef([...allPendingRef, ...data?.items]);
@@ -60,16 +60,16 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
       setCountCurrentPagesPending(countCurrentPagesPending + 1);
       fetchReceivedRequestPending();
     }
-  }; // end block paginate for user-received_request(pending)
+  }; // end block paginate for user_request(pending)
 
-  // Block render user-received_request(pending) ***** paginated
+  // Block render user_request(rejected) ***** paginated
   const [allRejectedRef, setAllRejectedRef] = useState(dataChild[1]?.data);
   const [cursorRejected, setCursorRejected] = useState(dataChild[1]?.cursor);
   const [hasMoreRejected, setHasMoreRejected] = useState(dataChild[1]?.hasMore);
   const [pageRejected, setPageRejected] = useState(1);
   const [countCurrentPagesRejected, setCountCurrentPagesRejected] = useState(2);
   const fetchReceivedRequestRejected = async () => {
-    const data = await getMatchingRequestReceived(LIMITCOUNTPERPAGE, cursorRejected, "rejected");
+    const data = (dataType === "1") ? await getMatchingRequestReceived(LIMITCOUNTPERPAGE, cursorRejected, "rejected") : await getMatchingRequestSent(LIMITCOUNTPERPAGE, cursorRejected, "rejected");
     setCursorRejected(data?.cursor);
     setHasMoreRejected(data?.hasMore);
     setAllRejectedRef([...allRejectedRef, ...data?.items]);
@@ -81,7 +81,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
       setCountCurrentPagesRejected(countCurrentPagesRejected + 1);
       fetchReceivedRequestRejected();
     }
-  }; // end block paginate for user-received_request(pending)
+  }; // end block paginate for user-request(rejected)
 
   React.useEffect(() => {
     setAllPendingRef(dataChild[0]?.data);
@@ -137,10 +137,9 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
             backgroundColor: [theme.whiteBlue, "white"],
           }}
         >
-          {dataChild[0]?.data?.length ? (
+          {allPendingRef?.length ? (
             <React.Fragment>
-              {dataChild[0]?.data
-                ?.slice((pagePending - 1) * LIMITCOUNTPERPAGE, pagePending * LIMITCOUNTPERPAGE)
+              {allPendingRef?.slice((pagePending - 1) * LIMITCOUNTPERPAGE, pagePending * LIMITCOUNTPERPAGE)
                 .map((tab, index) => (
                   <React.Fragment key={index.toString()}>
                     <Box
@@ -170,7 +169,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
                   justifyContent: "center",
                 }}
               >
-                {dataChild[0]?.data?.length > LIMITCOUNTPERPAGE && (
+                {dataChild[0]?.hasMore && (
                   <PaginationCustomComponent
                     handleCallbackChangePagination={handleCallbackChangePaginationPending}
                     page={pagePending}
@@ -201,10 +200,9 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
             backgroundColor: [theme.whiteBlue, "white"],
           }}
         >
-          {dataChild[1]?.data?.length ? (
+          {allRejectedRef?.length ? (
             <React.Fragment>
-              {dataChild[1]?.data
-                ?.slice((pageRejected - 1) * LIMITCOUNTPERPAGE, pageRejected * LIMITCOUNTPERPAGE)
+              {allRejectedRef?.slice((pageRejected - 1) * LIMITCOUNTPERPAGE, pageRejected * LIMITCOUNTPERPAGE)
                 .map((tab, index) => (
                   <React.Fragment key={index.toString()}>
                     <Box
@@ -231,7 +229,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({
                   justifyContent: "center",
                 }}
               >
-                {dataChild[1]?.data?.length > LIMITCOUNTPERPAGE && (
+                {(dataChild[1]?.hasMore) && (
                   <PaginationCustomComponent
                     handleCallbackChangePagination={handleCallbackChangePaginationRejected}
                     page={pageRejected}

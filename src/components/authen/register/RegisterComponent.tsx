@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 
 import theme from "src/theme";
-import FooterComponent from "src/components/layouts/FooterComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 import { authWithProvider } from "src/services/auth";
@@ -33,9 +32,9 @@ const RegisterComponents = () => {
   };
 
   useEffect(() => {
-    const registerAccount = async (providerAuth: string, accessToken: string) => {
+    const registerAccount = async (providerAuth: string, credentials: any) => {
       setIsLoading(true);
-      const resAuth = await authWithProvider(providerAuth, accessToken);
+      const resAuth = await authWithProvider(providerAuth, credentials);
       if (resAuth?.data?.access_token) {
         dispatch(login(resAuth?.data?.user));
         if (resAuth?.data?.user?.is_profile_edited) {
@@ -48,8 +47,8 @@ const RegisterComponents = () => {
       }
       return resAuth;
     };
-    if (profile?.access_token) {
-      registerAccount(provider, profile?.access_token);
+    if (profile?.credentials) {
+      registerAccount(provider, profile);
     }
   }, [profile]);
 
@@ -154,7 +153,7 @@ const RegisterComponents = () => {
                   }}
                   onError={onLogoutFailure}
                 >
-                  <ButtonComponent props={{ mode: "google" }}>{t("login:right.register-google")}</ButtonComponent>
+                  <ButtonComponent props={{ mode: "google" }}>{t("register:register-google")}</ButtonComponent>
                 </LoginSocialGoogle>
               </Box>
 
@@ -202,7 +201,6 @@ const RegisterComponents = () => {
           </Grid>
         </Grid>
       </Box>
-      <FooterComponent authPage />
     </React.Fragment>
   );
 };

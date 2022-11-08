@@ -1,12 +1,11 @@
 /* eslint-disable no-unused-vars */
 import { Backdrop, Box, CircularProgress, Grid } from "@mui/material";
 import { useTranslation } from "next-i18next";
-import React, { useEffect, useRef, useState, Suspense } from "react";
+import React, { useEffect, useRef, useState, Suspense, useCallback } from "react";
 import { useQuery } from "react-query";
 import dynamic from "next/dynamic";
 
 import { REACT_QUERY_KEYS } from "src/constants/constants";
-import ContentComponent from "src/components/layouts/ContentComponent";
 import {
   getUserFavoriteTags,
   getUserProvince,
@@ -197,28 +196,37 @@ const HomeIndexComponents = () => {
     }
   };
 
-  const handleSendMatchingRequest = async (matchingRequest: any) => {
-    const res = await sendMatchingRequest(userRequestMatching?.id, matchingRequest);
-    await addUserFavorite(userRequestMatching?.id);
-    setOpenModal(false);
-    handleRefetchData();
-    return res;
-  };
+  const handleSendMatchingRequest = useCallback(
+    async (matchingRequest: any) => {
+      const res = await sendMatchingRequest(userRequestMatching?.id, matchingRequest);
+      await addUserFavorite(userRequestMatching?.id);
+      setOpenModal(false);
+      handleRefetchData();
+      return res;
+    },
+    [userRequestMatching?.id],
+  );
 
-  const handleOpenMatchingModal = (userMatching: any, index: number) => {
-    setOpenModal(true);
-    setUserRequestMatching(userMatching);
-    indexRefetch.current = index;
-  };
+  const handleOpenMatchingModal = useCallback(
+    (userMatching: any, index: number) => {
+      setOpenModal(true);
+      setUserRequestMatching(userMatching);
+      indexRefetch.current = index;
+    },
+    [indexRefetch],
+  );
 
-  const handleAcceptMatchingRequestReceived = async (userSendMatching: any, index: number) => {
-    await acceptMatchingRequestReceived(userSendMatching?.match_request?.id);
-    indexRefetch.current = index;
-    handleRefetchData();
-  };
+  const handleAcceptMatchingRequestReceived = useCallback(
+    async (userSendMatching: any, index: number) => {
+      await acceptMatchingRequestReceived(userSendMatching?.match_request?.id);
+      indexRefetch.current = index;
+      handleRefetchData();
+    },
+    [indexRefetch],
+  );
 
   return (
-    <ContentComponent>
+    <React.Fragment>
       {isLoading && (
         <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
           <CircularProgress color="inherit" />
@@ -264,7 +272,7 @@ const HomeIndexComponents = () => {
           )}
         </Grid>
       </Box>
-    </ContentComponent>
+    </React.Fragment>
   );
 };
 export default HomeIndexComponents;

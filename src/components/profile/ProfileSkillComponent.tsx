@@ -11,10 +11,13 @@ import TabUnstyled, { tabUnstyledClasses } from "@mui/base/TabUnstyled";
 import { useTranslation } from "next-i18next";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { styled } from "@mui/material/styles";
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import { USER_STATUS, JOBS, EMPLOYEES } from "src/components/constants/constants";
 import { TEXT_ENGLISH_LEVEL_OPTIONS } from "src/constants/constants";
+import { searchUserActions } from "src/store/actionTypes";
 
 import { ShowTextArea } from "../common/ShowTextAreaComponent";
 
@@ -129,9 +132,16 @@ const ImgStar: React.SFC<IRecommendMembersComponentProps> = ({ countStar }) => {
 
 const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const router = useRouter();
   const FRAMEWORK = "framework";
   const INFRASTRUCTURE = "infrastructure";
   const LANGUAGE = "programLanguage";
+
+  const onUserTagClicked = (tag: string) => {
+    dispatch({ type: searchUserActions.SEARCH_TAG_ONLY, payload: [tag] });
+    router.push("/search_user");
+  };
 
   return (
     <Grid item xs={12} sm={12} lg={12} xl={12}>
@@ -227,8 +237,13 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                     <Box sx={{ display: "flex", flexWrap: "wrap" }}>
                       {data?.tags?.map((item, key) => (
                         <Box
+                          onClick={() => onUserTagClicked(item)}
                           key={key}
                           sx={{
+                            cursor: "pointer",
+                            ":hover": {
+                              background: "#dcf9ff",
+                            },
                             background: "#F4FDFF",
                             fontSize: "12px",
                             mr: 1,

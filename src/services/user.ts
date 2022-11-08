@@ -194,22 +194,22 @@ export const UserSearch = async (
   query +=
     params?.lastLogin === typeTimeLogin.on_day_to_week
       ? `&last_login[]=${dayjs().subtract(1, "weeks").toISOString()}&last_login[]=${dayjs()
-        .subtract(1, "days")
-        .toISOString()}`
+          .subtract(1, "days")
+          .toISOString()}`
       : "";
 
   query +=
     params?.lastLogin === typeTimeLogin.week_to_two_week
       ? `&last_login[]=${dayjs().subtract(2, "weeks").toISOString()}&last_login[]=${dayjs()
-        .subtract(1, "weeks")
-        .toISOString()}`
+          .subtract(1, "weeks")
+          .toISOString()}`
       : "";
 
   query +=
     params?.lastLogin === typeTimeLogin.two_week_to_month
       ? `&last_login[]=${dayjs().subtract(1, "months").toISOString()}&last_login[]=${dayjs()
-        .subtract(2, "weeks")
-        .toISOString()}`
+          .subtract(2, "weeks")
+          .toISOString()}`
       : "";
 
   query +=
@@ -250,9 +250,17 @@ export const getOrtherUserProfile = async (userId: string | string[]) => {
   }
 };
 
-export const getUserCommunites = async (userId: string | string[], limit: number | null = null, cursor: string = null) => {
+export const getUserCommunites = async (
+  userId: string | string[],
+  limit: number | null = null,
+  cursor: string = null,
+) => {
   try {
-    const res = await api.get(`/user/${userId}/communities?limit=${limit}&cursor=${cursor}`);
+    const queryString = new URLSearchParams({
+      ...(limit ? { limit: `${limit}` } : {}),
+      ...(cursor ? { cursor } : {}),
+    }).toString();
+    const res = await api.get(`/user/${userId}/communities?${queryString}`);
     return res?.data;
   } catch (error) {
     return error;
@@ -261,7 +269,11 @@ export const getUserCommunites = async (userId: string | string[], limit: number
 
 export const getUserRecommended = async (limit: number, cursor: string = "") => {
   try {
-    const res = await api.get(`/user/recommended-users/?limit=${limit}&cursor=${cursor}`);
+    const queryString = new URLSearchParams({
+      ...(limit ? { limit: `${limit}` } : {}),
+      ...(cursor ? { cursor } : {}),
+    }).toString();
+    const res = await api.get(`/user/recommended-users/?${queryString}`);
     return res?.data;
   } catch (error) {
     return error;
@@ -290,17 +302,19 @@ export const getUserProfile = async () => {
   }
 };
 
-export const updateProfile = async (body: any) => {
+export const updateProfile = async (body: any, showToast = true) => {
+  toast.configure();
   try {
     const res = await api.patch(`/user/profile`, body);
-
     if (!res.data) {
       toast.error(SERVER_ERROR);
     } else if (res?.data?.message?.email[0]?.message === "email is not unique") {
       toast.error(EMAIL_EXISTS);
     } else {
       setIsProfileEdited("true");
-      toast.success(UPDATE_PROFILE);
+      if (showToast) {
+        toast.success(UPDATE_PROFILE);
+      }
     }
     return res.data;
   } catch (error) {
@@ -311,7 +325,11 @@ export const updateProfile = async (body: any) => {
 
 export const getListnotifications = async (limit: number, cursor: string) => {
   try {
-    const res = await api.get(`/user/notifications?limit=${limit}&cursor=${cursor}`);
+    const queryString = new URLSearchParams({
+      ...(limit ? { limit: `${limit}` } : {}),
+      ...(cursor ? { cursor } : {}),
+    }).toString();
+    const res = await api.get(`/user/notifications?${queryString}`);
     return res?.data;
   } catch (error) {
     return error;
@@ -340,7 +358,7 @@ export const readMessagePersonal = async (userId: string) => {
   } catch (error) {
     return error;
   }
-}
+};
 
 export const readMessageCommunity = async (communityId: string) => {
   try {
@@ -348,4 +366,4 @@ export const readMessageCommunity = async (communityId: string) => {
   } catch (error) {
     return error;
   }
-}
+};

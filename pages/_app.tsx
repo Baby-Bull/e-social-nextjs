@@ -1,6 +1,8 @@
 import * as React from "react";
+import { FC } from "react";
 import Script from "next/script";
 import Head from "next/head";
+import { NextPage } from "next";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 import { AppProps } from "next/app";
 import { ThemeProvider } from "@mui/material/styles";
@@ -15,8 +17,7 @@ import { Provider } from "react-redux";
 
 import createEmotionCache from "src/createEmotionCache";
 import { AUTH_PAGE_PATHS } from "src/constants/constants";
-import { USER_TOKEN } from "src/helpers/storage";
-import { refreshToken } from "src/services/auth";
+import { getRefreshToken, getToken, USER_TOKEN } from "src/helpers/storage";
 // eslint-disable-next-line import/order
 import theme from "src/theme";
 
@@ -24,15 +25,22 @@ import "react-toastify/dist/ReactToastify.css";
 import "src/styles/index.scss";
 import * as gtag from "lib/gtag";
 import { useStore } from "src/store/store";
-import { setApiAuth } from "src/helpers/api";
+import { fetchToken, setApiAuth } from "src/helpers/api";
 import socket from "src/helpers/socket";
+import ContentComponent from "src/components/layouts/ContentComponent";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  // eslint-disable-next-line no-unused-vars
+  getLayout?: FC;
+};
+
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
   pathname: string;
+  Component: NextPageWithLayout;
 }
 
 const SplashScreen = () => (
@@ -47,6 +55,11 @@ const SplashScreen = () => (
 const MyApp = (props: MyAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps, pathname } = props;
   const [queryClient] = React.useState(() => new QueryClient());
+  const Layout =
+    Component.getLayout !== undefined
+      ? // eslint-disable-next-line react/jsx-pascal-case, no-unused-vars
+        ({ children, isAuth }) => <Component.getLayout>{children}</Component.getLayout>
+      : ({ children, isAuth }) => <ContentComponent authPage={!isAuth}>{children}</ContentComponent>;
   const cookies = parseCookies();
   const isAuth = cookies[USER_TOKEN];
 
@@ -69,20 +82,23 @@ const MyApp = (props: MyAppProps) => {
   }, [Router.events]);
 
   React.useEffect(() => {
-    let updateLastSeenAtInterval = null;
-    socket.on("connected", () => {
-      updateLastSeenAtInterval = setInterval(() => {
-        if (!socket.isClosed()) {
-          socket.emit("user.last_seen_at", null);
-        }
-      }, 60000); // 1minute
-    });
+    if (isAuth) {
+      let updateLastSeenAtInterval = null;
+      socket.on("connected", () => {
+        socket.emit("user.last_seen_at", null);
+        updateLastSeenAtInterval = setInterval(() => {
+          if (!socket.isClosed()) {
+            socket.emit("user.last_seen_at", null);
+          }
+        }, 60000); // 1minute
+      });
 
-    return () => {
-      clearInterval(updateLastSeenAtInterval);
-      updateLastSeenAtInterval = null;
-      socket.off("connected");
-    };
+      return () => {
+        clearInterval(updateLastSeenAtInterval);
+        updateLastSeenAtInterval = null;
+        socket.off("connected");
+      };
+    }
   }, [isAuth]);
 
   React.useEffect(() => {
@@ -90,21 +106,18 @@ const MyApp = (props: MyAppProps) => {
       // Router.push("/login");
     }
     if (!AUTH_PAGE_PATHS.includes(pathname) && isAuth) {
-      const now = new Date();
-      const expiresIn = parseInt(cookies.EXPIRES_IN, 10) || now.getTime();
-
-      const timeOutFreshToken = expiresIn - now.getTime() - 300000;
-      let intervalRef = null;
-      const timeOutRef = setTimeout(() => {
-        refreshToken();
-        intervalRef = setInterval(() => {
-          refreshToken();
-        }, 2700000);
-      }, timeOutFreshToken);
-      return () => {
-        clearInterval(intervalRef);
-        clearTimeout(timeOutRef);
-      };
+      if (cookies.EXPIRES_IN) {
+        const timeOutFreshToken = (parseInt(cookies.EXPIRES_IN, 10) - 30) * 1000;
+        const intervalRef = setInterval(() => {
+          fetchToken({
+            accessToken: getToken(),
+            refreshToken: getRefreshToken(),
+          });
+        }, timeOutFreshToken);
+        return () => {
+          clearInterval(intervalRef);
+        };
+      }
     }
   }, [isAuth]);
 
@@ -162,17 +175,13 @@ const MyApp = (props: MyAppProps) => {
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
-      <QueryClientProvider client={queryClient}>
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script
-          id="google-analytics"
-          strategy="afterInteractive"
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{
-            __html: `
+      <Script src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`} strategy="afterInteractive" />
+      <Script
+        id="google-analytics"
+        strategy="afterInteractive"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
@@ -180,17 +189,19 @@ const MyApp = (props: MyAppProps) => {
               page_path: window.location.pathname,
             });
           `,
-          }}
-        />
+        }}
+      />
+      <QueryClientProvider client={queryClient}>
         <Provider store={store}>
           {isServerRendering ? (
             <CacheProvider value={emotionCache}>
               <ThemeProvider theme={theme}>
                 {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
                 <CssBaseline />
-
                 <Hydrate state={pageProps.dehydratedState}>
-                  <Component {...pageProps} />
+                  <Layout isAuth={isAuth}>
+                    <Component {...pageProps} />
+                  </Layout>
                 </Hydrate>
               </ThemeProvider>
             </CacheProvider>
@@ -201,7 +212,9 @@ const MyApp = (props: MyAppProps) => {
                   {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
                   <CssBaseline />
                   <Hydrate state={pageProps.dehydratedState}>
-                    <Component {...pageProps} />
+                    <Layout isAuth={isAuth}>
+                      <Component {...pageProps} />
+                    </Layout>
                   </Hydrate>
                 </ThemeProvider>
               </CacheProvider>
@@ -218,13 +231,12 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   const { query, pathname, res } = ctx;
 
   const cookies = parseCookies(ctx);
-
   if (!AUTH_PAGE_PATHS.includes(pathname)) {
     if (!cookies[USER_TOKEN]) {
       if (!res) {
         Router.push("/login");
+        return {};
       }
-      return {};
     }
     setApiAuth(cookies[USER_TOKEN]);
   }
