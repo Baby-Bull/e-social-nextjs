@@ -101,7 +101,6 @@ const ProfileHaveDataComponent = () => {
 
   const handleSendMatchingRequest = async (matchingRequest) => {
     const res = await sendMatchingRequest(userId, matchingRequest);
-    await addUserFavorite(userId);
     setModalMatching(false);
     return res;
   };

@@ -74,7 +74,6 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
     setLiked(true);
     const res = await sendMatchingRequest(data?.id, matchingRequest);
     setStatusBtnSendMatching("sent_pending");
-    await addUserFavorite(data?.id);
     setModalMatching(false);
     if (callbackHandleIsRefresh) {
       callbackHandleIsRefresh(!isRefresh);

@@ -199,7 +199,6 @@ const HomeIndexComponents = () => {
   const handleSendMatchingRequest = useCallback(
     async (matchingRequest: any) => {
       const res = await sendMatchingRequest(userRequestMatching?.id, matchingRequest);
-      await addUserFavorite(userRequestMatching?.id);
       setOpenModal(false);
       handleRefetchData();
       return res;
