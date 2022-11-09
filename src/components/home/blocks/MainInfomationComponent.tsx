@@ -1,16 +1,49 @@
 /* eslint-disable */
-import React from 'react'
+import React, { useMemo } from 'react'
+import { useQuery } from "react-query";
 import { Box, Grid, Typography, Button, Avatar } from '@mui/material';
 import styles from "src/components/home/home.module.scss";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { IStoreState } from "src/constants/interface";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { REACT_QUERY_KEYS } from "src/constants/constants";
+import actionTypes from "src/store/actionTypes";
+import { getUserStatics } from "src/services/user";
 import Link from 'next/link';
 
 export default function MainInfomationComponent() {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     const auth = useSelector((state: IStoreState) => state.user);
+    const isProfileEdited = useSelector((state: any) => state.is_profile_edited);
+    useQuery(
+        [`${REACT_QUERY_KEYS.HOMEPAGE_GET_USER_STATS}`],
+        async () => { 
+          const stats = await getUserStatics();
+          dispatch({
+            type: actionTypes.UPDATE_PROFILE,
+            payload: stats,
+          });
+        },
+        { refetchOnWindowFocus: false, keepPreviousData: true },
+    );
+
+    const hasFinishedMission1 = useMemo(() => {
+        return isProfileEdited;
+    }, [isProfileEdited]);
+
+        const hasFinishedMission2 = useMemo(() => {
+        return auth.community_count > 0 && (auth.match_request_confirmed_count + auth.match_application_confirmed_count) > 0
+    }, [auth]);
+
+        const hasFinishedMission3 = useMemo(() => {
+        return auth.community_chat_message_count > 0;
+    }, [auth]);
+
+        const hasFinishedMission4 = useMemo(() => {
+        return auth.community_post_count > 0;
+    }, [auth]);
 
     const dataInfoMatching = [
         {
@@ -40,76 +73,81 @@ export default function MainInfomationComponent() {
 
     ]
     return (
-        <Box className={styles.mainInfomations} sx={{ flexGrow: 1 }}>
-            <Grid container spacing={3}>
-                <Grid className={styles.imgInfomation} item xs={3}>
-                    <Box className={styles.infoTitle}>お名前さん</Box>
-                    <Avatar
-                        sx={{
-                            borderRadius: "50%",
-                            width: "106px",
-                            height: "106px",
-                            margin: "auto",
-                        }}
-                    >
-                        <Image
-                            loader={() => auth?.profile_image}
-                            src={auth?.profile_image || "/assets/images/avatar_user.png"}
-                            alt="Image"
-                            width={106}
-                            height={106}
-                            loading="lazy"
-                            className="rounded-full"
-                        />
-                    </Avatar>
-                    <Box className={styles.contentProfile}>
-                        <Typography className={styles.titleProfile}>マイプロフィールを充実させてみよう！</Typography>
-                        <Link href="/my-profile">
-                            <Button className={styles.btnProfile}>マイプロフィール編集</Button>
-                        </Link>
-                    </Box>
-                </Grid>
-                <Grid className={styles.matchingInfomation} item xs={3}>
-                    <Box className={styles.infoTitle}>goodhubメニュー</Box>
-                    <Grid container>
-                        <Grid item xs={9} >
-                            <ul className={styles.matchingListTitle}>
-                                {dataInfoMatching?.map((item, index) => (
-                                    <li key={index}>
-                                        <img src={item.icon} alt="icon" />
-                                        <span>{item.title}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </Grid>
-                        <Grid item xs={3} >
-                            <ul className={styles.matchingListNumber}>
-                                {dataInfoMatching?.map((item, index) => (
-                                    <li key={index}>{item.number}</li>
-                                ))}
-                            </ul>
-                        </Grid>
-                    </Grid>
-                </Grid>
-                <Grid className={styles.missionInfomation} item xs={6}>
-                    <Box className={styles.infoTitle}>ミッションクリアしてみよう！</Box>
-                    <ul className={styles.missionList}>
-                        <li>
-                            <span style={{ color: "#989EA8" }}>Mission 1 プロフィールを充実させて、色んな人に知ってもらおう</span>
-                            <div className={styles.doneMission}>OK</div>
-                        </li>
-                        <li>
-                            <span>Mission 2 気になるコミュニティに参加して、友達を増やそう</span>
-                        </li>
-                        <li>
-                            <span>Mission 3 コミュニティチャットで自己紹介をしてみよう</span>
-                        </li>
-                        <li>
-                            <span>Mission 4 コミュニティで話題を投稿して、メンバーと交流してみよう</span>
-                        </li>
-                    </ul>
-                </Grid>
+      <Box className={styles.mainInfomations} sx={{ flexGrow: 1 }}>
+        <Grid container spacing={3}>
+          <Grid className={styles.imgInfomation} item xs={3}>
+            <Box className={styles.infoTitle}>お名前さん</Box>
+            <Avatar
+              sx={{
+                borderRadius: "50%",
+                width: "106px",
+                height: "106px",
+                margin: "auto",
+              }}
+            >
+              <Image
+                loader={() => auth?.profile_image}
+                src={auth?.profile_image || "/assets/images/avatar_user.png"}
+                alt="Image"
+                width={106}
+                height={106}
+                loading="lazy"
+                className="rounded-full"
+              />
+            </Avatar>
+            <Box className={styles.contentProfile}>
+              <Typography className={styles.titleProfile}>マイプロフィールを充実させてみよう！</Typography>
+              <Link href="/my-profile">
+                <Button className={styles.btnProfile}>マイプロフィール編集</Button>
+              </Link>
+            </Box>
+          </Grid>
+          <Grid className={styles.matchingInfomation} item xs={3}>
+            <Box className={styles.infoTitle}>goodhubメニュー</Box>
+            <Grid container>
+              <Grid item xs={9}>
+                <ul className={styles.matchingListTitle}>
+                  {dataInfoMatching?.map((item, index) => (
+                    <li key={index}>
+                      <img src={item.icon} alt="icon" />
+                      <span>{item.title}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Grid>
+              <Grid item xs={3}>
+                <ul className={styles.matchingListNumber}>
+                  {dataInfoMatching?.map((item, index) => (
+                    <li key={index}>{item.number}</li>
+                  ))}
+                </ul>
+              </Grid>
             </Grid>
-        </Box>
-    )
+          </Grid>
+          <Grid className={styles.missionInfomation} item xs={6}>
+            <Box className={styles.infoTitle}>ミッションクリアしてみよう！</Box>
+            <ul className={styles.missionList}>
+              <li>
+                <span className={hasFinishedMission1 ? styles.doneMissionText : undefined}>
+                  Mission 1 プロフィールを充実させて、色んな人に知ってもらおう
+                </span>
+                {hasFinishedMission1 && <div className={styles.doneMission}>OK</div>}
+              </li>
+              <li>
+                <span className={hasFinishedMission2 ? styles.doneMissionText : undefined}>Mission 2 気になるコミュニティに参加して、友達を増やそう</span>
+                                {hasFinishedMission2 && <div className={styles.doneMission}>OK</div>}
+              </li>
+              <li>
+                <span className={hasFinishedMission3 ? styles.doneMissionText : undefined}>Mission 3 コミュニティチャットで自己紹介をしてみよう</span>
+                                                {hasFinishedMission3 && <div className={styles.doneMission}>OK</div>}
+              </li>
+              <li>
+                <span className={hasFinishedMission4 ? styles.doneMissionText : undefined}>Mission 4 コミュニティで話題を投稿して、メンバーと交流してみよう</span>
+                 {hasFinishedMission4 && <div className={styles.doneMission}>OK</div>}
+              </li>
+            </ul>
+          </Grid>
+        </Grid>
+      </Box>
+    );
 }

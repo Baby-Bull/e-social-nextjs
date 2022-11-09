@@ -47,7 +47,7 @@
   padding: 0 3em;
   display: flex;
   align-items: center;
-  background: #E2F9FD;
+  background: #e2f9fd;
   white-space: nowrap;
   overflow: hidden;
 
@@ -132,39 +132,38 @@
   background-color: white;
   padding: 1.5em;
   text-align: center;
-  font-family: 'Noto Sans JP';
+  font-family: "Noto Sans JP";
   font-style: normal;
 
   .infoTitle {
     font-weight: 700;
     font-size: 16px;
     line-height: 23px;
-    color: #1A2944;
+    color: #1a2944;
     margin-bottom: 1em;
   }
 
   .imgInfomation {
-
     .contentProfile {
       margin-top: 1em;
       width: 280px;
       height: 118px;
-      background: #03BCDB;
+      background: #03bcdb;
       border-radius: 8px;
 
       .titleProfile {
         font-weight: 700;
         font-size: 14px;
         line-height: 22px;
-        color: #FFFFFF;
+        color: #ffffff;
         padding: 1.2em 0;
       }
 
       .btnProfile {
         width: 200px;
         height: 40px;
-        color: #03BCDB;
-        background: #FFFFFF;
+        color: #03bcdb;
+        background: #ffffff;
         border-radius: 4px;
       }
     }
@@ -188,12 +187,12 @@
       }
 
       span {
-        font-family: 'Noto Sans JP';
+        font-family: "Noto Sans JP";
         font-style: normal;
         font-weight: 700;
         font-size: 14px;
         line-height: 20px;
-        color: #03BCDB;
+        color: #03bcdb;
       }
     }
 
@@ -207,7 +206,7 @@
         padding: 0.67em 0;
         align-items: center;
         text-align: right;
-        color: #989EA8;
+        color: #989ea8;
       }
     }
   }
@@ -217,7 +216,7 @@
     font-size: 14px;
     line-height: 20px;
     align-items: center;
-    color: #1A2944;
+    color: #1a2944;
 
     .missionList {
       list-style: none;
@@ -231,11 +230,14 @@
         border-radius: 15px;
         align-items: center;
 
+        .doneMissionText {
+          color: #989ea8;
+        }
 
         .doneMission {
           width: 36px;
           height: 36px;
-          background: #FF9458;
+          background: #ff9458;
           border-radius: 50%;
           margin: auto;
           display: flex;
@@ -250,8 +252,6 @@
     }
   }
 }
-
-
 
 .notificationMenu {
   margin-top: 46px;
@@ -627,7 +627,7 @@
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
       display: -webkit-box;
-      background: #F5F5F5;
+      background: #f5f5f5;
       margin: 1em 20px;
       border-radius: 4px;
     }
@@ -695,11 +695,11 @@
         align-self: baseline;
         position: absolute;
         right: 0;
-        font-family: 'Noto Sans JP';
+        font-family: "Noto Sans JP";
         font-style: normal;
         font-weight: 400;
         font-size: 12px;
-        color: #03BCDB;
+        color: #03bcdb;
 
         .ic_like {
           width: 15px;
