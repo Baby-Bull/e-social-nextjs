@@ -58,32 +58,32 @@ export default function MainInfomationComponent() {
       title: t("home:matching.community"),
       icon: "/assets/images/home_page/ic_star_circle.svg",
       number: auth?.community_count ?? 0,
-      link: "",
+      link: "/matching?type=community",
     },
     {
       title: t("home:matching.people"),
       icon: "/assets/images/home_page/ic_heart_blue.svg",
       number: auth?.favorite_count ?? 0,
-      link: "",
+      link: "/matching?type=favorite",
     },
     {
       title: t("home:matching.request"),
       icon: "/assets/images/home_page/ic_user.svg",
       number: auth?.match_application_count ?? 0,
-      link: "",
+      link: "/matching?type=received",
     },
     {
       title: t("home:matching.application"),
       icon: "/assets/images/home_page/ic_hand.svg",
       number: auth?.match_request_pending_count ?? 0,
-      link: "",
+      link: "/matching?type=sent",
     },
   ];
   return (
     <Box className={styles.mainInfomations} sx={{ flexGrow: 1 }}>
       <Grid container spacing={3}>
         <Grid className={styles.imgInfomation} item xs={3}>
-          <Box className={styles.infoTitle}>お名前さん</Box>
+          <Box className={styles.infoTitle}>{auth.username}</Box>
           <Avatar
             sx={{
               borderRadius: "50%",
@@ -115,10 +115,12 @@ export default function MainInfomationComponent() {
             <Grid item xs={9}>
               <ul className={styles.matchingListTitle}>
                 {dataInfoMatching?.map((item, index) => (
-                  <li key={index}>
-                    <img src={item.icon} alt="icon" />
-                    <span>{item.title}</span>
-                  </li>
+                  <Link href={item.link} shallow>
+                    <li key={index}>
+                      <img src={item.icon} alt="icon" />
+                      <span>{item.title}</span>
+                    </li>
+                  </Link>
                 ))}
               </ul>
             </Grid>

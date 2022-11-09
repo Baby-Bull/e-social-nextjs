@@ -101,7 +101,6 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
 
   const handleSendMatchingRequest = async (matchingRequest) => {
     const res = await sendMatchingRequest(userId, matchingRequest);
-    await addUserFavorite(userId);
     setModalMatching(false);
     setIsDisableBtn(true);
     setProfileSkill({

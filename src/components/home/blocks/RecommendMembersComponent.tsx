@@ -9,6 +9,8 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import Link from "next/link";
 // import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
+import { useMutation } from "react-query";
+import { useDispatch } from "react-redux";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import {
@@ -17,10 +19,9 @@ import {
 } from "src/components/constants/constants";
 import { JOBS } from "src/constants/constants";
 import styles from "src/components/home/home.module.scss";
-// import { replaceLabelByTranslate } from "src/utils/utils";
-// import { addUserFavorite, deleteUserFavorite } from "src/services/user";
-// import { IStoreState } from "src/constants/interface";
-// import actionTypes from "src/store/actionTypes";
+import { addUserFavorite, deleteUserFavorite } from "src/services/user";
+import actionTypes, { searchUserActions } from "src/store/actionTypes";
+import UserTag from "src/components/profile/UserTagComponent";
 
 import SlickSliderRecommendComponent from "./SlickSliderRecommendComponent";
 
@@ -100,14 +101,19 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
-  const [liked, setLiked] = useState(data?.is_favorite);
-  const [likeCount] = useState(data?.is_favorite_count ?? 0);
+  const dispatch = useDispatch();
+  const [liked, setLiked] = useState(data.is_favorite);
+  const [likeCount, setLikeCount] = useState(data?.is_favorite_count ?? 0);
   // const dispatch = useDispatch();
   // const auth = useSelector((state: IStoreState) => state.user);
 
   useEffect(() => {
-    setLiked(data?.is_favorite);
-  }, [data?.is_favorite]);
+    setLiked(data.is_favorite);
+  }, [data.is_favorite]);
+
+  useEffect(() => {
+    setLikeCount(data.is_favorite_count);
+  }, [data.is_favorite_count]);
 
   const handleClickButtonModal = (tempValue: any) => {
     if (tempValue === "rejected" || !tempValue) {
@@ -121,6 +127,26 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
     }
   };
 
+  const mutation = useMutation({
+    mutationFn: async ({ isFavorite, userId }: any) => {
+      if (isFavorite) {
+        await deleteUserFavorite(userId);
+        setLikeCount((value) => value - 1);
+        dispatch({ type: actionTypes.REMOVE_FAVORITE });
+      } else {
+        await addUserFavorite(userId);
+        setLikeCount((value) => value + 1);
+        dispatch({ type: actionTypes.ADD_FAVORITE });
+      }
+      setLiked(!isFavorite);
+    },
+  });
+
+  const onUserTagClicked = (tag: string) => {
+    dispatch({ type: searchUserActions.SEARCH_TAG_ONLY, payload: [tag] });
+    router.push("/search_user");
+  };
+
   // const handleClickFavoriteButton = () => {
   //   handleFavoriteAnUser(liked, data?.id);
   //   if (liked) dispatch({ type: actionTypes.REMOVE_FAVORITE, payload: auth });
@@ -132,17 +158,11 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
   //   router.push(`/profile/${data.id}`, undefined, { shallow: true });
   // };
 
-  // const onUserTagClicked = (tag: string) => {
-  //   dispatch({ type: searchUserActions.SEARCH_TAG_ONLY, payload: [tag] });
-  //   router.push("/search_user");
-  // };
-
   return (
     <Grid item xs={12} className={classNames(styles.boxRecommend)}>
       <Box className={styles.boxRecommendMember}>
-        <Link href={`/profile/${data.id}`}>
-          <Box sx={{ cursor: "pointer" }}>
-            {/* <div className="status-summary">
+        <Box sx={{ cursor: "pointer" }}>
+          {/* <div className="status-summary">
               <ButtonComponent
                 mode={HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.mode}
                 size="small"
@@ -160,7 +180,8 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
               </span>
             </div> */}
 
-            <div className="info-summary">
+          <div className="info-summary">
+            <Link href={`/profile/${data.id}`}>
               <Avatar
                 sx={{
                   width: "56px",
@@ -186,6 +207,9 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
                   objectFit="contain"
                 />
               </Avatar>
+            </Link>
+
+            <Link href={`/profile/${data.id}`}>
               <div className="member-info">
                 <div className="name">{data?.username}</div>
                 <div className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? "情報なし"}</div>
@@ -193,39 +217,43 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
                   {t("home:box-member-recommend.review")}: {data?.review_count ?? 0}
                 </div>
               </div>
-              <div className="favorite-btn">
-                <img
-                  className="ic_like"
-                  alt="ic-like"
-                  src={
-                    liked ? "/assets/images/home_page/ic_heart_blue.svg" : "/assets/images/home_page/ic_heart_empty.svg"
-                  }
-                />
-                {likeCount}
-              </div>
+            </Link>
+            <div
+              className="favorite-btn"
+              onClick={() =>
+                mutation.mutate({
+                  isFavorite: liked,
+                  userId: data.id,
+                })
+              }
+            >
+              <img
+                className="ic_like"
+                alt="ic-like"
+                src={
+                  liked ? "/assets/images/home_page/ic_heart_blue.svg" : "/assets/images/home_page/ic_heart_empty.svg"
+                }
+              />
+              {likeCount}
             </div>
-            {/* </div> */}
+          </div>
+          {/* </div> */}
 
-            {/* <div className="introduce">{data?.hitokoto ?? "情報なし"}</div> */}
+          {/* <div className="introduce">{data?.hitokoto ?? "情報なし"}</div> */}
 
-            <div className="label-description">
-              <img alt="" src="/assets/images/home_page/chatIcon.png" />
-              {t("home:box-member-recommend.label-talking")}
-            </div>
+          <div className="label-description">
+            <img alt="" src="/assets/images/home_page/chatIcon.png" />
+            {t("home:box-member-recommend.label-talking")}
+          </div>
 
-            <div className="description">
-              {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
-            </div>
+          <div className="description">
+            {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
+          </div>
 
-            <div className="tags">
-              <ul>
-                {data?.tags?.map((tag, index) => (
-                  <li key={index}>{tag}</li>
-                ))}
-              </ul>
-            </div>
-          </Box>
-        </Link>
+          <div className="tags">
+            <UserTag tags={data.tags} onClick={onUserTagClicked} />
+          </div>
+        </Box>
         {/* <div className="div-review" onClick={handleClickFavoriteButton}>
           <img
             alt="ic-like"
