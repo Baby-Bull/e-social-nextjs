@@ -7,21 +7,20 @@ import dayjs from "dayjs";
 import "dayjs/locale/ja";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Link from "next/link";
-import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import {
-  HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS,
+  // HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS,
   HOMEPAGE_RECOMMEND_MEMBER_STATUS,
 } from "src/components/constants/constants";
-import { JOBS, USER_ONLINE_STATUS } from "src/constants/constants";
+import { JOBS } from "src/constants/constants";
 import styles from "src/components/home/home.module.scss";
-import { replaceLabelByTranslate } from "src/utils/utils";
-import { addUserFavorite, deleteUserFavorite } from "src/services/user";
-import { IStoreState } from "src/constants/interface";
-import actionTypes, { searchUserActions } from "src/store/actionTypes";
-import UserTag from "src/components/profile/UserTagComponent";
+// import { replaceLabelByTranslate } from "src/utils/utils";
+// import { addUserFavorite, deleteUserFavorite } from "src/services/user";
+// import { IStoreState } from "src/constants/interface";
+// import actionTypes from "src/store/actionTypes";
 
 import SlickSliderRecommendComponent from "./SlickSliderRecommendComponent";
 
@@ -41,6 +40,7 @@ interface IRecommendDataItem {
   status: string;
   chatStatus: number;
   is_favorite: boolean;
+  is_favorite_count: number;
   match_status: string;
   activity_status?: string;
 }
@@ -60,23 +60,23 @@ interface IRecommendMembersComponentProps {
   handleAcceptMatchingRequestReceived: Function;
 }
 
-const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
-  if (isFavorite) deleteUserFavorite(tempData);
-  else addUserFavorite(tempData);
-};
+// const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
+//   if (isFavorite) deleteUserFavorite(tempData);
+//   else addUserFavorite(tempData);
+// };
 
-const handleMapChatStatus = (statusChatTemp: string) => {
-  switch (statusChatTemp) {
-    case "looking-for-friend":
-      return 1;
-    case "can-talk":
-      return 2;
-    case "need-consult":
-      return 3;
-    default:
-      return 2;
-  }
-};
+// const handleMapChatStatus = (statusChatTemp: string) => {
+//   switch (statusChatTemp) {
+//     case "looking-for-friend":
+//       return 1;
+//     case "can-talk":
+//       return 2;
+//     case "need-consult":
+//       return 3;
+//     default:
+//       return 2;
+//   }
+// };
 const handleMapMatchingStatus = (statusMatchingTemp: string) => {
   switch (statusMatchingTemp) {
     case "sent_pending":
@@ -101,8 +101,9 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
   const { t } = useTranslation();
   const router = useRouter();
   const [liked, setLiked] = useState(data?.is_favorite);
-  const dispatch = useDispatch();
-  const auth = useSelector((state: IStoreState) => state.user);
+  const [likeCount] = useState(data?.is_favorite_count ?? 0);
+  // const dispatch = useDispatch();
+  // const auth = useSelector((state: IStoreState) => state.user);
 
   useEffect(() => {
     setLiked(data?.is_favorite);
@@ -120,94 +121,118 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
     }
   };
 
-  const handleClickFavoriteButton = () => {
-    handleFavoriteAnUser(liked, data?.id);
-    if (liked) dispatch({ type: actionTypes.REMOVE_FAVORITE, payload: auth });
-    else dispatch({ type: actionTypes.ADD_FAVORITE, payload: auth });
-    setLiked(!liked);
-  };
+  // const handleClickFavoriteButton = () => {
+  //   handleFavoriteAnUser(liked, data?.id);
+  //   if (liked) dispatch({ type: actionTypes.REMOVE_FAVORITE, payload: auth });
+  //   else dispatch({ type: actionTypes.ADD_FAVORITE, payload: auth });
+  //   setLiked(!liked);
+  // };
 
-  const handleClickToProfile = () => {
-    router.push(`/profile/${data.id}`, undefined, { shallow: true });
-  };
+  // const handleClickToProfile = () => {
+  //   router.push(`/profile/${data.id}`, undefined, { shallow: true });
+  // };
 
-  const onUserTagClicked = (tag: string) => {
-    dispatch({ type: searchUserActions.SEARCH_TAG_ONLY, payload: [tag] });
-    router.push("/search_user");
-  };
+  // const onUserTagClicked = (tag: string) => {
+  //   dispatch({ type: searchUserActions.SEARCH_TAG_ONLY, payload: [tag] });
+  //   router.push("/search_user");
+  // };
 
   return (
     <Grid item xs={12} className={classNames(styles.boxRecommend)}>
       <Box className={styles.boxRecommendMember}>
-        <Box>
-          <div onClick={handleClickToProfile} className="status-summary">
-            <ButtonComponent
-              mode={HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.mode}
-              size="small"
-              style={{ borderRadius: "4px", width: "130px" }}
-            >
-              {HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.label}
-            </ButtonComponent>
-            <span className="label-login-status">
-              {data?.activity_status !== USER_ONLINE_STATUS
-                ? replaceLabelByTranslate(
-                    t("home:box-member-recommend.last-login"),
-                    dayjs(data?.last_login_at).fromNow(),
-                  )
-                : t("home:box-member-recommend.no-login")}
-            </span>
-          </div>
+        <Link href={`/profile/${data.id}`}>
+          <Box sx={{ cursor: "pointer" }}>
+            {/* <div className="status-summary">
+              <ButtonComponent
+                mode={HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.mode}
+                size="small"
+                style={{ borderRadius: "4px", width: "130px" }}
+              >
+                {HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS[handleMapChatStatus(data?.status)]?.label}
+              </ButtonComponent>
+              <span className="label-login-status">
+                {data?.activity_status !== USER_ONLINE_STATUS
+                  ? replaceLabelByTranslate(
+                      t("home:box-member-recommend.last-login"),
+                      dayjs(data?.last_login_at).fromNow(),
+                    )
+                  : t("home:box-member-recommend.no-login")}
+              </span>
+            </div> */}
 
-          <div onClick={handleClickToProfile} className="info-summary">
-            <Avatar sx={{ width: "56px", height: "56px", mr: "13px" }}>
-              <Image
-                loader={() =>
-                  data?.profile_image ??
-                  "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
-                }
-                width={56}
-                height={56}
-                src={
-                  data?.profile_image ??
-                  "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
-                }
-                alt={data?.username}
-                objectFit="contain"
-              />
-            </Avatar>
-            <div className="member-info">
-              <div className="name">{data?.username}</div>
-              <div className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? "情報なし"}</div>
-              <div className="review">
-                {t("home:box-member-recommend.review")}: {data?.review_count ?? 0}
+            <div className="info-summary">
+              <Avatar
+                sx={{
+                  width: "56px",
+                  height: "56px",
+                  mr: "13px",
+                  borderRadius: "74px",
+                  objectFit: "cover",
+                  border: " 1px solid rgba(156, 172, 194, 0.3)",
+                }}
+              >
+                <Image
+                  loader={() =>
+                    data?.profile_image ??
+                    "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
+                  }
+                  width={56}
+                  height={56}
+                  src={
+                    data?.profile_image ??
+                    "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
+                  }
+                  alt={data?.username}
+                  objectFit="contain"
+                />
+              </Avatar>
+              <div className="member-info">
+                <div className="name">{data?.username}</div>
+                <div className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? "情報なし"}</div>
+                <div className="review">
+                  {t("home:box-member-recommend.review")}: {data?.review_count ?? 0}
+                </div>
+              </div>
+              <div className="favorite-btn">
+                <img
+                  className="ic_like"
+                  alt="ic-like"
+                  src={
+                    liked ? "/assets/images/home_page/ic_heart_blue.svg" : "/assets/images/home_page/ic_heart_empty.svg"
+                  }
+                />
+                {likeCount}
               </div>
             </div>
-          </div>
+            {/* </div> */}
 
-          <div onClick={handleClickToProfile} className="introduce">
-            {data?.hitokoto ?? "情報なし"}
-          </div>
+            {/* <div className="introduce">{data?.hitokoto ?? "情報なし"}</div> */}
 
-          <div className="tags">
-            <UserTag tags={data.tags} onClick={onUserTagClicked} />
-          </div>
+            <div className="label-description">
+              <img alt="" src="/assets/images/home_page/chatIcon.png" />
+              {t("home:box-member-recommend.label-talking")}
+            </div>
 
-          <div className="label-description">
-            <img alt="" src="/assets/images/home_page/ic_chat.svg" />
-            {t("home:box-member-recommend.label-description")}
-          </div>
+            <div className="description">
+              {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
+            </div>
 
-          <div className="description">
-            {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
-          </div>
-        </Box>
-        <div className="div-review" onClick={handleClickFavoriteButton}>
+            <div className="tags">
+              <ul>
+                {data?.tags?.map((tag, index) => (
+                  <li key={index}>{tag}</li>
+                ))}
+              </ul>
+            </div>
+          </Box>
+        </Link>
+        {/* <div className="div-review" onClick={handleClickFavoriteButton}>
           <img
             alt="ic-like"
             src={liked ? "/assets/images/home_page/ic_heart.svg" : "/assets/images/home_page/ic_heart_empty.svg"}
           />
           <span>{t("home:box-member-recommend.like-string")}</span>
-        </div>
+        </div>  */}
 
         <ButtonComponent
           className="button-matching"

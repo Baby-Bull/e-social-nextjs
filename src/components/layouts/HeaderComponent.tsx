@@ -470,17 +470,17 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
               </a>
             </Link>
             <Box sx={{ display: { xs: "none", lg: statusAuthPage ? "none" : "block" } }}>
-              <Link href="/search_user" prefetch={false}>
-                <a style={{ textDecoration: "none" }}>
-                  <StyledButtonList startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" />}>
-                    {t("header.list-engineers")}
-                  </StyledButtonList>
-                </a>
-              </Link>
               <Link href="/search_community" prefetch={false}>
                 <a style={{ textDecoration: "none" }}>
                   <StyledButtonList startIcon={<img alt="" src="/assets/images/svg/users.svg" />}>
                     {t("header.list-community")}
+                  </StyledButtonList>
+                </a>
+              </Link>
+              <Link href="/search_user" prefetch={false}>
+                <a style={{ textDecoration: "none" }}>
+                  <StyledButtonList startIcon={<img alt="" src="/assets/images/svg/ic_computer.svg" />}>
+                    {t("header.list-engineers")}
                   </StyledButtonList>
                 </a>
               </Link>

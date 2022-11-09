@@ -31,6 +31,7 @@
         "no-login": "ログイン中",
         "review": "レビュー",
         "label-description": "話せること/聞きたいこと",
+        "label-talking": "話せること",
         "like-string": "話したい人リストに登録"
     },
     "modal-matching": {
