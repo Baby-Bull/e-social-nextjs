@@ -40,6 +40,7 @@ interface IRecommendDataItem {
   status: string;
   chatStatus: number;
   is_favorite: boolean;
+  is_favorite_count: number;
   match_status: string;
   activity_status?: string;
 }
@@ -100,6 +101,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
   const { t } = useTranslation();
   const router = useRouter();
   const [liked, setLiked] = useState(data?.is_favorite);
+  const [likeCount] = useState(data?.is_favorite_count ?? 0);
   // const dispatch = useDispatch();
   // const auth = useSelector((state: IStoreState) => state.user);
 
@@ -199,7 +201,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
                     liked ? "/assets/images/home_page/ic_heart_blue.svg" : "/assets/images/home_page/ic_heart_empty.svg"
                   }
                 />
-                {12}
+                {likeCount}
               </div>
             </div>
             {/* </div> */}

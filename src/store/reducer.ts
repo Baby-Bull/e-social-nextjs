@@ -106,6 +106,14 @@ const reducer = (state, action: any) => {
           items_count: action?.payload?.items_count || 0,
         },
       };
+    case actionTypes.UPDATE_NOTIFICATION_UNREAD_COUNT:
+      return {
+        ...state,
+        notifications: {
+          ...state?.notifications,
+          unread_count: action.payload.count || 0,
+        },
+      };
     case actionTypes.ADD_NOTIFICATION:
       return {
         ...state,
@@ -182,9 +190,9 @@ const reducer = (state, action: any) => {
           itemsPersonal: state.listrooms.itemsPersonal.map((chatroom) =>
             chatroom.id === action.payload.chatRoomId
               ? {
-                  ...chatroom,
-                  unread_message_count: action.payload.count,
-                }
+                ...chatroom,
+                unread_message_count: action.payload.count,
+              }
               : chatroom,
           ),
         },
@@ -198,9 +206,9 @@ const reducer = (state, action: any) => {
           itemsCommunity: state.listrooms.itemsCommunity.map((chatroom) =>
             chatroom.id === action.payload.chatRoomId
               ? {
-                  ...chatroom,
-                  unread_message_count: action.payload.count,
-                }
+                ...chatroom,
+                unread_message_count: action.payload.count,
+              }
               : chatroom,
           ),
         },
