@@ -115,8 +115,8 @@ export default function MainInfomationComponent() {
             <Grid item xs={9}>
               <ul className={styles.matchingListTitle}>
                 {dataInfoMatching?.map((item, index) => (
-                  <Link href={item.link} shallow>
-                    <li key={index}>
+                  <Link href={item.link} shallow key={index}>
+                    <li>
                       <img src={item.icon} alt="icon" />
                       <span>{item.title}</span>
                     </li>
