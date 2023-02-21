@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useLayoutEffect } from "react";
 import {
   Box,
   Grid,
@@ -408,7 +408,7 @@ const ChatBoxRightComponent = ({
     }
   }, [newMessageOfRoom]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const listMessagesFormat = formatListMessages(listMessages);
     setListMessagesShow(listMessagesFormat);
   }, [listMessages]);
@@ -562,7 +562,11 @@ const ChatBoxRightComponent = ({
     >
       <Box className="box-title">
         <Typography className="username">
-          {isMobile ? <NameOfChatSP name={user?.username} handleClick={toggleRenderSide} /> : user?.username}
+          {isMobile ? (
+            <NameOfChatSP name={user?.username ?? ""} handleClick={toggleRenderSide} />
+          ) : (
+            user?.username ?? ""
+          )}
         </Typography>
         <div className="btn-report-review">
           <ButtonComponent

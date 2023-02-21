@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useLayoutEffect } from "react";
 import {
   Box,
   Grid,
@@ -341,7 +341,7 @@ const ChatBoxRightComponent = ({
     }
   }, [newMessageOfRoom]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const listMessagesFormat = formatListMessages(listMessages);
     setListMessagesShow(listMessagesFormat);
   }, [listMessages]);
@@ -482,11 +482,15 @@ const ChatBoxRightComponent = ({
         <Typography className="username">
           {isMobile ? (
             <NameOfChatSP
-              name={`${roomSelect?.community?.name}(${roomSelect?.community?.member_count})`}
+              name={`${roomSelect?.community?.name ?? ""}${
+                roomSelect?.community?.member_count ? `(${roomSelect?.community?.member_count})` : ""
+              }`}
               handleClick={toggleRenderSide}
             />
           ) : (
-            `${roomSelect?.community?.name}(${roomSelect?.community?.member_count})`
+            `${roomSelect?.community?.name ?? ""}${
+              roomSelect?.community?.member_count ? `(${roomSelect?.community?.member_count})` : ""
+            }`
           )}
         </Typography>
       </Box>
