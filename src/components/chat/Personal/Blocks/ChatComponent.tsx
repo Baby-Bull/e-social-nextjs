@@ -140,32 +140,35 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   //   const listRoomSort = sortListRoomChat(listRoomResQuery?.items || []);
   //   setListRooms(listRoomSort);
   // }, [listRoomResQuery]);
+
   useLayoutEffect(() => {
     const checkChatroomExistFn = async () => {
       if (viewPort.width) {
         let selectedRoom = roomSelect;
         let tempUserResult, tempChatroomId;
-        if (userId) {
-          tempUserResult = await getOrtherUserProfile(userId);
-          tempChatroomId = await getMessages(userId, "", 1)
-        }
-        if (tempUserResult) {
-          selectedRoom = {
-            user: {
-              id: tempUserResult?.id,
-              username: tempUserResult?.username,
-              profile_image: tempUserResult?.profile_image,
-            },
-            id: tempChatroomId?.chat_room_id
-          }
-        } else {
+        const checkInListChatroom = listRoomsChatTemp.findIndex((item: any) => item?.user?.id === userId);
+        if (checkInListChatroom > -1) {
           selectedRoom = listRoomsChatTemp.find(
             (item: any) => item?.user?.id === userId
           );
+        } else {
+          if (userId) {
+            tempUserResult = await getOrtherUserProfile(userId);
+            tempChatroomId = await getMessages(userId, "", 1)
+
+            if (tempUserResult) {
+              selectedRoom = {
+                user: {
+                  id: tempUserResult?.id,
+                  username: tempUserResult?.username,
+                  profile_image: tempUserResult?.profile_image,
+                },
+                id: tempChatroomId?.chat_room_id
+              }
+            }
+          }
         }
-        // if (roomSelect?.user?.id !== userId) {
-        //   selectedRoom = listRoomsChatTemp.find((item: any) => item.id === userId || item?.user?.id === userId);
-        // }
+
         if (selectedRoom) {
           if (isMobile) setIsRenderRightSide(true);
           setRoomSelect(selectedRoom);

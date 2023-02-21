@@ -153,27 +153,27 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
       if (viewPort.width) {
         let selectedRoom = roomSelect;
         let tempCommunityResult;
-        if (communityId) tempCommunityResult = await getCommunity(communityId);
-        if (tempCommunityResult) {
-          selectedRoom = {
-            community: {
-              id: tempCommunityResult?.id,
-              member_count: tempCommunityResult?.member_count,
-              name: tempCommunityResult?.name,
-              profile_image: tempCommunityResult?.profile_image,
-            },
-            id: tempCommunityResult?.id
-          }
+
+        const checkInListChatroom = listRoomsChatTemp.findIndex((room) => room.id === communityId);
+        if (checkInListChatroom > -1) {
+          selectedRoom = listRoomsChatTemp.find((room) => room.id === communityId);
         } else {
-          selectedRoom = listRoomsChatTemp.find(
-            (item: any) => item?.community?.id === communityId,
-          );
+          if (communityId) {
+            tempCommunityResult = await getCommunity(communityId);
+            if (tempCommunityResult) {
+              selectedRoom = {
+                community: {
+                  id: tempCommunityResult?.id,
+                  member_count: tempCommunityResult?.member_count,
+                  name: tempCommunityResult?.name,
+                  profile_image: tempCommunityResult?.profile_image,
+                },
+                id: tempCommunityResult?.id
+              }
+            }
+          }
         }
-        // if (roomSelect?.id !== communityId) {
-        //   selectedRoom = listRoomsChatTemp.find(
-        //     (item: any) => item.id === communityId || item?.community?.id === communityId,
-        //   );
-        // }
+
         if (selectedRoom) {
           if (isMobile) setIsRenderRightSide(true);
           setRoomSelect(selectedRoom);
