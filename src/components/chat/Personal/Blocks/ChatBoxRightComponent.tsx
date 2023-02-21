@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import React, { useEffect, useState, useRef, useCallback, useLayoutEffect } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   Box,
   Grid,
@@ -408,7 +408,7 @@ const ChatBoxRightComponent = ({
     }
   }, [newMessageOfRoom]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const listMessagesFormat = formatListMessages(listMessages);
     setListMessagesShow(listMessagesFormat);
   }, [listMessages]);

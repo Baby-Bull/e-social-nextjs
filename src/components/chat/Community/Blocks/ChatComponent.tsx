@@ -166,7 +166,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
           }
         } else {
           selectedRoom = listRoomsChatTemp.find(
-            (item: any) => item.id === communityId || item?.community?.id === communityId,
+            (item: any) => item?.community?.id === communityId,
           );
         }
         // if (roomSelect?.id !== communityId) {

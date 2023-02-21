@@ -10,7 +10,7 @@ import unionBy from "lodash/unionBy";
 
 import styles from "src/components/chat/chat.module.scss";
 import useViewport from "src/helpers/useViewport";
-import { getListChatRooms } from "src/services/chat";
+import { getListChatRooms, getMessages } from "src/services/chat";
 import { REACT_QUERY_KEYS } from "src/constants/constants";
 import { sortListRoomChat } from "src/helpers/helper";
 import ChatBoxLeftComponent from "src/components/chat/Personal/Blocks/ChatBoxLeftComponent";
@@ -71,7 +71,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   const updateLastMessageOfListRooms = useCallback(
     async (message: any) => {
       let tempList = [...listRoomsChatTemp];
-      const chatroomIndex = tempList.findIndex((room) => room.user.id === message.chat_room_id);
+      const chatroomIndex = tempList.findIndex((room) => room.id === message.chat_room_id);
       if (chatroomIndex > -1) {
         // chatroom exists
         tempList[chatroomIndex] = {
@@ -144,8 +144,11 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
     const checkChatroomExistFn = async () => {
       if (viewPort.width) {
         let selectedRoom = roomSelect;
-        let tempUserResult;
-        if (userId) { tempUserResult = await getOrtherUserProfile(userId); }
+        let tempUserResult, tempChatroomId;
+        if (userId) {
+          tempUserResult = await getOrtherUserProfile(userId);
+          tempChatroomId = await getMessages(userId, "", 1)
+        }
         if (tempUserResult) {
           selectedRoom = {
             user: {
@@ -153,7 +156,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
               username: tempUserResult?.username,
               profile_image: tempUserResult?.profile_image,
             },
-            id: tempUserResult?.id
+            id: tempChatroomId?.chat_room_id
           }
         } else {
           selectedRoom = listRoomsChatTemp.find(
@@ -163,10 +166,6 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
         // if (roomSelect?.user?.id !== userId) {
         //   selectedRoom = listRoomsChatTemp.find((item: any) => item.id === userId || item?.user?.id === userId);
         // }
-
-        console.log(roomSelect);
-
-
         if (selectedRoom) {
           if (isMobile) setIsRenderRightSide(true);
           setRoomSelect(selectedRoom);
