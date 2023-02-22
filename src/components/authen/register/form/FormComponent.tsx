@@ -143,7 +143,7 @@ const FormRegisterComponents = () => {
       errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.invalid_date;
     } else if (
       userInfo?.birthday?.length !== 0 &&
-      userInfo?.birthday?.dob_value >= new Date().toISOString().slice(0, 10)
+      new Date(userInfo?.birthday?.dob_value).getTime() > new Date().getTime()
     ) {
       isValidForm = false;
       errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.future_input;
