@@ -482,11 +482,15 @@ const ChatBoxRightComponent = ({
         <Typography className="username">
           {isMobile ? (
             <NameOfChatSP
-              name={`${roomSelect?.community?.name}(${roomSelect?.community?.member_count})`}
+              name={`${roomSelect?.community?.name ?? ""}${
+                roomSelect?.community?.member_count ? `(${roomSelect?.community?.member_count})` : ""
+              }`}
               handleClick={toggleRenderSide}
             />
           ) : (
-            `${roomSelect?.community?.name}(${roomSelect?.community?.member_count})`
+            `${roomSelect?.community?.name ?? ""}${
+              roomSelect?.community?.member_count ? `(${roomSelect?.community?.member_count})` : ""
+            }`
           )}
         </Typography>
       </Box>

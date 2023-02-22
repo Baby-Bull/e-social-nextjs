@@ -21,6 +21,7 @@ import actionTypes from "src/store/actionTypes";
 import ChatBoxRightComponent from "./ChatBoxRightComponent";
 import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
 import { readMessageCommunity } from "src/services/user";
+import { getCommunity } from "src/services/community";
 
 const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   const router = useRouter();
@@ -68,7 +69,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
       let tempList = [...listRoomsChatTemp];
       const chatroomIndex = tempList.findIndex((room) => room.id === message.chat_room_id);
       if (chatroomIndex > -1) {
-        // chatroom exists
+        // chatroom exists -- only chatrooms that loaded from store (20 chatrooms)
         tempList[chatroomIndex] = {
           ...tempList[chatroomIndex],
           last_chat_message_at: message.created_at,
@@ -148,23 +149,44 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   // }, [listRoomResQuery]);
 
   useLayoutEffect(() => {
-    if (viewPort.width) {
-      let selectedRoom = roomSelect;
+    const checkCommuExistFn = async () => {
+      if (viewPort.width) {
+        let selectedRoom = roomSelect;
+        let tempCommunityResult;
 
-      if (roomSelect?.id !== communityId) {
-        selectedRoom = listRoomsChatTemp.find(
-          (item: any) => item.id === communityId || item?.community?.id === communityId,
-        );
-      }
-      if (selectedRoom) {
-        if (isMobile) setIsRenderRightSide(true);
-        setRoomSelect(selectedRoom);
-        setCommunityId(selectedRoom?.id);
-      } else if (!isMobile) {
-        setRoomSelect(listRoomsChatTemp[0] || {});
-        setCommunityId(listRoomsChatTemp[0]?.community?.id);
+        const checkInListChatroom = listRoomsChatTemp.findIndex((room) => room.id === communityId);
+        if (checkInListChatroom > -1) {
+          selectedRoom = listRoomsChatTemp.find((room) => room.id === communityId);
+        } else {
+          if (communityId) {
+            tempCommunityResult = await getCommunity(communityId);
+            if (tempCommunityResult) {
+              selectedRoom = {
+                community: {
+                  id: tempCommunityResult?.id,
+                  member_count: tempCommunityResult?.member_count,
+                  name: tempCommunityResult?.name,
+                  profile_image: tempCommunityResult?.profile_image,
+                },
+                id: tempCommunityResult?.id
+              }
+            }
+          }
+        }
+
+        if (selectedRoom) {
+          if (isMobile) setIsRenderRightSide(true);
+          setRoomSelect(selectedRoom);
+          setCommunityId(selectedRoom?.id);
+        }
+        // else if (!isMobile) {
+        else {
+          setRoomSelect(listRoomsChatTemp[0] || {});
+          setCommunityId(listRoomsChatTemp[0]?.community?.id);
+        }
       }
     }
+    checkCommuExistFn();
   }, [listRoomsChatTemp, viewPort, communityId]);
 
   useEffect(() => {
@@ -191,6 +213,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
       };
       websocket.emit("community.chatRoom.message", payload);
       updateLastMessageOfListRooms({
+        community: roomSelect?.community,
         content: message,
         chat_room_id: roomSelect?.id,
         content_type: type,

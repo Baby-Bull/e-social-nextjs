@@ -562,7 +562,11 @@ const ChatBoxRightComponent = ({
     >
       <Box className="box-title">
         <Typography className="username">
-          {isMobile ? <NameOfChatSP name={user?.username} handleClick={toggleRenderSide} /> : user?.username}
+          {isMobile ? (
+            <NameOfChatSP name={user?.username ?? ""} handleClick={toggleRenderSide} />
+          ) : (
+            user?.username ?? ""
+          )}
         </Typography>
         <div className="btn-report-review">
           <ButtonComponent

@@ -29,7 +29,7 @@ export const getListChatRooms = async (
   }
 };
 
-export const getMessages = async (userId: string, cursor: string = "", limit: number = LIMIT_MESSAGES_PER_PAGE) => {
+export const getMessages = async (userId: string | string[], cursor: string = "", limit: number = LIMIT_MESSAGES_PER_PAGE) => {
   try {
     const res = await api.get(`/user/${userId}/messages?limit=${limit}&cursor=${cursor}`);
     return res.data;

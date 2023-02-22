@@ -10,7 +10,7 @@ import unionBy from "lodash/unionBy";
 
 import styles from "src/components/chat/chat.module.scss";
 import useViewport from "src/helpers/useViewport";
-import { getListChatRooms } from "src/services/chat";
+import { getListChatRooms, getMessages } from "src/services/chat";
 import { REACT_QUERY_KEYS } from "src/constants/constants";
 import { sortListRoomChat } from "src/helpers/helper";
 import ChatBoxLeftComponent from "src/components/chat/Personal/Blocks/ChatBoxLeftComponent";
@@ -20,7 +20,7 @@ import actionTypes from "src/store/actionTypes";
 
 import ChatBoxRightComponent from "./ChatBoxRightComponent";
 import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
-import { readMessagePersonal } from "src/services/user";
+import { getOrtherUserProfile, readMessagePersonal } from "src/services/user";
 
 const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   const router = useRouter();
@@ -111,7 +111,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   );
 
   useEffect(() => {
-    const wsHandler = (message) => {
+    const wsHandler = (message: any) => {
       if (roomSelect?.id === message.chat_room_id) {
         setNewMessageOfRoom(message);
       }
@@ -140,23 +140,50 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   //   const listRoomSort = sortListRoomChat(listRoomResQuery?.items || []);
   //   setListRooms(listRoomSort);
   // }, [listRoomResQuery]);
+
   useLayoutEffect(() => {
-    if (viewPort.width) {
-      let selectedRoom = roomSelect;
-      if (roomSelect?.user?.id !== userId) {
-        selectedRoom = listRoomsChatTemp.find((item: any) => item.id === userId || item?.user?.id === userId);
-      }
-      if (selectedRoom) {
-        if (isMobile) setIsRenderRightSide(true);
-        setRoomSelect(selectedRoom);
-        setUserId(selectedRoom?.user?.id);
-        setUser(selectedRoom?.user);
-      } else if (!isMobile) {
-        setRoomSelect(listRoomsChatTemp[0] || {});
-        setUserId(listRoomsChatTemp[0]?.user?.id);
-        setUser(listRoomsChatTemp[0]?.user);
+    const checkChatroomExistFn = async () => {
+      if (viewPort.width) {
+        let selectedRoom = roomSelect;
+        let tempUserResult, tempChatroomId;
+        const checkInListChatroom = listRoomsChatTemp.findIndex((item: any) => item?.user?.id === userId);
+        if (checkInListChatroom > -1) {
+          selectedRoom = listRoomsChatTemp.find(
+            (item: any) => item?.user?.id === userId
+          );
+        } else {
+          if (userId) {
+            tempUserResult = await getOrtherUserProfile(userId);
+            tempChatroomId = await getMessages(userId, "", 1)
+
+            if (tempUserResult) {
+              selectedRoom = {
+                user: {
+                  id: tempUserResult?.id,
+                  username: tempUserResult?.username,
+                  profile_image: tempUserResult?.profile_image,
+                },
+                id: tempChatroomId?.chat_room_id
+              }
+            }
+          }
+        }
+
+        if (selectedRoom) {
+          if (isMobile) setIsRenderRightSide(true);
+          setRoomSelect(selectedRoom);
+          setUserId(selectedRoom?.user?.id);
+          setUser(selectedRoom?.user);
+        }
+        //else if (!isMobile) {
+        else {
+          setRoomSelect(listRoomsChatTemp[0] || {});
+          setUserId(listRoomsChatTemp[0]?.user?.id);
+          setUser(listRoomsChatTemp[0]?.user);
+        }
       }
     }
+    checkChatroomExistFn();
   }, [listRoomsChatTemp, viewPort, userId]);
 
   useEffect(() => {
@@ -183,6 +210,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
       };
       websocket.emit("chatRoom.message", payload);
       updateLastMessageOfListRooms({
+        user: roomSelect?.user,
         content: message,
         chat_room_id: roomSelect?.id,
         content_type: type,
