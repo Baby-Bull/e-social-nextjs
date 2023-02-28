@@ -380,7 +380,7 @@ const SearchUserComponent: FC<Props> = ({
                     onClick={() => sort !== "login_at" && handleSort("login_at")}
                     className={sort === "login_at" ? "sort-link" : "sort-link active"}
                   >
-                    {t("user-search:last-login-order")}
+                    {t("user-search:last-register-order")}
                   </Box>
                   <Divider orientation="vertical" flexItem />
                 </Grid>
@@ -398,7 +398,7 @@ const SearchUserComponent: FC<Props> = ({
                     onClick={() => sort !== "login_at" && handleSort("login_at")}
                     className={sort === "login_at" ? "sort-link" : "sort-link active"}
                   >
-                    {t("user-search:last-login-order")}
+                    {t("user-search:last-register-order")}
                   </Link>
                 </Grid>
               )}
