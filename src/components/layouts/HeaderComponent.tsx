@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import React, { useEffect, useState, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -25,11 +26,12 @@ import websocket from "src/helpers/socket";
 import "react-toastify/dist/ReactToastify.css";
 import { IStoreState } from "src/constants/interface";
 import { CONTENT_OF_NOTIFICATIONS, TYPE_OF_NOTIFICATIONS } from "src/constants/constants";
-import { readAllNotifications } from "src/services/user";
+import { getUserStatics, readAllNotifications } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
 import { logout } from "src/services/auth";
 import { customizeContentNotificationBrowser, notify } from "src/utils/utils";
 import { ChatMessage } from "src/types/models/ChatMessage";
+import { getItem, setItem, TRIGGER_REFRESH } from "src/helpers/storage";
 
 interface IHeaderComponentProps {
   authPage?: boolean;
@@ -144,6 +146,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
   const auth = useSelector((state: IStoreState) => state.user);
   const notifications = useSelector((state: IStoreState) => state.notifications);
   const listRoomsChatUnread = useSelector((state: IStoreState) => state.listrooms.unread_count);
+  const triggerRefresh = getItem(TRIGGER_REFRESH);
 
   // block function Messages ***********************************************************
   const [statusChatMenu, setStatusChatMenu] = useState(false);
@@ -155,6 +158,28 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
     setMenuChatAnchorEl(null);
     setStatusChatMenu(false);
   }, []);
+
+  React.useEffect(() => {
+    async () => {
+      if (triggerRefresh === "true") {
+        setItem(TRIGGER_REFRESH, "false");
+        const stats = await getUserStatics();
+        dispatch({
+          type: actionTypes.UPDATE_PROFILE,
+          payload: stats,
+        });
+        dispatch({
+          type: actionTypes.UPDATE_UNREAD_LISTROOMS_COUNT,
+          payload: { count: stats.chat_room_with_unread_messages },
+        });
+        dispatch({
+          type: actionTypes.UPDATE_NOTIFICATION_UNREAD_COUNT,
+          payload: { count: stats.notification_unread_count },
+        });
+      }
+    };
+  }, []);
+
   const handleOpenMenuChat = (event: any) => {
     if (isMobile) {
       router.push("/chat/personal");
