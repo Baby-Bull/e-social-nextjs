@@ -698,7 +698,7 @@ const ProfileSkillComponent = () => {
       isValidForm = false;
       errorMessages.username = VALIDATE_FORM_UPDATE_PROFILE.username.required;
     }
-    if (!REGEX_RULES.text_input.test(profileSocialRequest?.username)) {
+    if (!REGEX_RULES.username_register.test(profileSocialRequest?.username)) {
       isValidForm = false;
       errorMessages.username = VALIDATE_FORM_UPDATE_PROFILE.format;
     }
