@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Backdrop, Box, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useSelector } from "react-redux";
@@ -13,7 +13,6 @@ import {
   getUserReviews,
   getUserRecommended,
   getUserProfile,
-  addUserFavorite,
 } from "src/services/user";
 import BoxItemUserComponent from "src/components/profile/BoxItemUserComponent";
 import BoxNoDataComponent from "src/components/profile/BoxNoDataComponent";
@@ -36,7 +35,22 @@ const ProfileHaveDataComponent = () => {
   const NumberOfReviewsPerPage = isMobile ? 5 : 10;
   const NumberOfCommunitiesPerPage = isMobile ? 2 : 8;
   const triggerTwitterShareBtn = Boolean(router.query.shareTwitter);
-
+  const review_ref = useRef(null);
+  const community_ref = useRef(null);
+  const handleClickToScroll = (keyString: string) => {
+    switch (keyString) {
+      case "review": {
+        review_ref.current?.scrollIntoView({ behavior: 'smooth' });
+        break;
+      }
+      case "community": {
+        community_ref.current?.scrollIntoView({ behavior: 'smooth' });
+        break;
+      }
+      default:
+        break;
+    }
+  }
   const auth = useSelector((state: IStoreState) => state.user);
 
   const [profileSkill, setProfileSkill] = useState([]);
@@ -128,7 +142,12 @@ const ProfileHaveDataComponent = () => {
           p: { xs: "60px 20px 0 20px", lg: "140px 120px 120px 120px" },
         }}
       >
-        <TopProfileComponent user={profileSkill} myProfile triggerShareTwitterBtn={triggerTwitterShareBtn} />
+        <TopProfileComponent
+          user={profileSkill}
+          myProfile
+          triggerShareTwitterBtn={triggerTwitterShareBtn}
+          handleClickToScroll={handleClickToScroll}
+        />
         <ProfileSkillComponent data={profileSkill} />
         <Box
           sx={{
@@ -137,7 +156,9 @@ const ProfileHaveDataComponent = () => {
             color: "#1A2944",
             fontSize: { xs: "16px", lg: "24px" },
             fontWeight: 700,
+            scrollMarginTop: "3em"
           }}
+          ref={community_ref}
         >
           {t("profile:title-participating-community")} ({countAllCommunities ?? 0})
           {countAllCommunities > 0 ? (
@@ -159,7 +180,9 @@ const ProfileHaveDataComponent = () => {
             color: "#1A2944",
             fontSize: { xs: "16px", lg: "24px" },
             fontWeight: 700,
+            scrollMarginTop: "3em"
           }}
+          ref={review_ref}
         >
           {t("profile:title-review")}（{countReviews}）
           {countReviews > NumberOfReviewsPerPage && (

@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { IStoreState } from "src/constants/interface";
 import { useSelector, useDispatch } from "react-redux";
-import { REACT_QUERY_KEYS } from "src/constants/constants";
+import { CONSTANT_COMMUNITY_ID, REACT_QUERY_KEYS } from "src/constants/constants";
 import actionTypes from "src/store/actionTypes";
 import { getUserStatics } from "src/services/user";
 import Link from "next/link";
@@ -136,30 +136,38 @@ export default function MainInfomationComponent() {
         <Grid className={styles.missionInfomation} item xs={6}>
           <Box className={styles.infoTitle}>ミッションクリアしてみよう！</Box>
           <ul className={styles.missionList}>
-            <li>
-              <span className={hasFinishedMission1 ? styles.doneMissionText : undefined}>
-                Mission 1 プロフィールを充実させて、色んな人に知ってもらおう
-              </span>
-              {hasFinishedMission1 && <div className={styles.doneMission}>OK</div>}
-            </li>
-            <li>
-              <span className={hasFinishedMission2 ? styles.doneMissionText : undefined}>
-                Mission 2 気になるコミュニティに参加して、友達を増やそう
-              </span>
-              {hasFinishedMission2 && <div className={styles.doneMission}>OK</div>}
-            </li>
-            <li>
-              <span className={hasFinishedMission3 ? styles.doneMissionText : undefined}>
-                Mission 3 コミュニティチャットで自己紹介をしてみよう
-              </span>
-              {hasFinishedMission3 && <div className={styles.doneMission}>OK</div>}
-            </li>
-            <li>
-              <span className={hasFinishedMission4 ? styles.doneMissionText : undefined}>
-                Mission 4 コミュニティで話題を投稿して、メンバーと交流してみよう
-              </span>
-              {hasFinishedMission4 && <div className={styles.doneMission}>OK</div>}
-            </li>
+            <Link href={"/my-profile/edit"} shallow >
+              <li >
+                <span className={hasFinishedMission1 ? styles.doneMissionText : undefined}>
+                  Mission 1 プロフィールを充実させて、色んな人に知ってもらおう
+                </span>
+                {hasFinishedMission1 && <div className={styles.doneMission}>OK</div>}
+              </li>
+            </Link>
+            <Link href={"/search_community"} shallow >
+              <li >
+                <span className={hasFinishedMission2 ? styles.doneMissionText : undefined}>
+                  Mission 2 気になるコミュニティに参加して、友達を増やそう
+                </span>
+                {hasFinishedMission2 && <div className={styles.doneMission}>OK</div>}
+              </li>
+            </Link>
+            <Link href={"/matching?type=community"} shallow >
+              <li >
+                <span className={hasFinishedMission3 ? styles.doneMissionText : undefined}>
+                  Mission 3 コミュニティチャットで自己紹介をしてみよう
+                </span>
+                {hasFinishedMission3 && <div className={styles.doneMission}>OK</div>}
+              </li>
+            </Link>
+            <Link href={`/community/${CONSTANT_COMMUNITY_ID}/post/create`} shallow >
+              <li >
+                <span className={hasFinishedMission4 ? styles.doneMissionText : undefined}>
+                  Mission 4 コミュニティで話題を投稿して、メンバーと交流してみよう
+                </span>
+                {hasFinishedMission4 && <div className={styles.doneMission}>OK</div>}
+              </li>
+            </Link>
           </ul>
         </Grid>
       </Grid>

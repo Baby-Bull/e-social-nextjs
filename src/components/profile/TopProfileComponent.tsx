@@ -30,6 +30,8 @@ interface TopProfileComponentProps {
   user: any;
   myProfile: boolean;
   triggerShareTwitterBtn?: boolean;
+  // eslint-disable-next-line no-unused-vars
+  handleClickToScroll: (keyString: string) => void;
 }
 
 const PopupChartProfileComponent = dynamic(() => import("src/components/profile/PopupChartProfileComponent"));
@@ -48,12 +50,14 @@ const BoxInfoProfile = styled(Box)`
   color: ${theme.navy};
   font-size: 16px;
   margin-right: 20px;
+  cursor: pointer;
 `;
 
 const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
   user,
   myProfile,
   triggerShareTwitterBtn = false,
+  handleClickToScroll,
 }) => {
   const { t } = useTranslation();
   const twitterShareBtnRef = useRef(null);
@@ -466,7 +470,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                       mt: "30px",
                     }}
                   >
-                    <BoxInfoProfile>
+                    <BoxInfoProfile onClick={() => handleClickToScroll("review")}>
                       <Box>{t("profile:review")}</Box>
                       <Box
                         sx={{
@@ -485,26 +489,28 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                         <Box>件</Box>
                       </Box>
                     </BoxInfoProfile>
-                    <BoxInfoProfile>
-                      <Box>{t("profile:cumulativ-matching")}</Box>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
+                    <Link href="/matching?type=matched" shallow>
+                      <BoxInfoProfile onClick={() => handleClickToScroll("community")}>
+                        <Box>{t("profile:cumulativ-matching")}</Box>
                         <Box
                           sx={{
-                            fontSize: "32px",
-                            fontWeight: 700,
+                            display: "flex",
+                            alignItems: "center",
                           }}
                         >
-                          {user?.match_count ?? 0}
-                        </Box>{" "}
-                        <Box>人</Box>
-                      </Box>
-                    </BoxInfoProfile>
-                    <BoxInfoProfile>
+                          <Box
+                            sx={{
+                              fontSize: "32px",
+                              fontWeight: 700,
+                            }}
+                          >
+                            {user?.match_count ?? 0}
+                          </Box>{" "}
+                          <Box>人</Box>
+                        </Box>
+                      </BoxInfoProfile>
+                    </Link>
+                    <BoxInfoProfile onClick={() => handleClickToScroll("community")}>
                       <Box>
                         {t("profile:participating-community1")}
                         <br />
@@ -655,6 +661,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                     mt: "12px",
                     textAlign: "center",
                   }}
+                  onClick={() => handleClickToScroll("review")}
                 >
                   <Box
                     sx={{
@@ -676,41 +683,44 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                     {user?.review_count ?? 0}
                   </Box>
                 </Box>
-                <Box
-                  sx={{
-                    width: "34%",
-                    borderLeft: "1px solid rgba(196, 196, 196, 0.4)",
-                    borderRight: "1px solid rgba(196, 196, 196, 0.4)",
-                    mt: "12px",
-                    textAlign: "center",
-                  }}
-                >
+                <Link href="/matching?type=matched" shallow>
                   <Box
                     sx={{
-                      color: "#1A2944",
-                      lineheight: "12px",
-                      fontSize: "8px",
+                      width: "34%",
+                      borderLeft: "1px solid rgba(196, 196, 196, 0.4)",
+                      borderRight: "1px solid rgba(196, 196, 196, 0.4)",
+                      mt: "12px",
+                      textAlign: "center",
                     }}
                   >
-                    {t("profile:cumulativ-matching")}
+                    <Box
+                      sx={{
+                        color: "#1A2944",
+                        lineheight: "12px",
+                        fontSize: "8px",
+                      }}
+                    >
+                      {t("profile:cumulativ-matching")}
+                    </Box>
+                    <Box
+                      sx={{
+                        color: "#1A2944",
+                        lineheight: "29px",
+                        fontSize: "20px",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {user?.match_count ?? 0}
+                    </Box>
                   </Box>
-                  <Box
-                    sx={{
-                      color: "#1A2944",
-                      lineheight: "29px",
-                      fontSize: "20px",
-                      fontWeight: 500,
-                    }}
-                  >
-                    {user?.match_count ?? 0}
-                  </Box>
-                </Box>
+                </Link>
                 <Box
                   sx={{
                     width: "33%",
                     mt: "12px",
                     textAlign: "center",
                   }}
+                  onClick={() => handleClickToScroll("community")}
                 >
                   <Box
                     sx={{
