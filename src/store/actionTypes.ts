@@ -40,4 +40,10 @@ export const searchUserActions = {
   APPEND_TAG: "SEARCH_USER_APPEND_TAG",
 };
 
+export const searchCommunityActions = {
+  UPDATE_SCROLL_POSITION: "UPDATE_SCROLL_POSITION",
+  UPDATE_FORM: "CLEAR_FORM",
+  CLEAR_FORM: "CLEAR_FORM"
+}
+
 export default actionTypes;

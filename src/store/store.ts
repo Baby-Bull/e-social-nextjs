@@ -7,6 +7,7 @@ import { SearchUserFormStatus } from "src/constants/constants";
 
 import actionTypes from "./actionTypes";
 import reducer from "./reducer";
+import rootReducer, { RootState } from "./reducers/combineReducers";
 
 interface IStoreState {
   user: any;
@@ -83,7 +84,7 @@ const persistConfig = {
   storage,
   whitelist: ["user", "is_profile_edited", "listrooms"], // place to select which state you want to persist
 };
-const persistedReducer = persistReducer(persistConfig, reducer);
+const persistedReducer = persistReducer<RootState>(persistConfig, rootReducer);
 
 function makeStore(initialState = exampleInitialState) {
   return createStore(persistedReducer, initialState, applyMiddleware());

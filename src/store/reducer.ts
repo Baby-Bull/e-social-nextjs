@@ -94,6 +94,10 @@ const reducer = (state, action: any) => {
           community_count: (state?.user?.community_count || 0) - 1,
         },
       };
+
+
+
+
     case actionTypes.UPDATE_NOTIFICATIONS:
       return {
         ...state,
@@ -148,6 +152,12 @@ const reducer = (state, action: any) => {
           askPermissionNotification: false,
         },
       };
+
+
+
+
+
+
     case actionTypes.UPDATE_LIST_ROOMS:
       return {
         ...state,
