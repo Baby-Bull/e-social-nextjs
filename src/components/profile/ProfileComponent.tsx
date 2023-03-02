@@ -30,9 +30,10 @@ import { acceptMatchingRequestReceived, sendMatchingRequest } from "../../servic
 import PaginationCustomComponent from "../common/PaginationCustomComponent";
 interface Props {
   userId: string;
+  isAuth: boolean;
 }
 
-const ProfileHaveDataComponent: FC<Props> = ({ userId }) => {
+const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
   const { t } = useTranslation();
   const viewPort = useViewport();
   const router = useRouter();
@@ -60,7 +61,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId }) => {
   const fetchUserReviews = async () => {
     const data = await getUserReviews(userId, NumberOfReviewsPerPage, cursorReviews);
     setCursorReviews(data?.cursor);
-    setCountAllReviews(data.items_count);
+    setCountAllReviews(data?.items_count ?? 0);
     setAllReviewsRef([...allReviewsRef, ...data?.items]);
     return data;
   };
@@ -100,7 +101,6 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId }) => {
 
   const handleSendMatchingRequest = async (matchingRequest) => {
     const res = await sendMatchingRequest(userId, matchingRequest);
-    await addUserFavorite(userId);
     setModalMatching(false);
     setIsDisableBtn(true);
     setProfileSkill({
@@ -141,7 +141,9 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId }) => {
     fetchProfileSkill();
     fetchUserReviews();
     fetchCommunities();
-    fetchRecommended();
+    if (isAuth) {
+      fetchRecommended();
+    }
   }, [userId]);
 
   const dataElements = useMemo(() => {

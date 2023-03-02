@@ -30,6 +30,7 @@ import { formatChatDate, formatListMessages } from "src/helpers/helper";
 import { MESSAGE_CONTENT_TYPES, REACT_QUERY_KEYS } from "src/constants/constants";
 import { IStoreState } from "src/constants/interface";
 import "react-image-lightbox/style.css";
+import useWindowSize from "src/customHooks/UseWindowSize";
 
 interface IBoxChatProps {
   avatar?: string;
@@ -281,6 +282,8 @@ const ChatBoxRightComponent = ({
     cursor: null,
     hasMore: false,
   });
+
+  const [, windowHeight] = useWindowSize();
   const auth = useSelector((state: IStoreState) => state.user);
 
   const { data: listMessageResQuery } = useQuery(
@@ -479,11 +482,15 @@ const ChatBoxRightComponent = ({
         <Typography className="username">
           {isMobile ? (
             <NameOfChatSP
-              name={`${roomSelect?.community?.name}(${roomSelect?.community?.member_count})`}
+              name={`${roomSelect?.community?.name ?? ""}${
+                roomSelect?.community?.member_count ? `(${roomSelect?.community?.member_count})` : ""
+              }`}
               handleClick={toggleRenderSide}
             />
           ) : (
-            `${roomSelect?.community?.name}(${roomSelect?.community?.member_count})`
+            `${roomSelect?.community?.name ?? ""}${
+              roomSelect?.community?.member_count ? `(${roomSelect?.community?.member_count})` : ""
+            }`
           )}
         </Typography>
       </Box>
@@ -493,6 +500,7 @@ const ChatBoxRightComponent = ({
           id="box-message"
           ref={boxMessageRef}
           style={{
+            height: isMobile ? `${windowHeight - 54 - 61}px` : `${windowHeight - 54 - 61 - 60}px`,
             display: listMessages?.length === 0 ? "flex" : "block",
             justifyContent: listMessages?.length === 0 ? "center" : "initial",
             alignItems: listMessages?.length === 0 ? "center" : "initial",

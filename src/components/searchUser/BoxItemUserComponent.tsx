@@ -1,7 +1,7 @@
 import { Box, Grid, Avatar } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/ja";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -51,10 +51,15 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [showModalMatching, setModalMatching] = React.useState(false);
-  const [statusMatching, setStatusMatching] = React.useState(false);
+  const [statusMatching, setStatusMatching] = React.useState(data?.match_status);
   const [liked, setLiked] = useState(data?.is_favorite);
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
+
+  useEffect(() => {
+    setStatusMatching(data?.match_status);
+    setLiked(data?.is_favorite);
+  }, [data?.match_status, data?.is_favorite]);
 
   const handleShowModalMatching = async (matchStatus) => {
     if (!matchStatus) {
@@ -71,10 +76,9 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
 
   const handleSendMatchingRequest = async (matchingRequest) => {
     const res = await sendMatchingRequest(data?.id, matchingRequest);
-    await addUserFavorite(data?.id);
     setLiked(true);
     setModalMatching(false);
-    setStatusMatching(true);
+    setStatusMatching("sent_pending");
     // callbackHandleIsRefresh(!isRefresh);
     return res;
   };
@@ -181,13 +185,9 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
 
               <ButtonComponent
                 fullWidth
-                onClick={() => handleShowModalMatching(data?.match_status)}
-                mode={
-                  HOMEPAGE_RECOMMEND_MEMBER_STATUS[
-                    handleMapMatchingStatus(statusMatching ? "sent_pending" : data?.match_status)
-                  ]?.mode
-                }
-                disabled={data?.match_status === "sent_pending" || statusMatching}
+                onClick={() => handleShowModalMatching(statusMatching)}
+                mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(statusMatching)]?.mode}
+                disabled={statusMatching === "sent_pending"}
                 sx={{
                   "&:disabled": {
                     background: "gray",
@@ -195,11 +195,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
                   },
                 }}
               >
-                {
-                  HOMEPAGE_RECOMMEND_MEMBER_STATUS[
-                    handleMapMatchingStatus(statusMatching ? "sent_pending" : data?.match_status)
-                  ]?.label
-                }
+                {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(statusMatching)]?.label}
               </ButtonComponent>
             </React.Fragment>
           )}

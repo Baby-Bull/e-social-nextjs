@@ -13,7 +13,7 @@ import ButtonDropDownComponent from "src/components/community/post/detail/blocks
 // eslint-disable-next-line import/order
 import { IStoreState } from "src/constants/interface";
 import { deleteCommunityPost } from "src/services/community";
-import { ShowTextArea } from "src/components/common/ShowTextAreaComponent";
+import TextEditor from "lib/TextEditor/TextEditor";
 
 dayjs.extend(localizedFormat);
 dayjs.locale("ja");
@@ -229,9 +229,7 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
         }}
       />
 
-      <Box mt="20px">
-        <ShowTextArea value={data?.content} />
-      </Box>
+      <Box mt="20px">{data?.content !== undefined && <TextEditor value={data?.content} readOnly />}</Box>
     </Box>
   );
 };

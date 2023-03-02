@@ -1,5 +1,7 @@
 export const REGEX_RULES = {
-  username_register: /^[一-龯ぁ-んァ-ンa-zA-Z0-9\w ]+$/,
+  username_register:
+    // eslint-disable-next-line max-len
+    /^([\u3000-\u3000]|[\u3040-\u309F]|[\u30A0-\u30FF]|[\u4E00-\u9FAF]|[\uFF10-\uFF19]|[\uFF41-\uFF5A]|[\uFF21-\uFF3A]|[a-zA-Z0-9_ ])+$/u,
   only_japanese: /^[一-龯ぁ-んァ-ン]+$/,
   email: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
   username_profile: /^[一-龯ぁ-んァ-ンa-zA-Z0-9\w ]+$/,
@@ -44,7 +46,7 @@ export const VALIDATE_FORM_MATCHING_REQUEST = {
   },
   message: {
     max_length: "文字数の制限を超えています。1000文字以内で入力してください",
-    required:"メッセージを入力してください",
+    required: "メッセージを入力してください",
   },
   desired_match_date: {
     invalid_date: "日付値が無効です",

@@ -43,7 +43,7 @@ export const getListCommunityHome = async (limit: number = 10, cursor: string = 
   }
 };
 
-export const getCommunity = async (communityId) => {
+export const getCommunity = async (communityId: any) => {
   try {
     const res = await api.get(`/community/${communityId}`);
     return res.data;

@@ -12,7 +12,7 @@ const FormComponent = dynamic(() => import("src/components/authen/register/form/
 const Form: NextPageWithLayout = () => <FormComponent />;
 
 Form.getLayout = ({ children }) => (
-  <ContentComponent authPage showHeader={false}>
+  <ContentComponent authPage registerPage showHeader={false}>
     {children}
   </ContentComponent>
 );

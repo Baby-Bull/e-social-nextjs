@@ -23,7 +23,6 @@ declare module "@mui/material/styles" {
       white: string;
     };
   }
-  
 
   interface ThemeOptions {
     lightBlue?: string;
@@ -101,8 +100,10 @@ const theme = createTheme({
   black: "#262A30",
   gd: "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)",
   filter: {
+    // eslint-disable-next-line max-len
     blue: "brightness(0) saturate(100%) invert(68%) sepia(84%) saturate(4101%) hue-rotate(150deg) brightness(100%) contrast(98%)",
     white:
+      // eslint-disable-next-line max-len
       "brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(299deg) brightness(101%) contrast(100%)",
   },
 });
@@ -113,11 +114,11 @@ export const themeSelect = createTheme({
       styleOverrides: {
         root: {
           "&": {
-            borderRadius: "16px"
+            borderRadius: "16px",
           },
         },
-      }
-    }
+      },
+    },
   },
 });
 

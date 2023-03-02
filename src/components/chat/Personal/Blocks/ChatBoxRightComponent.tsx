@@ -32,6 +32,7 @@ import { getMessages, uploadFile } from "src/services/chat";
 import { formatChatDate, formatListMessages } from "src/helpers/helper";
 import { MESSAGE_CONTENT_TYPES, MATCHING_PURPOSE_OPTIONS, REACT_QUERY_KEYS } from "src/constants/constants";
 import "react-image-lightbox/style.css";
+import useWindowSize from "src/customHooks/UseWindowSize";
 
 interface IBoxChatProps {
   allInfoMessage: any;
@@ -351,6 +352,8 @@ const ChatBoxRightComponent = ({
     hasMore: false,
   });
 
+  const [, windowHeight] = useWindowSize();
+
   const { data: listMessageResQuery } = useQuery(
     [REACT_QUERY_KEYS.PERSONAL_CHAT.LIST_MESSAGES, userId],
     async () => {
@@ -378,9 +381,10 @@ const ChatBoxRightComponent = ({
       hasMore: listMessageResQuery?.hasMore,
     });
     // inputChatRef.current.focus();
-    setTimeout(() => {
+    const timeoutRef = setTimeout(() => {
       scrollEl(boxMessageRef.current);
-    }, 0);
+    }, 300);
+    return () => clearTimeout(timeoutRef);
   }, [listMessageResQuery]);
 
   const fetchData = async () => {
@@ -397,9 +401,10 @@ const ChatBoxRightComponent = ({
   useEffect(() => {
     if (newMessageOfRoom && newMessageOfRoom?.chat_room_id === roomSelect.id) {
       setListMessages([...listMessages, newMessageOfRoom]);
-      setTimeout(() => {
+      const timeoutRef = setTimeout(() => {
         scrollEl(boxMessageRef.current);
       }, 300);
+      return () => clearTimeout(timeoutRef);
     }
   }, [newMessageOfRoom]);
 
@@ -557,12 +562,22 @@ const ChatBoxRightComponent = ({
     >
       <Box className="box-title">
         <Typography className="username">
-          {isMobile ? <NameOfChatSP name={user?.username} handleClick={toggleRenderSide} /> : user?.username}
+          {isMobile ? (
+            <NameOfChatSP name={user?.username ?? ""} handleClick={toggleRenderSide} />
+          ) : (
+            user?.username ?? ""
+          )}
         </Typography>
-        <ButtonComponent mode="info" size="medium" className="btn-chat" onClick={handleShow}>
-          {t("chat:btn-report")}
-        </ButtonComponent>
-        <div className="btn-review">
+        <div className="btn-report-review">
+          <ButtonComponent
+            mode="info"
+            size="medium"
+            className="btn-chat"
+            sx={{ marginRight: "1em" }}
+            onClick={handleShow}
+          >
+            {t("chat:btn-report")}
+          </ButtonComponent>
           <ButtonComponent mode="orange" size="medium" className="btn-chat" onClick={handleShowReview}>
             {isMobile ? t("chat:btn-review-sp") : t("chat:btn-review")}
           </ButtonComponent>
@@ -574,6 +589,7 @@ const ChatBoxRightComponent = ({
           className={styles.boxData}
           ref={boxMessageRef}
           style={{
+            height: isMobile ? `${windowHeight - 54 - 61}px` : `${windowHeight - 54 - 61 - 60}px`,
             display: listMessages?.length === 0 ? "flex" : "block",
             justifyContent: listMessages?.length === 0 ? "center" : "initial",
             alignItems: listMessages?.length === 0 ? "center" : "initial",

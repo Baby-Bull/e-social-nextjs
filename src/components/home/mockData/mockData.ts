@@ -1,18 +1,3 @@
-export const bannersMockData = [
-  {
-    src: "/assets/images/home_page/home_1.svg",
-  },
-  {
-    src: "/assets/images/home_page/home_2.svg",
-  },
-  {
-    src: "/assets/images/home_page/home_3.svg",
-  },
-  {
-    src: "/assets/images/home_page/home_4.svg",
-  },
-];
-
 export const notificationMockData = {
   title: "お知らせ",
   data: [

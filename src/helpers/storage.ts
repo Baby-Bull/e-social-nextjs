@@ -5,6 +5,7 @@ export const USER_TOKEN = "USER_TOKEN";
 export const REFRESH_TOKEN = "REFRESH_TOKEN";
 export const EXPIRES_IN = "EXPIRES_IN";
 export const IS_PROFILE_EDITED = "IS_PROFILE_EDITED";
+export const TRIGGER_REFRESH = "TRIGGER_REFRESH";
 
 export const setItem = (key: string, value: any) => {
   setCookie(null, key, value, {
@@ -25,6 +26,7 @@ export const setToken = (value: string, expiresIn?: number) => {
 };
 
 export const setRefreshToken = (value: string) => {
+  setItem(TRIGGER_REFRESH, "true");
   setItem(REFRESH_TOKEN, value);
 };
 

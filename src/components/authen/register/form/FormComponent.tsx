@@ -17,13 +17,10 @@ import {
   Chip,
   Backdrop,
   CircularProgress,
-  AppBar,
-  Toolbar,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import Link from "next/link";
 
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
@@ -32,6 +29,7 @@ import { updateProfile } from "src/services/user";
 import { REGEX_RULES, VALIDATE_MESSAGE_FORM_REGISTER } from "src/messages/validate";
 import { USER_STATUS_OPTIONS } from "src/components/constants/constants";
 import { JAPAN_PROVINCE_OPTIONS } from "src/constants/constants";
+import RegisterPageHeaderComponent from "src/components/layouts/RegisterPageHeaderComponent";
 
 import { Field } from "./Field";
 
@@ -145,7 +143,7 @@ const FormRegisterComponents = () => {
       errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.invalid_date;
     } else if (
       userInfo?.birthday?.length !== 0 &&
-      userInfo?.birthday?.dob_value >= new Date().toISOString().slice(0, 10)
+      new Date(userInfo?.birthday?.dob_value).getTime() > new Date().getTime()
     ) {
       isValidForm = false;
       errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.future_input;
@@ -212,42 +210,7 @@ const FormRegisterComponents = () => {
           </Backdrop>
         )}
 
-        <Box sx={{ flexGrow: 1 }}>
-          <AppBar
-            position="fixed"
-            sx={{
-              background: "#fff",
-              boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-              p: { xs: 0, lg: "0 16px" },
-            }}
-          >
-            <Toolbar
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: { xs: "100%", xl: "1440px" },
-                margin: "auto",
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Link href="/">
-                  <a>
-                    <Box
-                      component="img"
-                      sx={{
-                        width: { xs: "70px", lg: "141px" },
-                        height: { xs: "20px", lg: "42px" },
-                      }}
-                      alt="avatar"
-                      src="/assets/images/logo/logo.png"
-                    />
-                  </a>
-                </Link>
-              </Box>
-            </Toolbar>
-          </AppBar>
-        </Box>
-
+        <RegisterPageHeaderComponent />
         <Box sx={{ marginTop: "55px" }}>
           <Grid container>
             <GridLeftComponent smAndUp />

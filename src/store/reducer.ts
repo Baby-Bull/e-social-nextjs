@@ -1,5 +1,4 @@
 import { SearchUserFormStatus } from "src/constants/constants";
-import { fetchToken } from "src/helpers/api";
 
 import actionTypes, { searchUserActions } from "./actionTypes";
 
@@ -26,7 +25,10 @@ const reducer = (state, action: any) => {
     case actionTypes.UPDATE_PROFILE:
       return {
         ...state,
-        user: { ...action.payload },
+        user: {
+          ...state.user,
+          ...action.payload,
+        },
       };
     case actionTypes.ADD_FAVORITE:
       return {
@@ -102,6 +104,14 @@ const reducer = (state, action: any) => {
           cursor: action?.payload?.cursor ?? "",
           unread_count: action?.payload?.unread_count || 0,
           items_count: action?.payload?.items_count || 0,
+        },
+      };
+    case actionTypes.UPDATE_NOTIFICATION_UNREAD_COUNT:
+      return {
+        ...state,
+        notifications: {
+          ...state?.notifications,
+          unread_count: action.payload.count || 0,
         },
       };
     case actionTypes.ADD_NOTIFICATION:
@@ -318,10 +328,6 @@ const reducer = (state, action: any) => {
         },
       };
     }
-
-    case actionTypes.REFRESH_TOKEN:
-      fetchToken();
-      return state;
     default:
       return state;
   }
