@@ -19,6 +19,7 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DesktopDatePicker from "@mui/lab/DatePicker";
 import { styled } from "@mui/material/styles";
 import { ja } from "date-fns/locale";
+import dayjs from "dayjs";
 
 import theme from "src/theme";
 import { VALIDATE_MESSAGE_FORM_REGISTER } from "src/messages/validate";
@@ -146,12 +147,12 @@ export const Field: React.SFC<IFieldProps> = ({
       tempValue?.getFullYear() < 1900
     ) {
       onChangeValue("birthday", {
-        dob_value: tempValue?.toLocaleDateString("en-CA"),
+        dob_value: "",
         error_invalid: true,
       });
     } else {
       onChangeValue("birthday", {
-        dob_value: tempValue?.toLocaleDateString("en-CA"),
+        dob_value: dayjs(tempValue).format("YYYY-MM-DD"),
         error_invalid: false,
       });
     }
