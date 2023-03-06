@@ -134,11 +134,7 @@ const ParticipationComponent: React.SFC<IParticipationComponentProps> = ({ isPub
             handleCallbackChangePagination={handleCallbackChangePaginationParticipates}
             page={page}
             perPage={perPage}
-            totalPage={
-              Math.floor(countParticipates / LIMIT) < countParticipates / LIMIT
-                ? Math.floor(countParticipates / LIMIT) + 1
-                : Math.floor(countParticipates / LIMIT)
-            }
+            totalPage={Math.ceil(countParticipates / LIMIT)}
           />
         )}
       </Box>

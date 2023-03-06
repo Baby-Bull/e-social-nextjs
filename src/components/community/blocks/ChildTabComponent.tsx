@@ -213,11 +213,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ maxWidth, dataC
                           handleCallbackChangePagination={handleCallbackChangePagination}
                           page={pagePost}
                           perPage={perPagePost}
-                          totalPage={
-                            Math.floor(totalCommunityPost / LIMIT) < totalCommunityPost / LIMIT
-                              ? Math.floor(totalCommunityPost / LIMIT) + 1
-                              : Math.floor(totalCommunityPost / LIMIT)
-                          }
+                          totalPage={Math.ceil(totalCommunityPost / LIMIT)}
                         />
                       </Stack>
                     </Box>

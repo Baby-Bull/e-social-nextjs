@@ -116,11 +116,7 @@ const ListCommentComponent: React.SFC<IListCommentProps> = ({
                     handleCallbackChangePagination={handleCallbackChangePagination}
                     page={page}
                     perPage={perPage}
-                    totalPage={
-                      Math.floor(totalComment / LIMIT) < totalComment / LIMIT
-                        ? Math.floor(totalComment / LIMIT) + 1
-                        : Math.floor(totalComment / LIMIT)
-                    }
+                    totalPage={Math.ceil(totalComment / LIMIT)}
                   />
                 )}
               </Box>
