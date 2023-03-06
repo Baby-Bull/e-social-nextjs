@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useTranslation } from "next-i18next";
 import { IStoreState } from "src/constants/interface";
 import { useSelector, useDispatch } from "react-redux";
-import { CONSTANT_COMMUNITY_ID, REACT_QUERY_KEYS } from "src/constants/constants";
+import { REACT_QUERY_KEYS } from "src/constants/constants";
 import actionTypes from "src/store/actionTypes";
 import { getUserStatics } from "src/services/user";
 import Link from "next/link";
@@ -17,10 +17,12 @@ export default function MainInfomationComponent() {
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
   const isProfileEdited = useSelector((state: any) => state.is_profile_edited);
+  const [generalCommunityId, setGeneralCommunityId] = React.useState("")
   useQuery(
     [`${REACT_QUERY_KEYS.HOMEPAGE_GET_USER_STATS}`],
     async () => {
       const stats = await getUserStatics();
+      setGeneralCommunityId(stats?.default_community_id);
       dispatch({
         type: actionTypes.UPDATE_PROFILE,
         payload: stats,
@@ -160,7 +162,7 @@ export default function MainInfomationComponent() {
                 {hasFinishedMission3 && <div className={styles.doneMission}>OK</div>}
               </li>
             </Link>
-            <Link href={`/community/${CONSTANT_COMMUNITY_ID}/post/create`} shallow >
+            <Link href={`/community/${generalCommunityId}/post/create`} shallow >
               <li >
                 <span className={hasFinishedMission4 ? styles.doneMissionText : undefined}>
                   Mission 4 コミュニティで話題を投稿して、メンバーと交流してみよう

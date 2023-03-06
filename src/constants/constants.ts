@@ -434,5 +434,3 @@ export enum SearchUserFormStatus {
   // eslint-disable-next-line no-unused-vars
   Cached = "cached",
 }
-
-export const CONSTANT_COMMUNITY_ID = "63e613e6ae03c10008a37621"
