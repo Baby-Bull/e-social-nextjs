@@ -18,7 +18,7 @@ export const VALIDATE_MESSAGE_FORM_REGISTER = {
   birthday: {
     required: "生年月日を入力してください",
     future_input: "今日より前の日付を入力してください（今日は選択できません）",
-    invalid_date: "無効な日付 (dd/MM/yyyy)",
+    invalid_date: "無効な日付 (yyyy/MM/dd)",
   },
   status: {
     required: "ステータスを選択してください",
