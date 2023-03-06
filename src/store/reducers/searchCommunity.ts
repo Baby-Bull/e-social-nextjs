@@ -1,10 +1,33 @@
 import { SearchFormStatus } from "src/constants/constants";
-import { searchCommunityActions } from "../actionTypes";
+import actionTypes, { searchCommunityActions } from "../actionTypes";
 
 const initState = {}
 export default function (state: any = initState, action: any) {
     const { type } = action;
     switch (type) {
+
+        case actionTypes.LOGOUT: {
+            return {
+                formStatus: SearchFormStatus.Init,
+                scrollPosition: 0,
+                form: {
+                    login_count: 0,
+                    member_count: 0,
+                    lastLogin: 0,
+                    exclude_joined_communities: false,
+                    tags: [],
+                },
+                result: {
+                    sort: "recommended",
+                    limit: 12,
+                    cursor: "",
+                    hasMore: false,
+                    items: [],
+                },
+
+            };
+        }
+        
         case searchCommunityActions.UPDATE_SCROLL_POSITION: {
             return {
                 ...state,
