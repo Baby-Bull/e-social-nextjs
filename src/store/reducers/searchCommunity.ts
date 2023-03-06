@@ -1,18 +1,18 @@
 import { SearchFormStatus } from "src/constants/constants";
-import { searchUserActions } from "../actionTypes";
+import { searchCommunityActions } from "../actionTypes";
 
-const initState = {};
+const initState = {}
 export default function (state: any = initState, action: any) {
     const { type } = action;
     switch (type) {
-        case searchUserActions.UPDATE_SCROLL_POSITION: {
+        case searchCommunityActions.UPDATE_SCROLL_POSITION: {
             return {
                 ...state,
-                scrollPosition: action.payload.scrollPosition,
+                scrollPosition: action?.payload.scrollPosition,
             };
         }
 
-        case searchUserActions.UPDATE_RESULT: {
+        case searchCommunityActions.UPDATE_RESULT: {
             return {
                 ...state,
                 formStatus: SearchFormStatus.Cached,
@@ -23,7 +23,7 @@ export default function (state: any = initState, action: any) {
             };
         }
 
-        case searchUserActions.UPDATE_FORM: {
+        case searchCommunityActions.UPDATE_FORM: {
             return {
                 ...state,
                 form: {
@@ -33,24 +33,21 @@ export default function (state: any = initState, action: any) {
             };
         }
 
-        case searchUserActions.SEARCH_TAG_ONLY: {
+        case searchCommunityActions.SEARCH_TAG_ONLY: {
             return {
                 ...state,
                 formStatus: SearchFormStatus.Init,
                 form: {
-                    job: 0,
-                    employeeStatus: 0,
+                    login_count: 0,
+                    member_count: 0,
                     lastLogin: 0,
-                    review: 0,
-                    statusCanTalk: false,
-                    statusLookingForFriend: false,
-                    statusNeedConsult: false,
+                    exclude_joined_communities: false,
                     tags: [...(action.payload || [])],
                 },
             };
         }
 
-        case searchUserActions.APPEND_TAG: {
+        case searchCommunityActions.APPEND_TAG: {
             return {
                 ...state,
                 formStatus: SearchFormStatus.Init,
@@ -61,23 +58,21 @@ export default function (state: any = initState, action: any) {
             };
         }
 
-        case searchUserActions.CLEAR_FORM: {
+        case searchCommunityActions.CLEAR_FORM: {
             return {
                 ...state,
                 formStatus: SearchFormStatus.Init,
                 form: {
-                    job: 0,
-                    employeeStatus: 0,
+                    login_count: 0,
+                    member_count: 0,
                     lastLogin: 0,
-                    review: 0,
-                    statusCanTalk: false,
-                    statusLookingForFriend: false,
-                    statusNeedConsult: false,
+                    exclude_joined_communities: false,
                     tags: [],
                 },
             };
         }
+
         default:
-            return state;;
+            return state;
     }
 }
