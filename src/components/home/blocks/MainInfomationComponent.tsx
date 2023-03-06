@@ -17,9 +17,6 @@ export default function MainInfomationComponent() {
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
   const isProfileEdited = useSelector((state: any) => state.is_profile_edited);
-  const stateTemp = useSelector((state: IStoreState) => state);
-  console.log(stateTemp);
-
 
   useQuery(
     [`${REACT_QUERY_KEYS.HOMEPAGE_GET_USER_STATS}`],
