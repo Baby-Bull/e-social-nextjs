@@ -21,6 +21,7 @@ import {
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import dayjs from "dayjs";
 
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
@@ -143,7 +144,7 @@ const FormRegisterComponents = () => {
       errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.invalid_date;
     } else if (
       userInfo?.birthday?.length !== 0 &&
-      new Date(userInfo?.birthday?.dob_value).getTime() > new Date().getTime()
+      dayjs(userInfo?.birthday?.dob_value).isAfter(dayjs().subtract(1, "day"))
     ) {
       isValidForm = false;
       errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.future_input;
