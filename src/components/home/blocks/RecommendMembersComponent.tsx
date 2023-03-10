@@ -182,39 +182,38 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
 
           <div className="info-summary">
             <Link href={`/profile/${data.id}`}>
-              <Avatar
-                sx={{
-                  width: "56px",
-                  height: "56px",
-                  mr: "13px",
-                  borderRadius: "74px",
-                  objectFit: "cover",
-                  border: " 1px solid rgba(156, 172, 194, 0.3)",
-                }}
-              >
-                <Image
-                  loader={() =>
-                    data?.profile_image ??
-                    "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
-                  }
-                  width={56}
-                  height={56}
-                  src={
-                    data?.profile_image ??
-                    "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
-                  }
-                  alt={data?.username}
-                  objectFit="contain"
-                />
-              </Avatar>
-            </Link>
-
-            <Link href={`/profile/${data.id}`}>
-              <div className="member-info">
-                <div className="name">{data?.username}</div>
-                <div className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? "情報なし"}</div>
-                <div className="review">
-                  {t("home:box-member-recommend.review")}: {data?.review_count ?? 0}
+              <div style={{ width: "100%" }}>
+                <Avatar
+                  sx={{
+                    width: "56px",
+                    height: "56px",
+                    mr: "13px",
+                    borderRadius: "74px",
+                    objectFit: "cover",
+                    border: " 1px solid rgba(156, 172, 194, 0.3)",
+                  }}
+                >
+                  <Image
+                    loader={() =>
+                      data?.profile_image ??
+                      "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
+                    }
+                    width={56}
+                    height={56}
+                    src={
+                      data?.profile_image ??
+                      "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
+                    }
+                    alt={data?.username}
+                    objectFit="contain"
+                  />
+                </Avatar>
+                <div className="member-info">
+                  <div className="name">{data?.username}</div>
+                  <div className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? "情報なし"}</div>
+                  <div className="review">
+                    {t("home:box-member-recommend.review")}: {data?.review_count ?? 0}
+                  </div>
                 </div>
               </div>
             </Link>
@@ -241,18 +240,29 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
 
           {/* <div className="introduce">{data?.hitokoto ?? "情報なし"}</div> */}
 
-          <div className="label-description">
-            <img alt="" src="/assets/images/home_page/chatIcon.png" />
-            {t("home:box-member-recommend.label-talking")}
-          </div>
+          <Link href={`/profile/${data.id}`}>
+            <div>
+              <div className="label-description">
+                <img alt="" src="/assets/images/home_page/chatIcon.png" />
+                {t("home:box-member-recommend.label-talking")}
+              </div>
 
-          <div className="description">
-            {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
-          </div>
-
-          <div className="tags">
-            <UserTag tags={data.tags} onClick={onUserTagClicked} />
-          </div>
+              <div className="description">
+                {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
+              </div>
+            </div>
+          </Link>
+          {data.tags.length ? (
+            <div className="tags">
+              <UserTag tags={data.tags} onClick={onUserTagClicked} />
+            </div>
+          ) : (
+            <Link href={`/profile/${data.id}`}>
+              <div className="tags">
+                <UserTag tags={data.tags} onClick={onUserTagClicked} />
+              </div>
+            </Link>
+          )}
         </Box>
         {/* <div className="div-review" onClick={handleClickFavoriteButton}>
           <img

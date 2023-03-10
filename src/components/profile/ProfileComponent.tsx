@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { Backdrop, Box, CircularProgress } from "@mui/material";
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, useEffect, useMemo, useRef, useState, useLayoutEffect } from "react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
@@ -34,6 +34,8 @@ interface Props {
 }
 
 const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
+  const [userIdPathname, setUserIdPathname] = useState<string | string[]>(userId)
+
   const { t } = useTranslation();
   const viewPort = useViewport();
   const router = useRouter();
@@ -42,6 +44,22 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
   const LIMIT = 20;
   const NumberOfReviewsPerPage = isMobile ? 5 : 10;
   const NumberOfCommunitiesPerPage = isMobile ? 2 : 8;
+  const review_ref = useRef(null);
+  const community_ref = useRef(null);
+  const handleClickToScroll = (keyString: string) => {
+    switch (keyString) {
+      case "review": {
+        review_ref.current?.scrollIntoView({ behavior: 'smooth' });
+        break;
+      }
+      case "community": {
+        community_ref.current?.scrollIntoView({ behavior: 'smooth' });
+        break;
+      }
+      default:
+        break;
+    }
+  }
 
   const [isDisableBtn, setIsDisableBtn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +77,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
   const [countCurrentPages, setCountCurrentPages] = useState(2);
   const [countAllReviews, setCountAllReviews] = useState(0);
   const fetchUserReviews = async () => {
-    const data = await getUserReviews(userId, NumberOfReviewsPerPage, cursorReviews);
+    const data = await getUserReviews(userIdPathname, NumberOfReviewsPerPage, cursorReviews);
     setCursorReviews(data?.cursor);
     setCountAllReviews(data?.items_count ?? 0);
     setAllReviewsRef([...allReviewsRef, ...data?.items]);
@@ -75,7 +93,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
 
   const fetchProfileSkill = async () => {
     setIsLoading(true);
-    const data = await getOrtherUserProfile(userId);
+    const data = await getOrtherUserProfile(userIdPathname);
     setProfileSkill(data);
     setIsLoading(false);
     return data;
@@ -83,7 +101,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
 
   const fetchCommunities = async () => {
     setIsLoading(true);
-    const data = await getUserCommunites(userId);
+    const data = await getUserCommunites(userIdPathname);
     setCommunities(data?.items);
     setCommunityCursor(data.cursor);
     setCountAllCommunities(data.items_count);
@@ -100,7 +118,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
   };
 
   const handleSendMatchingRequest = async (matchingRequest) => {
-    const res = await sendMatchingRequest(userId, matchingRequest);
+    const res = await sendMatchingRequest(userIdPathname, matchingRequest);
     setModalMatching(false);
     setIsDisableBtn(true);
     setProfileSkill({
@@ -132,19 +150,20 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
   };
 
   useEffect(() => {
+    setUserIdPathname(router.query?.userId)
     if (router.query?.userId === auth?.id) {
       router.push("/my-profile");
     }
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     fetchProfileSkill();
     fetchUserReviews();
     fetchCommunities();
     if (isAuth) {
       fetchRecommended();
     }
-  }, [userId]);
+  }, [userIdPathname]);
 
   const dataElements = useMemo(() => {
     return recommended?.map((item) => <BoxItemUserComponent data={item} key={item.id} />);
@@ -163,7 +182,11 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
           p: { xs: "0 20px", lg: "140px 120px 120px 120px" },
         }}
       >
-        <TopProfileComponent user={profileSkill} myProfile={false} />
+        <TopProfileComponent
+          user={profileSkill}
+          myProfile={false}
+          handleClickToScroll={handleClickToScroll}
+        />
         <ProfileSkillComponent data={profileSkill} />
         <Box
           sx={{
@@ -172,7 +195,9 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
             color: "#1A2944",
             fontSize: { xs: "16px", lg: "24px" },
             fontWeight: 700,
+            scrollMarginTop: "3em"
           }}
+          ref={community_ref}
         >
           {t("profile:title-participating-community")} ({countAllCommunities ?? 0})
           {countAllCommunities > 0 ? (
@@ -194,7 +219,9 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
             color: "#1A2944",
             fontSize: { xs: "16px", lg: "24px" },
             fontWeight: 700,
+            scrollMarginTop: "3em"
           }}
+          ref={review_ref}
         >
           {t("profile:title-review")}（{countAllReviews}）
           {countAllReviews > NumberOfReviewsPerPage && (
