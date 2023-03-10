@@ -225,11 +225,7 @@ const MemberComponent: React.SFC<IMemberComponentProps> = ({ isAdmin }) => {
                 handleCallbackChangePagination={handleCallbackChangePaginationBlock}
                 page={pageBlock}
                 perPage={perPageBlock}
-                totalPage={
-                  Math.floor(countItemsBlock / LIMIT) < countItemsBlock / LIMIT
-                    ? Math.floor(countItemsBlock / LIMIT) + 1
-                    : Math.floor(countItemsBlock / LIMIT)
-                }
+                totalPage={Math.ceil(countItemsBlock / LIMIT)}
               />
             )}
           </Box>

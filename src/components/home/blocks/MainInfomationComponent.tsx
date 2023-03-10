@@ -71,7 +71,7 @@ export default function MainInfomationComponent() {
     {
       title: t("home:matching.request"),
       icon: "/assets/images/home_page/ic_user.svg",
-      number: auth?.match_application_count ?? 0,
+      number: auth?.match_application_pending_count ?? 0,
       link: "/matching?type=received",
     },
     {

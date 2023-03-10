@@ -64,11 +64,7 @@ const MemberComponent = () => {
             handleCallbackChangePagination={handleCallbackChangePaginationMember}
             page={page}
             perPage={perPage}
-            totalPage={
-              Math.floor(countCommunity / LIMIT) < countCommunity / LIMIT
-                ? Math.floor(countCommunity / LIMIT) + 1
-                : Math.floor(countCommunity / LIMIT)
-            }
+            totalPage={Math.ceil(countCommunity / LIMIT)}
           />
         )}
       </Box>
