@@ -161,18 +161,19 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
               {data?.hitokoto ? data?.hitokoto : "情報なし"}
             </div>
 
-            <div className="tags">
+            <div className="tags" onClick={data.tags.length ? null : handleClickToProfile}>
               <UserTag tags={data.tags} onClick={onUserTagClicked} />
             </div>
+            <div onClick={handleClickToProfile}>
+              <p className="label-description">
+                <img alt="" src="/assets/images/home_page/ic_chat.svg" />
+                {t("home:box-member-recommend.label-description")}
+              </p>
 
-            <p className="label-description">
-              <img alt="" src="/assets/images/home_page/ic_chat.svg" />
-              {t("home:box-member-recommend.label-description")}
-            </p>
-
-            <p className="description">
-              {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
-            </p>
+              <p className="description">
+                {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
+              </p>
+            </div>
           </Box>
           <div className="div-review" onClick={handleClickFavoriteButton}>
             <img

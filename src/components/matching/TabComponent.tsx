@@ -130,7 +130,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
   const [pageCommunity, setPageCommunity] = useState(1);
   const [countCurrentPagesCommunity, setCountCurrentPagesCommunity] = useState(2);
   const fetchUserCommunity = async () => {
-    const res3 = await getListCommunities(LIMITCOUNTPERPAGE, cursorCommunity);
+    const res3 = await getListCommunities(LIMITCOUNTPAGECOMMUNITY, cursorCommunity);
     setCursorCommunity(res3?.cursor);
     setHasMoreCommunity(res3?.hasMore);
     setAllCommunityRef([...allCommunityRef, ...res3?.items]);

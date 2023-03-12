@@ -56,36 +56,33 @@ interface Props {
   readOnly?: boolean;
   error?: string;
 }
-const TextEditor: FC<Props> = memo(({ value, placeholder, error, onChange = null, readOnly = false }) => {
-  console.log(value);
-  return (
-    <Box>
-      <Box
-        sx={{
-          flexGrow: 1,
-          backgroundColor: "white",
-          color: theme.navy,
-          borderRadius: "12px",
-          width: "100%",
-        }}
-      >
-        <Grid container>
-          <Grid item xs={12} sm={12}>
-            <ReactQuill
-              theme="snow"
-              className={readOnly ? styles.quillContainerReadonly : styles.quillContainerEditable}
-              formats={format}
-              readOnly={readOnly}
-              modules={modules}
-              defaultValue={value}
-              placeholder={placeholder}
-              onChange={(content, delta, source, editor) => onChange && onChange(editor.getHTML(), editor.getLength())}
-            />
-          </Grid>
+const TextEditor: FC<Props> = memo(({ value, placeholder, error, onChange = null, readOnly = false }) => (
+  <Box>
+    <Box
+      sx={{
+        flexGrow: 1,
+        backgroundColor: "white",
+        color: theme.navy,
+        borderRadius: "12px",
+        width: "100%",
+      }}
+    >
+      <Grid container>
+        <Grid item xs={12} sm={12}>
+          <ReactQuill
+            theme="snow"
+            className={readOnly ? styles.quillContainerReadonly : styles.quillContainerEditable}
+            formats={format}
+            readOnly={readOnly}
+            modules={modules}
+            defaultValue={value}
+            placeholder={placeholder}
+            onChange={(content, delta, source, editor) => onChange && onChange(editor.getHTML(), editor.getLength())}
+          />
         </Grid>
-      </Box>
-      {error ? <BoxTextValidate>{error}</BoxTextValidate> : null}
+      </Grid>
     </Box>
-  );
-});
+    {error ? <BoxTextValidate>{error}</BoxTextValidate> : null}
+  </Box>
+));
 export default TextEditor;
