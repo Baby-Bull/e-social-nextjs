@@ -428,7 +428,7 @@ export const MODE_ROOM_CHAT = {
 };
 
 // eslint-disable-next-line no-shadow
-export enum SearchUserFormStatus {
+export enum SearchFormStatus {
   // eslint-disable-next-line no-unused-vars
   Init = "init",
   // eslint-disable-next-line no-unused-vars

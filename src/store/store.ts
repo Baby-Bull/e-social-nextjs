@@ -3,44 +3,18 @@ import { applyMiddleware, createStore } from "redux";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-import { SearchUserFormStatus } from "src/constants/constants";
+import { SearchFormStatus } from "src/constants/constants";
+import { IStoreState } from "src/constants/interface";
 
 import actionTypes from "./actionTypes";
-import reducer from "./reducer";
+import rootReducer, { RootState } from "./reducers/combineReducers";
 
-interface IStoreState {
-  user: any;
-  notifications: any;
-  listrooms: any;
-  search_users: {
-    scrollPosition: number;
-    formStatus: SearchUserFormStatus;
-    form: {
-      job: string | number;
-      employeeStatus: string | number;
-      lastLogin: number;
-      review: number;
-      statusCanTalk: boolean;
-      statusLookingForFriend: boolean;
-      statusNeedConsult: boolean;
-      tags: string[];
-    };
-    result: {
-      limit: number;
-      cursor: string;
-      items: any[];
-      sort: string;
-      hasMore: boolean;
-    };
-  };
-}
-
-let store: any;
+let store: IStoreState | any;
 
 const exampleInitialState: IStoreState = {
   user: {},
   search_users: {
-    formStatus: SearchUserFormStatus.Init,
+    formStatus: SearchFormStatus.Init,
     scrollPosition: 0,
     form: {
       job: 0,
@@ -60,6 +34,24 @@ const exampleInitialState: IStoreState = {
       items: [],
     },
   },
+  search_community: {
+    formStatus: SearchFormStatus.Init,
+    scrollPosition: 0,
+    form: {
+      login_count: 0,
+      member_count: 0,
+      lastLogin: 0,
+      exclude_joined_communities: false,
+      tags: [],
+    },
+    result: {
+      sort: "recommended",
+      limit: 12,
+      cursor: "",
+      hasMore: false,
+      items: [],
+    },
+  },
   notifications: {
     items: [],
   },
@@ -72,6 +64,7 @@ const exampleInitialState: IStoreState = {
     cursorCommunity: "",
     unread_count: 0,
   },
+  is_profile_edited: true,
 };
 
 export const login = (user: any) => ({ type: actionTypes.LOGIN, user });
@@ -83,7 +76,7 @@ const persistConfig = {
   storage,
   whitelist: ["user", "is_profile_edited", "listrooms"], // place to select which state you want to persist
 };
-const persistedReducer = persistReducer(persistConfig, reducer);
+const persistedReducer = persistReducer<RootState>(persistConfig, rootReducer);
 
 function makeStore(initialState = exampleInitialState) {
   return createStore(persistedReducer, initialState, applyMiddleware());

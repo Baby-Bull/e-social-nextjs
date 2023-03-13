@@ -27,7 +27,7 @@ import { jobs, employeeStatus, lastLogins, reviews } from "src/constants/searchU
 import useViewport from "src/helpers/useViewport";
 import { UserSearch } from "src/services/user";
 import { searchUserActions } from "src/store/actionTypes";
-import { SearchUserFormStatus } from "src/constants/constants";
+import { SearchFormStatus } from "src/constants/constants";
 
 import BoxItemUserComponent from "./BoxItemUserComponent";
 import PopupSearchUser from "./block/PopupSearchUser";
@@ -79,7 +79,7 @@ const initalFormData = {
 
 type Props = {
   scrollPosition: number;
-  formStatus: SearchUserFormStatus;
+  formStatus: SearchFormStatus;
   form: {
     job: string | number;
     employeeStatus: string | number;
@@ -124,10 +124,10 @@ const SearchUserComponent: FC<Props> = ({
   // const query = useQuery();
   const LIMIT = 6;
   const [isLoading, setIsLoading] = useState(false);
-  // const [isRefresh, setIsRefresh] = useState(false);
   const fullText = router.query?.fulltext;
   const { items: users, cursor: nextCursor, hasMore, sort } = result;
   const { tags, ...formSearch } = form;
+  const [showPopupSearchUser, setShowPopupSearchUser] = useState(false);
 
   const fetchData = async (typeSort: string = "", arrayResult: Array<any> = [], cursor: string = "") => {
     setIsLoading(true);
@@ -191,7 +191,7 @@ const SearchUserComponent: FC<Props> = ({
   useEffect(() => {
     if (fullText !== undefined) {
       clearFormSearch();
-    } else if (formStatus === SearchUserFormStatus.Init) {
+    } else if (formStatus === SearchFormStatus.Init) {
       fetchData(sort, [], "");
     }
   }, [fullText]);
@@ -205,8 +205,6 @@ const SearchUserComponent: FC<Props> = ({
       updateScrollPosition(document.documentElement.scrollTop);
     };
   }, []);
-
-  const [showPopupSearchUser, setShowPopupSearchUser] = useState(false);
 
   return (
     <React.Fragment>
