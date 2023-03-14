@@ -74,20 +74,21 @@ const CommunityComponent: FC = () => {
     return resData;
   };
 
-  const fetchData = async () => {
-    const communityId = router.query;
-    const data = await getCommunity(communityId?.id);
-    if (!data?.error_code) {
-      setDataCommunityDetail(data);
-      setCheckLoading(true);
-      if ((data?.community_role && data?.community_role !== PENDING) || data?.is_public) {
-        fetchDataUsers();
-      }
-      return data;
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      const communityId = router.query;
+      const data = await getCommunity(communityId?.id);
+      if (!data?.error_code) {
+        setDataCommunityDetail(data);
+        console.log(data);
+
+        setCheckLoading(true);
+        if ((data?.community_role && data?.community_role !== PENDING) || data?.is_public) {
+          fetchDataUsers();
+        }
+        return data;
+      }
+    };
     fetchData();
   }, []);
 
@@ -106,7 +107,10 @@ const CommunityComponent: FC = () => {
     const community = router.query;
     const res = await joinCommunity(community?.id);
     if (res.status) {
-      router.reload();
+      setDataCommunityDetail({
+        ...dataCommunityDetail,
+        community_role: dataCommunityDetail?.is_public ? "member" : "pending",
+      });
     }
     return res;
   };
@@ -146,7 +150,7 @@ const CommunityComponent: FC = () => {
           </Box>
 
           <Box>
-            <BannerComponent data={dataCommunityDetail} />
+            <BannerComponent data={dataCommunityDetail} setDataCommunity={setDataCommunityDetail} />
           </Box>
 
           <Box

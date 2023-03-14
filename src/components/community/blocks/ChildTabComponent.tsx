@@ -35,10 +35,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ maxWidth, dataC
   const router = useRouter();
   const RoleAdmin = ["admin", "owner"];
   const tabs = [{ text: "新着順" }, { text: "オススメ順" }];
-  const checkRoleCreatPost =
-    RoleAdmin.includes(dataCommunityDetail?.community_role) ||
-    dataCommunityDetail?.post_permission === dataCommunityDetail?.community_role ||
-    dataCommunityDetail?.post_permission === "all";
+  const [checkRoleCreatPost, setCheckRoleCreatPost] = useState<any>(null);
   const LIMIT = 10;
   const recommended = "recommended";
   const latest = "latest";
@@ -109,6 +106,14 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ maxWidth, dataC
     communityPosts();
     communityPostsRecomend();
   }, []);
+
+  useEffect(() => {
+    setCheckRoleCreatPost(
+      RoleAdmin.includes(dataCommunityDetail?.community_role) ||
+        dataCommunityDetail?.post_permission === dataCommunityDetail?.community_role ||
+        dataCommunityDetail?.post_permission === "all",
+    );
+  }, [dataCommunityDetail?.community_role]);
 
   return (
     <Box>

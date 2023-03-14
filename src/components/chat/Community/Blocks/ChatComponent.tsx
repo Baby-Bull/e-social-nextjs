@@ -154,9 +154,9 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
         let selectedRoom = roomSelect;
         let tempCommunityResult;
 
-        const checkInListChatroom = listRoomsChatTemp.findIndex((room) => room.id === communityId);
+        const checkInListChatroom = listRoomsChatTemp?.findIndex((room) => room.id === communityId);
         if (checkInListChatroom > -1) {
-          selectedRoom = listRoomsChatTemp.find((room) => room.id === communityId);
+          selectedRoom = listRoomsChatTemp?.find((room) => room.id === communityId);
         } else {
           if (communityId) {
             tempCommunityResult = await getCommunity(communityId);
@@ -255,8 +255,8 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
           isMobile={isMobile}
         />
       ) : null}
-      {(!listRoomsChatTemp.length && !isMobile) && <ChatBoxRightNoDataComponent />}
-      {listRoomsChatTemp.length && (!isMobile || (isMobile && isRenderRightSide)) ? (
+      {(!listRoomsChatTemp?.length && !isMobile) && <ChatBoxRightNoDataComponent />}
+      {listRoomsChatTemp?.length && (!isMobile || (isMobile && isRenderRightSide)) ? (
         <ChatBoxRightComponent
           isMobile={isMobile}
           toggleRenderSide={toggleRenderSide}
