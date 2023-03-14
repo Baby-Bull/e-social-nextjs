@@ -175,7 +175,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
         }
 
         if (selectedRoom) {
-          if (isMobile) setIsRenderRightSide(true);
+          //if (isMobile) setIsRenderRightSide(true);
           setRoomSelect(selectedRoom);
           setCommunityId(selectedRoom?.id);
         }

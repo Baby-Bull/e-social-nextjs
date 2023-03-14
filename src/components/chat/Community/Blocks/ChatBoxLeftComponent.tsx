@@ -108,7 +108,6 @@ const ChatBoxLeftComponent = ({
   }, 500);
 
   const handleOnKeyUpInputSearchRef = () => {
-    console.log("DAFA");
     debounce(inputSearchRef.current.value);
   };
   const [, windowHeight] = useWindowSize();

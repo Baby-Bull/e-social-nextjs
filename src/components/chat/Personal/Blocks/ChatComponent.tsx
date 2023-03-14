@@ -170,16 +170,16 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
         }
 
         if (selectedRoom) {
-          if (isMobile) setIsRenderRightSide(true);
+          //if (isMobile) setIsRenderRightSide(true);
           setRoomSelect(selectedRoom);
           setUserId(selectedRoom?.user?.id);
           setUser(selectedRoom?.user);
         }
         //else if (!isMobile) {
         else {
-          setRoomSelect(listRoomsChatTemp[0] || {});
-          setUserId(listRoomsChatTemp[0]?.user?.id);
-          setUser(listRoomsChatTemp[0]?.user);
+          setRoomSelect(listRoomsChatTemp?.[0] || {});
+          setUserId(listRoomsChatTemp?.[0]?.user?.id);
+          setUser(listRoomsChatTemp?.[0]?.user);
         }
       }
     }

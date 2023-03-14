@@ -541,19 +541,19 @@
       }
 
       .thread-content {
+        .name {
+          font-size: 14px;
+          font-weight: 700;
+          line-height: 21px;
+          color: #262a30;
+          white-space: nowrap;
+          width: 80%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
         .title-content {
           display: flex;
-
-          .name {
-            font-size: 14px;
-            font-weight: 700;
-            line-height: 21px;
-            color: #262a30;
-            white-space: nowrap;
-            width: 80%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
 
           .countMember {
             font-size: 14px;

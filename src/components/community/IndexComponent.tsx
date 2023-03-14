@@ -80,8 +80,6 @@ const CommunityComponent: FC = () => {
       const data = await getCommunity(communityId?.id);
       if (!data?.error_code) {
         setDataCommunityDetail(data);
-        console.log(data);
-
         setCheckLoading(true);
         if ((data?.community_role && data?.community_role !== PENDING) || data?.is_public) {
           fetchDataUsers();
