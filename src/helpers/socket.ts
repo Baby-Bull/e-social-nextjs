@@ -1,7 +1,7 @@
 import { getToken } from "./storage";
 
-// retryDelay: 5s
-const defaultRetryDelay = 5000;
+// retryDelay: 2s
+const defaultRetryDelay = 2000;
 const defaultMaxRetries = 5;
 
 const getWsEndpoint = () => `${process.env.NEXT_PUBLIC_WS}${getToken()}`;
@@ -71,7 +71,7 @@ const WebsocketClient = ({
       return isClosed;
     },
     // emit to server
-    emit(event, payload) {
+    emit(event: any, payload: any) {
       wsInstance.send(
         JSON.stringify({
           ...payload,
@@ -117,8 +117,8 @@ const WebsocketClient = ({
 const socket =
   typeof window !== "undefined"
     ? WebsocketClient({
-        url: getWsEndpoint,
-      })
+      url: getWsEndpoint,
+    })
     : null;
 
 export default socket;

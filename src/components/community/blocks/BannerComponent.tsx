@@ -16,11 +16,12 @@ import { bgColorByStatus } from "../mockData";
 
 interface ICommunityDataProps {
   data: any;
+  setDataCommunity: Function;
 }
 
 const ListItem = styled("li")({});
 
-const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
+const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunity }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const viewPort = useViewport();
@@ -38,7 +39,10 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
     const community = router.query;
     const res = await leaveCommunity(community?.id);
     if (res) {
-      setTimeout(() => router.reload(), 1000);
+      setDataCommunity({
+        ...data,
+        community_role: null,
+      });
       setOpen(false);
     }
     return res;
@@ -47,8 +51,11 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
   const handleJoinCommunity = async () => {
     const community = router.query;
     const res = await joinCommunity(community?.id, data?.is_public);
-    if (res.status) {
-      setTimeout(() => router.reload(), 1000);
+    if (res?.status) {
+      setDataCommunity({
+        ...data,
+        community_role: data?.is_public ? "member" : "pending",
+      });
     }
     return res;
   };

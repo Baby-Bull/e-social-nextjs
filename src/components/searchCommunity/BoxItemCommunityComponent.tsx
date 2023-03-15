@@ -52,10 +52,6 @@ const BoxItemCommunityComponent: React.SFC<IBoxItemCommunityComponentProps> = ({
     return res;
   };
 
-  const redirectToComunnity = () => {
-    router.push(`community/${data?.id}`);
-  };
-
   return (
     <Grid item xs={12} className={styles.boxCommunity} style={{ padding: "18px 20px" }}>
       <Box className={styles.boxItemCommunity}>
@@ -66,7 +62,7 @@ const BoxItemCommunityComponent: React.SFC<IBoxItemCommunityComponentProps> = ({
             </div>
           </Grid>
         </Grid>
-        <Box onClick={() => redirectToComunnity()} sx={{ cursor: "pointer" }}>
+        <Box onClick={() => router.push(`community/${data?.id}`)} sx={{ cursor: "pointer" }}>
           <div className="image-community">
             <img className="image" src={data?.profile_image ?? "/assets/images/logo/logo.png"} alt={data?.name} />
           </div>

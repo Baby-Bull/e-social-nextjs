@@ -145,10 +145,10 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
     const checkChatroomExistFn = async () => {
       if (viewPort.width) {
         let selectedRoom = roomSelect;
-        let tempUserResult, tempChatroomId;
-        const checkInListChatroom = listRoomsChatTemp.findIndex((item: any) => item?.user?.id === userId);
+        let tempUserResult: any, tempChatroomId: any;
+        const checkInListChatroom = listRoomsChatTemp?.findIndex((item: any) => item?.user?.id === userId);
         if (checkInListChatroom > -1) {
-          selectedRoom = listRoomsChatTemp.find(
+          selectedRoom = listRoomsChatTemp?.find(
             (item: any) => item?.user?.id === userId
           );
         } else {
@@ -170,16 +170,16 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
         }
 
         if (selectedRoom) {
-          if (isMobile) setIsRenderRightSide(true);
+          //if (isMobile) setIsRenderRightSide(true);
           setRoomSelect(selectedRoom);
           setUserId(selectedRoom?.user?.id);
           setUser(selectedRoom?.user);
         }
         //else if (!isMobile) {
         else {
-          setRoomSelect(listRoomsChatTemp[0] || {});
-          setUserId(listRoomsChatTemp[0]?.user?.id);
-          setUser(listRoomsChatTemp[0]?.user);
+          setRoomSelect(listRoomsChatTemp?.[0] || {});
+          setUserId(listRoomsChatTemp?.[0]?.user?.id);
+          setUser(listRoomsChatTemp?.[0]?.user);
         }
       }
     }
@@ -263,9 +263,9 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
           isMobile={isMobile}
         />
       ) : null}
-      {(!listRoomsChatTemp.length && !isMobile) && <ChatBoxRightNoDataComponent />}
+      {(!listRoomsChatTemp?.length && !isMobile) && <ChatBoxRightNoDataComponent />}
       {/* {(!listRoomsChatTemp.length && isMobile) && <BlockNoDataComponent />} */}
-      {listRoomsChatTemp.length && (!isMobile || (isMobile && isRenderRightSide)) ? (
+      {listRoomsChatTemp?.length && (!isMobile || (isMobile && isRenderRightSide)) ? (
         <ChatBoxRightComponent
           isMobile={isMobile}
           toggleRenderSide={toggleRenderSide}
