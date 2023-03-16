@@ -13,5 +13,9 @@
   "btn-clear-condition": "検索条件クリア",
 
   "btn-send-matching-request": "マッチングのリクエストを送る",
-  "btn-add-favorite": "話したい人リストに登録"
+  "btn-add-favorite": "話したい人リストに登録",
+
+  "validate-search-form":{
+    "input-length": "20文字以内で記入してください。"
+  }
 }

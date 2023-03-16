@@ -107,6 +107,7 @@ const PopupSearchUser: React.SFC<ISearchUserProps> = ({
   setFormSearch,
 }) => {
   const { t } = useTranslation();
+  const [valueInput, setValueInput] = React.useState<any>(null);
 
   const handleFetchdata = async () => {
     fetchData(isSort, [], "");
@@ -118,9 +119,11 @@ const PopupSearchUser: React.SFC<ISearchUserProps> = ({
   };
 
   const onKeyPress = (e) => {
-    if (e.key === "Enter" && e.target.value) {
-      setInputTags([...inputTags, e.target.value]);
-      (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
+    if (valueInput?.length <= 20) {
+      if (e.key === "Enter" && e.target.value) {
+        setInputTags([...inputTags, e.target.value]);
+        (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
+      }
     }
   };
 
@@ -183,8 +186,14 @@ const PopupSearchUser: React.SFC<ISearchUserProps> = ({
                     onKeyPress={onKeyPress}
                     sx={{ flex: 1 }}
                     placeholder={t("user-search:input-tag-placeholder")}
+                    onChange={(e) => setValueInput(e.target.value)}
                   />
                 </Paper>
+                {valueInput?.length > 20 && (
+                  <p style={{ color: "red", fontSize: "12px", margin: "5px 0px" }}>
+                    {t("user-search:validate-search-form.input-length")}
+                  </p>
+                )}
                 <div className="tags">
                   <ul>
                     {inputTags?.map((tag, index) => (

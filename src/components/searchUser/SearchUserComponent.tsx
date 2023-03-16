@@ -121,13 +121,13 @@ const SearchUserComponent: FC<Props> = ({
   const viewPort = useViewport();
   const isMobile = viewPort.width <= 992;
   const router = useRouter();
-  // const query = useQuery();
   const LIMIT = 6;
   const [isLoading, setIsLoading] = useState(false);
   const fullText = router.query?.fulltext;
   const { items: users, cursor: nextCursor, hasMore, sort } = result;
   const { tags, ...formSearch } = form;
   const [showPopupSearchUser, setShowPopupSearchUser] = useState(false);
+  const [valueInput, setValueInput] = useState<any>(null);
 
   const fetchData = async (typeSort: string = "", arrayResult: Array<any> = [], cursor: string = "") => {
     setIsLoading(true);
@@ -152,10 +152,12 @@ const SearchUserComponent: FC<Props> = ({
   };
 
   const onKeyPress = (e: any) => {
-    if (e.key === "Enter" && e.target.value) {
-      const newTags = [...tags, e.target.value];
-      updateForm({ tags: newTags });
-      (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
+    if (valueInput?.length <= 20) {
+      if (e.key === "Enter" && e.target.value) {
+        const newTags = [...tags, e.target.value];
+        updateForm({ tags: newTags });
+        (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
+      }
     }
   };
 
@@ -235,8 +237,14 @@ const SearchUserComponent: FC<Props> = ({
                     onKeyPress={onKeyPress}
                     sx={{ flex: 1 }}
                     placeholder={t("user-search:input-tag-placeholder")}
+                    onChange={(e) => setValueInput(e.target.value)}
                   />
                 </Paper>
+                {valueInput?.length > 20 && (
+                  <p style={{ color: "red", fontSize: "12px", margin: "5px 0px" }}>
+                    {t("user-search:validate-search-form.input-length")}
+                  </p>
+                )}
                 <div className="tags">
                   <ul>
                     {tags?.map((tag, index) => (

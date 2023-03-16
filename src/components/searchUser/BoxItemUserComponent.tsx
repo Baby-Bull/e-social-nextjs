@@ -65,7 +65,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
     if (!matchStatus) {
       setModalMatching(true);
     } else if (matchStatus === "confirmed") {
-      router.push(`/chat/personal?room=${data.id}`);
+      router.push(`/chat/personal?room=${data?.id}`);
     } else if (matchStatus === "received_pending") {
       await acceptMatchingRequestReceived(data?.match_request?.id);
       // callbackHandleIsRefresh(!isRefresh);
@@ -110,7 +110,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
 
   const handleClickToProfile = () => {
     if (auth?.id === data?.id) router.push(`/my-profile`);
-    else router.push(`/profile/${data.id}`, undefined, { shallow: true });
+    else router.push(`/profile/${data?.id}`, undefined, { shallow: true });
   };
 
   const onUserTagClicked = (tag: string) => {
@@ -160,8 +160,8 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
               {data?.hitokoto ? data?.hitokoto : "情報なし"}
             </div>
 
-            <div className="tags" onClick={data.tags.length ? null : handleClickToProfile}>
-              <UserTag tags={data.tags} onClick={onUserTagClicked} />
+            <div className="tags" onClick={data?.tags?.length ? null : handleClickToProfile}>
+              <UserTag tags={data?.tags} onClick={onUserTagClicked} />
             </div>
             <div onClick={handleClickToProfile}>
               <p className="label-description">
