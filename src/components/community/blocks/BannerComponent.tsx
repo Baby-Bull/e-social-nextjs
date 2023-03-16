@@ -4,6 +4,7 @@ import { useTranslation } from "next-i18next";
 import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import GlobalStyles from "@mui/material/GlobalStyles";
+import { useDispatch, useSelector } from "react-redux";
 
 import { infoCommunitySetting } from "src/components/community/mockData";
 import theme from "src/theme";
@@ -11,6 +12,9 @@ import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmWithAvatarComponent from "src/components/common/dialog/DialogConfirmWithAvatarComponent";
 import { joinCommunity, leaveCommunity } from "src/services/community";
 import useViewport from "src/helpers/useViewport";
+import { IStoreState } from "src/constants/interface";
+import { searchCommunityActions } from "src/store/actionTypes";
+import { typeRoleUser } from "src/constants/searchCommunityConstants";
 
 import { bgColorByStatus } from "../mockData";
 
@@ -26,14 +30,42 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
   const router = useRouter();
   const viewPort = useViewport();
   const isMobile = viewPort.width <= 600; // use only with communiy screen - banner community
+  const dispatch = useDispatch();
+  const searchCommunityState = useSelector((state: IStoreState) => state.search_community);
 
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const PENDING = "pending";
-  const ADMIN = "admin";
-  const MEMBER = "member";
-  const OWNER = "owner";
+
+  const arrayItemsInCommunityStore = searchCommunityState?.result?.items;
+  const currentItem = searchCommunityState?.result?.items?.find((item: any) => item?.id === data?.id);
+
+  const updateCommunityStateAfterHandleRequestFn = (typeOfAction: string) => {
+    if (currentItem) {
+      switch (typeOfAction) {
+        case "JOIN_PUBLIC_COMMUNITY":
+          currentItem.join_status = typeRoleUser.MEMBER;
+          break;
+        case "JOIN_PRIVATE_COMMUNITY":
+          currentItem.join_status = typeRoleUser.PENDING;
+          break;
+        case "LEAVE":
+          currentItem.join_status = null;
+          break;
+        default:
+          break;
+      }
+      const updatedItems = arrayItemsInCommunityStore?.map((item: any) => (item?.id === data?.id ? currentItem : item));
+      const updatedPayload = {
+        ...searchCommunityState?.result,
+        items: updatedItems,
+      };
+      dispatch({
+        type: searchCommunityActions.UPDATE_RESULT,
+        payload: updatedPayload,
+      });
+    }
+  };
 
   const handleLeaveCommunity = async () => {
     const community = router.query;
@@ -43,6 +75,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
         ...data,
         community_role: null,
       });
+      updateCommunityStateAfterHandleRequestFn("LEAVE");
       setOpen(false);
     }
     return res;
@@ -54,8 +87,9 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
     if (res?.status) {
       setDataCommunity({
         ...data,
-        community_role: data?.is_public ? "member" : "pending",
+        community_role: data?.is_public ? typeRoleUser.MEMBER : typeRoleUser.PENDING,
       });
+      updateCommunityStateAfterHandleRequestFn(data?.is_public ? "JOIN_PUBLIC_COMMUNITY" : "JOIN_PRIVATE_COMMUNITY");
     }
     return res;
   };
@@ -244,7 +278,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
             </Box>
           </Box>
           <Box sx={{ marginTop: "22px", position: "absolute", top: "22px", right: "16px" }}>
-            {!data?.is_public && (!data?.community_role || data?.community_role === PENDING) ? (
+            {!data?.is_public && (!data?.community_role || data?.community_role === typeRoleUser.PENDING) ? (
               <Box>
                 <ButtonComponent
                   sx={{
@@ -253,11 +287,11 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
                     height: "36px",
                   }}
                   props={{
-                    bgColor: data?.community_role === PENDING ? theme.gray : theme.orange,
+                    bgColor: data?.community_role === typeRoleUser.PENDING ? theme.gray : theme.orange,
                   }}
-                  onClick={data?.community_role !== PENDING ? handleJoinCommunity : null}
+                  onClick={data?.community_role !== typeRoleUser.PENDING ? handleJoinCommunity : null}
                 >
-                  {data?.community_role === PENDING ? "申請中" : "参加申請する"}
+                  {data?.community_role === typeRoleUser.PENDING ? "申請中" : "参加申請する"}
                 </ButtonComponent>
               </Box>
             ) : (
@@ -265,7 +299,10 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
                 <ButtonComponent
                   sx={{
                     display: {
-                      xs: data?.community_role !== ADMIN && data?.community_role !== OWNER ? "inherit" : "none",
+                      xs:
+                        data?.community_role !== typeRoleUser.ADMIN && data?.community_role !== typeRoleUser.OWNER
+                          ? "inherit"
+                          : "none",
                       md: "none",
                     },
                     width: "120px",
@@ -274,16 +311,21 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
                   props={{
                     bgColor: data.community_role ? "red" : bgColorByStatus,
                   }}
-                  onClick={data.community_role === MEMBER ? handleClickOpen : handleJoinCommunity}
+                  onClick={data.community_role === typeRoleUser.MEMBER ? handleClickOpen : handleJoinCommunity}
                 >
-                  {data.community_role === MEMBER ? t("community:banner.withdraw-SP") : t("community:banner.join-SP")}
+                  {data.community_role === typeRoleUser.MEMBER
+                    ? t("community:banner.withdraw-SP")
+                    : t("community:banner.join-SP")}
                 </ButtonComponent>
 
                 <ButtonComponent
                   variant="outlined"
                   sx={{
                     display: {
-                      xs: data?.community_role === ADMIN || data?.community_role === OWNER ? "inherit" : "none",
+                      xs:
+                        data?.community_role === typeRoleUser.ADMIN || data?.community_role === typeRoleUser.OWNER
+                          ? "inherit"
+                          : "none",
                       md: "none",
                     },
                     width: "120px",
@@ -305,7 +347,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
           </Box>
         </Box>
         <Box sx={{ display: "flex", justifyContent: "center" }}>
-          {!data?.is_public && (!data?.community_role || data?.community_role === PENDING) ? (
+          {!data?.is_public && (!data?.community_role || data?.community_role === typeRoleUser.PENDING) ? (
             <ButtonComponent
               sx={{
                 width: "280px",
@@ -313,11 +355,13 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
                 display: { xs: "none", md: "inherit" },
               }}
               props={{
-                bgColor: data?.community_role === PENDING ? theme.gray : theme.orange,
+                bgColor: data?.community_role === typeRoleUser.PENDING ? theme.gray : theme.orange,
               }}
-              onClick={data?.community_role !== PENDING ? handleJoinCommunity : null}
+              onClick={data?.community_role !== typeRoleUser.PENDING ? handleJoinCommunity : null}
             >
-              {data?.community_role === PENDING ? t("community:banner.applying") : t("community:banner.apply")}
+              {data?.community_role === typeRoleUser.PENDING
+                ? t("community:banner.applying")
+                : t("community:banner.apply")}
             </ButtonComponent>
           ) : (
             <Box>
@@ -325,15 +369,20 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
                 sx={{
                   display: {
                     xs: "none",
-                    md: data?.community_role !== ADMIN && data?.community_role !== OWNER ? "inherit" : "none",
+                    md:
+                      data?.community_role !== typeRoleUser.ADMIN && data?.community_role !== typeRoleUser.OWNER
+                        ? "inherit"
+                        : "none",
                   },
                 }}
                 props={{
                   bgColor: data.community_role ? "red" : bgColorByStatus,
                 }}
-                onClick={data.community_role === MEMBER ? handleClickOpen : handleJoinCommunity}
+                onClick={data.community_role === typeRoleUser.MEMBER ? handleClickOpen : handleJoinCommunity}
               >
-                {data.community_role === MEMBER ? t("community:banner.withdraw") : t("community:banner.join")}
+                {data.community_role === typeRoleUser.MEMBER
+                  ? t("community:banner.withdraw")
+                  : t("community:banner.join")}
               </ButtonComponent>
 
               <ButtonComponent
@@ -341,7 +390,10 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
                 sx={{
                   display: {
                     xs: "none",
-                    md: data?.community_role === ADMIN || data?.community_role === OWNER ? "inherit" : "none",
+                    md:
+                      data?.community_role === typeRoleUser.ADMIN || data?.community_role === typeRoleUser.OWNER
+                        ? "inherit"
+                        : "none",
                   },
                 }}
                 props={{

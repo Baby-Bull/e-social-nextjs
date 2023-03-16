@@ -18,6 +18,7 @@ import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
 import { IStoreState } from "src/constants/interface";
+import { typeMatchingStatus } from "src/constants/searchUserConstants";
 
 import UserTag from "./UserTagComponent";
 
@@ -59,9 +60,9 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
   const handleShowModalMatching = async (matchStatus) => {
     if (!matchStatus) {
       setModalMatching(true);
-    } else if (matchStatus === "confirmed") {
+    } else if (matchStatus === typeMatchingStatus.CONFIRMED) {
       router.push(`/chat/personal?room=${data.id}`);
-    } else if (matchStatus === "received_pending") {
+    } else if (matchStatus === typeMatchingStatus.RECEIVED_PENDING) {
       await acceptMatchingRequestReceived(data?.match_request?.id);
       if (callbackHandleIsRefresh) {
         callbackHandleIsRefresh(!isRefresh);
@@ -73,7 +74,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
   const handleSendMatchingRequest = async (matchingRequest) => {
     setLiked(true);
     const res = await sendMatchingRequest(data?.id, matchingRequest);
-    setStatusBtnSendMatching("sent_pending");
+    setStatusBtnSendMatching(typeMatchingStatus.SENT_PENDING);
     setModalMatching(false);
     if (callbackHandleIsRefresh) {
       callbackHandleIsRefresh(!isRefresh);
@@ -83,11 +84,11 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
 
   const handleMapMatchingStatus = (statusMatchingTemp: string) => {
     switch (statusMatchingTemp) {
-      case "sent_pending":
+      case typeMatchingStatus.SENT_PENDING:
         return 1;
-      case "confirmed":
+      case typeMatchingStatus.CONFIRMED:
         return 2;
-      case "received_pending":
+      case typeMatchingStatus.RECEIVED_PENDING:
         return 3;
       default:
         return 4;

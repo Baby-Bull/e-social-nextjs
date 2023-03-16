@@ -2,12 +2,16 @@ import { Box, Grid, Typography } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import { HOMEPAGE_RECOMMEND_COMMUNITY_STATUS } from "src/components/constants/constants";
 import styles from "src/components/searchCommunity/search_community.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import { joinCommunity } from "src/services/community";
+import { IStoreState } from "src/constants/interface";
+import { typeRoleUser } from "src/constants/searchCommunityConstants";
+import { searchCommunityActions } from "src/store/actionTypes";
 
 interface IIBoxItemCommunityDataItem {
   id: string;
@@ -29,11 +33,41 @@ interface IBoxItemCommunityComponentProps {
 const BoxItemCommunityComponent: React.SFC<IBoxItemCommunityComponentProps> = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  const dispatch = useDispatch();
+  const searchCommunityState = useSelector((state: IStoreState) => state.search_community);
   const [statusJoin, setStatusJoin] = useState(
     // eslint-disable-next-line no-nested-ternary
-    data?.is_public ? 1 : !data?.is_public && data?.join_status === "pending" ? 2 : 3,
+    data?.is_public ? 1 : !data?.is_public && data?.join_status === typeRoleUser.PENDING ? 2 : 3,
   );
-  const IS_MEMBER = data?.join_status === "member";
+  const IS_MEMBER = data?.join_status === typeRoleUser.MEMBER;
+
+  const arrayItemsInCommunityStore = searchCommunityState?.result?.items;
+  const currentItem = searchCommunityState?.result?.items?.find((item: any) => item?.id === data?.id);
+
+  const updateCommunityStateAfterHandleRequestFn = (typeOfAction: string) => {
+    if (currentItem) {
+      switch (typeOfAction) {
+        case "JOIN_PUBLIC_COMMUNITY":
+          currentItem.join_status = typeRoleUser.MEMBER;
+          break;
+        case "JOIN_PRIVATE_COMMUNITY":
+          currentItem.join_status = typeRoleUser.PENDING;
+          break;
+        default:
+          break;
+      }
+      const updatedItems = arrayItemsInCommunityStore?.map((item: any) => (item?.id === data?.id ? currentItem : item));
+      const updatedPayload = {
+        ...searchCommunityState?.result,
+        items: updatedItems,
+      };
+      dispatch({
+        type: searchCommunityActions.UPDATE_RESULT,
+        payload: updatedPayload,
+      });
+    }
+  };
+
   const joinCommunitySearch = async () => {
     if (statusJoin === 2) return;
     if (IS_MEMBER) {
@@ -42,8 +76,9 @@ const BoxItemCommunityComponent: React.SFC<IBoxItemCommunityComponentProps> = ({
     }
     const res = await joinCommunity(data?.id, data?.is_public);
     if (res) {
+      updateCommunityStateAfterHandleRequestFn(data?.is_public ? "JOIN_PUBLIC_COMMUNITY" : "JOIN_PRIVATE_COMMUNITY");
       if (statusJoin === 1) {
-        setTimeout(() => router.push(`community/${data?.id}`), 1000);
+        setTimeout(() => router.push(`community/${data?.id}`), 100);
       }
       if (statusJoin === 3) {
         setStatusJoin(2);

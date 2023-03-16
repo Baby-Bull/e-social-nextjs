@@ -18,6 +18,7 @@ import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
 import { IStoreState } from "src/constants/interface";
+import { typeMatchingStatus } from "src/constants/searchUserConstants";
 
 import UserTag from "../profile/UserTagComponent";
 
@@ -64,9 +65,9 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
   const handleShowModalMatching = async (matchStatus) => {
     if (!matchStatus) {
       setModalMatching(true);
-    } else if (matchStatus === "confirmed") {
+    } else if (matchStatus === typeMatchingStatus.CONFIRMED) {
       router.push(`/chat/personal?room=${data?.id}`);
-    } else if (matchStatus === "received_pending") {
+    } else if (matchStatus === typeMatchingStatus.RECEIVED_PENDING) {
       await acceptMatchingRequestReceived(data?.match_request?.id);
       // callbackHandleIsRefresh(!isRefresh);
     } else {
@@ -78,18 +79,18 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
     const res = await sendMatchingRequest(data?.id, matchingRequest);
     setLiked(true);
     setModalMatching(false);
-    setStatusMatching("sent_pending");
+    setStatusMatching(typeMatchingStatus.SENT_PENDING);
     // callbackHandleIsRefresh(!isRefresh);
     return res;
   };
 
   const handleMapMatchingStatus = (statusMatchingTemp: string) => {
     switch (statusMatchingTemp) {
-      case "sent_pending":
+      case typeMatchingStatus.SENT_PENDING:
         return 1;
-      case "confirmed":
+      case typeMatchingStatus.CONFIRMED:
         return 2;
-      case "received_pending":
+      case typeMatchingStatus.RECEIVED_PENDING:
         return 3;
       default:
         return 4;
@@ -188,7 +189,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
                 fullWidth
                 onClick={() => handleShowModalMatching(statusMatching)}
                 mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(statusMatching)]?.mode}
-                disabled={statusMatching === "sent_pending"}
+                disabled={statusMatching === typeMatchingStatus.SENT_PENDING}
                 sx={{
                   "&:disabled": {
                     background: "gray",

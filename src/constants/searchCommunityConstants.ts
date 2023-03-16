@@ -59,3 +59,11 @@ export const typeCountMember = {
   less_than_20: 3,
   more_than_30: 4,
 };
+
+export const typeRoleUser = {
+  MEMBER: "member",
+  PENDING: "pending",
+  OWNER: "owner",
+  ADMIN: "admin",
+  NULL: null,
+}

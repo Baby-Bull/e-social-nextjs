@@ -16,7 +16,7 @@ import { COPY_SUCCESSFUL } from "src/messages/notification";
 import theme from "src/theme";
 import styles from "src/components/profile/profile.module.scss";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
-import actionTypes from "src/store/actionTypes";
+import actionTypes, { searchUserActions } from "src/store/actionTypes";
 import { IStoreState } from "src/constants/interface";
 import { USER_ONLINE_STATUS } from "src/constants/constants";
 import TwitterShareButton from "lib/ShareButtons/TwitterShareButton";
@@ -64,7 +64,8 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
   const twitterMobileBtnRef = useRef(null);
   const [liked, setLiked] = useState(user?.is_favorite);
   const dispatch = useDispatch();
-  const auth = useSelector((state: IStoreState) => state.user);
+  // const auth = useSelector((state: IStoreState) => state.user);
+  const stateUserGlobalStorage = useSelector((state: IStoreState) => state.search_users);
   const [hint, setHint] = useState(false);
   const [hintMobile, setHintMobile] = useState(false);
   const [showPopupAnalysis, setShowPopupAnalysis] = useState(false);
@@ -97,15 +98,31 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
     }
   }, [triggerShareTwitterBtn, userLoaded]);
 
-  const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
-    if (isFavorite) deleteUserFavorite(tempData);
-    else addUserFavorite(tempData);
+  const arrayItemsInUserStore = stateUserGlobalStorage?.result?.items;
+  const currentItem = stateUserGlobalStorage?.result?.items?.find((item: any) => item?.id === user?.id);
+  const updateCommunityStateAfterClickFavouriteFn = () => {
+    if (currentItem) {
+      currentItem.is_favorite = !currentItem.is_favorite;
+      const updatedItems = arrayItemsInUserStore?.map((item: any) => (item?.id === user?.id ? currentItem : item));
+      const updatedPayload = {
+        ...stateUserGlobalStorage?.result,
+        items: updatedItems,
+      };
+      dispatch({
+        type: searchUserActions.UPDATE_RESULT,
+        payload: updatedPayload,
+      });
+    }
   };
-
   const handleClickFavoriteButton = () => {
-    handleFavoriteAnUser(liked, user?.id);
-    if (liked) dispatch({ type: actionTypes.REMOVE_FAVORITE, payload: auth });
-    else dispatch({ type: actionTypes.ADD_FAVORITE, payload: auth });
+    updateCommunityStateAfterClickFavouriteFn();
+    if (liked) {
+      deleteUserFavorite(user?.id);
+      dispatch({ type: actionTypes.REMOVE_FAVORITE });
+    } else {
+      addUserFavorite(user?.id);
+      dispatch({ type: actionTypes.ADD_FAVORITE });
+    }
     setLiked(!liked);
   };
 

@@ -22,6 +22,7 @@ import styles from "src/components/home/home.module.scss";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
 import UserTag from "src/components/profile/UserTagComponent";
+import { typeMatchingStatus } from "src/constants/searchUserConstants";
 
 import SlickSliderRecommendComponent from "./SlickSliderRecommendComponent";
 
@@ -80,13 +81,13 @@ interface IRecommendMembersComponentProps {
 // };
 const handleMapMatchingStatus = (statusMatchingTemp: string) => {
   switch (statusMatchingTemp) {
-    case "sent_pending":
+    case typeMatchingStatus.SENT_PENDING:
       return 1;
-    case "confirmed":
+    case typeMatchingStatus.CONFIRMED:
       return 2;
     // case "rejected":
     //   return 3;
-    case "received_pending":
+    case typeMatchingStatus.RECEIVED_PENDING:
       return 3;
     default:
       return 4;
@@ -116,13 +117,13 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
   }, [data.is_favorite_count]);
 
   const handleClickButtonModal = (tempValue: any) => {
-    if (tempValue === "rejected" || !tempValue) {
+    if (tempValue === typeMatchingStatus.REJECTED || !tempValue) {
       handleOpenMatchingModal(data, indexKey);
-    } else if (tempValue === "received_pending") {
+    } else if (tempValue === typeMatchingStatus.RECEIVED_PENDING) {
       handleAcceptMatchingRequestReceived(data, indexKey);
-    } else if (tempValue === "confirmed") {
+    } else if (tempValue === typeMatchingStatus.CONFIRMED) {
       router.push(`/chat/personal?room=${data.id}`);
-    } else if (tempValue === "sent_pending") {
+    } else if (tempValue === typeMatchingStatus.SENT_PENDING) {
       return null;
     }
   };
