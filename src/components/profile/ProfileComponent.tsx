@@ -3,7 +3,7 @@ import { Backdrop, Box, CircularProgress } from "@mui/material";
 import React, { FC, useEffect, useMemo, useRef, useState, useLayoutEffect } from "react";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { IStoreState } from "src/constants/interface";
 import useViewport from "src/helpers/useViewport";
@@ -28,6 +28,8 @@ import theme from "../../theme";
 import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "../../services/matching";
 import PaginationCustomComponent from "../common/PaginationCustomComponent";
+import { typeMatchingStatus } from "src/constants/searchUserConstants";
+import { searchUserActions } from "src/store/actionTypes";
 interface Props {
   userId: string;
   isAuth: boolean;
@@ -35,10 +37,11 @@ interface Props {
 
 const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
   const [userIdPathname, setUserIdPathname] = useState<string | string[]>(userId)
-
   const { t } = useTranslation();
   const viewPort = useViewport();
   const router = useRouter();
+  const dispatch = useDispatch();
+  const stateUserGlobalStorage = useSelector((state: IStoreState) => state.search_users)
   const auth = useSelector((state: IStoreState) => state.user);
   const isMobile = viewPort.width <= 992;
   const LIMIT = 20;
@@ -46,6 +49,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
   const NumberOfCommunitiesPerPage = isMobile ? 2 : 8;
   const review_ref = useRef(null);
   const community_ref = useRef(null);
+
   const handleClickToScroll = (keyString: string) => {
     switch (keyString) {
       case "review": {
@@ -112,13 +116,41 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
   const fetchRecommended = async () => {
     setIsLoading(true);
     const data = await getUserRecommended(LIMIT);
-    setRecommended(data?.items?.filter((item: any) => item?.match_status !== "confirmed"));
+    setRecommended(data?.items?.filter((item: any) => item?.match_status !== typeMatchingStatus.CONFIRMED));
     setIsLoading(false);
     return data;
   };
 
-  const handleSendMatchingRequest = async (matchingRequest) => {
+  let arrayItemsInUserStore = stateUserGlobalStorage?.result?.items
+  let current_item = stateUserGlobalStorage?.result?.items?.find((item: any) => item?.id === userId)
+  const updateCommunityStateAfterHandleRequestFn = (typeOfAction: string) => {
+    if (current_item) {
+      switch (typeOfAction) {
+        case "ACCEPT_REQUEST":
+          current_item.match_status = typeMatchingStatus.CONFIRMED
+          break;
+        case "SENT_REQUEST":
+          current_item.match_status = typeMatchingStatus.SENT_PENDING
+          break;
+        default:
+          break;
+      }
+      current_item.match_status = typeMatchingStatus.SENT_PENDING
+      const updated_items = arrayItemsInUserStore?.map((item: any) => item?.id === userId ? current_item : item)
+      const updated_payload = {
+        ...stateUserGlobalStorage?.result,
+        items: updated_items
+      }
+      dispatch({
+        type: searchUserActions.UPDATE_RESULT,
+        payload: updated_payload,
+      });
+    }
+  }
+
+  const handleSendMatchingRequest = async (matchingRequest: any) => {
     const res = await sendMatchingRequest(userIdPathname, matchingRequest);
+    updateCommunityStateAfterHandleRequestFn("SENT_REQUEST");
     setModalMatching(false);
     setIsDisableBtn(true);
     setProfileSkill({
@@ -129,8 +161,9 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
   };
 
   const handleClickMatchingButton = async (statusValue: string) => {
-    if (statusValue === "received_pending") {
+    if (statusValue === typeMatchingStatus.RECEIVED_PENDING) {
       await acceptMatchingRequestReceived(profileSkill?.match_request?.id);
+      updateCommunityStateAfterHandleRequestFn("ACCEPT_REQUEST")
     } else {
       setModalMatching(true);
     }
@@ -138,11 +171,11 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
 
   const handleMapMatchingStatus = (statusMatchingTemp: string) => {
     switch (statusMatchingTemp) {
-      case "sent_pending":
+      case typeMatchingStatus.SENT_PENDING:
         return 1;
-      case "confirmed":
+      case typeMatchingStatus.CONFIRMED:
         return 2;
-      case "received_pending":
+      case typeMatchingStatus.RECEIVED_PENDING:
         return 3;
       default:
         return 4;
@@ -156,7 +189,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
     }
   }, []);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     fetchProfileSkill();
     fetchUserReviews();
     fetchCommunities();

@@ -12,7 +12,7 @@ import {
   InputBase,
   Paper,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -107,9 +107,7 @@ const PopupSearchCommunity: React.SFC<ISearchCommunityProps> = ({
   setFormSearch,
 }) => {
   const { t } = useTranslation();
-
-  // const [countLogin, setCountLogin] = useState(numberOfLogins[0]?.value);
-  // const [countMember, setCountMember] = useState(numberOfParticipants[0]?.value);
+  const [valueInput, setValueInput] = useState<any>(null);
 
   const handleFetchCommunity = async () => {
     fetchCommunity([], "", statusOrder);
@@ -121,19 +119,15 @@ const PopupSearchCommunity: React.SFC<ISearchCommunityProps> = ({
   };
 
   const onKeyPress = (e) => {
-    if (e.key === "Enter" && e.target.value) {
-      setInputTags([...inputTags, e.target.value]);
-      (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
+    if (valueInput?.length <= 20) {
+      if (e.key === "Enter" && e.target.value) {
+        setInputTags([...inputTags, e.target.value]);
+        (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
+      }
     }
   };
 
   const handleChangeInputSearch = (e, key) => {
-    // if (key === "login_count") {
-    //     setCountLogin(e.target.value);
-    // }
-    // if (key === "member_count") {
-    //     setCountMember(e.target.value);
-    // }
     setFormSearch({
       ...formSearch,
       [key]: e.target.value,
@@ -188,8 +182,14 @@ const PopupSearchCommunity: React.SFC<ISearchCommunityProps> = ({
                       onKeyPress={onKeyPress}
                       sx={{ flex: 1 }}
                       placeholder={t("community-search:input-tag-placeholder")}
+                      onChange={(e) => setValueInput(e.target.value)}
                     />
                   </Paper>
+                  {valueInput?.length > 20 && (
+                    <p style={{ color: "red", fontSize: "12px", margin: "5px 0px" }}>
+                      {t("community-search:validate-search-form.input-length")}
+                    </p>
+                  )}
                   <div className="tags">
                     <ul>
                       {inputTags?.map((tag, index) => (

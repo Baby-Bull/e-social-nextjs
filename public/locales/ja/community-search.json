@@ -12,5 +12,9 @@
 
   "box-item": {
     "number-of-participant": "参加人数：0人"
+  },
+  
+  "validate-search-form":{
+    "input-length": "20文字以内で記入してください。"
   }
 }

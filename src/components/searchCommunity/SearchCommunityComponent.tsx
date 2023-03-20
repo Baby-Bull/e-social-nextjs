@@ -83,14 +83,13 @@ const SearchCommunityComponent = () => {
   const LATEST = "latest";
 
   const [isLoading, setIsLoading] = useState(false);
-  // const [countLogin, setCountLogin] = useState(numberOfLogins[0]?.value);
-  // const [countMember, setCountMember] = useState(numberOfParticipants[0]?.value);
   const fullText = router.query?.fulltext;
   const [showPopupSearchCommunity, setShowPopupSearchCommunity] = useState(false);
   const dispatch = useDispatch();
   const searchCommunityState = useSelector((state: IStoreState) => state.search_community);
   const { items: communities, cursor: nextCursor, hasMore, sort } = searchCommunityState.result;
   const { tags, ...formSearch } = searchCommunityState.form;
+  const [valueInput, setValueInput] = useState<any>(null);
 
   const fetchCommunity = async (
     arrayResult: Array<any> = [],
@@ -125,9 +124,11 @@ const SearchCommunityComponent = () => {
   };
 
   const onKeyPress = (e) => {
-    if (e.key === "Enter" && e.target.value) {
-      dispatch({ type: searchCommunityActions.UPDATE_FORM, payload: { tags: [...tags, e.target.value] } });
-      (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
+    if (valueInput?.length <= 20) {
+      if (e.key === "Enter" && e.target.value) {
+        dispatch({ type: searchCommunityActions.UPDATE_FORM, payload: { tags: [...tags, e.target.value] } });
+        (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
+      }
     }
   };
 
@@ -228,8 +229,14 @@ const SearchCommunityComponent = () => {
                         onKeyPress={onKeyPress}
                         sx={{ flex: 1 }}
                         placeholder={t("community-search:input-tag-placeholder")}
+                        onChange={(e) => setValueInput(e.target.value)}
                       />
                     </Paper>
+                    {valueInput?.length > 20 && (
+                      <p style={{ color: "red", fontSize: "12px", margin: "5px 0px" }}>
+                        {t("community-search:validate-search-form.input-length")}
+                      </p>
+                    )}
                     <div className="tags">
                       <ul>
                         {tags?.map((tag, index) => (

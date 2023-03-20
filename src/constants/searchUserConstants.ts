@@ -183,3 +183,11 @@ export const typeReview = {
   from_51_to_100: 4,
   more_than_100: 5,
 };
+
+export const typeMatchingStatus = {
+  REJECTED: "rejected",
+  SENT_PENDING: "sent_pending",
+  RECEIVED_PENDING: "received_pending",
+  CONFIRMED: "confirmed",
+  NULL: null,
+}
