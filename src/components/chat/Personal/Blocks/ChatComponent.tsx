@@ -33,8 +33,6 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   const listRoomsChatCursor = useSelector((state: IStoreState) => state.listrooms.cursorPersonal);
   const hasMoreChatRooms = useSelector((state: IStoreState) => state.listrooms.hasMorePersonal);
   const ListRoomsStatic = useSelector((state: IStoreState) => state.listrooms);
-  console.log(ListRoomsStatic);
-
 
   const [userId, setUserId] = useState(roomQuery);
   const [user, setUser] = useState({});
@@ -222,8 +220,6 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   };
 
   const onSelectRoom = async (index: number) => {
-    console.log(listRoomsChatTemp?.[index]);
-
     if (isMobile) setIsRenderRightSide(!isRenderRightSide);
     if (listRoomsChatTemp?.[index]?.user?.id !== userId) {
       setRoomSelect(listRoomsChatTemp[index]);

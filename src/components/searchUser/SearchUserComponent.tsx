@@ -135,13 +135,15 @@ const SearchUserComponent: FC<Props> = ({
   const [showPopupSearchUser, setShowPopupSearchUser] = useState<boolean>(false);
   const [valueInput, setValueInput] = useState<any>(null);
   const [routerQuerySort, setRouterQuerySort] = useState<string | string[] | boolean>(router.query?.sortType);
+  const [triggerTheFirstFetching, setTriggerTheFirstFetching] = React.useState<boolean>(true);
 
   const fetchData = async (typeSort: string = "", arrayResult: Array<any> = [], cursor: string = "") => {
     setIsLoading(true);
     const res = await UserSearch(formSearch, tags, fullText, typeSort, LIMIT, cursor);
     const items = arrayResult.concat(res?.items);
     setIsLoading(false);
-    setRouterQuerySort(false);
+    setRouterQuerySort(undefined);
+    setTriggerTheFirstFetching(false);
     updateResult({
       items,
       cursor: res?.cursor,
@@ -161,16 +163,18 @@ const SearchUserComponent: FC<Props> = ({
         case "sortByArea":
           res = await getUserProvince(LIMIT, cursor);
           break;
-        case "sortbyLogin":
+        case "sortByLogin":
           res = await getUserRecentlyLogin(LIMIT, cursor);
           break;
         case "sortByRegistration":
           res = await getUserNewMembers(LIMIT, cursor);
           break;
         default:
+          res = await UserSearch(formSearch, tags, fullText, "", LIMIT, "");
           break;
       }
       const items = arrayResult.concat(res?.items);
+      setTriggerTheFirstFetching(false);
       setIsLoading(false);
       updateResult({
         items,
@@ -181,11 +185,11 @@ const SearchUserComponent: FC<Props> = ({
   };
 
   const handleClickHasMore = () => {
+    setTriggerTheFirstFetching(false);
     if (routerQuerySort) {
       fetchDataWithOptionFromHomepage(users, nextCursor);
-    } else {
-      fetchData(sort, users, nextCursor);
-    }
+    } else if (triggerTheFirstFetching) fetchData(sort, users, "");
+    else fetchData(sort, users, nextCursor);
   };
 
   const handleSort = async (typeSort: string) => {
@@ -237,12 +241,16 @@ const SearchUserComponent: FC<Props> = ({
   };
 
   useEffect(() => {
+    setTriggerTheFirstFetching(true);
     if (routerQuerySort) {
       fetchDataWithOptionFromHomepage([], "");
-    } else if (fullText !== undefined) {
-      clearFormSearch();
-    } else if (formStatus === SearchFormStatus.Init) {
-      fetchData(sort, [], "");
+    } else {
+      if (fullText !== undefined) {
+        clearFormSearch();
+      }
+      if (formStatus === SearchFormStatus.Init) {
+        fetchData(sort, [], "");
+      }
     }
   }, [fullText, routerQuerySort]);
 
