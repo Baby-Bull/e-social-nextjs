@@ -53,24 +53,28 @@ const HomeIndexComponents = () => {
     {
       title: t("home:register-newest"),
       data: [],
+      query_url: "sortByRegistration",
     },
 
     // recent-login-member
     {
       title: t("home:recent-login-member"),
       data: [],
+      query_url: "sortByLogin",
     },
 
     // member-favorite-area
     {
       title: t("home:member-favorite-area"),
       data: [],
+      query_url: "sortByArea",
     },
 
     // member-favorite-tags
     {
       title: t("home:member-favorite-tags"),
       data: [],
+      query_url: "sortByTags",
     },
   ]);
   const [isLoading, setIsLoading] = useState(true);
@@ -259,6 +263,7 @@ const HomeIndexComponents = () => {
               indexFetch={index}
               handleOpenMatchingModal={handleOpenMatchingModal}
               handleAcceptMatchingRequestReceived={handleAcceptMatchingRequestReceived}
+              queryUrl={item?.query_url}
             />
           ))}
           {openModal && (

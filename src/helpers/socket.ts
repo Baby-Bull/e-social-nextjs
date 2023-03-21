@@ -107,6 +107,8 @@ const WebsocketClient = ({
     },
 
     reconnect() {
+      console.log("reconnect");
+      
       isClosed = false;
       retries = 0;
       createWsInstance();
