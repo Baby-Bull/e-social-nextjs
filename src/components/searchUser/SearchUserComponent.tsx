@@ -25,7 +25,13 @@ import styles from "src/components/searchUser/search_user.module.scss";
 import theme from "src/theme";
 import { jobs, employeeStatus, lastLogins, reviews } from "src/constants/searchUserConstants";
 import useViewport from "src/helpers/useViewport";
-import { UserSearch } from "src/services/user";
+import {
+  UserSearch,
+  getUserFavoriteTags,
+  getUserProvince,
+  getUserRecentlyLogin,
+  getUserNewMembers,
+} from "src/services/user";
 import { searchUserActions } from "src/store/actionTypes";
 import { SearchFormStatus } from "src/constants/constants";
 
@@ -122,18 +128,20 @@ const SearchUserComponent: FC<Props> = ({
   const isMobile = viewPort.width <= 992;
   const router = useRouter();
   const LIMIT = 6;
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const fullText = router.query?.fulltext;
   const { items: users, cursor: nextCursor, hasMore, sort } = result;
   const { tags, ...formSearch } = form;
-  const [showPopupSearchUser, setShowPopupSearchUser] = useState(false);
+  const [showPopupSearchUser, setShowPopupSearchUser] = useState<boolean>(false);
   const [valueInput, setValueInput] = useState<any>(null);
+  const [routerQuerySort, setRouterQuerySort] = useState<string | string[] | boolean>(router.query?.sortType);
 
   const fetchData = async (typeSort: string = "", arrayResult: Array<any> = [], cursor: string = "") => {
     setIsLoading(true);
     const res = await UserSearch(formSearch, tags, fullText, typeSort, LIMIT, cursor);
     const items = arrayResult.concat(res?.items);
     setIsLoading(false);
+    setRouterQuerySort(false);
     updateResult({
       items,
       cursor: res?.cursor,
@@ -142,11 +150,49 @@ const SearchUserComponent: FC<Props> = ({
     });
   };
 
+  const fetchDataWithOptionFromHomepage = async (arrayResult: Array<any> = [], cursor: string = "") => {
+    setIsLoading(true);
+    let res: any;
+    if (routerQuerySort) {
+      switch (routerQuerySort) {
+        case "sortByTags":
+          res = await getUserFavoriteTags(LIMIT, cursor);
+          break;
+        case "sortByArea":
+          res = await getUserProvince(LIMIT, cursor);
+          break;
+        case "sortbyLogin":
+          res = await getUserRecentlyLogin(LIMIT, cursor);
+          break;
+        case "sortByRegistration":
+          res = await getUserNewMembers(LIMIT, cursor);
+          break;
+        default:
+          break;
+      }
+      const items = arrayResult.concat(res?.items);
+      setIsLoading(false);
+      updateResult({
+        items,
+        cursor: res?.cursor,
+        hasMore: res?.hasMore,
+      });
+    }
+  };
+
+  const handleClickHasMore = () => {
+    if (routerQuerySort) {
+      fetchDataWithOptionFromHomepage(users, nextCursor);
+    } else {
+      fetchData(sort, users, nextCursor);
+    }
+  };
+
   const handleSort = async (typeSort: string) => {
     fetchData(typeSort, [], "");
   };
 
-  const removeSearchTag = (indexRemove) => {
+  const removeSearchTag = (indexRemove: number) => {
     const filterdTags = tags.filter((_, index) => index !== indexRemove);
     updateForm({ tags: filterdTags });
   };
@@ -191,12 +237,14 @@ const SearchUserComponent: FC<Props> = ({
   };
 
   useEffect(() => {
-    if (fullText !== undefined) {
+    if (routerQuerySort) {
+      fetchDataWithOptionFromHomepage([], "");
+    } else if (fullText !== undefined) {
       clearFormSearch();
     } else if (formStatus === SearchFormStatus.Init) {
       fetchData(sort, [], "");
     }
-  }, [fullText]);
+  }, [fullText, routerQuerySort]);
 
   useLayoutEffect(() => {
     window.scrollTo({
@@ -424,7 +472,7 @@ const SearchUserComponent: FC<Props> = ({
             </Grid>
             {hasMore ? (
               <Box sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
-                <Button onClick={() => fetchData(sort, users, nextCursor)} sx={{ color: "rgb(3, 188, 219)" }}>
+                <Button onClick={handleClickHasMore} sx={{ color: "rgb(3, 188, 219)" }}>
                   {t("common:showMore")}
                 </Button>
               </Box>
