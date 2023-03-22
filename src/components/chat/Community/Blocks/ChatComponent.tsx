@@ -181,8 +181,8 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
         }
         // else if (!isMobile) {
         else {
-          setRoomSelect(listRoomsChatTemp[0] || {});
-          setCommunityId(listRoomsChatTemp[0]?.community?.id);
+          setRoomSelect(listRoomsChatTemp?.[0] || {});
+          setCommunityId(listRoomsChatTemp?.[0]?.community?.id);
         }
       }
     }

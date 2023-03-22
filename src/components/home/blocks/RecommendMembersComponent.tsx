@@ -60,6 +60,7 @@ interface IRecommendMembersComponentProps {
   dataRecommends: Array<IRecommendDataItem>;
   handleOpenMatchingModal: Function;
   handleAcceptMatchingRequestReceived: Function;
+  queryUrl: string;
 }
 
 // const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
@@ -288,7 +289,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
 };
 
 const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = memo(
-  ({ title, dataRecommends, indexFetch, handleOpenMatchingModal, handleAcceptMatchingRequestReceived }) => {
+  ({ title, dataRecommends, indexFetch, handleOpenMatchingModal, handleAcceptMatchingRequestReceived, queryUrl }) => {
     const { t } = useTranslation();
     const [dataElements, setDataElements] = useState([]);
 
@@ -309,7 +310,7 @@ const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = me
       <Grid container className={styles.recommendList} sx={{ display: dataRecommends.length > 0 ? "block" : "none" }}>
         <div className="div-title">
           <span className="title">{title}</span>
-          <Link href="/search_user">
+          <Link href={`/search_user?sortType=${queryUrl}`}>
             <a className="link-see-more content-pc">
               {t("home:see-more")} <img src="/assets/images/icon/icon_seemore.png" alt="" />
             </a>

@@ -36,7 +36,6 @@ interface Props {
 }
 
 const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
-  const [userIdPathname, setUserIdPathname] = useState<string | string[]>(userId)
   const { t } = useTranslation();
   const viewPort = useViewport();
   const router = useRouter();
@@ -49,6 +48,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
   const NumberOfCommunitiesPerPage = isMobile ? 2 : 8;
   const review_ref = useRef(null);
   const community_ref = useRef(null);
+  const userIdPathname = router.query?.userId || ""
 
   const handleClickToScroll = (keyString: string) => {
     switch (keyString) {
@@ -182,8 +182,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
     }
   };
 
-  useEffect(() => {
-    setUserIdPathname(router.query?.userId)
+  useLayoutEffect(() => {
     if (router.query?.userId === auth?.id) {
       router.push("/my-profile");
     }

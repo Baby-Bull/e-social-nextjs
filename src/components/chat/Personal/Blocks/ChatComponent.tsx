@@ -32,6 +32,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   const listRoomsChatTemp = useSelector((state: IStoreState) => state.listrooms.itemsPersonal);
   const listRoomsChatCursor = useSelector((state: IStoreState) => state.listrooms.cursorPersonal);
   const hasMoreChatRooms = useSelector((state: IStoreState) => state.listrooms.hasMorePersonal);
+  const ListRoomsStatic = useSelector((state: IStoreState) => state.listrooms);
 
   const [userId, setUserId] = useState(roomQuery);
   const [user, setUser] = useState({});
@@ -136,11 +137,6 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
     };
   }, [roomSelect?.id, updateLastMessageOfListRooms]);
 
-  // useEffect(() => {
-  //   const listRoomSort = sortListRoomChat(listRoomResQuery?.items || []);
-  //   setListRooms(listRoomSort);
-  // }, [listRoomResQuery]);
-
   useLayoutEffect(() => {
     const checkChatroomExistFn = async () => {
       if (viewPort.width) {
@@ -225,7 +221,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
 
   const onSelectRoom = async (index: number) => {
     if (isMobile) setIsRenderRightSide(!isRenderRightSide);
-    if (listRoomsChatTemp[index]?.user?.id !== userId) {
+    if (listRoomsChatTemp?.[index]?.user?.id !== userId) {
       setRoomSelect(listRoomsChatTemp[index]);
       setUserId(listRoomsChatTemp[index]?.user?.id);
       setUser(listRoomsChatTemp[index]?.user);
@@ -236,6 +232,10 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
         type: actionTypes.UPDATE_PERSONAL_CHATROOM_UNREAD_COUNT,
         payload: { chatRoomId: listRoomsChatTemp[index].id, count: 0 },
       });
+      // dispatch({
+      //   type: actionTypes.UPDATE_UNREAD_LISTROOMS_COUNT,
+      //   payload: { count: ListRoomsStatic?.unread_count - 1 },
+      // });
     }
   };
 
