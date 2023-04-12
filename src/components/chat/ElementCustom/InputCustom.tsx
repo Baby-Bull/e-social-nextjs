@@ -9,6 +9,21 @@ const InputCustom = styled(InputBase)({
   },
   "& .MuiInputBase-input": {
     padding: 0,
+    maxHeight: "60px",
+    overflowX: "hidden!important" as any,
+    overflowY: "auto!important" as any,
+    "&::-webkit-scrollbar ": {
+      width: "5px",
+      backgroundColor: "#f5f5f5",
+    },
+    "&::-webkit-scrollbar-track": {
+      borderRadius: "10px",
+      backgroundColor: "#f5f5f5",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      borderRadius: "10px",
+      backgroundColor: "#c1c1c1",
+    },
   },
 });
 
