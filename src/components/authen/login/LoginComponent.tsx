@@ -13,7 +13,8 @@ import { authWithProvider } from "src/services/auth";
 import { login } from "src/store/store";
 import actionTypes from "src/store/actionTypes";
 
-import { IResolveParams, LoginSocialGithub, LoginSocialTwitterV1 } from "../loginSocial";
+import { IResolveParams, LoginSocialGithub } from "../loginSocial";
+// import { IResolveParams, LoginSocialGithub, LoginSocialTwitterV1 } from "../loginSocial";
 import LoginSocialGoogle from "../loginSocial/google/LoginSocialGoogle";
 
 const LoginComponent = () => {
@@ -124,7 +125,7 @@ const LoginComponent = () => {
                   >
                     {t("login:right.title")}
                   </Typography>
-                  <Box pt="68px">
+                  {/* <Box pt="68px">
                     <LoginSocialTwitterV1
                       ref={githubRef}
                       redirect_uri={process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER}
@@ -137,7 +138,7 @@ const LoginComponent = () => {
                     >
                       <ButtonComponent props={{ mode: "twitter" }}>{t("login:right.register-twitter")}</ButtonComponent>
                     </LoginSocialTwitterV1>
-                  </Box>
+                  </Box> */}
                   <Box pt="48px">
                     <LoginSocialGoogle
                       clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
