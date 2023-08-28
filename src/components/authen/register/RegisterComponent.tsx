@@ -12,7 +12,8 @@ import { authWithProvider } from "src/services/auth";
 import { login } from "src/store/store";
 import SplashScreen from "src/components/common/SplashScreen";
 
-import { LoginSocialTwitterV1, LoginSocialGithub, IResolveParams } from "../loginSocial";
+import { LoginSocialGithub, IResolveParams } from "../loginSocial";
+// import { LoginSocialTwitterV1, LoginSocialGithub, IResolveParams } from "../loginSocial";
 import LoginSocialGoogle from "../loginSocial/google/LoginSocialGoogle";
 
 const RegisterComponents = () => {
@@ -127,7 +128,7 @@ const RegisterComponents = () => {
                 {t("register:sub-title")}
               </Typography>
 
-              <Box pt="63px">
+              {/* <Box pt="63px">
                 <LoginSocialTwitterV1
                   ref={githubRef}
                   redirect_uri={process.env.NEXT_PUBLIC_REDIRECT_URL_REGISTER}
@@ -142,7 +143,7 @@ const RegisterComponents = () => {
                 >
                   <ButtonComponent props={{ mode: "twitter" }}>{t("register:register-twitter")}</ButtonComponent>
                 </LoginSocialTwitterV1>
-              </Box>
+              </Box> */}
               <Box pt="48px">
                 <LoginSocialGoogle
                   clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
