@@ -26,7 +26,7 @@ import dayjs from "dayjs";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
-import { updateProfile } from "src/services/user";
+import { updateProfileUseRenewal } from "src/services/user";
 import { REGEX_RULES, VALIDATE_MESSAGE_FORM_REGISTER } from "src/messages/validate";
 import { USER_STATUS_OPTIONS } from "src/components/constants/constants";
 import { JAPAN_PROVINCE_OPTIONS } from "src/constants/constants";
@@ -194,7 +194,9 @@ const FormRegisterComponents = () => {
     if (handleValidateForm()) {
       userInfo.birthday = userInfo?.birthday?.dob_value || userInfo.birthday;
       setIsLoading(true);
-      const resUpdate = await updateProfile(userInfo);
+      // use redirect screen renewal
+      const resUpdate = await updateProfileUseRenewal(userInfo);
+      // const resUpdate = await updateProfile(userInfo);
       setIsLoading(false);
       if (resUpdate && !resUpdate?.error_code) {
         handleClickOpen();
