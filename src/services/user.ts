@@ -323,6 +323,28 @@ export const updateProfile = async (body: any, showToast = true) => {
   }
 };
 
+// use when show screen renewal
+export const updateProfileUseRenewal = async (body: any, showToast = true) => {
+  toast.configure();
+  try {
+    const res = await api.patch(`/user/profile`, body);
+    if (!res.data) {
+      toast.error(SERVER_ERROR);
+    } else if (res?.data?.message?.email[0]?.message === "email is not unique") {
+      toast.error(EMAIL_EXISTS);
+    } else {
+      window.location.href = "/waiting-renewal";
+      if (showToast) {
+        toast.success(UPDATE_PROFILE);
+      }
+    }
+    return res.data;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
 export const getListnotifications = async (limit: number, cursor: string) => {
   try {
     const queryString = new URLSearchParams({
