@@ -16,7 +16,7 @@ import {
 } from "src/messages/notification";
 import { typeTimeLogin, typeReview } from "src/constants/searchUserConstants";
 
-import { setIsProfileEdited } from "../helpers/storage";
+import { setIsProfileEdited, setIsRenewal } from "../helpers/storage";
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
@@ -333,6 +333,8 @@ export const updateProfileUseRenewal = async (body: any, showToast = true) => {
     } else if (res?.data?.message?.email[0]?.message === "email is not unique") {
       toast.error(EMAIL_EXISTS);
     } else {
+      setIsRenewal("true");
+      setIsProfileEdited("true");
       window.location.href = "/waiting-renewal";
       if (showToast) {
         toast.success(UPDATE_PROFILE);

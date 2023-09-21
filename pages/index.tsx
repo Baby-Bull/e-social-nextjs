@@ -4,7 +4,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { parseCookies } from "nookies";
 
 import HomeIndexComponents from "src/components/home/IndexComponent";
-import { IS_PROFILE_EDITED, USER_TOKEN } from "src/helpers/storage";
+import { IS_PROFILE_EDITED, USER_TOKEN, IS_RENEWAL } from "src/helpers/storage";
 
 const Home: NextPage = () => <HomeIndexComponents />;
 
@@ -15,6 +15,15 @@ export const getServerSideProps = async (ctx) => {
     return {
       redirect: {
         destination: `${process.env.NEXT_PUBLIC_URL_LANDING_PAGE}?oldUrl=${ctx.resolvedUrl}`,
+        permanent: false,
+      },
+    };
+  }
+
+  if (cookies[IS_RENEWAL] === "true") {
+    return {
+      redirect: {
+        destination: "/waiting-renewal",
         permanent: false,
       },
     };
