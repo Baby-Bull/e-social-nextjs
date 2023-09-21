@@ -1,9 +1,9 @@
 import * as React from "react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import dynamic from "next/dynamic";
-import { parseCookies } from "nookies";
+// import { parseCookies } from "nookies";
 
-import { USER_TOKEN } from "src/helpers/storage";
+// import { USER_TOKEN } from "src/helpers/storage";
 import ContentComponent from "src/components/layouts/ContentComponent";
 
 import { NextPageWithLayout } from "./_app";
@@ -20,15 +20,15 @@ WaitingRenewal.getLayout = ({ children }) => (
 
 export const getServerSideProps = async (ctx) => {
   const { locale } = ctx;
-  const cookies = parseCookies(ctx);
-  if (cookies[USER_TOKEN]) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
+  // const cookies = parseCookies(ctx);
+  // if (cookies[USER_TOKEN]) {
+  //   return {
+  //     redirect: {
+  //       destination: "/",
+  //       permanent: false,
+  //     },
+  //   };
+  // }
 
   return {
     props: {
