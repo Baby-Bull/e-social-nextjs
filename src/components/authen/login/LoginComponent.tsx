@@ -16,7 +16,7 @@ import SplashScreen from "src/components/common/SplashScreen";
 /**
  * import functions
  */
-import { authWithProvider } from "src/services/auth";
+import { authWithProvider, loginWithNestServer } from "src/services/auth";
 import { login } from "src/store/store";
 /**
  * import constants
@@ -27,6 +27,7 @@ import actionTypes from "src/store/actionTypes";
 import styles from "../authen.module.scss";
 import LoginSocialGoogle from "../loginSocial/google/LoginSocialGoogle";
 import { IResolveParams, LoginSocialGithub } from "../loginSocial";
+import { Field } from "../register/form/Field";
 
 const LoginComponent = () => {
   const { t } = useTranslation();
@@ -40,6 +41,25 @@ const LoginComponent = () => {
 
   const onLoginStart = () => {
     // add login function
+  };
+
+  const [loginInfo, setLoginInfo] = useState<{ email: String; password: String }>({
+    email: null,
+    password: null,
+  });
+  const onChangeLoginInfo = (key: string, value: string) => {
+    setLoginInfo({
+      ...loginInfo,
+      [key]: typeof value === "string" ? value.trim() : value,
+    });
+  };
+  const submitLoginInfo = async () => {
+    try {
+      const res = await loginWithNestServer(loginInfo);
+      return res;
+    } catch (error) {
+      return error;
+    }
   };
 
   useEffect(() => {
@@ -101,6 +121,38 @@ const LoginComponent = () => {
                   <Typography className={styles.title} sx={{ color: theme.navy }}>
                     {t("login:right.title")}
                   </Typography>
+                  <Box>
+                    <form>
+                      <Field
+                        id="email"
+                        required
+                        label={t("login:login-info.email")}
+                        placeholder={t("login:login-info.placeholder.email")}
+                        editor="textbox"
+                        onChangeValue={onChangeLoginInfo}
+                        // error={errorValidate.username}
+                      />
+                      <Field
+                        id="password"
+                        required
+                        label={t("login:login-info.password")}
+                        placeholder={t("login:login-info.placeholder.password")}
+                        editor="password"
+                        onChangeValue={onChangeLoginInfo}
+                        // error={errorValidate.username}
+                      />
+                      <ButtonComponent
+                        props={{
+                          mode: "gradient",
+                          dimension: "x-medium",
+                        }}
+                        sx={{ marginTop: "8px" }}
+                        onClick={submitLoginInfo}
+                      >
+                        {t("login:submit")}
+                      </ButtonComponent>
+                    </form>
+                  </Box>
                   <Box pt="48px">
                     <LoginSocialGoogle
                       clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}

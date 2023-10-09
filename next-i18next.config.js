@@ -2,13 +2,13 @@ const path = require("path");
 
 module.exports = {
   i18n: {
-    defaultLocale: "ja",
+    defaultLocale: "en",
     locales: ["ja", "en"],
     localePath: path.resolve("./public/locales"),
     localeSubpaths: "none",
     localeDetection: false,
     browserLanguageDetection: false,
-    defaultLanguage: "ja",
+    defaultLanguage: "en",
   },
   reloadOnPrerender: process.env.NODE_ENV === "development",
 };

@@ -28,11 +28,10 @@ export const apiAuth = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API,
 });
 
-// api from nest server
+// api from nest server ***************************************
 export const apiNestServer = axios.create({
   baseURL: ENDPOINT_NEST_SERVER,
 });
-
 export const configApiAuthNestServer = (token: string) => {
   fetchTokenPromise = Promise.resolve(token);
   if (token) {
@@ -41,8 +40,15 @@ export const configApiAuthNestServer = (token: string) => {
   axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 };
 configApiAuthNestServer(getTokenStorage());
+apiNestServer.interceptors.response.use(
+  (response) => response.data,
+  (error) => ({
+    data: error.response.data,
+    statusCode: error.response.status,
+  }),
+);
 
-// api from social server
+// api from social server ******************************************
 export const setApiAuth = (token: string) => {
   fetchTokenPromise = Promise.resolve(token);
   if (token) {

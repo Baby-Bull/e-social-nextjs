@@ -48,9 +48,9 @@ export const authWithProvider = async (provider: string, credentials: OauthCrede
   }
 };
 
-export const loginWithNestServer = async () => {
+export const loginWithNestServer = async (loginPayload: { email: String; password: String }) => {
   try {
-    const res = await apiNestServer.post(`auth/login`);
+    const res = await apiNestServer.post(`/auth/login`, loginPayload);
     return res;
   } catch (error) {
     return error;
