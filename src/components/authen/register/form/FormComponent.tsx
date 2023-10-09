@@ -216,7 +216,7 @@ const FormRegisterComponents = () => {
         <RegisterPageHeaderComponent />
         <Box sx={{ marginTop: "55px" }}>
           <Grid container>
-            <GridLeftComponent smAndUp />
+            <GridLeftComponent />
 
             <Grid item xs={12} sm={6}>
               <Box
