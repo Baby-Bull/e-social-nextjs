@@ -2,6 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 import { FORBIDDEN, NOT_FOUND, SERVER_ERROR } from "src/messages/notification";
+import { ENDPOINT_NEST_SERVER } from "src/constants/env.constant";
 
 import {
   setToken as setTokenStorage,
@@ -13,11 +14,10 @@ import {
 
 let fetchTokenPromise = Promise.resolve(null);
 let isFetchingToken = false;
-
 /**
  * we have tow types of api:
- * api: using for public request. Available with non AUTH request
- * apiAuth: only using for authenticated request. NOT allow any request without Authorization.
+ * api: using for normal request
+ * apiAuth: used for retrieving auth token (refresh_token, access_token, ...) from api
  *
  */
 export const api = axios.create({
@@ -28,6 +28,27 @@ export const apiAuth = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API,
 });
 
+// api from nest server ***************************************
+export const apiNestServer = axios.create({
+  baseURL: ENDPOINT_NEST_SERVER,
+});
+export const configApiAuthNestServer = (token: string) => {
+  fetchTokenPromise = Promise.resolve(token);
+  if (token) {
+    apiNestServer.defaults.headers.common.Authorization = `Bearer ${token}`;
+  }
+  axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
+};
+configApiAuthNestServer(getTokenStorage());
+apiNestServer.interceptors.response.use(
+  (response) => response.data,
+  (error) => ({
+    data: error.response.data,
+    statusCode: error.response.status,
+  }),
+);
+
+// api from social server ******************************************
 export const setApiAuth = (token: string) => {
   fetchTokenPromise = Promise.resolve(token);
   if (token) {
@@ -57,10 +78,7 @@ export const fetchToken = async ({ accessToken, refreshToken }) => {
         isFetchingToken = false;
         return accessToken;
       })
-      .catch((err) => {
-        console.log(err);
-        return null;
-      });
+      .catch(() => null);
   }
 
   return fetchTokenPromise;

@@ -1,3 +1,4 @@
+// TO-DO : update new format registration screen
 /* eslint-disable no-console */
 import React, { useRef, useState, useEffect } from "react";
 import { Box, Grid, Typography, Link, AppBar, Toolbar } from "@mui/material";
