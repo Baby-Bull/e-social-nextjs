@@ -20,6 +20,7 @@ import useViewport from "src/helpers/useViewport";
 
 import BannerComponent from "./blocks/BannerComponent";
 import MainInfomationComponent from "./blocks/MainInfomationComponent";
+import styles from "./home.module.scss";
 
 const NotificationComponent = dynamic(() => import("./blocks/NotificationsComponent"), {
   ssr: true,
@@ -235,22 +236,9 @@ const HomeIndexComponents = () => {
           <CircularProgress color="inherit" />
         </Backdrop>
       )}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: "65px",
-        }}
-      >
+      <Box className={styles["home-screen"]}>
         <BannerComponent />
-        <Grid
-          container
-          sx={{
-            maxWidth: "1440px",
-          }}
-        >
+        <Grid className={styles["home-component"]} container>
           {isMobile && <NotificationComponent />}
           {isMobile ? <MatchingComponent /> : <MainInfomationComponent />}
 
