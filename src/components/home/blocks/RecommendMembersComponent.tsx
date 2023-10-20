@@ -241,7 +241,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
               </div>
 
               <div className="description">
-                {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
+                {data?.discussion_topic ?? t("home:box-member-recommend.content-description")}
               </div>
             </div>
           </Link>

@@ -102,14 +102,14 @@ const MainInfomationComponent = () => {
             />
           </Avatar>
           <Box className={styles.contentProfile}>
-            <Typography className={styles.titleProfile}>マイプロフィールを充実させてみよう！</Typography>
+            <Typography className={styles.titleProfile}>{t("home:main-information.edit-title")}</Typography>
             <Link href="/my-profile">
-              <Button className={styles.btnProfile}>マイプロフィール編集</Button>
+              <Button className={styles.btnProfile}>{t("home:main-information.edit-button")}</Button>
             </Link>
           </Box>
         </Grid>
         <Grid className={styles.matchingInfomation} item xs={3}>
-          <Box className={styles.infoTitle}>goodhubメニュー</Box>
+          <Box className={styles.infoTitle}>{t("home:main-information.info-title")}</Box>
           <Grid container>
             <Grid item xs={9}>
               <ul className={styles.matchingListTitle}>
@@ -133,12 +133,12 @@ const MainInfomationComponent = () => {
           </Grid>
         </Grid>
         <Grid className={styles.missionInfomation} item xs={6}>
-          <Box className={styles.infoTitle}>ミッションクリアしてみよう！</Box>
+          <Box className={styles.infoTitle}>{t("home:main-information.mission.mission-title")}</Box>
           <ul className={styles.missionList}>
             <Link href="/my-profile/edit" shallow>
               <li>
                 <span className={hasFinishedMission1 ? styles.doneMissionText : undefined}>
-                  Mission 1 プロフィールを充実させて、色んな人に知ってもらおう
+                  Mission 1 {t("home:main-information.mission.mission1")}
                 </span>
                 {hasFinishedMission1 && <div className={styles.doneMission}>OK</div>}
               </li>
@@ -146,7 +146,7 @@ const MainInfomationComponent = () => {
             <Link href="/search_community" shallow>
               <li>
                 <span className={hasFinishedMission2 ? styles.doneMissionText : undefined}>
-                  Mission 2 気になるコミュニティに参加して、友達を増やそう
+                  Mission 2 {t("home:main-information.mission.mission2")}
                 </span>
                 {hasFinishedMission2 && <div className={styles.doneMission}>OK</div>}
               </li>
@@ -154,7 +154,7 @@ const MainInfomationComponent = () => {
             <Link href="/matching?type=community" shallow>
               <li>
                 <span className={hasFinishedMission3 ? styles.doneMissionText : undefined}>
-                  Mission 3 コミュニティチャットで自己紹介をしてみよう
+                  Mission 3 {t("home:main-information.mission.mission3")}
                 </span>
                 {hasFinishedMission3 && <div className={styles.doneMission}>OK</div>}
               </li>
@@ -162,7 +162,7 @@ const MainInfomationComponent = () => {
             <Link href={`/ community / ${generalCommunityId}/post/create`} shallow>
               <li>
                 <span className={hasFinishedMission4 ? styles.doneMissionText : undefined}>
-                  Mission 4 コミュニティで話題を投稿して、メンバーと交流してみよう
+                  Mission 4 {t("home:main-information.mission.mission4")}
                 </span>
                 {hasFinishedMission4 && <div className={styles.doneMission}>OK</div>}
               </li>
