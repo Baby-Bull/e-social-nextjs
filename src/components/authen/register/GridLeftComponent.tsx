@@ -5,6 +5,8 @@ import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
 
+import styles from "../authen.module.scss";
+
 const Item = styled(Paper)`
   display: flex;
   align-items: center;
@@ -49,77 +51,33 @@ const TypoContent = styled(TypoCustom)`
   }
 `;
 
-interface IGridLeftComponentProps {
-  smAndUp?: boolean;
-}
-
-const GridLeftComponent: React.SFC<IGridLeftComponentProps> = ({ smAndUp }) => {
+const GridLeftComponent = () => {
   const { t } = useTranslation();
 
   return (
     <Grid
+      className={styles["left-component-wrapper"]}
       item
-      xs={12}
-      sm={6}
       sx={{
         background: theme.whiteGray,
-        display: [smAndUp ? "none" : "block", "block"],
       }}
     >
-      <Box
-        sx={{
-          pt: [5, 9],
-          pb: [5, "186px"],
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Typography
-          sx={{
-            pb: ["40px", "48px"],
-            fontSize: 20,
-            fontWeight: 700,
-            letterSpacing: "7px",
-          }}
-        >
-          {t("register:description.title")}
-        </Typography>
+      <Box className={styles["left-component-container"]}>
+        <Typography className={styles["left-component--tittle"]}>{t("register:description.title")}</Typography>
         <Avatar
+          className={styles["left-component--avatar"]}
           variant="square"
-          sx={{
-            width: ["50.2%", "43.5%"],
-            height: "100%",
-          }}
           src="/assets/images/svg/register_account.svg"
         />
-        <Stack
-          spacing={{ xs: "20px", sm: 4 }}
-          sx={{
-            pt: ["40px", "57px"],
-            px: { sm: "60px" },
-            width: ["90%", "100%"],
-            height: "100%",
-          }}
-        >
+        <Stack className={styles["left-component--stack"]} spacing={{ xs: "20px", sm: 4 }}>
           <Item>
             <BoxDescription color="#000">
               <TypoNumber>01</TypoNumber>
-              <Box
-                sx={{
-                  pl: ["14px", "14px", 0],
-                  color: "#000",
-                  display: "flex",
-                  flexDirection: ["column", "column", "row"],
-                  alignItems: ["space-between", "space-between", "center"],
-                  justifyContent: ["space-between", "space-between", "center"],
-                }}
-              >
-                <TypoCustom fontWeight="700" pl={{ md: "20px" }}>
+              <Box className={styles["left-component--box-item"]}>
+                <TypoCustom className={styles["left-component--box-item-1-1"]}>
                   {t("register:description.text-1.1")}
                 </TypoCustom>
-                <Typography fontSize="12px" mt="6px" fontWeight="400" pl={{ md: "5px" }}>
+                <Typography className={styles["left-component--box-item-1-2"]}>
                   {t("register:description.text-1.2")}
                 </Typography>
               </Box>

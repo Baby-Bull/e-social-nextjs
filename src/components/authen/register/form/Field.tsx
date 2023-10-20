@@ -1,3 +1,4 @@
+// TO-DO : move to common folder *( atom component)  -- duplicate component.
 import * as React from "react";
 import {
   InputLabel,
@@ -20,11 +21,12 @@ import DesktopDatePicker from "@mui/lab/DatePicker";
 import { styled } from "@mui/material/styles";
 import { ja } from "date-fns/locale";
 import dayjs from "dayjs";
+import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
 import { VALIDATE_MESSAGE_FORM_REGISTER } from "src/messages/validate";
 
-type Editor = "textbox" | "dropdown" | "checkbox" | "multi-selection" | "date-picker";
+type Editor = "textbox" | "dropdown" | "checkbox" | "multi-selection" | "date-picker" | "password";
 
 export interface IOptionProps {
   label: string;
@@ -131,6 +133,7 @@ export const Field: React.SFC<IFieldProps> = ({
   onChangeValue,
   onChangeCheckbox,
 }) => {
+  const { t } = useTranslation();
   const handleDeleteTagItem = (tag: string) => () => {
     const tags = value.filter((item: string) => item !== tag);
     if (onChangeValue) {
@@ -259,6 +262,50 @@ export const Field: React.SFC<IFieldProps> = ({
           </FormControl>
         )}
 
+        {editor!.toLowerCase() === "password" && (
+          <FormControl sx={{ pt: "20px", mt: ["25px", "20px"] }} variant="standard">
+            <InputLabel
+              shrink
+              htmlFor={id}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                color: "black",
+              }}
+            >
+              <Box
+                sx={{
+                  fontFamily: "Noto Sans JP",
+                  fontSize: "18px",
+                }}
+                display="flex"
+              >
+                {label}
+                <Chip
+                  label="必須"
+                  sx={{
+                    display: required ? "" : "none",
+                    ml: 1,
+                    width: "54px",
+                    height: "22px",
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "white",
+                    backgroundColor: theme.orange,
+                  }}
+                />
+              </Box>
+            </InputLabel>
+            <InputCustom
+              type="password"
+              placeholder={placeholder}
+              defaultValue={value}
+              id={id}
+              onChange={(e) => onChangeValue(id, e.target.value)}
+            />
+          </FormControl>
+        )}
+
         {editor!.toLowerCase() === "dropdown" && (
           <FormControl sx={{ pt: "20px", mt: ["25px", "20px"], width: "100%" }} variant="standard">
             <InputLabel
@@ -279,7 +326,7 @@ export const Field: React.SFC<IFieldProps> = ({
               >
                 {label}
                 <Chip
-                  label="必須"
+                  label={t("common:required")}
                   sx={{
                     display: required ? "" : "none",
                     ml: 1,

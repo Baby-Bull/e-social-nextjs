@@ -46,7 +46,7 @@ interface MyAppProps extends AppProps {
 const SplashScreen = () => (
   <img
     alt="splash"
-    src="/assets/images/bg_loading.gif"
+    // src="/assets/images/bg_loading.gif"
     style={{ top: "40vh", bottom: 0, right: 0, left: "40%", width: "20%", position: "fixed" }}
   />
 );
@@ -128,7 +128,7 @@ const MyApp = (props: MyAppProps) => {
   return (
     <React.Fragment>
       <Head>
-        <title>goodhub</title>
+        <title>E-Social</title>
         <meta property="og:type" content="website" key="og-type" />
         <meta property="og:title" content='ITエンジニアのための溜まり場 - "goodhub"' key="og-title" />
         <meta

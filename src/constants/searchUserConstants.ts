@@ -190,4 +190,4 @@ export const typeMatchingStatus = {
   RECEIVED_PENDING: "received_pending",
   CONFIRMED: "confirmed",
   NULL: null,
-}
+};
