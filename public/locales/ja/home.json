@@ -1,4 +1,16 @@
 {
+    "main-information": {
+        "edit-title": "マイプロフィールを充実させてみよう！",
+        "edit-button": "マイプロフィール編集",
+        "info-title": "Esocial",
+        "mission": {
+            "mission-title": "ミッションクリアしてみよう！",
+            "mission1": "プロフィールを充実させて、色んな人に知ってもらおう",
+            "mission2": "気になるコミュニティに参加して、友達を増やそう",
+            "mission3": "コミュニティチャットで自己紹介をしてみよう",
+            "mission4": "コミュニティで話題を投稿して、メンバーと交流してみよう"
+        }
+    },
     "matching": {
         "request": "マッチングリクエスト",
         "request-m": "マッチング\nリクエスト",
@@ -31,6 +43,7 @@
         "no-login": "ログイン中",
         "review": "レビュー",
         "label-description": "話せること/聞きたいこと",
+        "content-description": "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。",
         "label-talking": "話せること",
         "like-string": "話したい人リストに登録"
     },
@@ -41,6 +54,13 @@
         "frequency-placeholder": "例）◯月◯日希望",
         "message": "メッセージ",
         "message-placeholder": "その他話したい内容などをご記載ください。",
-        "button": "リクエストを送信"
+        "button": "リクエストを送信",
+        "to-user": "さんへのマッチングリクエスト"
+    },
+    "notification": {
+        "title": "ヒント",
+        "content1-1": "Esocialへようこそ！まずは",
+        "content1-2": "プロフィール詳細を記入",
+        "content1-3": "してみると、マッチング率がUPします☆"
     }
 }

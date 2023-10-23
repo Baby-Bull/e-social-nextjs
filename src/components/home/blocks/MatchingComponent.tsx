@@ -1,3 +1,6 @@
+/**
+ * import libs
+ */
 import React, { memo, useEffect, useState } from "react";
 import { Grid, Box } from "@mui/material";
 import classNames from "classnames";
@@ -6,10 +9,16 @@ import { useRouter } from "next/router";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useSelector, useDispatch } from "react-redux";
 
+/**
+ * import functions
+ */
+import { getUserStatics } from "src/services/user";
 import styles from "src/components/home/home.module.scss";
+/**
+ * import constant
+ */
 import { IStoreState } from "src/constants/interface";
 import actionTypes from "src/store/actionTypes";
-import { getUserStatics } from "src/services/user";
 
 interface IMatchingItemProps {
   label: string;

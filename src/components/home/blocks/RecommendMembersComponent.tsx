@@ -185,16 +185,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
           <div className="info-summary">
             <Link href={`/profile/${data.id}`}>
               <div style={{ width: "100%" }}>
-                <Avatar
-                  sx={{
-                    width: "56px",
-                    height: "56px",
-                    mr: "13px",
-                    borderRadius: "74px",
-                    objectFit: "cover",
-                    border: " 1px solid rgba(156, 172, 194, 0.3)",
-                  }}
-                >
+                <Avatar className={styles["avatarUser-frame"]}>
                   <Image
                     loader={() =>
                       data?.profile_image ??
@@ -250,7 +241,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
               </div>
 
               <div className="description">
-                {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
+                {data?.discussion_topic ?? t("home:box-member-recommend.content-description")}
               </div>
             </div>
           </Link>

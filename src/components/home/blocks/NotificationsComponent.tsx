@@ -3,6 +3,7 @@ import React from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import { useTranslation } from "next-i18next";
 
 import styles from "src/components/home/home.module.scss";
 
@@ -34,28 +35,29 @@ const PrevArrow = (props: any) => {
 };
 
 const NotificationComponent = () => {
+  const { t } = useTranslation();
   const notificationsMockData = [
     {
-      title: "ヒント",
+      title: t("home:notification.title"),
       content: (
         <span>
-          goodhubへようこそ！まずは
+          {t("home:notification.content1-1")}
           <a style={{ color: "#FF9458" }} href="my-profile">
-            プロフィール詳細を記入
+            {t("home:notification.content1-2")}
           </a>
-          してみると、マッチング率がUPします☆
+          {t("home:notification.content1-3")}
         </span>
       ),
     },
     {
-      title: "ヒント",
+      title: t("home:notification.title"),
       content: (
         <span>
-          goodhubへようこそ！まずは
+          {t("home:notification.content1-1")}
           <a style={{ color: "#FF9458" }} href="my-profile">
-            プロフィール詳細を記入
+            {t("home:notification.content1-2")}
           </a>
-          してみると、マッチング率がUPします☆
+          {t("home:notification.content1-3")}
         </span>
       ),
     },

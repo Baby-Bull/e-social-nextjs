@@ -1,3 +1,6 @@
+/**
+ * import libs
+ */
 import React, { useRef, useState } from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -5,9 +8,11 @@ import Slider from "react-slick";
 import classNames from "classnames";
 import { useRouter } from "next/router";
 
-import styles from "src/components/home/home.module.scss";
-
+/**
+ * import external file
+ */
 import { notificationMockData } from "../mockData/mockData";
+import styles from "../home.module.scss";
 
 const NextArrow = (props: any) => {
   const { className, style, onClick } = props;
@@ -22,7 +27,6 @@ const NextArrow = (props: any) => {
 
 const PrevArrow = (props: any) => {
   const { className, style, onClick } = props;
-
   return (
     <div className={className} style={style} onClick={onClick}>
       <img src="/assets/images/home_page/left_triangle.svg" alt="prev" />
@@ -37,12 +41,11 @@ const BannerComponent = () => {
   const banners = useRef([
     {
       onClick: () => router.push("/search_community"),
-
-      src: "/assets/images/home_page/home_1.svg",
+      src: "/assets/images/home_page/home_1.jpg",
     },
     {
       onClick: () => router.push("/search_user"),
-      src: "/assets/images/home_page/home_2.svg",
+      src: "/assets/images/home_page/home_2.jpg",
     },
     {
       onClick: () =>
@@ -53,7 +56,7 @@ const BannerComponent = () => {
           },
           "/my-profile",
         ),
-      src: "/assets/images/home_page/home_3.svg",
+      src: "/assets/images/home_page/home_3.jpg",
     },
   ]);
 
@@ -114,15 +117,8 @@ const BannerComponent = () => {
           </div>
         ))}
       </Slider>
-      <div className={styles.notificationBanner}>
-        <div
-          style={{
-            maxWidth: "1360px",
-            margin: "auto",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+      <div className={styles["notification-banner"]}>
+        <div className={styles["notification-banner-wrapper"]}>
           <img src="/assets/images/home_page/ic_spiker_mute.svg" alt="spiker-mute" />
           <span className="title">{notification?.title}</span>
           <Slider className={styles.notificationSlick} {...settingNotificationSlick}>

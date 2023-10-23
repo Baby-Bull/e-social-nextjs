@@ -1,0 +1,6 @@
+export const USER_TOKEN = "USER_TOKEN";
+export const REFRESH_TOKEN = "REFRESH_TOKEN";
+export const EXPIRES_IN = "EXPIRES_IN";
+export const IS_PROFILE_EDITED = "IS_PROFILE_EDITED";
+export const TRIGGER_REFRESH = "TRIGGER_REFRESH";
+export const IS_RENEWAL = "IS_RENEWAL";

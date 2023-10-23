@@ -1,3 +1,50 @@
 {
-  "header-title": "KIAI"
+  "header-title": "KIAI-JA",
+  "header": {
+    "title": "Edit your profile",
+    "search-pc": "Search by language, region, etc.",
+    "search-mb": "Language",
+    "list-engineers": "Engineer list",
+    "list-community": "Community list",
+    "input-search-placeholder": "language, hobbies, region",
+    "profile-editing": "Edit profile",
+    "message": "Message",
+    "matching-request": "Matching request",
+    "matching-you-applied-for": "Applied matching",
+    "list-people-you-want-to-talk": "List favorite people",
+    "participating-community": "Participating communities",
+    "setting": "Setting",
+    "logout": "Logout",
+    "menuchat": {
+      "title1": "Message",
+      "title2": "Group chat",
+      "placeholder-chat": "Search message",
+      "attachment": "Attachment",
+      "empty-tab": "No conversation"
+    },
+    "menu-notification": {
+      "notice": "Notice",
+      "empty-noti": "No notifications."
+    }
+  },
+  "footer": {
+    "signin": "Login",
+    "signout": "Sign up",
+    "terms-service": "Terms of service",
+    "privacy-policy": "Privacy policy",
+    "commerical-act": "Description based on Specified Commercial Transactions Law",
+    "inquiry": "Inquiry",
+    "operating-company": "Operating company",
+    "home": "Home",
+    "engineer-search": "Engineer search",
+    "community-search": "Community search",
+    "logout": "Logout"
+  },
+  "body": {
+    "is_login": "Online"
+  },
+  "showMore": "Show more",
+  "required": "Required",
+  "not_have_access": "No access.",
+  "no_info": "No information"
 }
