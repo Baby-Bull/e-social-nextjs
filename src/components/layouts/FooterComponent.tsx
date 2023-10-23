@@ -40,16 +40,10 @@ const FooterComponent: React.FC<IFooterComponentProps> = ({ authPage = false, re
 
   return (
     <Box className={styles.footerComp}>
-      <Box
-        sx={{
-          display: { xs: "block", lg: "flex" },
-          justifyContent: "space-between",
-          p: { xs: "24px 28px", lg: "40px 200px 20px 200px" },
-          color: "#FFFFFF",
-        }}
-      >
+      <Box className={styles["footer-container"]}>
         <Box>
           <Box
+            className={styles["footer-rightsection"]}
             sx={{
               fontWeight: 700,
               fontSize: "14px",
@@ -158,7 +152,7 @@ const FooterComponent: React.FC<IFooterComponentProps> = ({ authPage = false, re
         </Box>
         <Box sx={{ mt: { xs: "39px", lg: "0" } }}>
           <Box sx={{ textAlign: { xs: "center", lg: "right" } }}>
-            <img style={{ width: "137px" }} src="/assets/images/logo/logo_footer2.png" alt="logo" />
+            <img style={{ width: "137px" }} src="/assets/images/logo/logo.png" alt="logo" />
           </Box>
           <Box sx={{ mt: { xs: "5px", lg: "77px" }, fontSize: "12px", textAlign: { xs: "center", lg: "right" } }}>
             Copyright © AilaB inc. All Rights Reserved.

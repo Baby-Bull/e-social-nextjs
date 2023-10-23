@@ -1,4 +1,8 @@
 /* eslint-disable no-unused-expressions */
+// TO-DO: update import sections
+/**
+ * import libs
+ */
 import React, { useEffect, useState, useCallback } from "react";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
@@ -9,11 +13,11 @@ import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import { useRouter } from "next/router";
 import Button from "@mui/material/Button";
 import Select from "@mui/material/Select";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
+import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import { ToastContainer } from "react-toastify";
 import Link from "next/link";
@@ -21,6 +25,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { isMobile } from "react-device-detect";
 import dynamic from "next/dynamic";
 
+/**
+ * import constant
+ */
 import theme from "src/theme";
 import websocket from "src/helpers/socket";
 import "react-toastify/dist/ReactToastify.css";
@@ -32,6 +39,7 @@ import { logout } from "src/services/auth";
 import { customizeContentNotificationBrowser, notify } from "src/utils/utils";
 import { ChatMessage } from "src/types/models/ChatMessage";
 import { getItem, setItem, TRIGGER_REFRESH } from "src/helpers/storage";
+import styles from "src/components/layouts/layout.module.scss";
 
 interface IHeaderComponentProps {
   authPage?: boolean;
@@ -356,50 +364,26 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
+      className={styles.menuChatDropDown}
       id={mobileMenuId}
       keepMounted
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
       sx={{
-        zIndex: 10001,
         top: "9px",
         "& .MuiMenu-paper": {
-          width: "160px",
-          borderRadius: "12px",
+          width: "200px",
         },
       }}
     >
-      <Box sx={{ p: "22px 0 22px 12px", borderBottom: "1px solid #D8D8D8" }}>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Avatar
-            src={auth?.profile_image}
-            alt={auth?.username}
-            sx={{ width: "20px", height: "20px", mr: "4px", borderRadius: "50%" }}
-          />
-          <Typography fontWeight={500} fontSize={12} lineHeight="17.38px">
-            マイプロフィール
-          </Typography>
+      <Box className={styles["menudrop-container"]}>
+        <Box className={styles["menudrop-section1"]}>
+          <Avatar className={styles["menudrop-section1--avatar"]} src={auth?.profile_image} alt={auth?.username} />
+          <Typography className={styles["menudrop-section1--title"]}>{t("header.title")}</Typography>
         </Box>
-        <Button
-          sx={{
-            width: "124px",
-            height: "32px",
-            borderRadius: "4px",
-            border: "0.5px solid #989EA8",
-            mt: "27px",
-            padding: "6px 13px",
-          }}
-        >
+        <Button className={styles["menudrop-buttonEdit"]}>
           <Link href="/my-profile" prefetch={false}>
-            <a
-              style={{
-                color: theme.navy,
-                fontSize: "12px",
-                fontWeight: 400,
-                lineHeight: "17.38px",
-                textDecoration: "none",
-              }}
-            >
+            <a className={styles["menudrop-buttonEdit--link"]} style={{ color: theme.navy }}>
               {t("header.profile-editing")}
             </a>
           </Link>
@@ -454,7 +438,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1 }} className={styles["header-container"]}>
       <ToastContainer
         position="top-right"
         autoClose={2000}
@@ -464,33 +448,16 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
         rtl={false}
         theme="colored"
       />
-      <AppBar
-        position="fixed"
-        sx={{
-          background: "#fff",
-          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-          p: { xs: 0, lg: "0 16px" },
-        }}
-      >
-        <Toolbar
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: { xs: "100%", xl: "1440px" },
-            margin: "auto",
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+      <AppBar className={styles["header-appbar"]}>
+        <Toolbar className={styles["header-toolbar"]}>
+          <Box className={styles["header-section1"]}>
             <Link href="/">
               <a>
                 <Box
+                  className={styles["header-logo--img"]}
                   component="img"
-                  sx={{
-                    width: { xs: "70px", lg: "141px" },
-                    height: { xs: "20px", lg: "42px" },
-                  }}
                   alt="avatar"
-                  src="/assets/images/logo/logo2.png"
+                  src="/assets/images/logo/logo.png"
                 />
               </a>
             </Link>
@@ -515,21 +482,12 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
                 <img src="/assets/images/icon/ic_search_2.png" alt="ic_search" width="18px" height="18px" />
               </SearchIconWrapper>
               <StyledInputBase
-                placeholder="言語、趣味、地域"
-                inputProps={{ "aria-label": "言語、趣味、地域" }}
+                placeholder={t("header.search-pc")}
+                inputProps={{ "aria-label": t("header.search-pc") }}
                 onKeyPress={onKeyPress}
                 defaultValue={valueSearch}
               />
-              <Box
-                sx={{
-                  width: "120px",
-                  background: "#F5F5F5",
-                  color: "#1A2944",
-                  borderTopRightRadius: "12px",
-                  borderBottomRightRadius: "12px",
-                  borderLeft: "1px solid #D8D8D8",
-                }}
-              >
+              <Box className={styles["header-searchSection"]}>
                 <SelectCustom id="outlined-select-typeSearch" value={typeSearch} onChange={handleChange}>
                   {typeSearchs.map((option) => (
                     <MenuItem key={option.label} value={option.label}>
@@ -540,8 +498,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
               </Box>
             </Search>
           </Box>
-          <Box sx={{ display: statusAuthPage ? "none" : "inherit" }}>
-            <Box sx={{ flexGrow: 1 }} />
+          <Box className={styles["header-section2"]} sx={{ display: statusAuthPage ? "none" : "inherit" }}>
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
               <IconButton
                 size="large"
@@ -565,25 +522,12 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
                   <img style={{ width: "24px", height: "24px" }} src="/assets/images/icon/ic_bell.png" alt="ic_bell" />
                 </Badge>
               </IconButton>
-              <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <IconButton
-                  onClick={handleOpenMenu}
-                  sx={{
-                    borderRadius: "50%",
-                    p: "0",
-                    ml: "20px",
-                    height: "100%",
-                  }}
-                >
+              <Box className={styles["header-userAvatar--container"]}>
+                <IconButton className={styles["header-userAvatar--button"]} onClick={handleOpenMenu}>
                   <Avatar
+                    className={styles["header-userAvatar--img"]}
                     src={auth?.profile_image || "/assets/images/svg/avatar.svg"}
                     alt={auth?.username}
-                    sx={{
-                      width: "40px",
-                      height: "40px",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
                   />
                 </IconButton>
               </Box>

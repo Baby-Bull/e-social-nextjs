@@ -30,7 +30,7 @@ import { updateProfileUseRenewal } from "src/services/user";
 import { REGEX_RULES, VALIDATE_MESSAGE_FORM_REGISTER } from "src/messages/validate";
 import { USER_STATUS_OPTIONS } from "src/components/constants/constants";
 import { JAPAN_PROVINCE_OPTIONS } from "src/constants/constants";
-import RegisterPageHeaderComponent from "src/components/layouts/RegisterPageHeaderComponent";
+import HeaderRegisterPageComponent from "src/components/layouts/HeaderRegisterPageComponent";
 
 import { Field } from "./Field";
 
@@ -213,7 +213,7 @@ const FormRegisterComponents = () => {
           </Backdrop>
         )}
 
-        <RegisterPageHeaderComponent />
+        <HeaderRegisterPageComponent />
         <Box sx={{ marginTop: "55px" }}>
           <Grid container>
             <GridLeftComponent />

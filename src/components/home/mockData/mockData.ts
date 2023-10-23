@@ -1,11 +1,11 @@
 export const notificationMockData = {
-  title: "お知らせ",
+  title: "Notice",
   data: [
     {
-      content: "【コミュニティ機能など】2022年10月にgoodhubがリリースしました🎉",
+      content: "【Community feature】2023-10 Esocial published🎉",
     },
     {
-      content: "【コミュニティ機能など】2022年10月にgoodhubがリリースしました🎉",
+      content: "【Community feature】2023-10 Esocial published🎉",
     },
   ],
 };

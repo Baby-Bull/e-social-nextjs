@@ -41,11 +41,11 @@ const BannerComponent = () => {
   const banners = useRef([
     {
       onClick: () => router.push("/search_community"),
-      src: "/assets/images/home_page/home_1.svg",
+      src: "/assets/images/home_page/home_1.jpg",
     },
     {
       onClick: () => router.push("/search_user"),
-      src: "/assets/images/home_page/home_2.svg",
+      src: "/assets/images/home_page/home_2.jpg",
     },
     {
       onClick: () =>
@@ -56,7 +56,7 @@ const BannerComponent = () => {
           },
           "/my-profile",
         ),
-      src: "/assets/images/home_page/home_3.svg",
+      src: "/assets/images/home_page/home_3.jpg",
     },
   ]);
 

@@ -13,7 +13,18 @@
     "list-people-you-want-to-talk": "話したい人リスト",
     "participating-community": "参加中のコミュニティ",
     "setting": "設定",
-    "logout": "ログアウト"
+    "logout": "ログアウト",
+    "menuchat": {
+      "title1": "メッセージ",
+      "title2": "グループチャット",
+      "placeholder-chat": "アカウントを検索",
+      "attachment": "添付ファイル",
+      "empty-tab": "会話なし"
+    },
+    "menu-notification": {
+      "notice": "お知らせ",
+      "empty-noti":"通知はありません。"
+    }
   },
   "footer": {
     "signin": "ログイン",
