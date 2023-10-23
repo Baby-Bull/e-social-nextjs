@@ -27,19 +27,9 @@ const ContentComponent: React.SFC<IContentComponentProps> = ({
   authPage = false,
   registerPage = false,
 }) => (
-  <Box
-    className={styles.contentLayout}
-    sx={{
-      display: "flex",
-      minHeight: "100vh",
-      flexDirection: "column",
-      justifyContent: "space-between",
-      backgroundColor: "#F4FDFF",
-      color: "#1A2944",
-    }}
-  >
+  <Box className={styles.contentLayout}>
     <Head>
-      <title>goodhub</title>
+      <title>E-Social</title>
     </Head>
     {showHeader && !registerPage && <HeaderComponent authPage={authPage} />}
     {children}

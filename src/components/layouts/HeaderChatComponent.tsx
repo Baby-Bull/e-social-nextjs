@@ -16,6 +16,7 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/styles";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
 import styles from "src/components/layouts/layout.module.scss";
@@ -83,6 +84,7 @@ const HeaderChatComponent: FC<Props> = ({
   onClose,
 }) => {
   const router = useRouter();
+  const { t } = useTranslation();
   const inputSearchMenuChatPersonal = useRef(null);
   const inputSearchMenuChatCommunity = useRef(null);
   const [searchChatRoomPersonal, setSearchChatRoomPersonal] = useState({
@@ -286,46 +288,24 @@ const HeaderChatComponent: FC<Props> = ({
       open
       onClose={onClose}
       className={styles.menuChatDropDown}
-      sx={{
-        zIndex: 10001,
-        "& .MuiMenu-paper": {
-          borderRadius: "12px",
-          height: "40em",
-          overflowY: "hidden",
-        },
-      }}
     >
-      <Box sx={{ width: "100%", typography: "body1" }}>
+      <Box className={styles["menuchat-container"]} sx={{ typography: "body1" }}>
         <TabContext value={valueTabChatMessage}>
-          <Box
-            sx={{
-              borderBottom: 1,
-              borderColor: "divider",
-              position: "sticky",
-              top: "0",
-              background: "white",
-              zIndex: "1",
-            }}
-          >
+          <Box className={styles["menuchat-tab--title"]}>
             <TabsCustom variant="fullWidth" onChange={handleChangeTabMessage}>
-              <Tab label="メッセージ" value="1" />
-              <Tab label="グループチャット" value="2" />
+              <Tab label={t("header.menuchat.title1")} value="1" />
+              <Tab label={t("header.menuchat.title2")} value="2" />
             </TabsCustom>
           </Box>
-          <TabPanel sx={{ padding: "0", width: "365px" }} value="1">
+          <TabPanel className={styles["menuchat-tab--content"]} value="1">
             <Box className={styles.boxSearch}>
-              <Paper
-                className={styles.inputSearch}
-                sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}
-              >
+              <Paper className={styles.inputSearch}>
                 <img alt="search" src="/assets/images/svg/ic_search.svg" />
                 <InputCustom
                   inputRef={inputSearchMenuChatPersonal}
                   sx={{ ml: 1, flex: 1 }}
-                  // placeholder={t("chat:box-left-input-search-placeholder")}
-                  // inputProps={{ "aria-label": t("chat:box-left-input-search-placeholder") }}
-                  placeholder="アカウントを検索"
-                  inputProps={{ "aria-label": "アカウントを検索" }}
+                  placeholder={t("header.menuchat.placeholder-chat")}
+                  inputProps={{ "aria-label": t("header.menuchat.placeholder-chat") }}
                   onInput={() =>
                     handleTypingForInputSearch(inputSearchMenuChatPersonal.current.value, MODE_ROOM_CHAT.personal)
                   }
@@ -369,89 +349,32 @@ const HeaderChatComponent: FC<Props> = ({
                               >
                                 {thread?.last_message_content_type === "text"
                                   ? thread?.last_chat_message_received
-                                  : "添付ファイル"}
+                                  : t("header.menuchat.attachment")}
                               </Typography>
                             </div>
                             <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
-                            {/* {!isMobile && (
-                                <div className="more-options">
-                                  <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
-                                    <img alt="more-options" src="/assets/images/chat/more_options.svg" />
-                                  </IconButton>
-                                  <ThreadDropdown
-                                    open={open}
-                                    handleClose={handleClose}
-                                    setShowPopupReport={setShowPopupReport}
-                                    setShowPopupReview={setShowPopupReview}
-                                    anchorEl={anchorEl}
-                                    redirectToProfile={redirectToProfile}
-                                  />
-                                </div>
-                              )} */}
                           </div>
                         </li>
-                        {/* {isMobile && (
-                            <div className="more-options-SP">
-                              <IconButton
-                                onClick={(event: React.MouseEvent<HTMLElement>) => {
-                                  handleClick(event);
-                                  transferUserToLeftMobile(index);
-                                }}
-                                aria-label="more"
-                                aria-haspopup="true"
-                                sx={{
-                                  position: "absolute",
-                                  right: "2em",
-                                  marginTop: "-2.4em",
-                                  height: "40px",
-                                  width: "40px",
-                                  background: "white",
-                                  boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
-                                }}
-                              >
-                                <img alt="more-options" src="/assets/images/chat/more_options.svg" />
-                              </IconButton>
-                              <ThreadDropdown
-                                open={open}
-                                handleClose={handleClose}
-                                setShowPopupReport={setShowPopupReport}
-                                setShowPopupReview={setShowPopupReview}
-                                anchorEl={anchorEl}
-                                redirectToProfile={redirectToProfile}
-                              />
-                            </div>
-                          )} */}
                       </React.Fragment>
                     ))
                   ) : (
-                    <Box
-                      sx={{
-                        width: "365px",
-                        display: "flex",
-                        height: "550px",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <b>会話なし</b>
+                    <Box className={styles["box-content--empty"]}>
+                      <b>{t("header.menuchat.empty-tab")}</b>
                     </Box>
                   )}
                 </InfiniteScroll>
               </ul>
             </Box>
           </TabPanel>
-          <TabPanel sx={{ padding: "0", width: "365px" }} value="2">
+          <TabPanel className={styles["menuchat-tab--content"]} value="2">
             <Box className={styles.boxSearch}>
-              <Paper
-                className={styles.inputSearch}
-                sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}
-              >
+              <Paper className={styles.inputSearch}>
                 <img alt="search" src="/assets/images/svg/ic_search.svg" />
                 <InputCustom
                   inputRef={inputSearchMenuChatCommunity}
                   sx={{ ml: 1, flex: 1 }}
-                  placeholder="アカウントを検索"
-                  inputProps={{ "aria-label": "アカウントを検索" }}
+                  placeholder={t("header.menuchat.placeholder-chat")}
+                  inputProps={{ "aria-label": t("header.menuchat.placeholder-chat") }}
                   onKeyUp={() =>
                     handleTypingForInputSearch(inputSearchMenuChatCommunity.current.value, MODE_ROOM_CHAT.community)
                   }
@@ -495,59 +418,19 @@ const HeaderChatComponent: FC<Props> = ({
                               >
                                 {thread?.last_message_content_type === "text"
                                   ? thread?.last_chat_message_received
-                                  : "添付ファイル"}
+                                  : t("header.menuchat.attachment")}
                               </Typography>
                             </div>
                             <div className="thread-last-time">
                               {thread?.last_chat_message_at ? formatChatDateRoom(thread?.last_chat_message_at) : ""}
                             </div>
-                            {/* {!isMobile && (
-                                <div className="more-options">
-                                  <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
-                                    <img alt="more-options" src="/assets/images/chat/more_options.svg" />
-                                  </IconButton>
-                                  <ThreadDropdown
-                                    open={open}
-                                    handleClose={handleClose}
-                                    anchorEl={anchorEl}
-                                    redirectToCommunity={() => redirectToCommunity(thread?.id)}
-                                  />
-                                </div>
-                              )} */}
                           </div>
                         </li>
-                        {/* {isMobile && (
-                            <div className="more-options-SP">
-                              <IconButton
-                                aria-label="more"
-                                aria-haspopup="true"
-                                sx={{
-                                  position: "absolute",
-                                  right: "2em",
-                                  marginTop: "-2.4em",
-                                  height: "40px",
-                                  width: "40px",
-                                  background: "white",
-                                  boxShadow: "0px 0px 4px rgba(0, 0, 0, 0.25)",
-                                }}
-                              >
-                                <img alt="more-options" src="/assets/images/chat/more_options.svg" />
-                              </IconButton>
-                            </div>
-                          )} */}
                       </React.Fragment>
                     ))
                   ) : (
-                    <Box
-                      sx={{
-                        width: "365px",
-                        display: "flex",
-                        height: "550px",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <b>会話なし</b>
+                    <Box className={styles["box-content--empty"]}>
+                      <b>{t("header.menuchat.empty-tab")}</b>
                     </Box>
                   )}
                 </InfiniteScroll>
