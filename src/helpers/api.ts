@@ -61,19 +61,19 @@ export const fetchToken = async ({ accessToken, refreshToken }) => {
   return fetchTokenPromise;
 };
 
-apiAuth.interceptors.response.use(
-  (response) => response.data,
-  async (err: any) => {
-    if (err.response.status === 422 || err.response.status === 401) {
-      setToken("", null);
-      setRefreshToken("");
-      if (typeof window !== "undefined") {
-        window.location.href = `/login?oldUrl=${window.location.pathname}`;
-      }
-    }
-    Promise.reject(err);
-  },
-);
+// apiAuth.interceptors.response.use(
+//   (response) => response.data,
+//   async (err: any) => {
+//     if (err.response.status === 422 || err.response.status === 401) {
+//       setToken("", null);
+//       setRefreshToken("");
+//       if (typeof window !== "undefined") {
+//         window.location.href = `/login?oldUrl=${window.location.pathname}`;
+//       }
+//     }
+//     Promise.reject(err);
+//   },
+// );
 
 api.interceptors.request.use(
   async (config) => {
@@ -96,43 +96,43 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (err: any) => {
-    if (err.response.status === 403) {
-      toast.warning(FORBIDDEN);
-      window.location.href = "/";
-    }
+    // if (err.response.status === 403) {
+    //   toast.warning(FORBIDDEN);
+    //   window.location.href = "/";
+    // }
 
-    if (err.response.status === 404) {
-      toast.warning(NOT_FOUND);
-      window.location.href = "/";
-    }
+    // if (err.response.status === 404) {
+    //   toast.warning(NOT_FOUND);
+    //   window.location.href = "/";
+    // }
 
-    if (err.response.status === 422) {
-      if (!err?.response?.data?.message?.email && !err.response.data?.message?.access_token) {
-        toast.error(SERVER_ERROR);
-      }
-    }
+    // if (err.response.status === 422) {
+    //   if (!err?.response?.data?.message?.email && !err.response.data?.message?.access_token) {
+    //     toast.error(SERVER_ERROR);
+    //   }
+    // }
 
     const originalRequest = err.config;
-    if (originalRequest.url !== "/auth/tokens") {
-      if (err.response.status === 401 && typeof window !== "undefined") {
-        // only refresh on client
-        const accessToken = getToken();
-        const refreshToken = getRefreshToken();
-        if (accessToken && refreshToken) {
-          const token = await fetchToken({
-            accessToken,
-            refreshToken,
-          });
-          originalRequest.headers.Authorization = `Bearer ${token}`;
-          return api(originalRequest).then((result) => ({ data: result }));
-        }
-        setToken("", null);
-        setRefreshToken("");
-        if (typeof window !== "undefined") {
-          window.location.href = `/login?oldUrl=${window.location.pathname}`;
-        }
-      }
-    }
+    // if (originalRequest.url !== "/auth/tokens") {
+    //   if (err.response.status === 401 && typeof window !== "undefined") {
+    //     // only refresh on client
+    //     const accessToken = getToken();
+    //     const refreshToken = getRefreshToken();
+    //     if (accessToken && refreshToken) {
+    //       const token = await fetchToken({
+    //         accessToken,
+    //         refreshToken,
+    //       });
+    //       originalRequest.headers.Authorization = `Bearer ${token}`;
+    //       return api(originalRequest).then((result) => ({ data: result }));
+    //     }
+    //     setToken("", null);
+    //     setRefreshToken("");
+    //     if (typeof window !== "undefined") {
+    //       window.location.href = `/login?oldUrl=${window.location.pathname}`;
+    //     }
+    //   }
+    // }
     return Promise.reject(err);
   },
 );

@@ -15,6 +15,7 @@ import {
   EMAIL_EXISTS,
 } from "src/messages/notification";
 import { typeTimeLogin, typeReview } from "src/constants/searchUserConstants";
+import { apiNestServer } from "src/utils/API-infra.util";
 
 import { setIsProfileEdited, setIsRenewal } from "../helpers/storage";
 
@@ -33,17 +34,17 @@ export const getUserFavorite = async (limit: number, cursor: string) => {
 
 export const getUserStatics = async () => {
   try {
-    const res = await api.get(`/user/stats`);
-    return res.data;
+    const res = await apiNestServer.get(`/users/stats`);
+    return res;
   } catch (error) {
     return error;
   }
 };
 
-export const getUserFavoriteTags = async (limit: number, cursor: string = "") => {
+export const getUserFavoriteTags = async (take: number, page: number = 1) => {
   try {
-    const res = await api.get(`/user/favorite/tag-users?limit=${limit}&cursor=${cursor}`);
-    return res?.data;
+    const res = await apiNestServer.get(`/users/user-tags?take=${take}&page=${page}`);
+    return res;
   } catch (error) {
     return error;
   }
@@ -58,10 +59,10 @@ export const getUserProvince = async (limit: number, cursor: string = "") => {
   }
 };
 
-export const getUserNewMembers = async (limit: number, cursor: string = "") => {
+export const getUserNewMembers = async (take: number, page: number = 1) => {
   try {
-    const res = await api.get(`/user/members-new?limit=${limit}&cursor=${cursor}`);
-    return res?.data;
+    const res = await apiNestServer.get(`/users/user-newest?take=${take}&page=${page}`);
+    return res;
   } catch (error) {
     return error;
   }

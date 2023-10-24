@@ -80,9 +80,9 @@ const HomeIndexComponents = () => {
   ]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const getCommunity = async (cursor: string = "") => {
-    const res = await getListCommunityHome(LIMIT, cursor);
-    setRecommendCommunity(res?.items);
+  const getCommunity = async (page: number = 1) => {
+    const res = await getListCommunityHome(LIMIT, page);
+    setRecommendCommunity(res?.data);
     return res;
   };
 
@@ -95,7 +95,7 @@ const HomeIndexComponents = () => {
     async () => {
       setIsLoading(false);
       const res = await getUserProvince(LIMIT);
-      return res?.items?.filter((item: any) => item?.match_status !== "confirmed") || [];
+      return res?.data?.filter((item: any) => item?.match_status !== "confirmed") || [];
     },
     {
       refetchOnWindowFocus: false,
@@ -110,7 +110,7 @@ const HomeIndexComponents = () => {
     async () => {
       setIsLoading(false);
       const res = await getUserRecentlyLogin(LIMIT);
-      return res?.items?.filter((item: any) => item?.match_status !== "confirmed") || [];
+      return res?.data?.filter((item: any) => item?.match_status !== "confirmed") || [];
     },
     {
       refetchOnWindowFocus: false,
@@ -125,7 +125,7 @@ const HomeIndexComponents = () => {
     async () => {
       setIsLoading(false);
       const res = await getUserNewMembers(LIMIT);
-      return res?.items?.filter((item: any) => item?.match_status !== "confirmed") || [];
+      return res?.data?.filter((item: any) => item?.match_status !== "confirmed") || [];
     },
     {
       refetchOnWindowFocus: false,
@@ -140,7 +140,7 @@ const HomeIndexComponents = () => {
     async () => {
       setIsLoading(false);
       const res = await getUserFavoriteTags(LIMIT);
-      return res?.items?.filter((item: any) => item?.match_status !== "confirmed") || [];
+      return res?.data?.filter((item: any) => item?.match_status !== "confirmed") || [];
     },
     {
       refetchOnWindowFocus: false,

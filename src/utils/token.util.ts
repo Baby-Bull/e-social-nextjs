@@ -16,7 +16,7 @@ export const setItem = (key: string, value: any) => {
   });
 };
 
-export const getItem = (key: string): String => {
+export const getItem = (key: string): string => {
   const cookieStorage = parseCookies(cookie);
   return cookieStorage[key] ?? "";
 };

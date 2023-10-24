@@ -34,7 +34,7 @@ const LoginComponent = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [provider, setProvider] = useState("");
   const [profile, setProfile] = useState<any>();
   const githubRef = useRef(null!);
@@ -55,7 +55,13 @@ const LoginComponent = () => {
   };
   const submitLoginInfo = async () => {
     try {
+      setIsLoading(true);
       const res = await loginWithNestServer(loginInfo);
+      if (res?.tokens?.accessToken) {
+        dispatch(login(res?.user));
+        router.push(`/${router.query?.oldUrl || ""}`);
+        setIsLoading(false);
+      }
       return res;
     } catch (error) {
       return error;
@@ -67,7 +73,7 @@ const LoginComponent = () => {
       setIsLoading(true);
       const resAuth = await authWithProvider(providerAuth, credentials);
       if (resAuth?.data?.access_token) {
-        dispatch(login(resAuth?.data?.user));
+        dispatch(login({ user: resAuth?.data?.user?.profile }));
         dispatch({
           type: actionTypes.UPDATE_UNREAD_LISTROOMS_COUNT,
           payload: {
@@ -76,9 +82,8 @@ const LoginComponent = () => {
         });
         if (resAuth?.data?.user?.is_profile_edited) {
           router.push(`/${router.query?.oldUrl || ""}`);
-          // router.back();
         } else {
-          router.push("/register/form");
+          // router.push("/register/form");
         }
       } else {
         setIsLoading(false);

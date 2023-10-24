@@ -10,7 +10,7 @@ import {
   setRefreshToken,
   getToken,
   getRefreshToken,
-} from "../helpers/storage";
+} from "./token.util";
 
 let fetchTokenPromise = Promise.resolve(null);
 let isFetchingToken = false;
@@ -32,6 +32,7 @@ export const apiAuth = axios.create({
 export const apiNestServer = axios.create({
   baseURL: ENDPOINT_NEST_SERVER,
 });
+
 export const configApiAuthNestServer = (token: string) => {
   fetchTokenPromise = Promise.resolve(token);
   if (token) {
@@ -52,7 +53,7 @@ apiNestServer.interceptors.response.use(
 export const setApiAuth = (token: string) => {
   fetchTokenPromise = Promise.resolve(token);
   if (token) {
-    api.defaults.headers.common.Authorization = `Bearer ${token}`;
+    apiNestServer.defaults.headers.common.Authorization = `Bearer ${token}`;
   }
   axios.defaults.headers.post["Access-Control-Allow-Origin"] = "*";
 };
@@ -65,15 +66,11 @@ export function setToken(token: string, expiresIn?: number) {
 export const fetchToken = async ({ accessToken, refreshToken }) => {
   if (!isFetchingToken) {
     isFetchingToken = true;
-    fetchTokenPromise = apiAuth
-      .post("/auth/tokens", { access_token: accessToken, refresh_token: refreshToken })
+    fetchTokenPromise = apiNestServer
+      .post("/auth/refresh-token", { accessToken, refreshToken })
       .then(({ data }) => {
-        const {
-          access_token: accessToken,
-          access_token_expires_in_seconds: accessTokenExpiresInSeconds,
-          refresh_token: refreshToken,
-        } = data;
-        setToken(accessToken, accessTokenExpiresInSeconds);
+        const { accessToken, refreshToken } = data;
+        setToken(accessToken, 10000);
         setRefreshToken(refreshToken);
         isFetchingToken = false;
         return accessToken;
@@ -98,7 +95,7 @@ apiAuth.interceptors.response.use(
   },
 );
 
-api.interceptors.request.use(
+apiNestServer.interceptors.request.use(
   async (config) => {
     const accessToken = getToken();
     const refreshToken = getRefreshToken();
@@ -107,7 +104,7 @@ api.interceptors.request.use(
       token = await fetchToken({ accessToken, refreshToken });
     }
     if (token) {
-      api.defaults.headers.common.Authorization = `Bearer ${token}`;
+      apiNestServer.defaults.headers.common.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -116,7 +113,7 @@ api.interceptors.request.use(
   },
 );
 
-api.interceptors.response.use(
+apiNestServer.interceptors.response.use(
   (response) => response,
   async (err: any) => {
     if (err.response.status === 403) {
@@ -136,7 +133,7 @@ api.interceptors.response.use(
     }
 
     const originalRequest = err.config;
-    if (originalRequest.url !== "/auth/tokens") {
+    if (originalRequest.url !== "/auth/refresh-token") {
       if (err.response.status === 401 && typeof window !== "undefined") {
         // only refresh on client
         const accessToken = getToken();
@@ -160,12 +157,12 @@ api.interceptors.response.use(
   },
 );
 
-api.interceptors.response.use(
-  (response) => response.data,
-  (error) => ({
-    data: error.response.data,
-    statusCode: error.response.status,
-  }),
-);
+// apiNestServer.interceptors.response.use(
+//   (response) => response.data,
+//   (error) => ({
+//     data: error.response.data,
+//     statusCode: error.response.status,
+//   }),
+// );
 
 setApiAuth(getTokenStorage());

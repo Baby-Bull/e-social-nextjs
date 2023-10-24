@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
-import { api, apiAuth, setToken } from "src/helpers/api";
+import { api, apiAuth } from "src/helpers/api";
 import { setIsProfileEdited, setRefreshToken } from "src/helpers/storage";
-import { apiNestServer } from "src/utils/API-infra.util";
+import { apiNestServer, setToken } from "src/utils/API-infra.util";
 
 type TwitterAccessToken = {
   oauth_token: string;
@@ -50,7 +50,13 @@ export const authWithProvider = async (provider: string, credentials: OauthCrede
 
 export const loginWithNestServer = async (loginPayload: { email: String; password: String }) => {
   try {
-    const res = await apiNestServer.post(`/auth/login`, loginPayload);
+    const res: any = await apiNestServer.post(`/auth/login`, loginPayload);
+    if (res?.tokens?.accessToken) {
+      setToken(res?.tokens?.accessToken, 10000); // TO-DO: import time to expried token
+      setRefreshToken(res?.tokens?.refreshToken);
+      // setIsProfileEdited(res?.data?.user?.is_profile_edited);
+    }
+
     return res;
   } catch (error) {
     return error;
@@ -59,7 +65,7 @@ export const loginWithNestServer = async (loginPayload: { email: String; passwor
 
 export const logout = async () => {
   try {
-    const res = await api.post("/auth/logout");
+    const res = await apiNestServer.post("/auth/logout");
     setToken("");
     setIsProfileEdited("");
     return res;

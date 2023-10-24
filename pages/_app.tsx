@@ -25,9 +25,9 @@ import "react-toastify/dist/ReactToastify.css";
 import "src/styles/index.scss";
 import * as gtag from "lib/gtag";
 import { useStore } from "src/store/store";
-import { fetchToken, setApiAuth } from "src/helpers/api";
 import socket from "src/helpers/socket";
 import ContentComponent from "src/components/layouts/ContentComponent";
+import { fetchToken, setApiAuth } from "src/utils/API-infra.util";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
