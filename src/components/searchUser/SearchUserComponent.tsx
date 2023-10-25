@@ -158,7 +158,7 @@ const SearchUserComponent: FC<Props> = ({
     if (routerQuerySort) {
       switch (routerQuerySort) {
         case "sortByTags":
-          res = await getUserFavoriteTags(LIMIT, cursor);
+          res = await getUserFavoriteTags(LIMIT, 1);
           break;
         case "sortByArea":
           res = await getUserProvince(LIMIT, cursor);
@@ -167,7 +167,7 @@ const SearchUserComponent: FC<Props> = ({
           res = await getUserRecentlyLogin(LIMIT, cursor);
           break;
         case "sortByRegistration":
-          res = await getUserNewMembers(LIMIT, cursor);
+          res = await getUserNewMembers(LIMIT, 1);
           break;
         default:
           res = await UserSearch(formSearch, tags, fullText, "", LIMIT, "");

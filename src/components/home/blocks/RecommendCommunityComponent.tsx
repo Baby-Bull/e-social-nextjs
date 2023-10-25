@@ -81,8 +81,12 @@ const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data 
             }}
           >
             <Image
-              loader={() => data?.profile_image}
-              src={data?.profile_image}
+              loader={() =>
+                data?.profile_image || "https://fujifilm-x.com/wp-content/uploads/2021/01/gfx100s_sample_04_thum-1.jpg"
+              }
+              src={
+                data?.profile_image || "https://fujifilm-x.com/wp-content/uploads/2021/01/gfx100s_sample_04_thum-1.jpg"
+              }
               alt={data?.name}
               width={360}
               height={160}
