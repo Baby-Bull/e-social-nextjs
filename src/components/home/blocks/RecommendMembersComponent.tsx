@@ -23,45 +23,12 @@ import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
 import UserTag from "src/components/profile/UserTagComponent";
 import { typeMatchingStatus } from "src/constants/searchUserConstants";
+import { IItemRecommendUserHomepage, ISlideRecommendUsersHomepage } from "src/constants/interfaces";
 
 import SlickSliderRecommendComponent from "./SlickSliderRecommendComponent";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
-
-interface IRecommendDataItem {
-  id: string;
-  profile_image: string;
-  last_login_at: string;
-  username: string;
-  job: string;
-  review_count: number;
-  hitokoto: string;
-  tags: Array<string>;
-  discussion_topic: string;
-  status: string;
-  chatStatus: number;
-  is_favorite: boolean;
-  is_favorite_count: number;
-  match_status: string;
-  activity_status?: string;
-}
-
-interface IRecommendItemProps {
-  data: IRecommendDataItem;
-  indexKey?: number;
-  handleOpenMatchingModal: Function;
-  handleAcceptMatchingRequestReceived: Function;
-}
-
-interface IRecommendMembersComponentProps {
-  indexFetch?: number;
-  title: string;
-  dataRecommends: Array<IRecommendDataItem>;
-  handleOpenMatchingModal: Function;
-  handleAcceptMatchingRequestReceived: Function;
-  queryUrl: string;
-}
 
 // const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
 //   if (isFavorite) deleteUserFavorite(tempData);
@@ -95,7 +62,7 @@ const handleMapMatchingStatus = (statusMatchingTemp: string) => {
   }
 };
 
-const RecommendItem: React.SFC<IRecommendItemProps> = ({
+const RecommendItem: React.SFC<IItemRecommendUserHomepage> = ({
   data,
   handleOpenMatchingModal,
   handleAcceptMatchingRequestReceived,
@@ -117,7 +84,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
     setLikeCount(data.is_favorite_count);
   }, [data.is_favorite_count]);
 
-  const handleClickButtonModal = (tempValue: any) => {
+  const handleClickButtonModal = (tempValue: string) => {
     if (tempValue === typeMatchingStatus.REJECTED || !tempValue) {
       handleOpenMatchingModal(data, indexKey);
     } else if (tempValue === typeMatchingStatus.RECEIVED_PENDING) {
@@ -279,7 +246,7 @@ const RecommendItem: React.SFC<IRecommendItemProps> = ({
   );
 };
 
-const RecommendMembersComponent: React.SFC<IRecommendMembersComponentProps> = memo(
+const RecommendMembersComponent: React.SFC<ISlideRecommendUsersHomepage> = memo(
   ({ title, dataRecommends, indexFetch, handleOpenMatchingModal, handleAcceptMatchingRequestReceived, queryUrl }) => {
     const { t } = useTranslation();
     const [dataElements, setDataElements] = useState([]);

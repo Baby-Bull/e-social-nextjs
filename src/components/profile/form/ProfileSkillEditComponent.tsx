@@ -42,7 +42,7 @@ import {
 } from "src/constants/constants";
 // eslint-disable-next-line import/no-duplicates
 import { getUserProfile, updateProfile } from "src/services/user";
-import { IStoreState } from "src/constants/interface";
+import { IStoreState } from "src/constants/interfaces";
 import actionTypes from "src/store/actionTypes";
 import { SERVER_ERROR, UPDATE_PROFILE } from "src/messages/notification";
 

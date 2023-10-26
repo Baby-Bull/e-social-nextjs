@@ -26,7 +26,7 @@ import theme from "src/theme";
 import useViewport from "src/helpers/useViewport";
 import { numberOfLogins, numberOfParticipants } from "src/constants/searchCommunityConstants";
 import { getListCommunitySearch } from "src/services/community";
-import { IStoreState } from "src/constants/interface";
+import { IStoreState } from "src/constants/interfaces";
 import { searchCommunityActions } from "src/store/actionTypes";
 import { SearchFormStatus } from "src/constants/constants";
 

@@ -20,6 +20,7 @@ import { styled } from "@mui/material/styles";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
+import { IStoreState } from "src/constants/interfaces";
 import theme, { themeSelect } from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabVerticalComponent";
 import { Field, InputCustom } from "src/components/community/blocks/Form/InputComponent";
@@ -27,7 +28,6 @@ import { TextArea } from "src/components/community/blocks/Form/TextAreaComponent
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
 import { VALIDATE_FORM_COMMUNITY, REGEX_RULES } from "src/messages/validate";
-import { IStoreState } from "src/constants/interface";
 import { createCommunity } from "src/services/community";
 
 import { tabsCreateCommunity, infoCommunitySetting } from "./mockData";

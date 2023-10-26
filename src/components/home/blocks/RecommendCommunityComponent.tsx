@@ -10,31 +10,11 @@ import Image from "next/image";
 import styles from "src/components/home/home.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
 // import { joinCommunity } from "src/services/community";
+import { IRecommendCommunityItemHomepage } from "src/constants/interfaces";
 
 import SlickSliderRecommendComponent from "./SlickSliderRecommendComponent";
 
-interface IRecommendCommunityDataItem {
-  id: string;
-  profile_image: string;
-  name: string;
-  member_count: number;
-  login_count: number;
-  tags: Array<string>;
-  description: string;
-  is_public: boolean;
-  join_status: string;
-  status: number;
-}
-
-interface IRecommendCommunityItemProps {
-  data: IRecommendCommunityDataItem;
-}
-
-interface IRecommendCommunityProps {
-  recommendCommunity?: any;
-}
-
-const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data }) => {
+const RecommendCommunityItem: React.SFC<{ data: IRecommendCommunityItemHomepage }> = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
   // const [statusJoin, setStatusJoin] = useState(
@@ -117,9 +97,9 @@ const RecommendCommunityItem: React.SFC<IRecommendCommunityItemProps> = ({ data 
   );
 };
 
-const RecommendCommunityComponent: React.SFC<IRecommendCommunityProps> = memo(({ recommendCommunity }) => {
+const RecommendCommunityComponent: React.SFC<{ recommendCommunity }> = memo(({ recommendCommunity }) => {
   const { t } = useTranslation();
-  const [recommendCommunityItems, setRecommendCommunityItems] = useState([]);
+  const [recommendCommunityItems, setRecommendCommunityItems] = useState<IRecommendCommunityItemHomepage[]>([]);
 
   useEffect(() => {
     setRecommendCommunityItems(

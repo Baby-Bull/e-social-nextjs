@@ -31,13 +31,12 @@ import dynamic from "next/dynamic";
 import theme from "src/theme";
 import websocket from "src/helpers/socket";
 import "react-toastify/dist/ReactToastify.css";
-import { IStoreState } from "src/constants/interface";
+import { ChatMessage, IStoreState } from "src/constants/interfaces";
 import { CONTENT_OF_NOTIFICATIONS, TYPE_OF_NOTIFICATIONS } from "src/constants/constants";
 import { getUserStatics, readAllNotifications } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
 import { logout } from "src/services/auth";
 import { customizeContentNotificationBrowser, notify } from "src/utils/utils";
-import { ChatMessage } from "src/types/models/ChatMessage";
 import { getItem, setItem, TRIGGER_REFRESH } from "src/helpers/storage";
 import styles from "src/components/layouts/layout.module.scss";
 

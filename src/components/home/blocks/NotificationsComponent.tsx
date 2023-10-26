@@ -7,32 +7,9 @@ import { useTranslation } from "next-i18next";
 
 import styles from "src/components/home/home.module.scss";
 
+import { NextArrow, PrevArrow } from "./SlickSliderRecommendComponent";
+
 // import { notificationsMockData } from "../mockData/mockData";
-
-const NextArrow = (props: any) => {
-  const { className, style, onClick } = props;
-  return (
-    <div className={className} style={style} onClick={onClick}>
-      <div className={styles.slickArrow}>
-        {!className?.includes("slick-disabled") && <img src="/assets/images/home_page/ic_arrow_small.svg" alt="next" />}
-      </div>
-    </div>
-  );
-};
-
-const PrevArrow = (props: any) => {
-  const { className, style, onClick } = props;
-
-  return (
-    <div className={className} style={style} onClick={onClick}>
-      <div className={styles.slickArrow}>
-        {!className?.includes("slick-disabled") && (
-          <img src="/assets/images/home_page/ic_arrow_small.svg" alt="prev" className="rotate-180" />
-        )}
-      </div>
-    </div>
-  );
-};
 
 const NotificationComponent = () => {
   const { t } = useTranslation();
@@ -71,8 +48,8 @@ const NotificationComponent = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     loop: false,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow srcImg="/assets/images/home_page/ic_arrow_small.svg" />,
+    prevArrow: <PrevArrow srcImg="/assets/images/home_page/ic_arrow_small.svg" />,
   };
 
   return (

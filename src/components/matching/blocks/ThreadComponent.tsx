@@ -23,7 +23,7 @@ import {
   cancelMatchingRequestSent,
 } from "src/services/matching";
 import { TYPE } from "src/constants/matching";
-import { IStoreState } from "src/constants/interface";
+import { IStoreState } from "src/constants/interfaces";
 import actionTypes from "src/store/actionTypes";
 import { JOBS, USER_ONLINE_STATUS } from "src/constants/constants";
 

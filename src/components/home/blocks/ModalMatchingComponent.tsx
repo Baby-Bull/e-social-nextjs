@@ -8,34 +8,11 @@ import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import { Field } from "src/components/common/Form/_Field";
 import styles from "src/components/home/home.module.scss";
 import { MATCHING_PURPOSE_OPTIONS } from "src/constants/constants";
-import { IStoreState } from "src/constants/interface";
+import { IStoreState, IMatchingRequest, IModalMatchingComponent } from "src/constants/interfaces";
 import { VALIDATE_FORM_MATCHING_REQUEST } from "src/messages/validate";
 import actionTypes from "src/store/actionTypes";
 
-interface IModalMatchingComponentProps {
-  open: boolean;
-  setOpen: Function;
-  userRequestMatching?: any;
-  handleSendMatchingRequest?: Function;
-}
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 640,
-  boxShadow: 24,
-  borderRadius: "12px",
-  p: 5,
-  pb: 4,
-  maxWidth: "90%",
-  marginTop: "5px",
-  paddingTop: "60px",
-  padding: "20px",
-};
-
-const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
+const ModalMatchingComponent: React.SFC<IModalMatchingComponent> = ({
   open,
   setOpen,
   userRequestMatching,
@@ -45,14 +22,14 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
 
-  const [matchingRequest, setMatchingRequest] = useState({
+  const [matchingRequest, setMatchingRequest] = useState<IMatchingRequest>({
     purpose: "",
     // desired_match_date: new Date()?.toLocaleString("sv-SE", { dateStyle: "short", timeStyle: "short" }),
     // meeting_link: "",
     message: null,
   });
 
-  const [errorValidates, setErrorValidates] = useState({
+  const [errorValidates, setErrorValidates] = useState<IMatchingRequest>({
     purpose: null,
     // desired_match_date: null,
     // meeting_link: null,
@@ -68,7 +45,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
 
   const handleValidateForm = () => {
     let isValidForm = true;
-    const errorMessages = {
+    const errorMessages: IMatchingRequest = {
       purpose: null,
       // desired_match_date: null,
       // meeting_link: null,
@@ -144,7 +121,7 @@ const ModalMatchingComponent: React.SFC<IModalMatchingComponentProps> = ({
       aria-describedby="modal-modal-description"
       sx={{ overflow: "scroll" }}
     >
-      <Box sx={style} className={classNames(styles.modalMatchingRequest, "gth-modal")}>
+      <Box className={classNames(styles.modalMatchingRequest, "gth-modal")}>
         <Button className="icon-close" onClick={handleClose}>
           <img src="/assets/images/home_page/ic_close_modal.svg" alt="close-modal" />
         </Button>

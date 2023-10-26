@@ -27,8 +27,8 @@ import _without from "lodash/without";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
+import { IStoreState } from "src/constants/interfaces";
 import useViewport from "src/helpers/useViewport";
-import { IStoreState } from "src/constants/interface";
 import theme from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabVerticalComponent";
 import { Field, InputCustom } from "src/components/community/blocks/Form/InputComponent";

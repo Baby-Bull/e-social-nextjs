@@ -102,10 +102,6 @@ const JAPAN_PROVINCES = [
 ];
 
 export const JAPAN_PROVINCE_OPTIONS = [
-  // {
-  //   label: "選択してください",
-  //   value: "",
-  // },
   ...JAPAN_PROVINCES.map((item) => ({
     label: item,
     value: item,

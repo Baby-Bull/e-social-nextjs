@@ -17,7 +17,7 @@ import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComp
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
-import { IStoreState } from "src/constants/interface";
+import { IStoreState } from "src/constants/interfaces";
 import { typeMatchingStatus } from "src/constants/searchUserConstants";
 
 import UserTag from "../profile/UserTagComponent";

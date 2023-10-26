@@ -17,24 +17,10 @@ import styles from "src/components/home/home.module.scss";
 /**
  * import constant
  */
-import { IStoreState } from "src/constants/interface";
 import actionTypes from "src/store/actionTypes";
+import { IMatchingItem, IMatchingItemMobile, IStoreState } from "src/constants/interfaces";
 
-interface IMatchingItemProps {
-  label: string;
-  data: number;
-  unit: string;
-  link: string;
-}
-
-interface IMatchingItemMobileProps {
-  icon: string;
-  // data: number;
-  label: string;
-  link: string;
-}
-
-const MatchingItem: React.SFC<IMatchingItemProps> = ({ label, data, unit, link }) => {
+const MatchingItem: React.SFC<IMatchingItem> = ({ label, data, unit, link }) => {
   const router = useRouter();
   const handleRedirectMatching = (type: string) => {
     router.push({
@@ -56,7 +42,7 @@ const MatchingItem: React.SFC<IMatchingItemProps> = ({ label, data, unit, link }
   );
 };
 
-const MatchingItemMobile: React.SFC<IMatchingItemMobileProps> = ({ label, icon, link }) => {
+const MatchingItemMobile: React.SFC<IMatchingItemMobile> = ({ label, icon, link }) => {
   const router = useRouter();
   const handleRedirectMatching = (type: string) => {
     router.push({

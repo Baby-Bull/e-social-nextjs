@@ -17,7 +17,7 @@ import theme from "src/theme";
 import styles from "src/components/profile/profile.module.scss";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
-import { IStoreState } from "src/constants/interface";
+import { IStoreState } from "src/constants/interfaces";
 import { USER_ONLINE_STATUS } from "src/constants/constants";
 import TwitterShareButton from "lib/ShareButtons/TwitterShareButton";
 import FacebookShareButton from "lib/ShareButtons/FacebookShareButton";

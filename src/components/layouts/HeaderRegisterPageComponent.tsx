@@ -14,7 +14,7 @@ import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 
 import theme from "src/theme";
-import { IStoreState } from "src/constants/interface";
+import { IStoreState } from "src/constants/interfaces";
 import actionTypes from "src/store/actionTypes";
 import { logout } from "src/services/auth";
 import styles from "src/components/layouts/layout.module.scss";

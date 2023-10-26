@@ -15,7 +15,7 @@ import GlobalStyles from "@mui/material/GlobalStyles";
 
 import theme from "src/theme";
 import ButtonDropDownComponent from "src/components/community/post/detail/blocks/ButtonDropDownComponent";
-import { IStoreState } from "src/constants/interface";
+import { IStoreState } from "src/constants/interfaces";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import { VALIDATE_FORM_COMMUNITY_POST } from "src/messages/validate";
 import { searchMemberCommunity, updatePostComment } from "src/services/community";

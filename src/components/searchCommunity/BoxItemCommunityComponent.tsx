@@ -9,7 +9,7 @@ import { HOMEPAGE_RECOMMEND_COMMUNITY_STATUS } from "src/components/constants/co
 import styles from "src/components/searchCommunity/search_community.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import { joinCommunity } from "src/services/community";
-import { IStoreState } from "src/constants/interface";
+import { IStoreState } from "src/constants/interfaces";
 import { typeRoleUser } from "src/constants/searchCommunityConstants";
 import { searchCommunityActions } from "src/store/actionTypes";
 

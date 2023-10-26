@@ -6,9 +6,9 @@ import dayjs from "dayjs";
 import "dayjs/locale/ja";
 import relativeTime from "dayjs/plugin/relativeTime";
 
+import { IStoreState } from "src/constants/interfaces";
 import { JOBS } from "src/components/constants/constants";
 import theme from "src/theme";
-import { IStoreState } from "src/constants/interface";
 import { USER_ONLINE_STATUS } from "src/constants/constants";
 
 import styles from "./gridView.module.scss";

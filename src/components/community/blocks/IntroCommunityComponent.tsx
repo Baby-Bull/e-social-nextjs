@@ -8,7 +8,7 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import { useSelector } from "react-redux";
 import GlobalStyles from "@mui/material/GlobalStyles";
 
-import { IStoreState } from "src/constants/interface";
+import { IStoreState } from "src/constants/interfaces";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import { ShowTextArea } from "src/components/common/ShowTextAreaComponent";

@@ -25,9 +25,9 @@ import { MODE_ROOM_CHAT, REACT_QUERY_KEYS } from "src/constants/constants";
 import { getListChatRooms, getListChatRoomsCommunity } from "src/services/chat";
 import { formatChatDateRoom, sortListRoomChat } from "src/helpers/helper";
 import websocket from "src/helpers/socket";
-import { ChatMessage } from "src/types/models/ChatMessage";
 import { readMessageCommunity, readMessagePersonal } from "src/services/user";
 import useDebounce from "src/customHooks/UseDebounce";
+import { ChatMessage } from "src/constants/interfaces";
 
 import InputCustom from "../chat/ElementCustom/InputCustom";
 
