@@ -22,10 +22,9 @@ import {
   acceptMatchingRequestReceived,
   cancelMatchingRequestSent,
 } from "src/services/matching";
-import { TYPE } from "src/constants/matching";
 import { IStoreState } from "src/constants/interfaces";
 import actionTypes from "src/store/actionTypes";
-import { JOBS, USER_ONLINE_STATUS } from "src/constants/constants";
+import { JOBS, TYPE, USER_STATUS } from "src/constants";
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
@@ -266,7 +265,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   mt: "9px",
                 }}
               >
-                {data?.activity_status === USER_ONLINE_STATUS ? "ログイン中" : dayjs(data?.last_login_at).fromNow()}
+                {data?.activity_status === USER_STATUS.online ? "ログイン中" : dayjs(data?.last_login_at).fromNow()}
               </Typography>
               {/* End Title bottom Avatar tab favorite */}
             </Box>
@@ -527,7 +526,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 mt: "9px",
               }}
             >
-              {data?.user?.activity_status === USER_ONLINE_STATUS
+              {data?.user?.activity_status === USER_STATUS.online
                 ? "ログイン中"
                 : dayjs(data?.user?.last_login_at).fromNow()}
             </Typography>

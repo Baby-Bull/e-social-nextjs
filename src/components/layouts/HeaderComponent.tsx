@@ -32,7 +32,7 @@ import theme from "src/theme";
 import websocket from "src/helpers/socket";
 import "react-toastify/dist/ReactToastify.css";
 import { ChatMessage, IStoreState } from "src/constants/interfaces";
-import { CONTENT_OF_NOTIFICATIONS, TYPE_OF_NOTIFICATIONS } from "src/constants/constants";
+import { CONTENT_OF_NOTIFICATIONS, TYPE_OF_NOTIFICATIONS } from "src/constants";
 import { getUserStatics, readAllNotifications } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
 import { logout } from "src/services/auth";

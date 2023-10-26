@@ -12,7 +12,7 @@ import useViewport from "src/helpers/useViewport";
 // import ChildTabComponent, { IDataChild } from "src/components/matching/blocks/ChildTabComponent";
 import ChildTabComponent from "src/components/matching/blocks/ChildTabComponent";
 import { getMatchedRequest } from "src/services/matching";
-import { TAB_VALUE_BY_KEY } from "src/constants/matching";
+import { TAB_VALUE_BY_KEY } from "src/constants";
 
 import PaginationCustomComponent from "../common/PaginationCustomComponent";
 import { getUserFavorite } from "src/services/user";

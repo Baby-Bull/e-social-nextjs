@@ -21,7 +21,7 @@ import { useTranslation } from "next-i18next";
 import theme from "src/theme";
 import styles from "src/components/layouts/layout.module.scss";
 import actionTypes from "src/store/actionTypes";
-import { MODE_ROOM_CHAT, REACT_QUERY_KEYS } from "src/constants/constants";
+import { MODE_ROOM_CHAT, REACT_QUERY_KEYS } from "src/constants";
 import { getListChatRooms, getListChatRoomsCommunity } from "src/services/chat";
 import { formatChatDateRoom, sortListRoomChat } from "src/helpers/helper";
 import websocket from "src/helpers/socket";

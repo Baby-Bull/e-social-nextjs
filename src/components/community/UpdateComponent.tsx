@@ -35,7 +35,6 @@ import { Field, InputCustom } from "src/components/community/blocks/Form/InputCo
 import { TextArea } from "src/components/community/blocks/Form/TextAreaComponent";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
-import { REGEX_RULES, VALIDATE_FORM_COMMUNITY } from "src/messages/validate";
 import {
   getCommunity,
   updateCommunity,
@@ -44,6 +43,7 @@ import {
   checkMemberCommunity,
   leaveCommunity,
 } from "src/services/community";
+import { REGEX_RULES } from "src/constants";
 
 import { infoCommunitySetting, tabsCommunitySetting } from "./mockData";
 import MemberComponent from "./setting/blocks/MemberComponent";
@@ -345,7 +345,7 @@ const UpdateComponent = () => {
   const uploadProfileImage = async (e) => {
     const file = e.currentTarget.files[0];
     if (file.size > 2097152) {
-      errorMessages.profile_image = VALIDATE_FORM_COMMUNITY.profile_image.max_size;
+      errorMessages.profile_image = t("validate:community_form.profile_image.max_size");
       setErrorValidates(errorMessages);
       return errorMessages;
     }
@@ -366,7 +366,7 @@ const UpdateComponent = () => {
       return true;
     }
 
-    errorMessages.profile_image = VALIDATE_FORM_COMMUNITY.profile_image.format;
+    errorMessages.profile_image = t("validate:community_form.profile_image.format");
     setErrorValidates(errorMessages);
     return errorMessages;
   };
@@ -384,32 +384,32 @@ const UpdateComponent = () => {
     let isValidForm = true;
     if (!communityRequest?.name?.length || communityRequest?.name?.length > 40) {
       isValidForm = false;
-      errorMessages.name = VALIDATE_FORM_COMMUNITY.name.max_length;
+      errorMessages.name = t("validate:community_form.name.max_length");
     }
 
     if (!communityRequest?.name?.length || communityRequest?.name?.length === 0) {
       isValidForm = false;
-      errorMessages.name = VALIDATE_FORM_COMMUNITY.name.required;
+      errorMessages.name = t("validate:community_form.name.required");
     }
 
     if (!communityRequest?.description?.length || communityRequest?.description?.length > 1000) {
       isValidForm = false;
-      errorMessages.description = VALIDATE_FORM_COMMUNITY.description.max_length;
+      errorMessages.description = t("validate:community_form.description.max_length");
     }
 
     if (!communityRequest?.description?.length || communityRequest?.description?.length === 0) {
       isValidForm = false;
-      errorMessages.description = VALIDATE_FORM_COMMUNITY.description.required;
+      errorMessages.description = t("validate:community_form.description.required");
     }
 
     if (!communityRequest?.post_permission?.length) {
       isValidForm = false;
-      errorMessages.post_permission = VALIDATE_FORM_COMMUNITY.post_permission.required;
+      errorMessages.post_permission = t("validate:community_form.post_permission.required");
     }
 
     if (communityRequest?.gather_url?.length && !REGEX_RULES.url.test(communityRequest?.gather_url)) {
       isValidForm = false;
-      errorMessages.gather_url = VALIDATE_FORM_COMMUNITY.gather_url.format;
+      errorMessages.gather_url = t("validate:community_form.gather_url.format");
     }
 
     setErrorValidates(errorMessages);

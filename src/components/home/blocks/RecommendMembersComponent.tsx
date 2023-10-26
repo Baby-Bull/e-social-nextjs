@@ -13,17 +13,12 @@ import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
-import {
-  // HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS,
-  HOMEPAGE_RECOMMEND_MEMBER_STATUS,
-} from "src/components/constants/constants";
-import { JOBS } from "src/constants/constants";
 import styles from "src/components/home/home.module.scss";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
 import UserTag from "src/components/profile/UserTagComponent";
-import { typeMatchingStatus } from "src/constants/searchUserConstants";
 import { IItemRecommendUserHomepage, ISlideRecommendUsersHomepage } from "src/constants/interfaces";
+import { HOMEPAGE_RECOMMEND_MEMBER_STATUS, JOBS, typeMatchingStatus } from "src/constants";
 
 import SlickSliderRecommendComponent from "./SlickSliderRecommendComponent";
 

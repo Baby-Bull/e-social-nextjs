@@ -17,9 +17,9 @@ import { getUserStatics } from "src/services/user";
 /**
  * import constants
  */
-import { REACT_QUERY_KEYS } from "src/constants/constants";
 import styles from "src/components/home/home.module.scss";
 import { IDataInfoMatching, IStoreState } from "src/constants/interfaces";
+import { REACT_QUERY_KEYS } from "src/constants";
 
 const MainInfomationComponent = () => {
   const { t } = useTranslation();

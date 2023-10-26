@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState, Suspense, useCallback } from "react
 import { useQuery } from "react-query";
 import dynamic from "next/dynamic";
 
-import { REACT_QUERY_KEYS } from "src/constants/constants";
+import { REACT_QUERY_KEYS } from "src/constants";
 import {
   getUserFavoriteTags,
   getUserProvince,

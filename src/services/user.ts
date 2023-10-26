@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/ja";
 import relativeTime from "dayjs/plugin/relativeTime";
 import localizedFormat from "dayjs/plugin/localizedFormat";
+import { i18n } from "next-i18next";
 
 import { api } from "src/helpers/api";
 import {
@@ -14,7 +15,7 @@ import {
   UPDATE_PROFILE,
   EMAIL_EXISTS,
 } from "src/messages/notification";
-import { typeTimeLogin, typeReview } from "src/constants/searchUserConstants";
+import { typeTimeLogin, typeReview } from "src/constants";
 import { apiNestServer } from "src/utils/API-infra.util";
 
 import { setIsProfileEdited, setIsRenewal } from "../helpers/storage";
@@ -101,7 +102,7 @@ export const userReport = async (userId: string, body: object) => {
     if (res.data.error_code) {
       toast.error(res.data.message);
     } else {
-      toast.success(USER_REPORT);
+      toast.success(i18n.t("common:message_notification.user_report"));
     }
     return res.data;
   } catch (error) {
@@ -195,22 +196,22 @@ export const UserSearch = async (
   query +=
     params?.lastLogin === typeTimeLogin.on_day_to_week
       ? `&last_login[]=${dayjs().subtract(1, "weeks").toISOString()}&last_login[]=${dayjs()
-          .subtract(1, "days")
-          .toISOString()}`
+        .subtract(1, "days")
+        .toISOString()}`
       : "";
 
   query +=
     params?.lastLogin === typeTimeLogin.week_to_two_week
       ? `&last_login[]=${dayjs().subtract(2, "weeks").toISOString()}&last_login[]=${dayjs()
-          .subtract(1, "weeks")
-          .toISOString()}`
+        .subtract(1, "weeks")
+        .toISOString()}`
       : "";
 
   query +=
     params?.lastLogin === typeTimeLogin.two_week_to_month
       ? `&last_login[]=${dayjs().subtract(1, "months").toISOString()}&last_login[]=${dayjs()
-          .subtract(2, "weeks")
-          .toISOString()}`
+        .subtract(2, "weeks")
+        .toISOString()}`
       : "";
 
   query +=

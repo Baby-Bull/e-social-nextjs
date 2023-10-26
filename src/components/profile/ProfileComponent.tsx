@@ -20,7 +20,6 @@ import {
 import BoxItemUserComponent from "src/components/profile/BoxItemUserComponent";
 import BoxNoDataComponent from "src/components/profile/BoxNoDataComponent";
 import TopProfileComponent from "src/components/profile/TopProfileComponent";
-import { HOMEPAGE_RECOMMEND_MEMBER_STATUS } from "src/components/constants/constants";
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import SlickSliderRecommendComponent from "src/components/home/blocks/SlickSliderRecommendComponent";
 
@@ -28,8 +27,8 @@ import theme from "../../theme";
 import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "../../services/matching";
 import PaginationCustomComponent from "../common/PaginationCustomComponent";
-import { typeMatchingStatus } from "src/constants/searchUserConstants";
 import { searchUserActions } from "src/store/actionTypes";
+import { HOMEPAGE_RECOMMEND_MEMBER_STATUS, typeMatchingStatus } from "src/constants";
 interface Props {
   userId: string;
   isAuth: boolean;

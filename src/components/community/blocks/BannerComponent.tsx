@@ -14,7 +14,7 @@ import DialogConfirmWithAvatarComponent from "src/components/common/dialog/Dialo
 import { joinCommunity, leaveCommunity } from "src/services/community";
 import useViewport from "src/helpers/useViewport";
 import { searchCommunityActions } from "src/store/actionTypes";
-import { typeRoleUser } from "src/constants/searchCommunityConstants";
+import { typeRoleUser } from "src/constants";
 
 import { bgColorByStatus } from "../mockData";
 

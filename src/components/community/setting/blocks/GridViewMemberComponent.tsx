@@ -8,7 +8,7 @@ import { IStoreState } from "src/constants/interfaces";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmWithAvatarComponent from "src/components/common/dialog/DialogConfirmWithAvatarComponent";
-import { JOBS } from "src/components/constants/constants";
+import { JOBS } from "src/constants";
 
 import DropDownBlockUserComponent from "./DropDownBlockUserComponent";
 

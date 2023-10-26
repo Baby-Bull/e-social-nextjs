@@ -15,11 +15,10 @@ import GlobalStyles from "@mui/material/GlobalStyles";
 
 import theme from "src/theme";
 import ButtonDropDownComponent from "src/components/community/post/detail/blocks/ButtonDropDownComponent";
-import { IStoreState } from "src/constants/interfaces";
 import ButtonComponent from "src/components/common/ButtonComponent";
-import { VALIDATE_FORM_COMMUNITY_POST } from "src/messages/validate";
 import { searchMemberCommunity, updatePostComment } from "src/services/community";
 import Link from "next/link";
+import { IStoreState } from "src/constants/interfaces";
 
 dayjs.extend(localizedFormat);
 dayjs.locale("ja");
@@ -92,7 +91,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
     let isValidForm = true;
     if (communityPostUpdateRequest?.content?.length > 1000) {
       isValidForm = false;
-      errorMessages.content = VALIDATE_FORM_COMMUNITY_POST.content_comment.max_length;
+      errorMessages.content = t("validate:community_post_form.content_comment.max_length");
     }
     setErrorValidates(errorMessages);
     return isValidForm;

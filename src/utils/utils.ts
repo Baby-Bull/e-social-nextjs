@@ -1,4 +1,4 @@
-import { TYPE_OF_NOTIFICATIONS } from "src/constants/constants";
+import { TYPE_OF_NOTIFICATIONS } from "src/constants";
 
 export const replaceLabelByTranslate = (message: string, textReplace: string | number) =>
   message.replace("%s", textReplace.toString());

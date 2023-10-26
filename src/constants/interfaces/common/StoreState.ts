@@ -1,4 +1,4 @@
-import { SearchFormStatus } from "src/constants/constants";
+import { SearchFormStatus } from "src/constants";
 
 export interface IStoreState {
   user: any;

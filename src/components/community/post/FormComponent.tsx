@@ -7,9 +7,9 @@ import { useRouter } from "next/router";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import { Field, InputCustom } from "src/components/community/blocks/Form/InputComponent";
-import { REGEX_RULES, VALIDATE_FORM_COMMUNITY_POST } from "src/messages/validate";
 import { createCommunityPost, detailCommunityPost, updateCommunityPost } from "src/services/community";
 import TextEditor from "lib/TextEditor/TextEditor";
+import { REGEX_RULES } from "src/constants";
 
 const BoxTitle = styled(Box)({
   fontSize: 18,
@@ -112,30 +112,30 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
     let isValidForm = true;
     if (!communityPostRequest?.title?.length || communityPostRequest?.title?.length > 60) {
       isValidForm = false;
-      errorMessages.title = VALIDATE_FORM_COMMUNITY_POST.title.max_length;
+      errorMessages.title = t("validate:community_post_form.title.max_length");
     }
 
     if (!communityPostRequest?.title?.length || communityPostRequest?.title?.length === 0) {
       isValidForm = false;
-      errorMessages.title = VALIDATE_FORM_COMMUNITY_POST.title.required;
+      errorMessages.title = t("validate:community_post_form.title.required");
     }
 
     if (!content || contentLength < 1) {
       isValidForm = false;
-      errorMessages.content = VALIDATE_FORM_COMMUNITY_POST.content.required;
+      errorMessages.content = t("validate:community_post_form.content.required");
     } else if (contentLength > 1000) {
       isValidForm = false;
-      errorMessages.content = VALIDATE_FORM_COMMUNITY_POST.content.max_length;
+      errorMessages.content = t("validate:community_post_form.content.max_length");
     }
 
     if (communityPostRequest?.reference_url?.length > 0 && !REGEX_RULES.url.test(communityPostRequest?.reference_url)) {
       isValidForm = false;
-      errorMessages.reference_url = VALIDATE_FORM_COMMUNITY_POST.reference_url.format;
+      errorMessages.reference_url = t("validate:community_post_form.reference_url.format");
     }
 
     if (communityPostRequest?.address?.length > 100) {
       isValidForm = false;
-      errorMessages.address = VALIDATE_FORM_COMMUNITY_POST.address.max_length;
+      errorMessages.address = t("validate:community_post_form.address.max_length");
     }
     setErrorValidates(errorMessages);
     return isValidForm;

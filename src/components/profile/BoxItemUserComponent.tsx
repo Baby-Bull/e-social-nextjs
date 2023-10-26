@@ -10,15 +10,19 @@ import { useDispatch, useSelector } from "react-redux";
 
 import styles from "src/components/profile/profile.module.scss";
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
-import { HOMEPAGE_RECOMMEND_MEMBER_STATUS, USER_SEARCH_STATUS } from "src/components/constants/constants";
-import { JOBS, USER_ONLINE_STATUS } from "src/constants/constants";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
 import { IStoreState } from "src/constants/interfaces";
-import { typeMatchingStatus } from "src/constants/searchUserConstants";
+import {
+  HOMEPAGE_RECOMMEND_MEMBER_STATUS,
+  JOBS,
+  USER_SEARCH_STATUS,
+  USER_STATUS,
+  typeMatchingStatus,
+} from "src/constants";
 
 import UserTag from "./UserTagComponent";
 
@@ -134,7 +138,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
                 {USER_SEARCH_STATUS[data?.status]?.label}
               </ButtonComponent>
               <span className="label-login-status">
-                {data?.activity_status === USER_ONLINE_STATUS
+                {data?.activity_status === USER_STATUS.online
                   ? t("home:box-member-recommend.no-login")
                   : replaceLabelByTranslate(
                       t("home:box-member-recommend.last-login"),

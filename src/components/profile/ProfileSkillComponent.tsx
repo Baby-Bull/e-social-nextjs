@@ -15,9 +15,8 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 
 import theme from "src/theme";
-import { USER_STATUS, JOBS, EMPLOYEES } from "src/components/constants/constants";
-import { TEXT_ENGLISH_LEVEL_OPTIONS } from "src/constants/constants";
 import { searchUserActions } from "src/store/actionTypes";
+import { EMPLOYEES, JOBS, TEXT_ENGLISH_LEVEL_OPTIONS, USER_STATUS_MATCHING } from "src/constants";
 
 import { ShowTextArea } from "../common/ShowTextAreaComponent";
 
@@ -180,9 +179,9 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                   <TitleContentTab>{t("profile:status")}</TitleContentTab>
                   <Box
                     sx={{
-                      background: USER_STATUS[data?.status]?.bg,
+                      background: USER_STATUS_MATCHING[data?.status]?.bg,
                       borderRadius: "4px",
-                      color: USER_STATUS[data?.status]?.color,
+                      color: USER_STATUS_MATCHING[data?.status]?.color,
                       fontSize: "10px",
                       fontWeight: 700,
                       width: "138.13px",
@@ -191,7 +190,7 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                       justifyContent: "center",
                     }}
                   >
-                    {USER_STATUS[data?.status]?.label}
+                    {USER_STATUS_MATCHING[data?.status]?.label}
                   </Box>
                 </Box>
                 <BoxContentTab>

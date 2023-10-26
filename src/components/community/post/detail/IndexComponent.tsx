@@ -21,7 +21,6 @@ import {
   deleteCommunityPostComment,
   searchMemberCommunity,
 } from "src/services/community";
-import { VALIDATE_FORM_COMMUNITY_POST } from "src/messages/validate";
 
 const BoxTextValidate = styled(Box)({
   color: "#FF9458",
@@ -95,7 +94,7 @@ const DetailPostComponent = () => {
     let isValidForm = true;
     if (communityPostRequest?.content?.length > 1000) {
       isValidForm = false;
-      errorMessages.content = VALIDATE_FORM_COMMUNITY_POST.content_comment.max_length;
+      errorMessages.content = t("validate:community_post_form.content.max_length");
     }
     setErrorValidates(errorMessages);
     return isValidForm;

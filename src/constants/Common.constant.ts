@@ -3,6 +3,17 @@ export const LIMIT_ROOMS_PER_PAGE = 15;
 export const LIMIT_MESSAGES_PER_PAGE = 20;
 export const AUTH_PAGE_PATHS = ["/login", "/register", "/register/form", "/_error"];
 
+export const REGEX_RULES = {
+  username_register:
+    // eslint-disable-next-line max-len
+    /^([\u3000-\u3000]|[\u3040-\u309F]|[\u30A0-\u30FF]|[\u4E00-\u9FAF]|[\uFF10-\uFF19]|[\uFF41-\uFF5A]|[\uFF21-\uFF3A]|[a-zA-Z0-9_ ])+$/u,
+  only_japanese: /^[一-龯ぁ-んァ-ン]+$/,
+  email: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
+  username_profile: /^[一-龯ぁ-んァ-ンa-zA-Z0-9\w ]+$/,
+  text_input: /^[一-龯ぁ-んァ-ンa-zA-Z0-9\w ]+$/,
+  url: /^(ftp|http|https):\/\/[^ "]+$/,
+};
+
 export const MONTHS = [
   {
     label: 0,
@@ -105,7 +116,7 @@ const JAPAN_PROVINCES = [
 ];
 
 export const JAPAN_PROVINCE_OPTIONS = [
-  JAPAN_PROVINCES.map((item) => ({
+  ...JAPAN_PROVINCES.map((item) => ({
     label: item,
     value: item,
   })),

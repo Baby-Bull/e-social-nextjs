@@ -24,11 +24,10 @@ import styles from "src/components/searchCommunity/search_community.module.scss"
 import theme from "src/theme";
 // eslint-disable-next-line import/order
 import useViewport from "src/helpers/useViewport";
-import { numberOfLogins, numberOfParticipants } from "src/constants/searchCommunityConstants";
+import { numberOfLogins, numberOfParticipants, SearchFormStatus } from "src/constants";
 import { getListCommunitySearch } from "src/services/community";
 import { IStoreState } from "src/constants/interfaces";
 import { searchCommunityActions } from "src/store/actionTypes";
-import { SearchFormStatus } from "src/constants/constants";
 
 import PopupSearchCommunity from "./block/PopupSearchCommunity.";
 import BoxItemUserComponent from "./BoxItemCommunityComponent";
