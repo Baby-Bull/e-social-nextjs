@@ -67,7 +67,7 @@ const RecommendItem: React.SFC<IItemRecommendUserHomepage> = ({
   const router = useRouter();
   const dispatch = useDispatch();
   const [liked, setLiked] = useState(data.is_favorite);
-  const [likeCount, setLikeCount] = useState(data?.is_favorite_count ?? 0);
+  const [likeCount, setLikeCount] = useState(data?.favoriteCount ?? 0);
   // const dispatch = useDispatch();
   // const auth = useSelector((state: IStoreState) => state.user);
 
@@ -76,8 +76,8 @@ const RecommendItem: React.SFC<IItemRecommendUserHomepage> = ({
   }, [data.is_favorite]);
 
   useEffect(() => {
-    setLikeCount(data.is_favorite_count);
-  }, [data.is_favorite_count]);
+    setLikeCount(data.favoriteCount);
+  }, [data.favoriteCount]);
 
   const handleClickButtonModal = (tempValue: string) => {
     if (tempValue === typeMatchingStatus.REJECTED || !tempValue) {

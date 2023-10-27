@@ -82,7 +82,7 @@ const RecommendCommunityItem: React.SFC<{ data: IRecommendCommunityItemHomepage 
           </ul>
         </div>
         <div className="name">{data?.name}</div>
-        <p className="description">{data?.description}</p>
+        <p className="description">{data?.description || t("home:matching.community_des_default")}</p>
       </Box>
       {/* <Box sx={{ padding: "0 20px 20px" }}>
         <ButtonComponent

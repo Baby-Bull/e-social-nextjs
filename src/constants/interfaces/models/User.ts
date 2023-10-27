@@ -39,7 +39,7 @@ export interface IRecommendUserHomePage extends UserBasic {
   status: string;
   chatStatus: number;
   is_favorite: boolean;
-  is_favorite_count: number;
+  favoriteCount: number;
   match_status: string;
   activity_status?: string;
 }

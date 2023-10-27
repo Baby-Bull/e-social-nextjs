@@ -80,7 +80,7 @@ export const getUserRecentlyLogin = async (limit: number, cursor: string = "") =
 
 export const addUserFavorite = async (userId: string) => {
   try {
-    const res = await api.post(`/user/favorite/${userId}`);
+    const res = await apiNestServer.post(`/users/favorite/${userId}`);
     return res.data;
   } catch (error) {
     return error;
