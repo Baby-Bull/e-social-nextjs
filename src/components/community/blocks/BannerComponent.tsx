@@ -9,14 +9,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { IStoreState } from "src/constants/interfaces";
 import { infoCommunitySetting } from "src/components/community/mockData";
 import theme from "src/theme";
-import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmWithAvatarComponent from "src/components/common/dialog/DialogConfirmWithAvatarComponent";
 import { joinCommunity, leaveCommunity } from "src/services/community";
 import useViewport from "src/helpers/useViewport";
 import { searchCommunityActions } from "src/store/actionTypes";
 import { typeRoleUser } from "src/constants";
-
-import { bgColorByStatus } from "../mockData";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 interface ICommunityDataProps {
   data: any;
@@ -286,9 +284,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
                     width: "120px",
                     height: "36px",
                   }}
-                  props={{
-                    bgColor: data?.community_role === typeRoleUser.PENDING ? theme.gray : theme.orange,
-                  }}
+                  mode={data?.community_role === typeRoleUser.PENDING ? "gray" : "orange"}
                   onClick={data?.community_role !== typeRoleUser.PENDING ? handleJoinCommunity : null}
                 >
                   {data?.community_role === typeRoleUser.PENDING ? "申請中" : "参加申請する"}
@@ -308,9 +304,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
                     width: "120px",
                     height: "36px",
                   }}
-                  props={{
-                    bgColor: data.community_role ? "red" : bgColorByStatus,
-                  }}
+                  mode="orange"
                   onClick={data.community_role === typeRoleUser.MEMBER ? handleClickOpen : handleJoinCommunity}
                 >
                   {data.community_role === typeRoleUser.MEMBER
@@ -333,11 +327,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
                     fontSize: 14,
                     px: 0,
                   }}
-                  props={{
-                    bgColor: "white",
-                    color: theme.blue,
-                    borderColor: theme.blue,
-                  }}
+                  mode="cleam"
                   onClick={() => router.push(`/community/setting/${data.id}`)}
                 >
                   {t("community:setting.title")}
@@ -354,9 +344,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
                 height: "48px",
                 display: { xs: "none", md: "inherit" },
               }}
-              props={{
-                bgColor: data?.community_role === typeRoleUser.PENDING ? theme.gray : theme.orange,
-              }}
+              mode={data?.community_role === typeRoleUser.PENDING ? "gray" : "orange"}
               onClick={data?.community_role !== typeRoleUser.PENDING ? handleJoinCommunity : null}
             >
               {data?.community_role === typeRoleUser.PENDING
@@ -375,9 +363,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
                         : "none",
                   },
                 }}
-                props={{
-                  bgColor: data.community_role ? "red" : bgColorByStatus,
-                }}
+                mode="cleam"
                 onClick={data.community_role === typeRoleUser.MEMBER ? handleClickOpen : handleJoinCommunity}
               >
                 {data.community_role === typeRoleUser.MEMBER
@@ -396,11 +382,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
                         : "none",
                   },
                 }}
-                props={{
-                  bgColor: "white",
-                  color: theme.blue,
-                  borderColor: theme.blue,
-                }}
+                mode="cleam"
                 onClick={() => router.push(`/community/setting/${data.id}`)}
               >
                 {t("community:setting.title")}

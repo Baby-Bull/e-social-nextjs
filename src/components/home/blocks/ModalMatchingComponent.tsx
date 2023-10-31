@@ -4,8 +4,8 @@ import { useTranslation } from "next-i18next";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import { Field } from "src/components/common/Form/_Field";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 import styles from "src/components/home/home.module.scss";
 import { MATCHING_PURPOSE_OPTIONS } from "src/constants";
 import { IStoreState, IMatchingRequest, IModalMatchingComponent } from "src/constants/interfaces";

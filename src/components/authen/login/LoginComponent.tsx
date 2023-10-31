@@ -10,9 +10,7 @@ import { useDispatch } from "react-redux";
 /**
  * import Components
  */
-import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
-import SplashScreen from "src/components/common/SplashScreen";
 /**
  * import functions
  */
@@ -23,6 +21,9 @@ import { login } from "src/store/store";
  */
 import theme from "src/theme";
 import actionTypes from "src/store/actionTypes";
+import LoginButtonComponent from "src/components/common/atom-component/LoginButtonComponent";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
+import SplashScreen from "src/components/common/atom-component/SplashScreen";
 
 import styles from "../authen.module.scss";
 import LoginSocialGoogle from "../loginSocial/google/LoginSocialGoogle";
@@ -146,14 +147,7 @@ const LoginComponent = () => {
                         onChangeValue={onChangeLoginInfo}
                         // error={errorValidate.username}
                       />
-                      <ButtonComponent
-                        props={{
-                          mode: "gradient",
-                          dimension: "x-medium",
-                        }}
-                        sx={{ marginTop: "8px" }}
-                        onClick={submitLoginInfo}
-                      >
+                      <ButtonComponent mode="blue" sx={{ marginTop: "8px", width: "200px" }} onClick={submitLoginInfo}>
                         {t("login:submit")}
                       </ButtonComponent>
                     </form>
@@ -168,7 +162,9 @@ const LoginComponent = () => {
                       }}
                       onError={() => {}}
                     >
-                      <ButtonComponent props={{ mode: "google" }}>{t("login:right.register-google")}</ButtonComponent>
+                      <LoginButtonComponent props={{ mode: "google" }}>
+                        {t("login:right.register-google")}
+                      </LoginButtonComponent>
                     </LoginSocialGoogle>
                   </Box>
                   <Box pt="48px">
@@ -184,7 +180,9 @@ const LoginComponent = () => {
                       onLoginStart={onLoginStart}
                       onReject={() => {}}
                     >
-                      <ButtonComponent props={{ mode: "github" }}>{t("login:right.register-git")}</ButtonComponent>
+                      <LoginButtonComponent props={{ mode: "github" }}>
+                        {t("login:right.register-git")}
+                      </LoginButtonComponent>
                     </LoginSocialGithub>
                   </Box>
                   <Box className={styles.buttonSection} sx={{ color: theme.navy }}>

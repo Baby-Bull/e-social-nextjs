@@ -3,7 +3,7 @@ import { Box, Typography, Link } from "@mui/material";
 import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
-import ButtonComponent from "src/components/common/ButtonComponent";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 interface IEmptyMatchingComponentProps {
   text: string;
@@ -39,9 +39,7 @@ const EmptyMatchingComponent: React.SFC<IEmptyMatchingComponentProps> = ({ text,
       </Box>
       <Link underline="none" href={mode === "community" ? "/search_community" : "/search_user"}>
         <ButtonComponent
-          props={{
-            mode: "gradient",
-          }}
+          mode="gradient"
           sx={{
             mt: ["30px", "15px"],
           }}
@@ -52,11 +50,9 @@ const EmptyMatchingComponent: React.SFC<IEmptyMatchingComponentProps> = ({ text,
 
       <Link underline="none" href="/community/create">
         <ButtonComponent
-          props={{
-            dimension: "medium",
-            bgColor: theme.orange,
-          }}
+          mode="orange"
           sx={{
+            width: "210px",
             mt: "40px",
             display: mode !== "community" && "none",
             borderRadius: "4px",

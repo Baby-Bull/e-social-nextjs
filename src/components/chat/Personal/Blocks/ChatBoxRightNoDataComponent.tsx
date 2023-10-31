@@ -6,7 +6,7 @@ import Link from "next/link";
 
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
-import ButtonComponent from "src/components/common/elements/ButtonComponent";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 const ChatBoxRightNoDataComponent = () => {
   const { t } = useTranslation();

@@ -4,8 +4,8 @@ import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
 import CommentComponent from "src/components/community/post/detail/blocks/CommentComponent";
-import ButtonComponent from "src/components/common/ButtonComponent";
 import PaginationCustomComponent from "src/components/common/PaginationCustomComponent";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 interface IListCommentProps {
   comments?: any;

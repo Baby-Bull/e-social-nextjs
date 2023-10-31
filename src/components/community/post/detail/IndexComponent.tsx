@@ -8,7 +8,6 @@ import { MentionsInput, Mention } from "react-mentions";
 import GlobalStyles from "@mui/material/GlobalStyles";
 
 import theme from "src/theme";
-import ButtonComponent from "src/components/common/ButtonComponent";
 import IntroCommunityComponent from "src/components/community/blocks/IntroCommunityComponent";
 import PostDetailComponent from "src/components/community/post/detail/blocks/PostDetailComponent";
 import ListCommentComponent from "src/components/community/post/detail/blocks/ListCommentComponent";
@@ -21,6 +20,7 @@ import {
   deleteCommunityPostComment,
   searchMemberCommunity,
 } from "src/services/community";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 const BoxTextValidate = styled(Box)({
   color: "#FF9458",
@@ -363,10 +363,7 @@ const DetailPostComponent = () => {
                 <Box sx={{ textAlign: "right", cursor: "pointer" }}>
                   <ButtonComponent
                     disabled={!content?.length}
-                    props={{
-                      square: true,
-                      bgColor: theme.blue,
-                    }}
+                    mode="blue"
                     sx={{
                       mt: "20px",
                       width: "96px",

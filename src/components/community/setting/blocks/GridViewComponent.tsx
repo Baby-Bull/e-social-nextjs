@@ -9,8 +9,8 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 
 import { IStoreState } from "src/constants/interfaces";
 import theme from "src/theme";
-import ButtonComponent from "src/components/common/ButtonComponent";
 import { MemberApprove, MemberReject } from "src/services/community";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 dayjs.extend(localizedFormat);
 dayjs.locale("ja");
@@ -154,11 +154,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
         >
           <React.Fragment>
             <ButtonComponent
-              props={{
-                bgColor: theme.orange,
-                dimension: "x-small",
-              }}
+              mode="orange"
               sx={{
+                width: "160px",
                 mr: "20px",
                 height: "36px",
               }}
@@ -168,11 +166,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
             </ButtonComponent>
 
             <ButtonComponent
-              props={{
-                bgColor: theme.gray,
-                dimension: "x-small",
-              }}
+              mode="gray"
               sx={{
+                width: "160px",
                 height: "36px",
               }}
               onClick={callbackHandleReject}
@@ -195,11 +191,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
       >
         <React.Fragment>
           <ButtonComponent
-            props={{
-              bgColor: theme.orange,
-              dimension: "x-small",
-            }}
+            mode="orange"
             sx={{
+              width: "160px",
               mt: "27px",
               fontSize: 14,
               height: "40px",
@@ -210,11 +204,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ data, index, ca
           </ButtonComponent>
 
           <ButtonComponent
-            props={{
-              bgColor: theme.gray,
-              dimension: "x-small",
-            }}
+            mode="gray"
             sx={{
+              width: "160px",
               mt: "27px",
               fontSize: 14,
               height: "40px",

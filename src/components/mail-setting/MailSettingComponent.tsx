@@ -11,7 +11,6 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useTranslation } from "next-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
-import ButtonComponent from "src/components/common/ButtonComponent";
 import PopupOptionRecommendComponent from "src/components/mail-setting/PopupOptionRecommendComponent";
 // eslint-disable-next-line import/order
 import theme from "src/theme";
@@ -21,6 +20,8 @@ import { REGEX_RULES, VALIDATE_MESSAGE_FORM_REGISTER } from "src/messages/valida
 import { userSettingEmail, userSettingNotification } from "src/services/user";
 import { IStoreState } from "src/constants/interfaces";
 import actionTypes from "src/store/actionTypes";
+
+import ButtonComponent from "../common/atom-component/ButtonComponent";
 
 import { notifyMess, notifyRecommend } from "./mockData";
 
@@ -384,16 +385,14 @@ const MailSettingComponent = () => {
                 >
                   <ButtonComponent
                     sx={{
+                      width: "200px",
                       background: mailOnChange ? "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)" : theme.gray,
                       color: "#fff",
                       "&:hover": {
                         background: mailOnChange ? "linear-gradient(90deg, #03BCDB 0%, #03DBCE 100%)" : theme.gray,
                       },
                     }}
-                    props={{
-                      mode: "gradient",
-                      dimension: "x-medium",
-                    }}
+                    mode="gradient"
                     onClick={submitSettingMailRequest}
                   >
                     {t("mail-setting:send")}

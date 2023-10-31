@@ -33,7 +33,6 @@ import theme from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabVerticalComponent";
 import { Field, InputCustom } from "src/components/community/blocks/Form/InputComponent";
 import { TextArea } from "src/components/community/blocks/Form/TextAreaComponent";
-import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
 import {
   getCommunity,
@@ -44,6 +43,8 @@ import {
   leaveCommunity,
 } from "src/services/community";
 import { REGEX_RULES } from "src/constants";
+
+import ButtonComponent from "../common/atom-component/ButtonComponent";
 
 import { infoCommunitySetting, tabsCommunitySetting } from "./mockData";
 import MemberComponent from "./setting/blocks/MemberComponent";
@@ -1030,16 +1031,11 @@ const UpdateComponent = () => {
                 }}
               >
                 <ButtonComponent
-                  props={{
-                    dimension: "medium",
-                    bgColor: disableBtnSubmit ? theme.gray : theme.blue,
-                  }}
+                  mode={!disableBtnSubmit ? "gray" : "blue"}
                   sx={{
                     fontSize: { sm: 20 },
+                    width: "200px",
                     height: ["48px", "56px"],
-                    "@media (max-width: 425px)": {
-                      width: "200px",
-                    },
                     "&:hover": {
                       cursor: disableBtnSubmit && "not-allowed",
                     },

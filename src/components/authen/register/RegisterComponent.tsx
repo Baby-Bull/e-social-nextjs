@@ -7,11 +7,11 @@ import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 
 import theme from "src/theme";
-import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 import { authWithProvider } from "src/services/auth";
 import { login } from "src/store/store";
-import SplashScreen from "src/components/common/SplashScreen";
+import LoginButtonComponent from "src/components/common/atom-component/LoginButtonComponent";
+import SplashScreen from "src/components/common/atom-component/SplashScreen";
 
 import { LoginSocialGithub, IResolveParams } from "../loginSocial";
 // import { LoginSocialTwitterV1, LoginSocialGithub, IResolveParams } from "../loginSocial";
@@ -155,7 +155,9 @@ const RegisterComponents = () => {
                   }}
                   onError={onLogoutFailure}
                 >
-                  <ButtonComponent props={{ mode: "google" }}>{t("register:register-google")}</ButtonComponent>
+                  <LoginButtonComponent props={{ mode: "google" }}>
+                    {t("register:register-google")}
+                  </LoginButtonComponent>
                 </LoginSocialGoogle>
               </Box>
 
@@ -174,7 +176,7 @@ const RegisterComponents = () => {
                     setIsLoading(false);
                   }}
                 >
-                  <ButtonComponent props={{ mode: "github" }}>{t("register:register-git")}</ButtonComponent>
+                  <LoginButtonComponent props={{ mode: "github" }}>{t("register:register-git")}</LoginButtonComponent>
                 </LoginSocialGithub>
               </Box>
 

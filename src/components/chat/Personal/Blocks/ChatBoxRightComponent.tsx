@@ -23,7 +23,6 @@ import { v4 as uuidv4 } from "uuid";
 
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/chat/ElementCustom/InputCustom";
-import ButtonComponent from "src/components/common/elements/ButtonComponent";
 // @ts-ignore
 import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
 import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupReviewComponent";
@@ -33,6 +32,7 @@ import { formatChatDate, formatListMessages } from "src/helpers/helper";
 import "react-image-lightbox/style.css";
 import useWindowSize from "src/customHooks/UseWindowSize";
 import { MATCHING_PURPOSE_OPTIONS, MESSAGE_CONTENT_TYPES, REACT_QUERY_KEYS } from "src/constants";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 interface IBoxChatProps {
   allInfoMessage: any;

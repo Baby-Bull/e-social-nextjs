@@ -23,11 +23,11 @@ import theme, { themeSelect } from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabVerticalComponent";
 import { TextArea } from "src/components/community/blocks/Form/TextAreaComponent";
 import { InputCustom } from "src/components/community/blocks/Form/InputComponent";
-import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
 import ButtonExplainComponent from "src/components/community/setting/blocks/ButtonExplainComponent";
 import ParticipatedMemberComponent from "src/components/community/setting/blocks/ParticipatedMemberComponent";
 import MemberComponent from "src/components/community/setting/blocks/MemberComponent";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 import { admins, tabsCommunitySetting, infoCommunitySetting } from "../mockData";
 
@@ -249,15 +249,12 @@ const CommunityCreateComponent = () => {
                 <Typography>{t("community:setting.form.max-upload")}</Typography>
 
                 <ButtonComponent
-                  props={{
-                    square: true,
-                    dimension: "medium",
-                    bgColor: theme.gray,
-                  }}
+                  mode="gray"
                   sx={{
                     mt: "12px",
                     mb: "20px",
                     height: "56px",
+                    width: "200px",
                   }}
                 >
                   {t("community:button.setting.upload")}
@@ -403,11 +400,7 @@ const CommunityCreateComponent = () => {
                     </SelectCustom>
 
                     <ButtonComponent
-                      props={{
-                        bgColor: theme.lightGray,
-                        color: theme.navy,
-                        square: true,
-                      }}
+                      mode="cleam"
                       sx={{
                         display: !showBtnRemoveAdmin && "none",
                         ml: "20px",
@@ -596,16 +589,11 @@ const CommunityCreateComponent = () => {
               }}
             >
               <ButtonComponent
-                props={{
-                  dimension: "medium",
-                  bgColor: disableBtnSubmit ? theme.gray : theme.blue,
-                }}
+                mode={disableBtnSubmit ? "gray" : "blue"}
                 sx={{
+                  width: "200px",
                   fontSize: { sm: 20 },
                   height: ["48px", "56px"],
-                  "@media (max-width: 425px)": {
-                    width: "200px",
-                  },
                   "&:hover": {
                     cursor: disableBtnSubmit && "not-allowed",
                   },

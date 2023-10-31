@@ -24,11 +24,12 @@ import theme, { themeSelect } from "src/theme";
 import { TabPanel, a11yProps, TabCustom } from "src/components/common/Tab/BlueTabVerticalComponent";
 import { Field, InputCustom } from "src/components/community/blocks/Form/InputComponent";
 import { TextArea } from "src/components/community/blocks/Form/TextAreaComponent";
-import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmComponent from "src/components/common/dialog/DialogConfirmComponent";
 import { createCommunity } from "src/services/community";
 import { REGEX_RULES } from "src/constants";
 import { IStoreState } from "src/constants/interfaces";
+
+import ButtonComponent from "../common/atom-component/ButtonComponent";
 
 import { tabsCreateCommunity, infoCommunitySetting } from "./mockData";
 
@@ -694,11 +695,9 @@ const CreateComponent = () => {
               }}
             >
               <ButtonComponent
-                props={{
-                  dimension: "medium",
-                  bgColor: disableBtnSubmit ? theme.gray : theme.blue,
-                }}
+                mode={disableBtnSubmit ? "gray" : "blue"}
                 sx={{
+                  width: 200,
                   fontSize: { sm: 20 },
                   height: ["48px", "56px"],
                   "@media (max-width: 425px)": {

@@ -12,7 +12,6 @@ import Link from "next/link";
 
 import theme from "src/theme";
 import styles from "src/components/profile/profile.module.scss";
-import ButtonComponent from "src/components/common/ButtonComponent";
 import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
 import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupReviewComponent";
 import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
@@ -25,6 +24,7 @@ import {
 import { IStoreState } from "src/constants/interfaces";
 import actionTypes from "src/store/actionTypes";
 import { JOBS, TYPE, USER_STATUS } from "src/constants";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
@@ -359,12 +359,9 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
             {type === "unConfirm" && (
               <React.Fragment>
                 <ButtonComponent
-                  props={{
-                    color: theme.gray,
-                    bgColor: theme.whiteGray,
-                    dimension: "x-small",
-                  }}
+                  mode="gray"
                   sx={{
+                    width: "160px",
                     display: !data?.receiver_id && "none",
                     borderRadius: "12px",
                   }}
@@ -374,12 +371,10 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 </ButtonComponent>
 
                 <ButtonComponent
-                  props={{
-                    bgColor: theme.orange,
-                    dimension: "x-small",
-                  }}
+                  mode="orange"
                   onClick={() => handleAcceptMatchingRequest(data?.id)}
                   sx={{
+                    width: "160px",
                     display: data?.receiver_id && "none",
                     mr: "20px",
                   }}
@@ -388,11 +383,9 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 </ButtonComponent>
 
                 <ButtonComponent
-                  props={{
-                    bgColor: theme.gray,
-                    dimension: "x-small",
-                  }}
+                  mode="gray"
                   sx={{
+                    width: "160px",
                     display: data?.receiver_id && "none",
                   }}
                   onClick={() => handleRejectMatchingRequest(data?.id)}
@@ -406,12 +399,9 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
               <React.Fragment>
                 <ButtonComponent
                   disabled={data?.is_reviewed}
-                  props={{
-                    color: data?.is_reviewed && theme.gray,
-                    bgColor: !data?.is_reviewed && theme.orange,
-                    dimension: "small",
-                  }}
+                  mode="orange"
                   sx={{
+                    width: "160px",
                     mr: "20px",
                   }}
                   onClick={handleShowReview}
@@ -419,13 +409,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   {data?.is_reviewed ? t("thread:button.reviewed") : t("thread:button.review")}
                 </ButtonComponent>
 
-                <ButtonComponent
-                  props={{
-                    bgColor: theme.blue,
-                    dimension: "small",
-                  }}
-                  onClick={() => router.push(`/chat/personal?room=${data?.user?.id}`)}
-                >
+                <ButtonComponent mode="blue" onClick={() => router.push(`/chat/personal?room=${data?.user?.id}`)}>
                   {t("thread:button.open-message")}
                 </ButtonComponent>
               </React.Fragment>
@@ -433,9 +417,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
 
             {type === "reject" && (
               <ButtonComponent
-                props={{
-                  bgColor: theme.blue,
-                }}
+                mode="blue"
                 sx={{
                   width: "80px",
                   mr: "20px",
@@ -450,11 +432,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
             {type === "favorite" && data?.match_status !== "confirmed" && (
               <ButtonComponent
                 disabled={data?.match_status}
-                props={{
-                  color: data?.match_status && theme.gray,
-                  bgColor: !data?.match_status && theme.green,
-                  dimension: "small",
-                }}
+                mode="green"
                 sx={{
                   ml: "15px",
                 }}
@@ -468,11 +446,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
               <React.Fragment>
                 <ButtonComponent
                   disabled={data?.is_reviewed}
-                  props={{
-                    color: data?.is_reviewed && theme.gray,
-                    bgColor: !data?.is_reviewed && theme.orange,
-                    dimension: "small",
-                  }}
+                  mode="orange"
                   sx={{
                     mr: "20px",
                   }}
@@ -481,13 +455,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   {data?.is_reviewed ? t("thread:button.reviewed") : t("thread:button.review")}
                 </ButtonComponent>
 
-                <ButtonComponent
-                  props={{
-                    bgColor: theme.blue,
-                    dimension: "small",
-                  }}
-                  onClick={() => router.push(`/chat/personal?room=${data?.id}`)}
-                >
+                <ButtonComponent mode="blue" onClick={() => router.push(`/chat/personal?room=${data?.id}`)}>
                   {t("thread:button.open-message")}
                 </ButtonComponent>
               </React.Fragment>
@@ -590,11 +558,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
           {type === "unConfirm" && (
             <React.Fragment>
               <ButtonComponent
-                props={{
-                  color: theme.gray,
-                  bgColor: theme.whiteGray,
-                  dimension: "x-small",
-                }}
+                mode="gray"
                 sx={{
                   mb: "20px",
                   display: !data?.receiver_id && "none",
@@ -606,10 +570,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
               </ButtonComponent>
 
               <ButtonComponent
-                props={{
-                  bgColor: theme.orange,
-                  dimension: "medium",
-                }}
+                mode="orange"
                 sx={{
                   display: data?.receiver_id && "none",
                 }}
@@ -619,10 +580,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
               </ButtonComponent>
 
               <ButtonComponent
-                props={{
-                  bgColor: theme.gray,
-                  dimension: "x-small",
-                }}
+                mode="gray"
                 sx={{
                   display: data?.receiver_id && "none",
                   mt: "42px",
@@ -639,11 +597,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
             <React.Fragment>
               <ButtonComponent
                 disabled={data?.is_reviewed}
-                props={{
-                  color: data?.is_reviewed && theme.gray,
-                  bgColor: !data?.is_reviewed && theme.orange,
-                  dimension: "x-small",
-                }}
+                mode="orange"
                 sx={{
                   mt: "27px",
                   mb: "5px",
@@ -655,10 +609,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
               </ButtonComponent>
 
               <ButtonComponent
-                props={{
-                  bgColor: theme.blue,
-                  dimension: "x-small",
-                }}
+                mode="blue"
                 sx={{
                   mt: "27px",
                   mb: "5px",
@@ -673,9 +624,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
 
           {type === "reject" && (
             <ButtonComponent
-              props={{
-                bgColor: theme.blue,
-              }}
+              mode="blue"
               sx={{
                 width: "80px",
                 borderRadius: "12px",
@@ -690,11 +639,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
           {type === "favorite" && data?.match_status !== "confirmed" && (
             <ButtonComponent
               disabled={data?.match_status}
-              props={{
-                dimension: "small",
-                color: data?.match_status && theme.gray,
-                bgColor: !data?.match_status && theme.green,
-              }}
+              mode="green"
               sx={{
                 mt: "20px",
                 height: 40,
@@ -709,11 +654,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
             <React.Fragment>
               <ButtonComponent
                 disabled={data?.is_reviewed}
-                props={{
-                  color: data?.is_reviewed && theme.gray,
-                  bgColor: !data?.is_reviewed && theme.orange,
-                  dimension: "x-small",
-                }}
+                mode="orange"
                 sx={{
                   mt: "27px",
                   mb: "5px",
@@ -725,10 +666,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
               </ButtonComponent>
 
               <ButtonComponent
-                props={{
-                  bgColor: theme.blue,
-                  dimension: "x-small",
-                }}
+                mode="blue"
                 sx={{
                   mt: "27px",
                   mb: "5px",

@@ -24,11 +24,11 @@ import { useRouter } from "next/router";
 import dayjs from "dayjs";
 
 import theme from "src/theme";
-import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 import { updateProfileUseRenewal } from "src/services/user";
 import HeaderRegisterPageComponent from "src/components/layouts/HeaderRegisterPageComponent";
 import { JAPAN_PROVINCE_OPTIONS, REGEX_RULES, USER_STATUS_OPTIONS } from "src/constants";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 import { Field } from "./Field";
 
@@ -306,14 +306,7 @@ const FormRegisterComponents = () => {
                     error={errorValidate.checkbox}
                   />
 
-                  <ButtonComponent
-                    props={{
-                      mode: "gradient",
-                      dimension: "x-medium",
-                    }}
-                    sx={{ marginTop: "8px" }}
-                    onClick={submitUpdateProfile}
-                  >
+                  <ButtonComponent mode="gradient" sx={{ marginTop: "8px" }} onClick={submitUpdateProfile}>
                     {t("register:form.submit")}
                   </ButtonComponent>
                 </form>
@@ -592,13 +585,10 @@ const FormRegisterComponents = () => {
                       }}
                     >
                       <ButtonComponent
+                        mode="blue"
                         variant="outlined"
-                        props={{
-                          dimension: "medium",
-                          color: theme.blue,
-                          borderColor: theme.blue,
-                        }}
                         sx={{
+                          width: 200,
                           height: 32,
                           textAlign: "center",
                         }}
@@ -615,14 +605,7 @@ const FormRegisterComponents = () => {
                     </Box>
                   </CardContent>
                   <CardActions>
-                    <ButtonComponent
-                      props={{
-                        bgColor: theme.green,
-                      }}
-                      sx={{
-                        "&:hover": { backgroundColor: theme.green },
-                      }}
-                    >
+                    <ButtonComponent mode="green" sx={{ "&:hover": { backgroundColor: theme.green } }}>
                       {t("register:form.tutorial.send-request")}
                     </ButtonComponent>
                   </CardActions>
@@ -695,12 +678,9 @@ const FormRegisterComponents = () => {
             >
               <ButtonComponent
                 onClick={handleTutorialDone}
-                props={{
-                  dimension: "medium",
-                  color: "white",
-                  bgColor: theme.blue,
-                }}
+                mode="blue"
                 sx={{
+                  width: 200,
                   height: "56px",
                   "&:hover": { backgroundColor: theme.lightBlue },
                 }}
@@ -758,12 +738,9 @@ const FormRegisterComponents = () => {
               }}
             >
               <ButtonComponent
-                props={{
-                  bgColor: theme.blue,
-                  dimension: "medium",
-                  color: "white",
-                }}
+                mode="blue"
                 sx={{
+                  width: 200,
                   height: "56px",
                 }}
                 onClick={() => router.push("/")}

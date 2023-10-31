@@ -9,7 +9,6 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 
 import styles from "src/components/searchUser/search_user.module.scss";
-import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
@@ -25,6 +24,7 @@ import {
 } from "src/constants";
 
 import UserTag from "../profile/UserTagComponent";
+import ButtonComponent from "../common/atom-component/ButtonComponent";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");

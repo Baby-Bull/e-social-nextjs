@@ -1,0 +1,53 @@
+{
+  "title": "Register",
+  "sub-title": "Registration will be done using various accounts. If you do not have an account, please issue one and register.",
+  "register-git": "Github",
+  "register-google": "Google",
+  "register-twitter": "Twitter",
+  "description": {
+    "title": "Esocial - connect your story",
+    "text-1.1": "Engineer only",
+    "text-1.2": "*Please refrain from registering as an agent.",
+    "text-2": "Please do so in the spirit of Give&Given.",
+    "text-3": "Please cooperate in good communication."
+  },
+  "form": {
+    "title": "Registration is complete! Next, let's enter your profile",
+    "required": "Require",
+    "submit": "はじめる",
+    "label": {
+      "name": "ユーザー名",
+      "birthday": "生年月日",
+      "status": "ステータス",
+      "email": "メールアドレス",
+      "place": "お住まいの地域",
+      "tag": "タグ",
+      "checkbox": "に同意する"
+    },
+    "placeholder": {
+      "name": "田中太郎",
+      "birthday": "1990/01/01",
+      "status": "選択してください",
+      "email": "tanakataro@rebase.co.jp",
+      "place": "選択してください",
+      "tag": "言語、役職など２種類以上設定してください"
+    },
+    "tutorial": {
+      "button-status": "今すぐ話せます",
+      "last-login": "最終ログイン：6分前",
+      "name": "goodhubくん",
+      "major": "フロントエンドエンジニア",
+      "vote": "レビュー：0",
+      "intro": "自社サービス開発のエンジニアをしています！",
+      "pr": "話せること/聞きたいこと",
+      "description": "まずはマッチングリクエストを送って気になる人とマッチしてみよう！",
+      "text-demo": "Reactエンジニアを2年しているのでフロント開発についてお話しできます。フルスタックエンジニアを目指していて、PHPを習得したいと考えているので、フルスタックエンジニアの方に色々お話しを...",
+      "send-request": "マッチングのリクエストを送る",
+      "button-add": "話したい人リストに登録",
+      "button-redirect-home": "ホームへ",
+      "next-tutorial": "次へ"
+    }
+  },
+  "login-text-1": "アカウントをお持ちの方は",
+  "login-text-2": "こちら"
+}

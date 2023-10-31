@@ -7,10 +7,10 @@ import { useRouter } from "next/router";
 import theme from "src/theme";
 import { TabPanel, a11yProps, ChildTabCustom } from "src/components/common/Tab/BlueChildTabComponent";
 import ListViewComponent, { IData } from "src/components/common/ListViewComponent";
-import ButtonComponent from "src/components/common/ButtonComponent";
 import { getListCommunityPost } from "src/services/community";
 import PaginationCustomComponent from "src/components/common/PaginationCustomComponent";
 import EmptyComponent from "src/components/community/blocks/EmptyComponent";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 const TypographyCustom = styled(Typography)({
   fontSize: 16,
@@ -166,11 +166,9 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ maxWidth, dataC
                   </Tabs>
                   {checkRoleCreatPost && (
                     <ButtonComponent
-                      props={{
-                        mode: "gradient",
-                        dimension: "tiny",
-                      }}
+                      mode="gradient"
                       sx={{
+                        width: "120px",
                         height: "36px",
                         mr: "26px",
                         "@media (max-width: 425px)": {

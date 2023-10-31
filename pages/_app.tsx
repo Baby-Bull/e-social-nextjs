@@ -28,6 +28,7 @@ import socket from "src/helpers/socket";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import { fetchToken, setApiAuth } from "src/utils/API-infra.util";
 import { AUTH_PAGE_PATHS } from "src/constants";
+import SplashScreen from "src/components/common/atom-component/SplashScreen";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -42,14 +43,6 @@ interface MyAppProps extends AppProps {
   pathname: string;
   Component: NextPageWithLayout;
 }
-
-const SplashScreen = () => (
-  <img
-    alt="splash"
-    // src="/assets/images/bg_loading.gif"
-    style={{ top: "40vh", bottom: 0, right: 0, left: "40%", width: "20%", position: "fixed" }}
-  />
-);
 
 // eslint-disable-next-line no-undef
 const MyApp = (props: MyAppProps) => {

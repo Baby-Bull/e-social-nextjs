@@ -6,8 +6,8 @@ import classNames from "classnames";
 import { useRouter } from "next/router";
 
 import styles from "src/components/chat/chat.module.scss";
-import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import theme from "src/theme";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 const InputCustom = styled(InputBase)({
   "&.MuiInputBase-root": {

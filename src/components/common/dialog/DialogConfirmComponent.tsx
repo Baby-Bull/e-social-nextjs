@@ -2,7 +2,8 @@ import React from "react";
 import { Avatar, Box, Dialog, DialogActions, DialogContent, DialogTitle, Fab, Typography } from "@mui/material";
 
 import theme from "src/theme";
-import ButtonComponent from "src/components/common/ButtonComponent";
+
+import ButtonComponent from "../atom-component/ButtonComponent";
 
 interface IDialogConfirmProps {
   isShow: boolean;
@@ -13,7 +14,6 @@ interface IDialogConfirmProps {
   avatar?: string;
   btnLeft: string;
   btnRight: string;
-  bgColorBtnRight?: string;
   handleClose: () => void;
   handleCancel?: () => void;
   handleOK?: () => void;
@@ -31,7 +31,6 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
   handleCancel,
   handleOK,
   avatar,
-  bgColorBtnRight,
 }) => {
   const [fullWidth] = React.useState(true);
 
@@ -170,11 +169,8 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
         }}
       >
         <ButtonComponent
-          props={{
-            dimension: "medium",
-            bgColor: theme.gray,
-          }}
           sx={{
+            width: 200,
             height: "56px",
           }}
           onClick={handleCancel}
@@ -183,11 +179,9 @@ const DialogConfirmComponent: React.SFC<IDialogConfirmProps> = ({
         </ButtonComponent>
 
         <ButtonComponent
-          props={{
-            dimension: "medium",
-            bgColor: bgColorBtnRight ?? theme.blue,
-          }}
+          mode="blue"
           sx={{
+            width: 200,
             height: "56px",
             mt: ["40px", 0],
           }}
