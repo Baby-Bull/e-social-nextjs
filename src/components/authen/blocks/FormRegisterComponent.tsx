@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Box,
-  Grid,
   Typography,
   Avatar,
   Dialog,
@@ -24,13 +23,12 @@ import { useRouter } from "next/router";
 import dayjs from "dayjs";
 
 import theme from "src/theme";
-import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 import { updateProfileUseRenewal } from "src/services/user";
-import HeaderRegisterPageComponent from "src/components/layouts/HeaderRegisterPageComponent";
 import { JAPAN_PROVINCE_OPTIONS, REGEX_RULES, USER_STATUS_OPTIONS } from "src/constants";
 import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
+import Field from "src/components/common/molecules/Field";
 
-import { Field } from "./Field";
+import styles from "../authen.module.scss";
 
 const ListItem = styled("li")({
   marginRight: theme.spacing(0),
@@ -206,339 +204,171 @@ const FormRegisterComponents = () => {
     <React.Fragment>
       <React.Fragment>
         {isLoading && (
-          <Backdrop sx={{ color: "#fff", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
+          <Backdrop sx={{ color: "white", zIndex: () => theme.zIndex.drawer + 1 }} open={isLoading}>
             <CircularProgress color="inherit" />
           </Backdrop>
         )}
+        <Box className={styles["registerForm-wrapper"]}>
+          <Typography className={styles["registerForm-title"]} sx={{ color: theme.navy }}>
+            {t("register:form.title")}
+          </Typography>
 
-        <HeaderRegisterPageComponent />
-        <Box sx={{ marginTop: "55px" }}>
-          <Grid container>
-            <GridLeftComponent />
+          <form style={{ textAlign: "center", marginBottom: "63px" }}>
+            <Field
+              id="username"
+              required
+              label={t("register:form.label.name")}
+              placeholder={t("register:form.placeholder.name")}
+              editor="textbox"
+              onChangeValue={onChangeUserInfo}
+              error={errorValidate.username}
+            />
 
-            <Grid item xs={12} sm={6}>
-              <Box
-                sx={{
-                  pt: [5, 9],
-                  px: ["5%", "10%"],
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Typography
-                  sx={{
-                    pb: ["20px", "23px"],
-                    fontSize: 20,
-                    fontWeight: 700,
-                    color: theme.navy,
-                  }}
-                >
-                  {t("register:form.title")}
-                </Typography>
+            <Field
+              id="birthday"
+              required
+              label={t("register:form.label.birthday")}
+              placeholder={t("register:form.placeholder.birthday")}
+              onChangeValue={onChangeUserInfo}
+              editor="date-picker"
+              error={errorValidate.birthday}
+            />
 
-                <form style={{ textAlign: "center", marginBottom: "63px" }}>
-                  <Field
-                    id="username"
-                    required
-                    label={t("register:form.label.name")}
-                    placeholder={t("register:form.placeholder.name")}
-                    editor="textbox"
-                    onChangeValue={onChangeUserInfo}
-                    error={errorValidate.username}
-                  />
+            <Field
+              id="status"
+              required
+              label={t("register:form.label.status")}
+              placeholder={t("register:form.placeholder.status")}
+              options={USER_STATUS_OPTIONS}
+              editor="dropdown"
+              onChangeValue={onChangeUserInfo}
+              error={errorValidate.status}
+            />
+            <Field
+              id="email"
+              required
+              label={t("register:form.label.email")}
+              placeholder={t("register:form.placeholder.email")}
+              editor="textbox"
+              onChangeValue={onChangeUserInfo}
+              error={errorValidate.email}
+            />
+            <Field
+              id="address"
+              required
+              label={t("register:form.label.place")}
+              placeholder={t("register:form.placeholder.place")}
+              editor="dropdown"
+              options={JAPAN_PROVINCE_OPTIONS}
+              onChangeValue={onChangeUserInfo}
+              error={errorValidate.address}
+            />
+            <Field
+              id="tags"
+              required
+              label={t("register:form.label.tag")}
+              placeholder={t("register:form.placeholder.tag")}
+              editor="multi-selection"
+              value={userInfo?.tags || []}
+              onChangeValue={onChangeUserInfo}
+              error={errorValidate.tags}
+            />
+            <Field
+              id="checkbox"
+              label={t("register:form.label.checkbox")}
+              editor="checkbox"
+              value={hasAgree}
+              onChangeCheckbox={onChangeCheckbox}
+              error={errorValidate.checkbox}
+            />
 
-                  <Field
-                    id="birthday"
-                    required
-                    label={t("register:form.label.birthday")}
-                    placeholder={t("register:form.placeholder.birthday")}
-                    onChangeValue={onChangeUserInfo}
-                    editor="date-picker"
-                    error={errorValidate.birthday}
-                  />
-
-                  <Field
-                    id="status"
-                    required
-                    label={t("register:form.label.status")}
-                    placeholder={t("register:form.placeholder.status")}
-                    options={USER_STATUS_OPTIONS}
-                    editor="dropdown"
-                    onChangeValue={onChangeUserInfo}
-                    error={errorValidate.status}
-                  />
-                  <Field
-                    id="email"
-                    required
-                    label={t("register:form.label.email")}
-                    placeholder={t("register:form.placeholder.email")}
-                    editor="textbox"
-                    onChangeValue={onChangeUserInfo}
-                    error={errorValidate.email}
-                  />
-                  <Field
-                    id="address"
-                    required
-                    label={t("register:form.label.place")}
-                    placeholder={t("register:form.placeholder.place")}
-                    editor="dropdown"
-                    options={JAPAN_PROVINCE_OPTIONS}
-                    onChangeValue={onChangeUserInfo}
-                    error={errorValidate.address}
-                  />
-                  <Field
-                    id="tags"
-                    required
-                    label={t("register:form.label.tag")}
-                    placeholder={t("register:form.placeholder.tag")}
-                    editor="multi-selection"
-                    value={userInfo?.tags || []}
-                    onChangeValue={onChangeUserInfo}
-                    error={errorValidate.tags}
-                  />
-                  <Field
-                    id="checkbox"
-                    label={t("register:form.label.checkbox")}
-                    editor="checkbox"
-                    value={hasAgree}
-                    onChangeCheckbox={onChangeCheckbox}
-                    error={errorValidate.checkbox}
-                  />
-
-                  <ButtonComponent mode="gradient" sx={{ marginTop: "8px" }} onClick={submitUpdateProfile}>
-                    {t("register:form.submit")}
-                  </ButtonComponent>
-                </form>
-              </Box>
-            </Grid>
-          </Grid>
+            <ButtonComponent mode="gradient" sx={{ marginTop: "8px" }} onClick={submitUpdateProfile}>
+              {t("register:form.submit")}
+            </ButtonComponent>
+          </form>
         </Box>
       </React.Fragment>
 
       <Dialog
-        PaperProps={{
-          style: { borderRadius: 12 },
-        }}
-        open={open}
+        PaperProps={{ style: { borderRadius: 12 } }}
+        open
         onClose={handleClose}
         scroll="paper"
         fullWidth={fullWidth}
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
+        className={styles["dialog-tutorial--container"]}
       >
         <DialogTitle
+          className={styles["dialog-tutorial--title"]}
           id="scroll-dialog-title"
-          sx={{
-            backgroundColor: theme.whiteBlue,
-            textAlign: "right",
-            p: [0, "27px"],
-            position: "relative",
-          }}
+          sx={{ backgroundColor: theme.whiteBlue }}
         >
           <Fab
+            className={styles["dialog-tutorial--title--item"]}
             variant="circular"
             // onClick={handleTutorialDone}
             onClick={() => setOpen(false)}
-            sx={{
-              position: "absolute",
-              top: ["7px", "20px"],
-              right: ["7px", "20px"],
-              width: ["30px", "inherit"],
-              height: ["30px", "inherit"],
-              backgroundColor: "transparent",
-              boxShadow: "unset",
-              "&:hover": {
-                backgroundColor: "transparent",
-                opacity: 0.8,
-              },
-            }}
           >
             <Avatar
+              className={styles["dialog-tutorial--title--item--img"]}
               variant="square"
-              sx={{
-                width: ["24px", "56px"],
-                height: ["24px", "56px"],
-                display: "flex",
-                justifyContent: "center",
-              }}
-              // src={
-              //   !isTutorialDone ? "/assets/images/svg/arrow-right-circle.svg" : "/assets/images/svg/delete-circle.svg"
-              // }
               src="/assets/images/svg/delete-circle.svg"
             />
           </Fab>
         </DialogTitle>
 
         {!isTutorialDone ? (
-          <DialogContent
-            sx={{
-              pb: "46px",
-              backgroundColor: theme.whiteBlue,
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: ["column-reverse", "row"],
-                alignItems: "center",
-                mt: ["53px", 0],
-                position: "relative",
-              }}
-            >
-              <Box sx={{ maxWidth: 320, flex: 2 }}>
-                <Card
-                  variant="outlined"
-                  sx={{
-                    display: ["none", "inherit"],
-                    px: "8px",
-                    pb: "16px",
-                  }}
-                >
+          <DialogContent className={styles["dialog-tutorial--content"]} sx={{ backgroundColor: theme.whiteBlue }}>
+            <Box className={styles["dialog-tutorial--content--container"]}>
+              <Box className={styles["dialog-tutorial--content--demo"]}>
+                <Card className={styles["dialog-tutorial--content--card"]} variant="outlined">
                   <CardContent>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Button
-                        sx={{
-                          fontSize: 10,
-                          width: 130,
-                          height: 20,
-                          color: "white",
-                          backgroundColor: theme.orange,
-                          "&:hover": {
-                            opacity: 0.9,
-                            backgroundColor: theme.orange,
-                          },
-                        }}
-                      >
+                    <Box className={styles["dialog-tutorial--card--head"]}>
+                      <Button className={styles["dialog-tutorial--content--status"]}>
                         {t("register:form.tutorial.button-status")}
                       </Button>
 
-                      <Typography
-                        sx={{
-                          color: "#D8D8D8",
-                          fontSize: 10,
-                          fontWeight: 700,
-                        }}
-                      >
+                      <Typography className={styles["dialog-tutorial--content--time"]}>
                         {t("register:form.tutorial.last-login")}
                       </Typography>
                     </Box>
-
-                    <Box
-                      sx={{
-                        pt: "20px",
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                    >
+                    <Box className={styles["dialog-tutorial--content--body1"]}>
                       <Box height={80}>
                         <Avatar
-                          sx={{
-                            width: ["56px", "56px"],
-                            height: ["56px", "56px"],
-                            display: "flex",
-                            justifyContent: "center",
-                          }}
+                          className={styles["dialog-tutorial--body1--avatar"]}
                           src="/assets/images/svg/goodhub.svg"
                         />
                       </Box>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                        }}
-                      >
-                        <Typography
-                          sx={{
-                            pl: "13px",
-                            pb: "5px",
-                            color: "#262A30",
-                            fontSize: 14,
-                            fontWeight: 700,
-                          }}
-                        >
+                      <Box className={styles["dialog-tutorial--body1--name--section"]}>
+                        <Typography className={styles["dialog-tutorial--body1--name"]}>
                           {t("register:form.tutorial.name")}
                         </Typography>
-
-                        <Typography
-                          sx={{
-                            pl: "13px",
-                            pb: "5px",
-                            color: theme.blue,
-                            fontSize: 12,
-                            fontWeight: 400,
-                          }}
-                        >
+                        <Typography className={styles["dialog-tutorial--body1--name"]}>
                           {t("register:form.tutorial.major")}
                         </Typography>
-
-                        <Typography
-                          sx={{
-                            pl: "13px",
-                            color: "#262A30",
-                            fontSize: 10,
-                            fontWeight: 400,
-                          }}
-                        >
+                        <Typography className={styles["dialog-tutorial--body1--name"]}>
                           {t("register:form.tutorial.vote")}
                         </Typography>
                       </Box>
                     </Box>
-                    <Typography
-                      sx={{
-                        color: theme.navy,
-                        fontSize: 12,
-                        fontWeight: 700,
-                      }}
-                    >
+                    <Typography className={styles["dialog-tutorial--content--intro"]} sx={{ color: theme.navy }}>
                       {t("register:form.tutorial.intro")}
                     </Typography>
 
-                    <Typography
-                      sx={{
-                        color: theme.navy,
-                        fontSize: 12,
-                        fontWeight: 400,
-                        textTransform: "",
-                      }}
-                    >
-                      <Paper
-                        sx={{
-                          pl: 0,
-                          mt: 1,
-                          mb: 4,
-                          maxWidth: "360px",
-                          display: "flex",
-                          flexWrap: "wrap",
-                          listStyle: "none",
-                          boxShadow: "none",
-                        }}
-                        component="ul"
-                      >
+                    <Typography className={styles["dialog-tutorial--content--list"]} sx={{ color: theme.navy }}>
+                      <Paper className={styles["dialog-tutorial--content--paper"]} component="ul">
                         {listChipData.map((data) => {
                           let icon;
-
                           return (
                             <ListItem key={data.key}>
                               <Chip
+                                className={styles["dialog-tutorial--content--chip"]}
                                 variant="outlined"
                                 size="small"
                                 icon={icon}
                                 label={data.label}
-                                sx={{
-                                  fontSize: 12,
-                                  fontWeight: 400,
-                                  backgroundColor: theme.whiteBlue,
-                                  border: "none",
-                                  color: theme.navy,
-                                  borderRadius: "4px",
-                                }}
+                                sx={{ backgroundColor: theme.whiteBlue, color: theme.navy }}
                               />
                             </ListItem>
                           );

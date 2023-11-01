@@ -29,7 +29,7 @@ import { readMessageCommunity, readMessagePersonal } from "src/services/user";
 import useDebounce from "src/customHooks/UseDebounce";
 import { ChatMessage } from "src/constants/interfaces";
 
-import InputCustom from "../chat/ElementCustom/InputCustom";
+import InputCustom from "../common/atom-component/InputCustom";
 
 const TabsCustom = styled(TabList)(() => ({
   padding: 0,

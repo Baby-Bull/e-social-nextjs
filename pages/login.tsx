@@ -8,7 +8,7 @@ import ContentComponent from "src/components/layouts/ContentComponent";
 
 import { NextPageWithLayout } from "./_app";
 
-const LoginComponent = dynamic(() => import("src/components/authen/login/LoginComponent"), { ssr: false });
+const LoginComponent = dynamic(() => import("src/components/authen/LoginComponent"), { ssr: false });
 
 const Login: NextPageWithLayout = () => <LoginComponent />;
 

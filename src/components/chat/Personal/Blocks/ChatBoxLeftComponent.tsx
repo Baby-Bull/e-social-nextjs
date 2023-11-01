@@ -19,7 +19,7 @@ import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
 
 import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
-import InputCustom from "src/components/chat/ElementCustom/InputCustom";
+import InputCustom from "src/components/common/atom-component/InputCustom";
 import styles from "src/components/chat/chat.module.scss";
 import { formatChatDateRoom } from "src/helpers/helper";
 import theme from "src/theme";

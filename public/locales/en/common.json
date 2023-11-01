@@ -43,6 +43,12 @@
   "body": {
     "is_login": "Online"
   },
+  "form": {
+    "placeholder-select": "Please select",
+    "regular-option": "Commonly used tags",
+    "policy": "Term of services",
+    "datetime-click": "Click to select date"
+  },
   "showMore": "Show more",
   "required": "Required",
   "not_have_access": "No access.",

@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import dynamic from "next/dynamic";
 
-const RegisterComponent = dynamic(() => import("src/components/authen/register/RegisterComponent"), { ssr: false });
+const RegisterComponent = dynamic(() => import("src/components/authen/RegisterComponent"), { ssr: false });
 
 const Register: NextPage = () => <RegisterComponent />;
 

@@ -22,7 +22,7 @@ import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 
 import styles from "src/components/chat/chat.module.scss";
-import InputCustom from "src/components/chat/ElementCustom/InputCustom";
+import InputCustom from "src/components/common/atom-component/InputCustom";
 // @ts-ignore
 import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
 import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupReviewComponent";

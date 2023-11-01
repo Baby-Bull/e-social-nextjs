@@ -14,31 +14,31 @@
   "form": {
     "title": "Registration is complete! Next, let's enter your profile",
     "required": "Require",
-    "submit": "はじめる",
+    "submit": "Create account",
     "label": {
-      "name": "ユーザー名",
-      "birthday": "生年月日",
-      "status": "ステータス",
-      "email": "メールアドレス",
-      "place": "お住まいの地域",
-      "tag": "タグ",
-      "checkbox": "に同意する"
+      "name": "Username",
+      "birthday": "Date of Birth",
+      "status": "Status",
+      "email": "Email",
+      "place": "Address",
+      "tag": "Tags",
+      "checkbox": "Agree with"
     },
     "placeholder": {
-      "name": "田中太郎",
+      "name": "Your name",
       "birthday": "1990/01/01",
-      "status": "選択してください",
-      "email": "tanakataro@rebase.co.jp",
-      "place": "選択してください",
-      "tag": "言語、役職など２種類以上設定してください"
+      "status": "Please select",
+      "email": "youremail@rebase.co.vn",
+      "place": "Please select",
+      "tag": "Please set at least 2 types such as language and job title."
     },
     "tutorial": {
-      "button-status": "今すぐ話せます",
-      "last-login": "最終ログイン：6分前",
+      "button-status": "You can talk now",
+      "last-login": "Last login: 6 minutes ago",
       "name": "goodhubくん",
-      "major": "フロントエンドエンジニア",
+      "major": "Front end Engineer",
       "vote": "レビュー：0",
-      "intro": "自社サービス開発のエンジニアをしています！",
+      "intro": "I am an engineer developing our own services!",
       "pr": "話せること/聞きたいこと",
       "description": "まずはマッチングリクエストを送って気になる人とマッチしてみよう！",
       "text-demo": "Reactエンジニアを2年しているのでフロント開発についてお話しできます。フルスタックエンジニアを目指していて、PHPを習得したいと考えているので、フルスタックエンジニアの方に色々お話しを...",
@@ -48,6 +48,6 @@
       "next-tutorial": "次へ"
     }
   },
-  "login-text-1": "アカウントをお持ちの方は",
-  "login-text-2": "こちら"
+  "login-text-1": "If you have an account",
+  "login-text-2": "Login here"
 }

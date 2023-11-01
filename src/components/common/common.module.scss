@@ -10,3 +10,135 @@
   align-items: center;
   align-content: center;
 }
+
+// TO-DO: update media screen styles
+// Field styles *****************************
+.field-container {
+  display: flex;
+  justify-content: center;
+
+  .field-wrapper {
+    width: 100%;
+    padding-top: 20px;
+    margin-top: 25px;
+
+    .field-input--label {
+      display: flex;
+      align-items: center;
+      color: black;
+
+      .field-input--label--wrapper {
+        display: flex;
+        font-size: 18px;
+        font-family: "Noto Sans JP";
+
+        .field-input--label--chip {
+          width: 90px;
+          height: 22px;
+          font-size: 12;
+          font-weight: 600;
+          margin-left: 10px;
+          color: white;
+        }
+      }
+    }
+
+    .field-multiSelection--title {
+      padding-left: 18px;
+      margin-top: 1px;
+      margin-bottom: 4px;
+      padding-bottom: 15px;
+      min-width: 360px;
+      display: flex;
+      flex-wrap: wrap;
+      list-style: none;
+      box-shadow: none;
+      border-radius: 12px;
+
+      .field-multiSelection--1st {
+        width: 100%;
+        padding-left: 4px;
+        padding-top: 7px;
+        font-size: 12px;
+        font-weight: 400;
+        text-align: left;
+      }
+
+      .field-multiSelection--item {
+        font-size: 12px;
+        font-weight: 400;
+        border-radius: 4px;
+      }
+    }
+
+    .field-listTags {
+      padding-left: 0;
+      margin-top: 1px;
+      margin-bottom: 5px;
+      display: flex;
+      flex-wrap: wrap;
+      list-style: none;
+      box-shadow: none;
+
+      .field-listTags--item {
+        padding-right: 1px;
+        font-size: 12;
+        font-weight: 500;
+        color: white;
+        height: 22px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+
+        .field-listTags--item--img {
+          width: 16px;
+          height: 16px;
+          padding: 4px;
+          background-color: white;
+        }
+      }
+
+    }
+
+    .field-datetime--wrapper {
+      background-color: white;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-family: "Noto Sans JP";
+      align-items: center;
+      display: flex;
+
+      .field-datetime--input {
+        outline-style: none;
+        border-style: none;
+        font-size: 14px;
+        width: 100%;
+      }
+    }
+  }
+
+  .form-checkbox {
+    display: "-webkit-box" !important;
+
+    .form-checkbox--item {
+      margin-top: 3px;
+      color: blue;
+    }
+
+    .form-checkbox--title {
+      font-size: 12px;
+      display: flex;
+    }
+  }
+}
+
+.field-errorMessage--section {
+  font-size: "10px";
+  color: orange;
+}
+
+@media screen and (max-width: 425px) {}
+
+@media screen and (max-width: 768px) {}
+
+@media screen and (max-width: 1024px) {}

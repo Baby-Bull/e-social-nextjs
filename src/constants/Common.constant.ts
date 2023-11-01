@@ -14,6 +14,17 @@ export const REGEX_RULES = {
   url: /^(ftp|http|https):\/\/[^ "]+$/,
 };
 
+export const listChipsData = [
+  { key: 0, label: "React" },
+  { key: 1, label: "Ruby on Rails" },
+  { key: 2, label: "Python" },
+  { key: 3, label: "C++" },
+  { key: 4, label: "NodeJs" },
+  { key: 5, label: "PHP" },
+  { key: 6, label: "Javascript" },
+  { key: 7, label: "Chat GPT" },
+];
+
 export const MONTHS = [
   {
     label: 0,

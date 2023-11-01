@@ -119,6 +119,162 @@
             font-weight: 400;
             display: block;
           }
+
+          .loginRedirect--section {
+            font-size: 18;
+            font-weight: 400;
+            display: flex;
+          }
+
+          .registerForm-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            .registerForm-title {
+              padding-bottom: 20px;
+              font-size: 20;
+              font-weight: 700;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.dialog-tutorial--container {
+  .dialog-tutorial--title {
+    text-align: right;
+    padding: 20px;
+    position: relative;
+
+    .dialog-tutorial--title--item {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: inherit;
+      height: inherit;
+      background-color: transparent;
+      box-shadow: unset;
+
+      &:hover {
+        background-color: transparent;
+        opacity: 0.8;
+      }
+
+      .dialog-tutorial--title--item--img {
+        width: 56px;
+        height: 56px;
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
+
+  .dialog-tutorial--content {
+    padding-bottom: 46px;
+
+    .dialog-tutorial--content--container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-top: 50px;
+      position: relative;
+
+      .dialog-tutorial--content--demo {
+        max-width: 320;
+        flex: 2;
+
+        .dialog-tutorial--content--card {
+          display: inherit;
+          padding: 8px;
+
+          .dialog-tutorial--card--head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .dialog-tutorial--content--status {
+              font-size: 10;
+              width: 130px;
+              height: 20px;
+              color: white;
+              background-color: orange;
+
+              &:hover {
+                opacity: 0.9;
+                background-color: rgb(214, 139, 0);
+              }
+            }
+
+            .dialog-tutorial--content--time {
+              color: #D8D8D8;
+              font-size: 10;
+              font-weight: 700;
+            }
+          }
+
+          .dialog-tutorial--content--body1 {
+            padding-top: 20px;
+            display: flex;
+            align-items: center;
+
+            .dialog-tutorial--body1--avatar {
+              width: 56px;
+              height: 56px;
+              display: flex;
+              justify-content: center;
+            }
+
+            .dialog-tutorial--body1--name--section {
+              display: flex;
+              flex-direction: column;
+
+              .dialog-tutorial--body1--name {
+                padding-left: 13px;
+                padding-bottom: 5px;
+                color: #262A30;
+                font-size: 14;
+                font-weight: 700;
+              }
+
+              .dialog-tutorial--body1--vote {
+                font-size: 10;
+                font-weight: 400;
+              }
+            }
+          }
+
+          .dialog-tutorial--content--intro {
+            font-size: 12;
+            font-weight: 700;
+
+            .dialog-tutorial--content--list {
+              font-size: 12;
+              font-weight: 400;
+              text-transform: "";
+
+              .dialog-tutorial--content--paper {
+                margin-top: 1px;
+                margin-bottom: 4px;
+                max-width: 360px;
+                display: flex;
+                flex-wrap: wrap;
+                list-style: none;
+                box-shadow: none;
+
+                .dialog-tutorial--content--chip {
+                  font: 12;
+                  font-weight: 400;
+                  border: none;
+                  border-radius: 4px;
+                }
+              }
+            }
+
+            // TO-DO: complete style dialog
+          }
         }
       }
     }

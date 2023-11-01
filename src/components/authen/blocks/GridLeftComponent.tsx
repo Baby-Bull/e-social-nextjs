@@ -55,13 +55,7 @@ const GridLeftComponent = () => {
   const { t } = useTranslation();
 
   return (
-    <Grid
-      className={styles["left-component-wrapper"]}
-      item
-      sx={{
-        background: theme.whiteGray,
-      }}
-    >
+    <Grid className={styles["left-component-wrapper"]} item sx={{ background: theme.whiteGray }}>
       <Box className={styles["left-component-container"]}>
         <Typography className={styles["left-component--tittle"]}>{t("register:description.title")}</Typography>
         <Avatar className={styles["left-component--avatar"]} variant="square" src="/assets/images/image_login1.jpg" />

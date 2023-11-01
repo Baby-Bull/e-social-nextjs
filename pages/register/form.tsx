@@ -7,7 +7,7 @@ import { IS_PROFILE_EDITED, USER_TOKEN } from "src/helpers/storage";
 import { NextPageWithLayout } from "pages/_app";
 import ContentComponent from "src/components/layouts/ContentComponent";
 
-const FormComponent = dynamic(() => import("src/components/authen/register/form/FormComponent"), { ssr: false });
+const FormComponent = dynamic(() => import("src/components/authen/blocks/FormRegisterComponent"), { ssr: false });
 
 const Form: NextPageWithLayout = () => <FormComponent />;
 
