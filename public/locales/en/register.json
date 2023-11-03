@@ -22,7 +22,8 @@
       "email": "Email",
       "place": "Address",
       "tag": "Tags",
-      "checkbox": "Agree with"
+      "checkbox": "Agree with",
+      "password": "Password"
     },
     "placeholder": {
       "name": "Your name",

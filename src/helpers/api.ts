@@ -1,8 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 import axios from "axios";
-import { toast } from "react-toastify";
-
-import { FORBIDDEN, NOT_FOUND, SERVER_ERROR } from "src/messages/notification";
 
 import {
   setToken as setTokenStorage,

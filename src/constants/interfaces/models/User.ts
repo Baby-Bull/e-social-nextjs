@@ -43,3 +43,13 @@ export interface IRecommendUserHomePage extends UserBasic {
   match_status: string;
   activity_status?: string;
 }
+
+export interface IUserCreate {
+  username: string;
+  password: string;
+  birthday: any;
+  status: string;
+  email: string;
+  address: string;
+  tags: any;
+}

@@ -35,10 +35,11 @@ import { ChatMessage, IStoreState } from "src/constants/interfaces";
 import { CONTENT_OF_NOTIFICATIONS, TYPE_OF_NOTIFICATIONS } from "src/constants";
 import { getUserStatics, readAllNotifications } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
-import { logout } from "src/services/auth";
+import { logoutWithNestServer } from "src/services/auth";
 import { customizeContentNotificationBrowser, notify } from "src/utils/utils";
 import { getItem, setItem, TRIGGER_REFRESH } from "src/helpers/storage";
 import styles from "src/components/layouts/layout.module.scss";
+import { logout } from "src/store/store";
 
 interface IHeaderComponentProps {
   authPage?: boolean;
@@ -332,8 +333,8 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
   }; // end block search ***********************************
 
   const handleLogout = async () => {
-    await logout();
-    dispatch({ type: actionTypes.LOGOUT });
+    await logoutWithNestServer();
+    dispatch(logout());
     router.push(`/login?oldUrl=${window.location.pathname}`);
   };
 

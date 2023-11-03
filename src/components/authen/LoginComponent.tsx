@@ -37,7 +37,7 @@ const LoginComponent = () => {
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [provider, setProvider] = useState("");
+  const [provider, setProvider] = useState<string>("");
   const [profile, setProfile] = useState<any>();
   const githubRef = useRef(null!);
 
@@ -62,10 +62,11 @@ const LoginComponent = () => {
       if (res?.tokens?.accessToken) {
         dispatch(login(res?.user));
         router.push(`/${router.query?.oldUrl || ""}`);
-        setIsLoading(false);
       }
+      setIsLoading(false);
       return res;
     } catch (error) {
+      setIsLoading(false);
       return error;
     }
   };
@@ -136,7 +137,7 @@ const LoginComponent = () => {
                         onChangeValue={onChangeLoginInfo}
                         // error={errorValidate.username}
                       />
-                      <ButtonComponent mode="blue" sx={{ marginTop: "8px", width: "200px" }} onClick={submitLoginInfo}>
+                      <ButtonComponent mode="green" sx={{ marginTop: "8px", width: "200px" }} onClick={submitLoginInfo}>
                         {t("login:submit")}
                       </ButtonComponent>
                     </form>

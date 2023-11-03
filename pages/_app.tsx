@@ -33,7 +33,7 @@ import SplashScreen from "src/components/common/atom-component/SplashScreen";
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+export type NextPageWithLayout<P = {}> = NextPage<P> & {
   // eslint-disable-next-line no-unused-vars
   getLayout?: FC;
 };
@@ -162,10 +162,10 @@ const MyApp = (props: MyAppProps) => {
             コミュニティで新しい繋がりや仲間づくり、キャリアの相談など無料で全て使えます。"
         />
         <meta name="keywords" content="キーワード, E-Social" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/logo_favicon.jpg" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/logo_favicon.jpg" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/logo_favicon.jpg" />
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
       <Script src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`} strategy="afterInteractive" />

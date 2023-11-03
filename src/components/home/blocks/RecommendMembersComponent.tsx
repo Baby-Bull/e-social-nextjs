@@ -207,7 +207,7 @@ const RecommendItem: React.SFC<IItemRecommendUserHomepage> = ({
               </div>
             </div>
           </Link>
-          {data.tags.length ? (
+          {data?.tags?.length ? (
             <div className="tags">
               <UserTag tags={data.tags} onClick={onUserTagClicked} />
             </div>

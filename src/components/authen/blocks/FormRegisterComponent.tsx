@@ -20,13 +20,16 @@ import {
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
 
 import theme from "src/theme";
-import { updateProfileUseRenewal } from "src/services/user";
-import { JAPAN_PROVINCE_OPTIONS, REGEX_RULES, USER_STATUS_OPTIONS } from "src/constants";
+import { AREA_LIST, REGEX_RULES, USER_STATUS_OPTIONS, listChipsData } from "src/constants";
 import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 import Field from "src/components/common/molecules/Field";
+import { IUserCreate } from "src/constants/interfaces";
+import { signupWithNestServer } from "src/services/auth";
+import { login } from "src/store/store";
 
 import styles from "../authen.module.scss";
 
@@ -37,15 +40,19 @@ const ListItem = styled("li")({
 const FormRegisterComponents = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const dispatch = useDispatch();
+  const descriptionElementRef = React.useRef(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [fullWidth] = React.useState(true);
   const [isTutorialDone, setStep] = React.useState(false);
   const [hasAgree, setHasAgree] = useState(false);
+  const [listChipData] = React.useState(listChipsData);
 
-  const [userInfo, setUserInfo] = useState({
+  const [userInfo, setUserInfo] = useState<IUserCreate>({
     username: null,
+    password: null,
     birthday: null,
     status: null,
     email: null,
@@ -53,7 +60,7 @@ const FormRegisterComponents = () => {
     tags: [],
   });
 
-  const [errorValidate, setErrorValidates] = useState({
+  const [errorValidate, setErrorValidates] = useState<IUserCreate & { checkbox: string }>({
     username: null,
     birthday: null,
     status: null,
@@ -61,6 +68,7 @@ const FormRegisterComponents = () => {
     address: null,
     tags: null,
     checkbox: null,
+    password: null,
   });
 
   const onChangeUserInfo = (key: string, value: any) => {
@@ -70,14 +78,10 @@ const FormRegisterComponents = () => {
     });
   };
 
-  const handleClickOpen = () => {
-    setStep(false);
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
+  // const handleClickOpen = () => {
+  //   setStep(false);
+  //   setOpen(true);
+  // };
 
   const handleTutorialDone = () => {
     if (isTutorialDone) {
@@ -86,15 +90,6 @@ const FormRegisterComponents = () => {
     setStep(true);
   };
 
-  const [listChipData] = React.useState([
-    { key: 0, label: "React" },
-    { key: 1, label: "PHP勉強中" },
-    { key: 2, label: "コードレビュー" },
-    { key: 3, label: "駆け出しエンジニアと繋がりたい" },
-    { key: 4, label: "要件定義" },
-  ]);
-
-  const descriptionElementRef = React.useRef(null);
   React.useEffect(() => {
     if (open) {
       const { current: descriptionElement } = descriptionElementRef;
@@ -103,10 +98,6 @@ const FormRegisterComponents = () => {
       }
     }
   }, [open]);
-
-  const onChangeCheckbox = () => {
-    setHasAgree(!hasAgree);
-  };
 
   const handleValidateForm = () => {
     let isValidForm = true;
@@ -118,6 +109,7 @@ const FormRegisterComponents = () => {
       address: null,
       tags: null,
       checkbox: null,
+      password: null,
     };
     // validate username;
     if (!userInfo?.username || userInfo?.username?.length === 0) {
@@ -186,17 +178,20 @@ const FormRegisterComponents = () => {
     return isValidForm;
   };
 
-  const submitUpdateProfile = async () => {
+  const submitSignUpProfile = async () => {
     if (handleValidateForm()) {
       userInfo.birthday = userInfo?.birthday?.dob_value || userInfo.birthday;
-      setIsLoading(true);
-      // use redirect screen renewal
-      const resUpdate = await updateProfileUseRenewal(userInfo);
-      // const resUpdate = await updateProfile(userInfo);
-      setIsLoading(false);
-      if (resUpdate && !resUpdate?.error_code) {
-        handleClickOpen();
+      // setIsLoading(true);
+      const resUpdate = await signupWithNestServer(userInfo);
+      if (resUpdate?.tokens?.accessToken) {
+        dispatch(login(resUpdate?.user));
+        router.push(`/${router.query?.oldUrl || ""}`);
+        setIsLoading(false);
       }
+      return resUpdate;
+      // if (resUpdate && !resUpdate?.error_code) {
+      //   handleClickOpen();
+      // }
     }
   };
 
@@ -225,6 +220,34 @@ const FormRegisterComponents = () => {
             />
 
             <Field
+              id="password"
+              required
+              label={t("register:form.label.password")}
+              editor="password"
+              onChangeValue={onChangeUserInfo}
+              error={errorValidate.password}
+            />
+
+            <Field
+              id="password-confirm"
+              required
+              label={t("register:form.label.password")}
+              editor="password"
+              onChangeValue={onChangeUserInfo}
+              error={errorValidate.password}
+            />
+
+            <Field
+              id="email"
+              required
+              label={t("register:form.label.email")}
+              placeholder={t("register:form.placeholder.email")}
+              editor="textbox"
+              onChangeValue={onChangeUserInfo}
+              error={errorValidate.email}
+            />
+
+            <Field
               id="birthday"
               required
               label={t("register:form.label.birthday")}
@@ -244,25 +267,18 @@ const FormRegisterComponents = () => {
               onChangeValue={onChangeUserInfo}
               error={errorValidate.status}
             />
-            <Field
-              id="email"
-              required
-              label={t("register:form.label.email")}
-              placeholder={t("register:form.placeholder.email")}
-              editor="textbox"
-              onChangeValue={onChangeUserInfo}
-              error={errorValidate.email}
-            />
+
             <Field
               id="address"
               required
               label={t("register:form.label.place")}
               placeholder={t("register:form.placeholder.place")}
               editor="dropdown"
-              options={JAPAN_PROVINCE_OPTIONS}
+              options={AREA_LIST}
               onChangeValue={onChangeUserInfo}
               error={errorValidate.address}
             />
+
             <Field
               id="tags"
               required
@@ -273,16 +289,17 @@ const FormRegisterComponents = () => {
               onChangeValue={onChangeUserInfo}
               error={errorValidate.tags}
             />
+
             <Field
               id="checkbox"
               label={t("register:form.label.checkbox")}
               editor="checkbox"
               value={hasAgree}
-              onChangeCheckbox={onChangeCheckbox}
+              onChangeCheckbox={() => setHasAgree(!hasAgree)}
               error={errorValidate.checkbox}
             />
 
-            <ButtonComponent mode="gradient" sx={{ marginTop: "8px" }} onClick={submitUpdateProfile}>
+            <ButtonComponent mode="orange" sx={{ marginTop: "8px" }} onClick={submitSignUpProfile}>
               {t("register:form.submit")}
             </ButtonComponent>
           </form>
@@ -291,8 +308,8 @@ const FormRegisterComponents = () => {
 
       <Dialog
         PaperProps={{ style: { borderRadius: 12 } }}
-        open
-        onClose={handleClose}
+        open={open}
+        onClose={() => setOpen(false)}
         scroll="paper"
         fullWidth={fullWidth}
         aria-labelledby="scroll-dialog-title"
