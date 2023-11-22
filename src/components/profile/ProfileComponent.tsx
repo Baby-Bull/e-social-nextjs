@@ -21,7 +21,7 @@ import BoxItemUserComponent from "src/components/profile/BoxItemUserComponent";
 import BoxNoDataComponent from "src/components/profile/BoxNoDataComponent";
 import TopProfileComponent from "src/components/profile/TopProfileComponent";
 import SlickSliderRecommendComponent from "src/components/home/blocks/SlickSliderRecommendComponent";
-import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
+import ModalMatchingComponent from "../common/organisms/ModalMatchingComponent";
 import ButtonComponent from "../common/atom-component/ButtonComponent";
 import PaginationCustomComponent from "../common/PaginationCustomComponent";
 

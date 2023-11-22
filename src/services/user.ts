@@ -7,7 +7,6 @@ import { i18n } from "next-i18next";
 
 import { api } from "src/helpers/api";
 import {
-  USER_REPORT,
   USER_REVIEW,
   SETTING_EMAIL,
   SERVER_ERROR,
@@ -196,22 +195,22 @@ export const UserSearch = async (
   query +=
     params?.lastLogin === typeTimeLogin.on_day_to_week
       ? `&last_login[]=${dayjs().subtract(1, "weeks").toISOString()}&last_login[]=${dayjs()
-        .subtract(1, "days")
-        .toISOString()}`
+          .subtract(1, "days")
+          .toISOString()}`
       : "";
 
   query +=
     params?.lastLogin === typeTimeLogin.week_to_two_week
       ? `&last_login[]=${dayjs().subtract(2, "weeks").toISOString()}&last_login[]=${dayjs()
-        .subtract(1, "weeks")
-        .toISOString()}`
+          .subtract(1, "weeks")
+          .toISOString()}`
       : "";
 
   query +=
     params?.lastLogin === typeTimeLogin.two_week_to_month
       ? `&last_login[]=${dayjs().subtract(1, "months").toISOString()}&last_login[]=${dayjs()
-        .subtract(2, "weeks")
-        .toISOString()}`
+          .subtract(2, "weeks")
+          .toISOString()}`
       : "";
 
   query +=

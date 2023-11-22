@@ -14,6 +14,7 @@ import {
   Chip,
   Paper,
   Avatar,
+  Grid,
 } from "@mui/material";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -397,6 +398,28 @@ const Field: React.SFC<IFieldProps> = ({
                 )}
               />
             </LocalizationProvider>
+          </FormControl>
+        )}
+
+        {editor!.toLowerCase() === "textarea" && (
+          <FormControl className={styles["field-wrapper"]} variant="standard" fullWidth>
+            <InputLabel className={styles["field-textarea--label--wrapper"]} shrink htmlFor={id}>
+              <Box className={styles["field-textarea--label"]}>
+                {label}
+                {required && <span className="input-required-mark">＊</span>}
+              </Box>
+            </InputLabel>
+            <Grid item md={12} xs={12}>
+              <InputCustom
+                multiline
+                rows={10}
+                placeholder={placeholder}
+                defaultValue={value}
+                id={id}
+                onChange={(e) => onChangeValue(id, e.target.value)}
+                fullWidth
+              />
+            </Grid>
           </FormControl>
         )}
 

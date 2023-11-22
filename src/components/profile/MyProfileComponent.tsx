@@ -21,7 +21,7 @@ import SlickSliderRecommendComponent from "src/components/home/blocks/SlickSlide
 import theme from "src/theme";
 import { IStoreState } from "src/constants/interfaces";
 
-import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
+import ModalMatchingComponent from "../common/organisms/ModalMatchingComponent";
 import { sendMatchingRequest } from "../../services/matching";
 import PaginationCustomComponent from "../common/PaginationCustomComponent";
 import { useRouter } from "next/router";

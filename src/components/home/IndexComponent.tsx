@@ -26,7 +26,7 @@ const NotificationComponent = dynamic(() => import("./blocks/NotificationsCompon
   ssr: true,
 }) as any;
 
-const ModalMatchingComponent = dynamic(() => import("./blocks/ModalMatchingComponent"), {
+const ModalMatchingComponent = dynamic(() => import("../common/organisms/ModalMatchingComponent"), {
   ssr: true,
 }) as any;
 

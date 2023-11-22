@@ -117,6 +117,19 @@
     }
   }
 
+  .field-textarea--label--wrapper {
+    display: flex;
+    align-items: center;
+    color: black;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 48px;
+
+    .field-textarea--label {
+      display: flex;
+    }
+  }
+
   .form-checkbox {
     display: "-webkit-box" !important;
 

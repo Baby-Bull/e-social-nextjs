@@ -1,20 +1,20 @@
 import { Box, Grid, Avatar } from "@mui/material";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import "dayjs/locale/ja";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 
-import styles from "src/components/profile/profile.module.scss";
+import styles from "src/components/searchUser/search_user.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import ModalMatchingComponent from "src/components/common/organisms/ModalMatchingComponent";
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
-import { IStoreState } from "src/constants/interfaces";
+import { IStoreState, IUserCardInformation } from "src/constants/interfaces";
 import {
   HOMEPAGE_RECOMMEND_MEMBER_STATUS,
   JOBS,
@@ -23,67 +23,45 @@ import {
   typeMatchingStatus,
 } from "src/constants";
 
-import ButtonComponent from "../common/atom-component/ButtonComponent";
-
-import UserTag from "./UserTagComponent";
+import ButtonComponent from "../atom-component/ButtonComponent";
+import UserTag from "../molecules/UserTag";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
 
-interface IUserItemProps {
-  id: string;
-  profile_image: string;
-  last_login_at: string;
-  activity_status?: string;
-  username: string;
-  job: string;
-  review_count: number;
-  hitokoto: string;
-  tags: Array<string>;
-  discussion_topic: string;
-  status: number;
-  chatStatus: number;
-  is_favorite: boolean;
-  match_status?: string;
-  match_request?: any;
-}
-
-interface IBoxUserComponentProps {
-  data: IUserItemProps;
-  callbackHandleIsRefresh?: any;
-  isRefresh?: boolean;
-}
-
-const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbackHandleIsRefresh, isRefresh }) => {
+const UserCardComponent: React.SFC<{ data: IUserCardInformation }> = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [showModalMatching, setModalMatching] = React.useState(false);
+  const [statusMatching, setStatusMatching] = React.useState(data?.match_status);
   const [liked, setLiked] = useState(data?.is_favorite);
-  const [statusBtnSendMatching, setStatusBtnSendMatching] = useState(data?.match_status);
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
+
+  useEffect(() => {
+    setStatusMatching(data?.match_status);
+    setLiked(data?.is_favorite);
+  }, [data?.match_status, data?.is_favorite]);
+
   const handleShowModalMatching = async (matchStatus) => {
     if (!matchStatus) {
       setModalMatching(true);
     } else if (matchStatus === typeMatchingStatus.CONFIRMED) {
-      router.push(`/chat/personal?room=${data.id}`);
+      router.push(`/chat/personal?room=${data?.id}`);
     } else if (matchStatus === typeMatchingStatus.RECEIVED_PENDING) {
       await acceptMatchingRequestReceived(data?.match_request?.id);
-      if (callbackHandleIsRefresh) {
-        callbackHandleIsRefresh(!isRefresh);
-      }
+      // callbackHandleIsRefresh(!isRefresh);
     } else {
       return 1;
     }
   };
+
   const handleSendMatchingRequest = async (matchingRequest) => {
-    setLiked(true);
     const res = await sendMatchingRequest(data?.id, matchingRequest);
-    setStatusBtnSendMatching(typeMatchingStatus.SENT_PENDING);
+    setLiked(true);
     setModalMatching(false);
-    if (callbackHandleIsRefresh) {
-      callbackHandleIsRefresh(!isRefresh);
-    }
+    setStatusMatching(typeMatchingStatus.SENT_PENDING);
+    // callbackHandleIsRefresh(!isRefresh);
     return res;
   };
 
@@ -113,22 +91,18 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
   };
 
   const handleClickToProfile = () => {
-    // router.push(`/profile/${data.id}`);
-    router.push(`/profile/${data.id}`, undefined, { shallow: true });
-    if (callbackHandleIsRefresh) {
-      callbackHandleIsRefresh(!isRefresh);
-    }
+    if (auth?.id === data?.id) router.push(`/my-profile`);
+    else router.push(`/profile/${data?.id}`, undefined, { shallow: true });
   };
 
   const onUserTagClicked = (tag: string) => {
-    dispatch({ type: searchUserActions.SEARCH_TAG_ONLY, payload: [tag] });
-    router.push("/search_user");
+    dispatch({ type: searchUserActions.APPEND_TAG, payload: [tag] });
   };
 
   return (
     <React.Fragment>
       <Grid item xs={12} className={classNames(styles.boxItemUser)}>
-        <Box className={styles.boxItemRecommend}>
+        <Box className={styles.boxItemSearchUser}>
           <Box>
             <div onClick={handleClickToProfile} className="status-summary">
               <ButtonComponent
@@ -156,6 +130,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
               />
               <div className="member-info">
                 <p className="name">{data?.username}</p>
+                {/* <p className="career">{JOBS[data?.job_position]?.label}</p> */}
                 <p className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? "情報なし"}</p>
                 <p className="review">
                   {t("home:box-member-recommend.review")}: {data?.review_count}
@@ -167,8 +142,8 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
               {data?.hitokoto ? data?.hitokoto : "情報なし"}
             </div>
 
-            <div className="tags" onClick={data.tags.length ? null : handleClickToProfile}>
-              <UserTag tags={data.tags} onClick={onUserTagClicked} />
+            <div className="tags" onClick={data?.tags?.length ? null : handleClickToProfile}>
+              <UserTag tags={data?.tags} onClick={onUserTagClicked} />
             </div>
             <div onClick={handleClickToProfile}>
               <p className="label-description">
@@ -181,22 +156,32 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
               </p>
             </div>
           </Box>
-          <div className="div-review" onClick={handleClickFavoriteButton}>
-            <img
-              alt="ic-like"
-              src={liked ? "/assets/images/home_page/ic_heart.svg" : "/assets/images/home_page/ic_heart_empty.svg"}
-            />
-            <span>{t("user-search:btn-add-favorite")}</span>
-          </div>
+          {auth?.id !== data?.id && (
+            <React.Fragment>
+              <div className="div-review" onClick={handleClickFavoriteButton}>
+                <img
+                  alt="ic-like"
+                  src={liked ? "/assets/images/home_page/ic_heart.svg" : "/assets/images/home_page/ic_heart_empty.svg"}
+                />
+                <span>{t("user-search:btn-add-favorite")}</span>
+              </div>
 
-          <ButtonComponent
-            className="button-matching"
-            fullWidth
-            onClick={() => handleShowModalMatching(statusBtnSendMatching)}
-            mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(statusBtnSendMatching)]?.mode}
-          >
-            {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(statusBtnSendMatching)]?.label}
-          </ButtonComponent>
+              <ButtonComponent
+                fullWidth
+                onClick={() => handleShowModalMatching(statusMatching)}
+                mode={HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(statusMatching)]?.mode}
+                disabled={statusMatching === typeMatchingStatus.SENT_PENDING}
+                sx={{
+                  "&:disabled": {
+                    background: "gray",
+                    color: "white",
+                  },
+                }}
+              >
+                {HOMEPAGE_RECOMMEND_MEMBER_STATUS[handleMapMatchingStatus(statusMatching)]?.label}
+              </ButtonComponent>
+            </React.Fragment>
+          )}
         </Box>
       </Grid>
 
@@ -210,4 +195,4 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
   );
 };
 
-export default BoxItemUserComponent;
+export default UserCardComponent;

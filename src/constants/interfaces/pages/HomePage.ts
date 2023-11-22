@@ -1,13 +1,13 @@
 import { ReactNode } from "react";
 
-import { IRecommendUserHomePage } from "../models/User";
+import { IUserCardInformation } from "../models/User";
 
 export interface ISlickSliderRecommendComponentProps {
   items: Array<ReactNode>;
 }
 
 export interface IItemRecommendUserHomepage {
-  data: IRecommendUserHomePage;
+  data: IUserCardInformation;
   indexKey?: number;
   handleOpenMatchingModal: Function;
   handleAcceptMatchingRequestReceived: Function;
@@ -16,7 +16,7 @@ export interface IItemRecommendUserHomepage {
 export interface ISlideRecommendUsersHomepage {
   indexFetch?: number;
   title: string;
-  dataRecommends: Array<IRecommendUserHomePage>;
+  dataRecommends: Array<IUserCardInformation>;
   handleOpenMatchingModal: Function;
   handleAcceptMatchingRequestReceived: Function;
   queryUrl: string;

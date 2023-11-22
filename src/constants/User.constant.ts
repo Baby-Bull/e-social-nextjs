@@ -30,23 +30,28 @@ export const TAB_VALUE_BY_KEY = {
 
 export const MATCHING_PURPOSE_OPTIONS = [
   {
-    label: "選択してください",
+    // label: "選択してください",
+    label: "Please select",
     value: "",
   },
   {
-    label: "カジュアルにお話ししたい",
+    // label: "カジュアルにお話ししたい",
+    label: "Want to talk casually",
     value: "talk-casually",
   },
   {
-    label: "技術的な相談がしたい",
+    // label: "技術的な相談がしたい",
+    label: "Want to be technical consulted",
     value: "technical-consultation",
   },
   {
-    label: "一緒に働けるエンジニアを探している",
+    label: "Want to find team member",
+    // label: "一緒に働けるエンジニアを探している",
     value: "work-with",
   },
   {
-    label: "その他",
+    // label: "その他",
+    label: "Other",
     value: "other",
   },
 ];
@@ -95,7 +100,8 @@ export const STATUS_OPTIONS = [
 
 export const USER_STATUS_OPTIONS = [
   {
-    label: "今すぐ話せます",
+    // label: i18n.t("register:status-option.can-talk"),
+    label: "Can talk",
     value: "can-talk",
   },
   {
@@ -125,19 +131,23 @@ export const HOMEPAGE_MEMBER_RECOMMEND_CHAT_STATUS = {
 
 export const HOMEPAGE_RECOMMEND_MEMBER_STATUS = {
   1: {
-    label: "リクエスト送信済み",
+    // label: "リクエスト送信済み",
+    label: "Waiting for reply",
     mode: "default",
   },
   2: {
-    label: "メッセージを開く",
+    // label: "メッセージを開く",
+    label: "Open conversation",
     mode: "info",
   },
   3: {
-    label: "承認する",
+    // label: "承認する",
+    label: "Approve",
     mode: "orange",
   },
   4: {
-    label: "マッチングのリクエストを送る",
+    // label: "マッチングのリクエストを送る",
+    label: "Send matching request",
     mode: "green",
   },
 };

@@ -33,6 +33,11 @@
       "place": "Please select",
       "tag": "Please set at least 2 types such as language and job title."
     },
+    "status-option": {
+      "can-talk": "Can talk",
+      "looking-for-friend": "Looking for friends",
+      "need-consult": "Need to consult"
+    },
     "tutorial": {
       "button-status": "You can talk now",
       "last-login": "Last login: 6 minutes ago",

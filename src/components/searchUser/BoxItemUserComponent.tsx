@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import styles from "src/components/searchUser/search_user.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
-import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
+import ModalMatchingComponent from "src/components/common/organisms/ModalMatchingComponent";
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
