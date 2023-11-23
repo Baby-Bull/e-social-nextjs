@@ -18,7 +18,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
 
-import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
+import PopupReportUser from "src/components/common/organisms/PopupReportUser";
 import InputCustom from "src/components/common/atom-component/InputCustom";
 import styles from "src/components/chat/chat.module.scss";
 import { formatChatDateRoom } from "src/helpers/helper";
@@ -26,7 +26,8 @@ import theme from "src/theme";
 import useDebounce from "src/customHooks/UseDebounce";
 import useWindowSize from "src/customHooks/UseWindowSize";
 
-import PopupReviewComponent from "./PopupReviewComponent";
+import PopupReviewComponent from "../../../common/organisms/PopupReviewComponent";
+
 import BlockNoDataComponent from "./NoDataComponent";
 
 interface IThreadDropDownProps {

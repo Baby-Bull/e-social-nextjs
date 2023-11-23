@@ -24,8 +24,8 @@ import { v4 as uuidv4 } from "uuid";
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/common/atom-component/InputCustom";
 // @ts-ignore
-import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
-import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupReviewComponent";
+import PopupReportUser from "src/components/common/organisms/PopupReportUser";
+import PopupReviewComponent from "src/components/common/organisms/PopupReviewComponent";
 import scrollEl from "src/helpers/scrollEl";
 import { getMessages, uploadFile } from "src/services/chat";
 import { formatChatDate, formatListMessages } from "src/helpers/helper";
