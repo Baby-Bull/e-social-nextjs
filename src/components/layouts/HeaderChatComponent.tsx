@@ -22,14 +22,14 @@ import theme from "src/theme";
 import styles from "src/components/layouts/layout.module.scss";
 import actionTypes from "src/store/actionTypes";
 import { MODE_ROOM_CHAT, REACT_QUERY_KEYS } from "src/constants";
-import { getListChatRooms, getListChatRoomsCommunity } from "src/services/chat";
+import { getListChatRooms, getListChatRoomsCommunity, getListPrivateChatRooms } from "src/services/chat";
 import { formatChatDateRoom, sortListRoomChat } from "src/helpers/helper";
 import websocket from "src/helpers/socket";
 import { readMessageCommunity, readMessagePersonal } from "src/services/user";
 import useDebounce from "src/customHooks/UseDebounce";
 import { ChatMessage } from "src/constants/interfaces";
 
-import InputCustom from "../chat/ElementCustom/InputCustom";
+import InputCustom from "../common/atom-component/InputCustom";
 
 const TabsCustom = styled(TabList)(() => ({
   padding: 0,
@@ -124,14 +124,20 @@ const HeaderChatComponent: FC<Props> = ({
   useQuery(
     [`${REACT_QUERY_KEYS.LIST_ROOMS}/personal`, searchChatRoomPersonal.cursor, searchChatRoomPersonal.search],
     async () => {
-      const personalChatRoomTemp = await getListChatRooms(
+      const personalChatRoomTemp = await getListPrivateChatRooms(
         searchChatRoomPersonal?.search,
         searchChatRoomPersonal?.cursor,
         10,
       );
-      const updatedList = searchChatRoomPersonal?.cursor
-        ? sortListRoomChat(unionBy(personalChatRoomTemp.items, personalChatRooms, "id"))
-        : personalChatRoomTemp.items;
+      const updatedList = personalChatRoomTemp;
+      // const personalChatRoomTemp = await getListChatRooms(
+      //   searchChatRoomPersonal?.search,
+      //   searchChatRoomPersonal?.cursor,
+      //   10,
+      // );
+      // const updatedList = searchChatRoomPersonal?.cursor
+      //   ? sortListRoomChat(unionBy(personalChatRoomTemp, personalChatRooms, "id"))
+      //   : personalChatRoomTemp;
 
       updatePersonalChatRoomList({
         items: updatedList,
@@ -222,7 +228,7 @@ const HeaderChatComponent: FC<Props> = ({
     router.push(
       {
         pathname: "/chat/personal",
-        query: { room: chatroom.user.id },
+        query: { room: chatroom.id },
       },
       undefined,
       { shallow: false },
@@ -333,13 +339,13 @@ const HeaderChatComponent: FC<Props> = ({
                           <div className={`thread-item ${thread?.user?.id === "userId" ? "active" : ""}`}>
                             <div className="avatar">
                               <Avatar
-                                alt={thread?.user?.username}
-                                src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+                                alt={thread?.title}
+                                src={thread?.profileImage || "/assets/images/svg/avatar.svg"}
                                 sx={{ width: "50px", height: "50px", mr: "13px" }}
                               />
                             </div>
                             <div className="thread-content">
-                              <Typography className="name">{thread?.user?.username}</Typography>
+                              <Typography className="name">{thread?.user_infos?.[0]?.username}</Typography>
                               <Typography
                                 className="message-hide"
                                 sx={{
@@ -347,12 +353,12 @@ const HeaderChatComponent: FC<Props> = ({
                                   fontWeight: thread?.unread_message_count > 0 ? "700!important" : "400",
                                 }}
                               >
-                                {thread?.last_message_content_type === "text"
-                                  ? thread?.last_chat_message_received
+                                {thread?.lastestMessageType === "text"
+                                  ? thread?.lastestMessage
                                   : t("header.menuchat.attachment")}
                               </Typography>
                             </div>
-                            <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
+                            <div className="thread-last-time">{formatChatDateRoom(thread?.lastestMessageAt)}</div>
                           </div>
                         </li>
                       </React.Fragment>

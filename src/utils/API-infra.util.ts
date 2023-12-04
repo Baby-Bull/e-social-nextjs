@@ -81,8 +81,8 @@ export const fetchToken = async ({ accessToken, refreshToken }) => {
   return fetchTokenPromise;
 };
 
-apiAuth.interceptors.response.use(
-  (response) => response.data,
+apiNestServer.interceptors.response.use(
+  (response) => response,
   async (err: any) => {
     if (err.response.status === 422 || err.response.status === 401) {
       setToken("", null);
@@ -156,13 +156,5 @@ apiNestServer.interceptors.response.use(
     return Promise.reject(err);
   },
 );
-
-// apiNestServer.interceptors.response.use(
-//   (response) => response.data,
-//   (error) => ({
-//     data: error.response.data,
-//     statusCode: error.response.status,
-//   }),
-// );
 
 setApiAuth(getTokenStorage());

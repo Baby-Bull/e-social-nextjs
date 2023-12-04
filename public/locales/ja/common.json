@@ -42,12 +42,16 @@
   "body": {
     "is_login": "ログイン中"
   },
+  "form": {
+    "placeholder-select": "選択してください",
+    "regular-option": "よく使用されているタグ",
+    "policy": "利用規約",
+    "datetime-click": "クリックして日付を選択"
+  },
   "showMore": "もっと見る",
   "required": "必須",
   "not_have_access": "アクセス権がありません。",
   "no_info": "情報なし",
-
-
   "message_notification": {
     "user_report": "運営に通報が送信されました。",
     "user_review": "レビューを投稿しました。",
@@ -69,14 +73,14 @@
     "reject_member": "拒否しました。",
     "create_post": "投稿を作成しました。",
     "update_post": "投稿を編集しました。",
-    "delete_post":"投稿を削除しました。",
-    "not_found_post":"投稿が見つかりません。",
-    "forbidden":"アクセス権がありません。",
-    "delete_comment":"コメントが削除されました。",
-    "create_comment":"コメントが投稿されました。",
-    "update_comment":"コメントが編集されました。",
-    "join_community":"コミュニティに参加しました。",
-    "send_request_community":"参加申請を送りました。",
+    "delete_post": "投稿を削除しました。",
+    "not_found_post": "投稿が見つかりません。",
+    "forbidden": "アクセス権がありません。",
+    "delete_comment": "コメントが削除されました。",
+    "create_comment": "コメントが投稿されました。",
+    "update_comment": "コメントが編集されました。",
+    "join_community": "コミュニティに参加しました。",
+    "send_request_community": "参加申請を送りました。",
     "leave_community": "コミュニティを退会しました。",
     "not_found": "データが存在しません。"
   }

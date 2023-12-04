@@ -28,11 +28,12 @@ import socket from "src/helpers/socket";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import { fetchToken, setApiAuth } from "src/utils/API-infra.util";
 import { AUTH_PAGE_PATHS } from "src/constants";
+import SplashScreen from "src/components/common/atom-component/SplashScreen";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+export type NextPageWithLayout<P = {}> = NextPage<P> & {
   // eslint-disable-next-line no-unused-vars
   getLayout?: FC;
 };
@@ -42,14 +43,6 @@ interface MyAppProps extends AppProps {
   pathname: string;
   Component: NextPageWithLayout;
 }
-
-const SplashScreen = () => (
-  <img
-    alt="splash"
-    // src="/assets/images/bg_loading.gif"
-    style={{ top: "40vh", bottom: 0, right: 0, left: "40%", width: "20%", position: "fixed" }}
-  />
-);
 
 // eslint-disable-next-line no-undef
 const MyApp = (props: MyAppProps) => {
@@ -169,10 +162,10 @@ const MyApp = (props: MyAppProps) => {
             コミュニティで新しい繋がりや仲間づくり、キャリアの相談など無料で全て使えます。"
         />
         <meta name="keywords" content="キーワード, E-Social" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/logo_favicon.jpg" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/logo_favicon.jpg" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/logo_favicon.jpg" />
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
       <Script src={`https://www.googletagmanager.com/gtag/js?id=${gtag.GA_TRACKING_ID}`} strategy="afterInteractive" />

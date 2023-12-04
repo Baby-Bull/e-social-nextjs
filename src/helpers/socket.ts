@@ -4,7 +4,7 @@ import { getToken } from "./storage";
 const defaultRetryDelay = 2000;
 const defaultMaxRetries = 5;
 
-const getWsEndpoint = () => `${process.env.NEXT_PUBLIC_WS}${getToken()}`;
+const getWsEndpoint2 = () => `wss://h0hdofghfyxexp3.execute-api${getToken()}`;
 
 const WebsocketClient = ({
   url,
@@ -119,8 +119,8 @@ const WebsocketClient = ({
 const socket =
   typeof window !== "undefined"
     ? WebsocketClient({
-      url: getWsEndpoint,
-    })
+        url: getWsEndpoint2,
+      })
     : null;
 
 export default socket;

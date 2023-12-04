@@ -5,11 +5,11 @@ import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 
 import theme from "src/theme";
-import ButtonComponent from "src/components/common/ButtonComponent";
 import { Field, InputCustom } from "src/components/community/blocks/Form/InputComponent";
 import { createCommunityPost, detailCommunityPost, updateCommunityPost } from "src/services/community";
 import TextEditor from "lib/TextEditor/TextEditor";
 import { REGEX_RULES } from "src/constants";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 const BoxTitle = styled(Box)({
   fontSize: 18,
@@ -391,13 +391,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
             justifyContent: "center",
           }}
         >
-          <ButtonComponent
-            props={{
-              dimension: "medium",
-              bgColor: theme.blue,
-            }}
-            onClick={handleSaveForm}
-          >
+          <ButtonComponent mode="blue" sx={{ width: "200px" }} onClick={handleSaveForm}>
             {editable ? t("community:form.submit-edit") : t("community:form.submit-create")}
           </ButtonComponent>
         </Box>

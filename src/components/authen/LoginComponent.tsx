@@ -2,7 +2,7 @@
  * import libs
  */
 import React, { useRef, useState, useEffect } from "react";
-import { Box, Grid, Typography, Link, Toolbar, AppBar } from "@mui/material";
+import { Box, Grid, Typography, Link } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
@@ -10,9 +10,7 @@ import { useDispatch } from "react-redux";
 /**
  * import Components
  */
-import ButtonComponent from "src/components/common/ButtonComponent";
-import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
-import SplashScreen from "src/components/common/SplashScreen";
+import GridLeftComponent from "src/components/authen/blocks/GridLeftComponent";
 /**
  * import functions
  */
@@ -23,11 +21,15 @@ import { login } from "src/store/store";
  */
 import theme from "src/theme";
 import actionTypes from "src/store/actionTypes";
+import LoginButtonComponent from "src/components/common/atom-component/LoginButtonComponent";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
+import SplashScreen from "src/components/common/atom-component/SplashScreen";
+import Field from "src/components/common/molecules/Field";
 
-import styles from "../authen.module.scss";
-import LoginSocialGoogle from "../loginSocial/google/LoginSocialGoogle";
-import { IResolveParams, LoginSocialGithub } from "../loginSocial";
-import { Field } from "../register/form/Field";
+import styles from "./authen.module.scss";
+import TopbarComponent from "./blocks/TopbarComponent";
+import LoginSocialGoogle from "./loginSocial/google/LoginSocialGoogle";
+import { IResolveParams, LoginSocialGithub } from "./loginSocial";
 
 const LoginComponent = () => {
   const { t } = useTranslation();
@@ -35,7 +37,7 @@ const LoginComponent = () => {
   const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [provider, setProvider] = useState("");
+  const [provider, setProvider] = useState<string>("");
   const [profile, setProfile] = useState<any>();
   const githubRef = useRef(null!);
 
@@ -60,10 +62,11 @@ const LoginComponent = () => {
       if (res?.tokens?.accessToken) {
         dispatch(login(res?.user));
         router.push(`/${router.query?.oldUrl || ""}`);
-        setIsLoading(false);
       }
+      setIsLoading(false);
       return res;
     } catch (error) {
+      setIsLoading(false);
       return error;
     }
   };
@@ -104,23 +107,11 @@ const LoginComponent = () => {
         <SplashScreen />
       ) : (
         <div className={styles.loginScreen}>
-          <Box className={styles.topBar}>
-            <AppBar className={styles.appBar}>
-              <Toolbar className={styles.toolBar}>
-                <Box className={styles.logoSection}>
-                  <Link href="/">
-                    <a>
-                      <Box className={styles.logoImg} component="img" alt="avatar" src="/assets/images/logo/logo.png" />
-                    </a>
-                  </Link>
-                </Box>
-              </Toolbar>
-            </AppBar>
-          </Box>
-
+          <TopbarComponent />
           <Box className={styles.contentSection}>
             <Grid className={styles.contentContainer} container>
               <GridLeftComponent />
+
               <Grid className={styles.rightComponent} item xs={12} sm={6}>
                 <Box className={styles.rightComponentWrapper}>
                   <Typography className={styles.title} sx={{ color: theme.navy }}>
@@ -146,14 +137,7 @@ const LoginComponent = () => {
                         onChangeValue={onChangeLoginInfo}
                         // error={errorValidate.username}
                       />
-                      <ButtonComponent
-                        props={{
-                          mode: "gradient",
-                          dimension: "x-medium",
-                        }}
-                        sx={{ marginTop: "8px" }}
-                        onClick={submitLoginInfo}
-                      >
+                      <ButtonComponent mode="green" sx={{ marginTop: "8px", width: "200px" }} onClick={submitLoginInfo}>
                         {t("login:submit")}
                       </ButtonComponent>
                     </form>
@@ -168,7 +152,9 @@ const LoginComponent = () => {
                       }}
                       onError={() => {}}
                     >
-                      <ButtonComponent props={{ mode: "google" }}>{t("login:right.register-google")}</ButtonComponent>
+                      <LoginButtonComponent props={{ mode: "google" }}>
+                        {t("login:right.register-google")}
+                      </LoginButtonComponent>
                     </LoginSocialGoogle>
                   </Box>
                   <Box pt="48px">
@@ -184,7 +170,9 @@ const LoginComponent = () => {
                       onLoginStart={onLoginStart}
                       onReject={() => {}}
                     >
-                      <ButtonComponent props={{ mode: "github" }}>{t("login:right.register-git")}</ButtonComponent>
+                      <LoginButtonComponent props={{ mode: "github" }}>
+                        {t("login:right.register-git")}
+                      </LoginButtonComponent>
                     </LoginSocialGithub>
                   </Box>
                   <Box className={styles.buttonSection} sx={{ color: theme.navy }}>

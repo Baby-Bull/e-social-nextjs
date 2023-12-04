@@ -9,9 +9,8 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 
 import styles from "src/components/profile/profile.module.scss";
-import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import { replaceLabelByTranslate } from "src/utils/utils";
-import ModalMatchingComponent from "src/components/home/blocks/ModalMatchingComponent";
+import ModalMatchingComponent from "src/components/common/organisms/ModalMatchingComponent";
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
@@ -23,6 +22,8 @@ import {
   USER_STATUS,
   typeMatchingStatus,
 } from "src/constants";
+
+import ButtonComponent from "../common/atom-component/ButtonComponent";
 
 import UserTag from "./UserTagComponent";
 

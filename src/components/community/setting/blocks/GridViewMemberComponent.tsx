@@ -6,9 +6,9 @@ import { useSelector } from "react-redux";
 
 import { IStoreState } from "src/constants/interfaces";
 import theme from "src/theme";
-import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmWithAvatarComponent from "src/components/common/dialog/DialogConfirmWithAvatarComponent";
 import { JOBS } from "src/constants";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 import DropDownBlockUserComponent from "./DropDownBlockUserComponent";
 
@@ -166,11 +166,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
           {/* Button PC */}
           {type === "participated" ? (
             <ButtonComponent
-              props={{
-                bgColor: theme.gray,
-                dimension: "x-small",
-              }}
+              mode="gray"
               sx={{
+                width: "160px",
                 display: ["none", ((data.role !== IS_OWNER && !isAdmin) || data.role === IS_MEMBER) && "flex"],
                 height: "36px",
               }}
@@ -181,11 +179,9 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
           ) : (
             <React.Fragment>
               <ButtonComponent
-                props={{
-                  bgColor: theme.blue,
-                  dimension: "x-small",
-                }}
+                mode="blue"
                 sx={{
+                  width: "160px",
                   display: ["none", ((data.role !== IS_OWNER && !isAdmin) || data.role === IS_MEMBER) && "inherit"],
                   height: "36px",
                 }}
@@ -195,10 +191,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
               </ButtonComponent>
 
               <ButtonComponent
-                props={{
-                  bgColor: theme.blue,
-                  dimension: "x-small",
-                }}
+                mode="blue"
                 sx={{
                   display: [data.is_representative && "none", "none"],
                   width: "54px",
@@ -223,7 +216,6 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({
         content2={t("community:setting.member.dialog-block.content2")}
         btnLeft={t("community:button.dialog.cancel")}
         btnRight={t("community:button.dialog.block")}
-        bgColorBtnRight={theme.red}
         isShow={openDialogBlock}
         handleClose={handleCloseDialogBlock}
         handleCancel={handleCloseDialogBlock}

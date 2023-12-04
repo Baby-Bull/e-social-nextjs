@@ -29,9 +29,10 @@ export interface User extends UserBasic {
   updated_at: string;
 }
 
-export interface IRecommendUserHomePage extends UserBasic {
+export interface IUserCardInformation extends UserBasic {
   last_login_at: string;
   job: string;
+  job_position?: string;
   review_count: number;
   hitokoto: string;
   tags: Array<string>;
@@ -42,4 +43,21 @@ export interface IRecommendUserHomePage extends UserBasic {
   favoriteCount: number;
   match_status: string;
   activity_status?: string;
+  match_request?: any;
+}
+
+export interface IUserCreate {
+  username: string;
+  password: string;
+  birthday: any;
+  status: string;
+  email: string;
+  address: string;
+  tags: any;
+}
+
+export interface IUserTag {
+  tags: string[];
+  // eslint-disable-next-line no-unused-vars
+  onClick: (tag: string) => void;
 }

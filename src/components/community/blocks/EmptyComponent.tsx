@@ -2,7 +2,7 @@ import React from "react";
 import { Box } from "@mui/material";
 
 import theme from "src/theme";
-import ButtonComponent from "src/components/common/ButtonComponent";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 interface IEmptyComponentProps {
   children: any;
@@ -12,7 +12,6 @@ interface IEmptyComponentProps {
     xs?: string;
     md?: string;
   };
-  bgButton?: string;
   absolute?: boolean;
   handleClick?: () => void;
 }
@@ -22,7 +21,6 @@ const EmptyComponent: React.SFC<IEmptyComponentProps> = ({
   textButton,
   hiddenButton,
   mtButton,
-  bgButton,
   absolute,
   handleClick,
 }) => (
@@ -65,10 +63,7 @@ const EmptyComponent: React.SFC<IEmptyComponentProps> = ({
     </Box>
 
     <ButtonComponent
-      props={{
-        mode: !bgButton && "gradient",
-        bgColor: bgButton,
-      }}
+      mode="gradient"
       sx={{
         display: hiddenButton ? "none" : "inherit",
         mt: [mtButton?.xs || "0", mtButton?.md || "80px"],

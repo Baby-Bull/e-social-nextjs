@@ -18,15 +18,16 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
 
-import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
-import InputCustom from "src/components/chat/ElementCustom/InputCustom";
+import PopupReportUser from "src/components/common/organisms/PopupReportUser";
+import InputCustom from "src/components/common/atom-component/InputCustom";
 import styles from "src/components/chat/chat.module.scss";
 import { formatChatDateRoom } from "src/helpers/helper";
 import theme from "src/theme";
 import useDebounce from "src/customHooks/UseDebounce";
 import useWindowSize from "src/customHooks/UseWindowSize";
 
-import PopupReviewComponent from "./PopupReviewComponent";
+import PopupReviewComponent from "../../../common/organisms/PopupReviewComponent";
+
 import BlockNoDataComponent from "./NoDataComponent";
 
 interface IThreadDropDownProps {
@@ -210,21 +211,21 @@ const ChatBoxLeftComponent = ({
                 <React.Fragment key={index}>
                   <li
                     onClick={() => {
-                      const newUrl = `/chat/personal?room=${thread?.user?.id}`;
+                      const newUrl = `/chat/personal?room=${thread?.id}`;
                       window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, "", newUrl);
                       onSelectRoom(index);
                     }}
                   >
-                    <div className={`thread-item ${thread?.user?.id === userId ? "active" : ""}`}>
+                    <div className={`thread-item ${thread?.id === userId ? "active" : ""}`}>
                       <div className="avatar">
                         <Avatar
-                          alt={thread?.user?.username}
-                          src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+                          alt={thread?.title}
+                          src={thread?.user_infos?.[0]?.profile_image || "/assets/images/svg/avatar.svg"}
                           sx={{ width: "56px", height: "56px", mr: "13px" }}
                         />
                       </div>
                       <div className="thread-content">
-                        <Typography className="name">{thread?.user?.username}</Typography>
+                        <Typography className="name">{thread?.title}</Typography>
                         <Typography
                           className="message-hide"
                           sx={{
@@ -232,12 +233,10 @@ const ChatBoxLeftComponent = ({
                             fontWeight: thread?.unread_message_count > 0 ? "700!important" : "400",
                           }}
                         >
-                          {thread?.last_message_content_type === "text"
-                            ? thread?.last_chat_message_received
-                            : "添付ファイル"}
+                          {thread?.lastestMessageType === "text" ? thread?.lastestMessage : "添付ファイル"}
                         </Typography>
                       </div>
-                      <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
+                      <div className="thread-last-time">{formatChatDateRoom(thread?.lastestMessageAt)}</div>
                       {!isMobile && (
                         <div className="more-options">
                           <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">

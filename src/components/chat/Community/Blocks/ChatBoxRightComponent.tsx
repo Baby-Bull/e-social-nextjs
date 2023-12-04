@@ -23,7 +23,7 @@ import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 
 import styles from "src/components/chat/chat.module.scss";
-import InputCustom from "src/components/chat/ElementCustom/InputCustom";
+import InputCustom from "src/components/common/atom-component/InputCustom";
 import scrollEl from "src/helpers/scrollEl";
 import { getMessagesCommunity, uploadFile } from "src/services/chat";
 import { formatChatDate, formatListMessages } from "src/helpers/helper";

@@ -1,0 +1,59 @@
+{
+  "title": "Register",
+  "sub-title": "Registration will be done using various accounts. If you do not have an account, please issue one and register.",
+  "register-git": "Github",
+  "register-google": "Google",
+  "register-twitter": "Twitter",
+  "description": {
+    "title": "Esocial - connect your story",
+    "text-1.1": "Engineer only",
+    "text-1.2": "*Please refrain from registering as an agent.",
+    "text-2": "Please do so in the spirit of Give&Given.",
+    "text-3": "Please cooperate in good communication."
+  },
+  "form": {
+    "title": "Registration is complete! Next, let's enter your profile",
+    "required": "Require",
+    "submit": "Create account",
+    "label": {
+      "name": "Username",
+      "birthday": "Date of Birth",
+      "status": "Status",
+      "email": "Email",
+      "place": "Address",
+      "tag": "Tags",
+      "checkbox": "Agree with",
+      "password": "Password"
+    },
+    "placeholder": {
+      "name": "Your name",
+      "birthday": "1990/01/01",
+      "status": "Please select",
+      "email": "youremail@rebase.co.vn",
+      "place": "Please select",
+      "tag": "Please set at least 2 types such as language and job title."
+    },
+    "status-option": {
+      "can-talk": "Can talk",
+      "looking-for-friend": "Looking for friends",
+      "need-consult": "Need to consult"
+    },
+    "tutorial": {
+      "button-status": "You can talk now",
+      "last-login": "Last login: 6 minutes ago",
+      "name": "goodhubくん",
+      "major": "Front end Engineer",
+      "vote": "レビュー：0",
+      "intro": "I am an engineer developing our own services!",
+      "pr": "話せること/聞きたいこと",
+      "description": "まずはマッチングリクエストを送って気になる人とマッチしてみよう！",
+      "text-demo": "Reactエンジニアを2年しているのでフロント開発についてお話しできます。フルスタックエンジニアを目指していて、PHPを習得したいと考えているので、フルスタックエンジニアの方に色々お話しを...",
+      "send-request": "マッチングのリクエストを送る",
+      "button-add": "話したい人リストに登録",
+      "button-redirect-home": "ホームへ",
+      "next-tutorial": "次へ"
+    }
+  },
+  "login-text-1": "If you have an account",
+  "login-text-2": "Login here"
+}

@@ -96,7 +96,6 @@ const DropDownBlockUserComponent: React.SFC<IDialogConfirmProps> = ({ handleOK, 
         content2={t("community:dialog.note-delete-title2")}
         btnLeft={t("community:button.dialog.cancel")}
         btnRight={t("community:button.dialog.block")}
-        bgColorBtnRight={theme.red}
         isShow={openDialog}
         handleClose={handleCloseDialog}
         handleCancel={handleCloseDialog}

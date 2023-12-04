@@ -4,13 +4,14 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 
-import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import styles from "src/components/searchCommunity/search_community.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import { joinCommunity } from "src/services/community";
 import { IStoreState } from "src/constants/interfaces";
 import { searchCommunityActions } from "src/store/actionTypes";
 import { HOMEPAGE_RECOMMEND_COMMUNITY_STATUS, typeRoleUser } from "src/constants";
+
+import ButtonComponent from "../common/atom-component/ButtonComponent";
 
 interface IIBoxItemCommunityDataItem {
   id: string;

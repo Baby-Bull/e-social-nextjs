@@ -15,10 +15,10 @@ import GlobalStyles from "@mui/material/GlobalStyles";
 
 import theme from "src/theme";
 import ButtonDropDownComponent from "src/components/community/post/detail/blocks/ButtonDropDownComponent";
-import ButtonComponent from "src/components/common/ButtonComponent";
 import { searchMemberCommunity, updatePostComment } from "src/services/community";
 import Link from "next/link";
 import { IStoreState } from "src/constants/interfaces";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 dayjs.extend(localizedFormat);
 dayjs.locale("ja");
@@ -305,10 +305,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
             <Box sx={{ textAlign: "right", cursor: "pointer" }}>
               {!isDisableBtn && (
                 <ButtonComponent
-                  props={{
-                    square: true,
-                    bgColor: theme.gray,
-                  }}
+                  mode="gray"
                   sx={{
                     mt: "20px",
                     mr: "15px",
@@ -325,10 +322,7 @@ const CommentComponent: React.SFC<ICommentComponentProps> = ({ itemData, handleC
               )}
               <ButtonComponent
                 disabled={isDisableBtn || content.length < 1}
-                props={{
-                  square: true,
-                  bgColor: theme.blue,
-                }}
+                mode="blue"
                 sx={{
                   mt: "20px",
                   width: "96px",

@@ -12,13 +12,13 @@ import Image from "next/image";
 import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
 
-import ButtonComponent from "src/components/common/elements/ButtonComponent";
 import styles from "src/components/home/home.module.scss";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
 import UserTag from "src/components/profile/UserTagComponent";
 import { IItemRecommendUserHomepage, ISlideRecommendUsersHomepage } from "src/constants/interfaces";
 import { HOMEPAGE_RECOMMEND_MEMBER_STATUS, JOBS, typeMatchingStatus } from "src/constants";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 import SlickSliderRecommendComponent from "./SlickSliderRecommendComponent";
 
@@ -207,7 +207,7 @@ const RecommendItem: React.SFC<IItemRecommendUserHomepage> = ({
               </div>
             </div>
           </Link>
-          {data.tags.length ? (
+          {data?.tags?.length ? (
             <div className="tags">
               <UserTag tags={data.tags} onClick={onUserTagClicked} />
             </div>

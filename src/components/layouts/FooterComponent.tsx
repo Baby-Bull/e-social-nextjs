@@ -5,8 +5,8 @@ import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 
-import { logout } from "src/services/auth";
 import styles from "src/components/layouts/layout.module.scss";
+import { logoutWithNestServer } from "src/services/auth";
 
 import actionTypes from "../../store/actionTypes";
 
@@ -33,7 +33,7 @@ const FooterComponent: React.FC<IFooterComponentProps> = ({ authPage = false, re
   const dispatch = useDispatch();
 
   const handleLogout = async () => {
-    await logout();
+    await logoutWithNestServer();
     dispatch({ type: actionTypes.LOGOUT });
     router.push("/login");
   };

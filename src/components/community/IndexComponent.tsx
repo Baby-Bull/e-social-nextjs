@@ -7,14 +7,15 @@ import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import LayoutComponent from "src/components/community/LayoutComponent";
-import ButtonComponent from "src/components/common/ButtonComponent";
 import IntroCommunityComponent from "src/components/community/blocks/IntroCommunityComponent";
 import TabComponent from "src/components/community/blocks/TabComponent";
 import BannerComponent from "src/components/community/blocks/BannerComponent";
 import EmptyComponent from "src/components/community/blocks/EmptyComponent";
 import { CommunityMembers, getCommunity, joinCommunity } from "src/services/community";
 
-import { tabsCommunity, status, bgColorByStatus } from "./mockData";
+import ButtonComponent from "../common/atom-component/ButtonComponent";
+
+import { tabsCommunity, status } from "./mockData";
 
 const TypographyCustom = styled(Typography)({
   fontSize: 20,
@@ -126,12 +127,9 @@ const CommunityComponent: FC = () => {
           <Box textAlign={["center", "right"]}>
             <ButtonComponent
               variant="outlined"
-              props={{
-                square: true,
-                color: theme.gray,
+              sx={{
+                width: 200,
                 height: "40px",
-                borderColor: theme.gray,
-                dimension: "medium",
               }}
               onClick={handleCopyUrl}
               startIcon={
@@ -272,7 +270,6 @@ const CommunityComponent: FC = () => {
                     xs: "25px",
                     md: "35px",
                   }}
-                  bgButton={bgColorByStatus}
                   absolute
                 >
                   <TypographyCustom>{t("community:community-is-approved")}</TypographyCustom>
@@ -312,9 +309,7 @@ const CommunityComponent: FC = () => {
                     marginTop: "35px",
                   }}
                   onClick={dataCommunityDetail?.community_role !== PENDING ? handleJoinCommunity : null}
-                  props={{
-                    bgColor: dataCommunityDetail?.community_role === PENDING ? theme.gray : theme.orange,
-                  }}
+                  mode={dataCommunityDetail?.community_role === PENDING ? "gray" : "orange"}
                 >
                   {dataCommunityDetail?.community_role === PENDING
                     ? t("community:banner.applying")

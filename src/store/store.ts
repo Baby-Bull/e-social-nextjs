@@ -69,7 +69,7 @@ const exampleInitialState: IStoreState = {
 
 export const login = (user: any) => ({ type: actionTypes.LOGIN, user });
 
-export const logout = () => ({ type: actionTypes.LOGIN, user: {} });
+export const logout = () => ({ type: actionTypes.LOGOUT });
 
 const persistConfig = {
   key: "primary",

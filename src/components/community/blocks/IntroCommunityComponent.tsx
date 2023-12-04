@@ -10,8 +10,8 @@ import GlobalStyles from "@mui/material/GlobalStyles";
 
 import { IStoreState } from "src/constants/interfaces";
 import theme from "src/theme";
-import ButtonComponent from "src/components/common/ButtonComponent";
 import { ShowTextArea } from "src/components/common/ShowTextAreaComponent";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 import { textRolesCreatePost } from "../mockData";
 
@@ -204,12 +204,9 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
           }}
         >
           <ButtonComponent
-            props={{
-              square: true,
-              mode: "gradient",
-              dimension: "medium",
-            }}
+            mode="gradient"
             sx={{
+              width: "200px",
               mt: ["20px", "40px"],
               height: "54px",
             }}

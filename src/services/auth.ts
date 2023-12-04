@@ -51,19 +51,35 @@ export const authWithProvider = async (provider: string, credentials: OauthCrede
 export const loginWithNestServer = async (loginPayload: { email: String; password: String }) => {
   try {
     const res: any = await apiNestServer.post(`/auth/login`, loginPayload);
+    // if (res?.statusCode === 400) {
+    //   toast.error("User not found");
+    // }
     if (res?.tokens?.accessToken) {
       setToken(res?.tokens?.accessToken, 10000); // TO-DO: import time to expried token
       setRefreshToken(res?.tokens?.refreshToken);
       // setIsProfileEdited(res?.data?.user?.is_profile_edited);
     }
-
     return res;
   } catch (error) {
     return error;
   }
 };
 
-export const logout = async () => {
+export const signupWithNestServer = async (signupPayload: any) => {
+  // TO-DO: import type user sign up
+  try {
+    const res: any = await apiNestServer.post(`/auth/signup`, signupPayload);
+    if (res?.tokens?.accessToken) {
+      setToken(res?.tokens?.accessToken, 10000); // TO-DO: import time to expried token
+      setRefreshToken(res?.tokens?.refreshToken);
+    }
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const logoutWithNestServer = async () => {
   try {
     const res = await apiNestServer.post("/auth/logout");
     setToken("");

@@ -16,8 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import theme from "src/theme";
 import { IStoreState } from "src/constants/interfaces";
 import actionTypes from "src/store/actionTypes";
-import { logout } from "src/services/auth";
 import styles from "src/components/layouts/layout.module.scss";
+import { logoutWithNestServer } from "src/services/auth";
 
 const MenuItemCustom = styled(MenuItem)({
   padding: "8px 0",
@@ -46,7 +46,7 @@ const HeaderRegisterPageComponent: React.FC = () => {
   };
 
   const handleLogout = async () => {
-    await logout().catch(() => null);
+    await logoutWithNestServer().catch(() => null);
     dispatch({ type: actionTypes.LOGOUT });
     router.push("/login");
   };
