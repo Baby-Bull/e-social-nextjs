@@ -211,21 +211,21 @@ const ChatBoxLeftComponent = ({
                 <React.Fragment key={index}>
                   <li
                     onClick={() => {
-                      const newUrl = `/chat/personal?room=${thread?.user?.id}`;
+                      const newUrl = `/chat/personal?room=${thread?.id}`;
                       window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, "", newUrl);
                       onSelectRoom(index);
                     }}
                   >
-                    <div className={`thread-item ${thread?.user?.id === userId ? "active" : ""}`}>
+                    <div className={`thread-item ${thread?.id === userId ? "active" : ""}`}>
                       <div className="avatar">
                         <Avatar
-                          alt={thread?.user?.username}
-                          src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+                          alt={thread?.title}
+                          src={thread?.user_infos?.[0]?.profile_image || "/assets/images/svg/avatar.svg"}
                           sx={{ width: "56px", height: "56px", mr: "13px" }}
                         />
                       </div>
                       <div className="thread-content">
-                        <Typography className="name">{thread?.user?.username}</Typography>
+                        <Typography className="name">{thread?.title}</Typography>
                         <Typography
                           className="message-hide"
                           sx={{
@@ -233,12 +233,10 @@ const ChatBoxLeftComponent = ({
                             fontWeight: thread?.unread_message_count > 0 ? "700!important" : "400",
                           }}
                         >
-                          {thread?.last_message_content_type === "text"
-                            ? thread?.last_chat_message_received
-                            : "添付ファイル"}
+                          {thread?.lastestMessageType === "text" ? thread?.lastestMessage : "添付ファイル"}
                         </Typography>
                       </div>
-                      <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
+                      <div className="thread-last-time">{formatChatDateRoom(thread?.lastestMessageAt)}</div>
                       {!isMobile && (
                         <div className="more-options">
                           <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">

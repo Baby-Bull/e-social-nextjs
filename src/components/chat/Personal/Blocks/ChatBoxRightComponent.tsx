@@ -27,12 +27,13 @@ import InputCustom from "src/components/common/atom-component/InputCustom";
 import PopupReportUser from "src/components/common/organisms/PopupReportUser";
 import PopupReviewComponent from "src/components/common/organisms/PopupReviewComponent";
 import scrollEl from "src/helpers/scrollEl";
-import { getMessages, uploadFile } from "src/services/chat";
+import { getMessages, getPrivateMessages, uploadFile } from "src/services/chat";
 import { formatChatDate, formatListMessages } from "src/helpers/helper";
 import "react-image-lightbox/style.css";
 import useWindowSize from "src/customHooks/UseWindowSize";
 import { MATCHING_PURPOSE_OPTIONS, MESSAGE_CONTENT_TYPES, REACT_QUERY_KEYS } from "src/constants";
 import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
+import socketIO from "src/helpers/socketIO";
 
 interface IBoxChatProps {
   allInfoMessage: any;
@@ -138,7 +139,7 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
         {allInfoMessage?.content_type !== "image" && allInfoMessage?.content_type !== "file" && (
           <div
             className={`message-content ${isErrorMessage ? "error-message" : ""}`}
-            // onClick={() => setShowOptionMessage(!showOptionMessage)}
+          // onClick={() => setShowOptionMessage(!showOptionMessage)}
           >
             {allInfoMessage.content_type === "first-message" ? (
               <Box className="theFirstMessage">
@@ -326,6 +327,7 @@ const NameOfChatSP: React.SFC<INameOfChatSPProps> = ({ name, handleClick }) => (
 const ChatBoxRightComponent = ({
   isMobile,
   toggleRenderSide,
+  roomId,
   userId,
   roomSelect,
   sendMessage,
@@ -357,11 +359,13 @@ const ChatBoxRightComponent = ({
   const { data: listMessageResQuery } = useQuery(
     [REACT_QUERY_KEYS.PERSONAL_CHAT.LIST_MESSAGES, userId],
     async () => {
-      const res = await getMessages(userId);
-      return {
-        ...res,
-        items: res?.items?.reverse() || [],
-      };
+      const res = await getPrivateMessages(roomId || 1);
+      console.log(res);
+      // return {
+      //   ...res,
+      //   items: res?.reverse() || [],
+      // };
+      return res ?? res;
     },
     {
       refetchOnWindowFocus: false,
@@ -369,28 +373,32 @@ const ChatBoxRightComponent = ({
     },
   );
 
-  useEffect(() => {
-    setListMessages([]);
-    setHasMoreParams({
-      cursor: null,
-      hasMore: false,
-    });
-    setListMessages(listMessageResQuery?.items || []);
-    setHasMoreParams({
-      cursor: listMessageResQuery?.cursor,
-      hasMore: listMessageResQuery?.hasMore,
-    });
-    // inputChatRef.current.focus();
-    const timeoutRef = setTimeout(() => {
-      scrollEl(boxMessageRef.current);
-    }, 300);
-    return () => clearTimeout(timeoutRef);
-  }, [listMessageResQuery]);
+  console.log(listMessageResQuery);
+  console.log(listMessages);
+
+  // useEffect(() => {
+  //   setListMessages([]);
+  //   setHasMoreParams({
+  //     cursor: null,
+  //     hasMore: false,
+  //   });
+  //   setListMessages(listMessageResQuery || []);
+  //   setHasMoreParams({
+  //     cursor: listMessageResQuery?.cursor,
+  //     hasMore: listMessageResQuery?.hasMore,
+  //   });
+  //   // inputChatRef.current.focus();
+  //   const timeoutRef = setTimeout(() => {
+  //     scrollEl(boxMessageRef.current);
+  //   }, 300);
+  //   return () => clearTimeout(timeoutRef);
+  // }, [listMessageResQuery]);
 
   const fetchData = async () => {
     if (hasMoreParams?.cursor?.length && listMessages.length) {
-      const messageData = await getMessages(userId, hasMoreParams?.cursor);
-      setListMessages([...(messageData?.items?.reverse() || []), ...listMessages]);
+      // const messageData = await getMessages(userId, hasMoreParams?.cursor);
+      const messageData = await getPrivateMessages(userId);
+      setListMessages([...(messageData?.reverse() || []), ...listMessages]);
       setHasMoreParams({
         cursor: messageData?.cursor,
         hasMore: messageData?.hasMore,
@@ -415,6 +423,8 @@ const ChatBoxRightComponent = ({
 
   const handleSendTextMessage = () => {
     const message = inputChatRef.current.value.trim();
+    console.log(message);
+
     if (message) {
       sendMessage(message);
       setListMessages([
@@ -473,8 +483,8 @@ const ChatBoxRightComponent = ({
     async (e) => {
       const heightScroll = boxMessageRef?.current?.scrollHeight;
       if (e.target.scrollTop === 0 && hasMoreParams?.cursor?.length && listMessages.length) {
-        const res = await getMessages(userId, hasMoreParams?.cursor);
-        setListMessages([...(res?.items?.reverse() || []), ...listMessages]);
+        const res = await getPrivateMessages(roomId);
+        setListMessages([...(res?.reverse() || []), ...listMessages]);
         setHasMoreParams({
           cursor: res?.cursor,
           hasMore: res?.hasMore,
@@ -552,6 +562,19 @@ const ChatBoxRightComponent = ({
     return res;
   };
 
+  const emitTyping = () => {
+    socketIO.emit("typing", { isTyping: true });
+    setTimeout(() => {
+      socketIO.emit("typing", { isTyping: false });
+    }, 3000);
+  };
+
+  const [TypingText, setTypingText] = useState("");
+  socketIO.on("typing", ({ name, isTyping }) => {
+    // eslint-disable-next-line no-unused-expressions
+    isTyping ? setTypingText(`${name} is typing ...`) : setTypingText("");
+  });
+
   return (
     <Grid
       item
@@ -568,7 +591,7 @@ const ChatBoxRightComponent = ({
             user?.username ?? ""
           )}
         </Typography>
-        <div className="btn-report-review">
+        {/* <div className="btn-report-review">
           <ButtonComponent
             mode="info"
             size="medium"
@@ -581,7 +604,7 @@ const ChatBoxRightComponent = ({
           <ButtonComponent mode="orange" size="medium" className="btn-chat" onClick={handleShowReview}>
             {isMobile ? t("chat:btn-review-sp") : t("chat:btn-review")}
           </ButtonComponent>
-        </div>
+        </div> */}
       </Box>
       <Box className="box-content">
         <Box
@@ -643,6 +666,16 @@ const ChatBoxRightComponent = ({
             </Box>
           </Box>
         </Box>
+        <Box
+          sx={{
+            position: "absolute",
+            marginTop: "-1.5em",
+            marginLeft: "5em",
+            fontSize: "10px",
+          }}
+        >
+          {TypingText !== "" && TypingText}
+        </Box>
       </Box>
       <Box className={styles.boxChat}>
         <Paper className="paper-chat" sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}>
@@ -655,6 +688,7 @@ const ChatBoxRightComponent = ({
             placeholder={t("chat:input-chat-placeholder")}
             inputProps={{ "aria-label": t("chat:input-chat-placeholder") }}
             onKeyDown={onKeyUpMessageText}
+            onChange={emitTyping}
           />
           <input hidden id="icon-button-file" type="file" onChange={sendFileOnMess} />
           <label htmlFor="icon-button-file">

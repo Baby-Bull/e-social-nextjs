@@ -10,7 +10,7 @@ import unionBy from "lodash/unionBy";
 
 import styles from "src/components/chat/chat.module.scss";
 import useViewport from "src/helpers/useViewport";
-import { getListChatRooms, getMessages } from "src/services/chat";
+import { getListChatRooms, getListPrivateChatRooms, getMessages } from "src/services/chat";
 import { sortListRoomChat } from "src/helpers/helper";
 import ChatBoxLeftComponent from "src/components/chat/Personal/Blocks/ChatBoxLeftComponent";
 import websocket from "src/helpers/socket";
@@ -21,6 +21,7 @@ import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
 import { getOrtherUserProfile, readMessagePersonal } from "src/services/user";
 import { IStoreState } from "src/constants/interfaces";
 import { REACT_QUERY_KEYS } from "src/constants";
+import socketIO from "src/helpers/socketIO";
 
 const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   const router = useRouter();
@@ -34,9 +35,16 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   const hasMoreChatRooms = useSelector((state: IStoreState) => state.listrooms.hasMorePersonal);
   const ListRoomsStatic = useSelector((state: IStoreState) => state.listrooms);
 
+  console.log(listRoomsChatTemp);
+
+
   const [userId, setUserId] = useState(roomQuery);
   const [user, setUser] = useState({});
   const [roomSelect, setRoomSelect] = useState(null);
+  const auth = useSelector((state: IStoreState) => state.user);
+  console.log(auth);
+  console.log(userId);
+
 
   const [newMessageOfRoom, setNewMessageOfRoom] = useState(null);
 
@@ -49,10 +57,13 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   const { refetch: fetchChatrooms } = useQuery(
     [`${REACT_QUERY_KEYS.LIST_ROOMS}/personal`, searchChatRoom.search, searchChatRoom.cursor],
     async () => {
-      const personalChatRoomTemp = await getListChatRooms(searchChatRoom?.search, searchChatRoom?.cursor, 10);
+      // const personalChatRoomTemp = await getListChatRooms(searchChatRoom?.search, searchChatRoom?.cursor, 10);
+      const personalChatRoomTemp = await getListPrivateChatRooms(searchChatRoom?.search, searchChatRoom?.cursor, 10);
+      console.log(personalChatRoomTemp);
+
       const updatedList = searchChatRoom?.cursor
-        ? sortListRoomChat(unionBy(personalChatRoomTemp.items, listRoomsChatTemp, "id"))
-        : personalChatRoomTemp.items;
+        ? sortListRoomChat(unionBy(personalChatRoomTemp, listRoomsChatTemp, "id"))
+        : personalChatRoomTemp;
       dispatch({
         type: actionTypes.UPDATE_LIST_PERSONAL_CHAT_ROOMS,
         payload: {
@@ -129,11 +140,13 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
         });
       }
     };
-    websocket.on("get.chatRoom.message", wsHandler);
-    websocket.on(`chatRoom.personal.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
+    socketIO.on('newMessage', () => { wsHandler })
+    // websocket.on("get.chatRoom.message", wsHandler);
+    // websocket.on(`chatRoom.personal.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
     return () => {
-      websocket.off("get.chatRoom.message", wsHandler);
-      websocket.off(`chatRoom.personal.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
+      socketIO.off('newMessage', () => { wsHandler })
+      // websocket.off("get.chatRoom.message", wsHandler);
+      // websocket.off(`chatRoom.personal.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
     };
   }, [roomSelect?.id, updateLastMessageOfListRooms]);
 
@@ -145,7 +158,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
         const checkInListChatroom = listRoomsChatTemp?.findIndex((item: any) => item?.user?.id === userId);
         if (checkInListChatroom > -1) {
           selectedRoom = listRoomsChatTemp?.find(
-            (item: any) => item?.user?.id === userId
+            (item: any) => item?.user_infos?.[0]?.id === userId
           );
         } else {
           if (userId) {
@@ -193,18 +206,20 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
     }));
   };
 
-  const sendMessage = (message: string, type: string = "text", fileName: string = "", fileSize: any = "") => {
+  const sendMessage = async (message: string, type: string = "text", fileName: string = "", fileSize: any = "") => {
     if (message) {
       const payload = {
-        chatRoomId: roomSelect?.id,
+        chatroomId: roomSelect?.id || 2, //TO-DO: update roomId
         content: message,
-        content_type: type,
+        authUserId: auth.id,
+        contentType: type,
         meta: {
           filename: fileName,
           size: fileSize,
         },
       };
-      websocket.emit("chatRoom.message", payload);
+      await socketIO.emit('sendMessageFromClient', payload)
+      // websocket.emit("chatRoom.message", payload);
       updateLastMessageOfListRooms({
         user: roomSelect?.user,
         content: message,
@@ -269,6 +284,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
         <ChatBoxRightComponent
           isMobile={isMobile}
           toggleRenderSide={toggleRenderSide}
+          roomId={roomSelect?.id}
           userId={userId}
           user={user}
           roomSelect={roomSelect}
