@@ -1,4 +1,4 @@
-import { LIMIT_ROOMS_PER_PAGE, LIMIT_MESSAGES_PER_PAGE } from "src/constants/constants";
+import { LIMIT_ROOMS_PER_PAGE, LIMIT_MESSAGES_PER_PAGE } from "src/constants";
 import { api } from "src/helpers/api";
 
 interface IParamsListChatRooms {
@@ -29,7 +29,11 @@ export const getListChatRooms = async (
   }
 };
 
-export const getMessages = async (userId: string | string[], cursor: string = "", limit: number = LIMIT_MESSAGES_PER_PAGE) => {
+export const getMessages = async (
+  userId: string | string[],
+  cursor: string = "",
+  limit: number = LIMIT_MESSAGES_PER_PAGE,
+) => {
   try {
     const res = await api.get(`/user/${userId}/messages?limit=${limit}&cursor=${cursor}`);
     return res.data;

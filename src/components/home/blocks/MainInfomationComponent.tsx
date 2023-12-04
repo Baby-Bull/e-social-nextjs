@@ -1,23 +1,31 @@
-/* eslint-disable */
+/**
+ * import libs
+ */
 import React, { useMemo } from "react";
 import { useQuery } from "react-query";
 import { Box, Grid, Typography, Button, Avatar } from "@mui/material";
-import styles from "src/components/home/home.module.scss";
+import Link from "next/link";
 import Image from "next/image";
 import { useTranslation } from "next-i18next";
-import { IStoreState } from "src/constants/interface";
 import { useSelector, useDispatch } from "react-redux";
-import { REACT_QUERY_KEYS } from "src/constants/constants";
+
+/**
+ * import function
+ */
 import actionTypes from "src/store/actionTypes";
 import { getUserStatics } from "src/services/user";
-import Link from "next/link";
+/**
+ * import constants
+ */
+import styles from "src/components/home/home.module.scss";
+import { IDataInfoMatching, IStoreState } from "src/constants/interfaces";
+import { REACT_QUERY_KEYS } from "src/constants";
 
-export default function MainInfomationComponent() {
+const MainInfomationComponent = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const auth = useSelector((state: IStoreState) => state.user);
-  const isProfileEdited = useSelector((state: any) => state.is_profile_edited);
-  const [generalCommunityId, setGeneralCommunityId] = React.useState("")
+  const [auth, isProfileEdited] = useSelector((state: IStoreState) => [state.user, state.is_profile_edited]);
+  const [generalCommunityId, setGeneralCommunityId] = React.useState<string>("");
   useQuery(
     [`${REACT_QUERY_KEYS.HOMEPAGE_GET_USER_STATS}`],
     async () => {
@@ -39,23 +47,15 @@ export default function MainInfomationComponent() {
     { refetchOnWindowFocus: false, keepPreviousData: true },
   );
 
-  const hasFinishedMission1 = useMemo(() => {
-    return isProfileEdited;
-  }, [isProfileEdited]);
+  const hasFinishedMission1 = useMemo(() => isProfileEdited, [isProfileEdited]);
+  const hasFinishedMission2 = useMemo(
+    () => auth.community_count > 0 && auth.match_request_confirmed_count + auth.match_application_confirmed_count > 0,
+    [auth],
+  );
+  const hasFinishedMission3 = useMemo(() => auth.community_chat_message_count > 0, [auth]);
+  const hasFinishedMission4 = useMemo(() => auth.community_post_count > 0, [auth]);
 
-  const hasFinishedMission2 = useMemo(() => {
-    return auth.community_count > 0 && auth.match_request_confirmed_count + auth.match_application_confirmed_count > 0;
-  }, [auth]);
-
-  const hasFinishedMission3 = useMemo(() => {
-    return auth.community_chat_message_count > 0;
-  }, [auth]);
-
-  const hasFinishedMission4 = useMemo(() => {
-    return auth.community_post_count > 0;
-  }, [auth]);
-
-  const dataInfoMatching = [
+  const dataInfoMatching: IDataInfoMatching[] = [
     {
       title: t("home:matching.community"),
       icon: "/assets/images/home_page/ic_star_circle.svg",
@@ -82,18 +82,11 @@ export default function MainInfomationComponent() {
     },
   ];
   return (
-    <Box className={styles.mainInfomations} sx={{ flexGrow: 1 }}>
+    <Box className={styles.mainInfomations}>
       <Grid container spacing={3}>
         <Grid className={styles.imgInfomation} item xs={3}>
           <Box className={styles.infoTitle}>{auth.username}</Box>
-          <Avatar
-            sx={{
-              borderRadius: "50%",
-              width: "106px",
-              height: "106px",
-              margin: "auto",
-            }}
-          >
+          <Avatar className={styles["avatar-section"]}>
             <Image
               loader={() => auth?.profile_image}
               src={auth?.profile_image || "/assets/images/avatar_user.png"}
@@ -105,14 +98,14 @@ export default function MainInfomationComponent() {
             />
           </Avatar>
           <Box className={styles.contentProfile}>
-            <Typography className={styles.titleProfile}>マイプロフィールを充実させてみよう！</Typography>
+            <Typography className={styles.titleProfile}>{t("home:main-information.edit-title")}</Typography>
             <Link href="/my-profile">
-              <Button className={styles.btnProfile}>マイプロフィール編集</Button>
+              <Button className={styles.btnProfile}>{t("home:main-information.edit-button")}</Button>
             </Link>
           </Box>
         </Grid>
         <Grid className={styles.matchingInfomation} item xs={3}>
-          <Box className={styles.infoTitle}>goodhubメニュー</Box>
+          <Box className={styles.infoTitle}>{t("home:main-information.info-title")}</Box>
           <Grid container>
             <Grid item xs={9}>
               <ul className={styles.matchingListTitle}>
@@ -136,36 +129,36 @@ export default function MainInfomationComponent() {
           </Grid>
         </Grid>
         <Grid className={styles.missionInfomation} item xs={6}>
-          <Box className={styles.infoTitle}>ミッションクリアしてみよう！</Box>
+          <Box className={styles.infoTitle}>{t("home:main-information.mission.mission-title")}</Box>
           <ul className={styles.missionList}>
-            <Link href={"/my-profile/edit"} shallow >
-              <li >
+            <Link href="/my-profile/edit" shallow>
+              <li>
                 <span className={hasFinishedMission1 ? styles.doneMissionText : undefined}>
-                  Mission 1 プロフィールを充実させて、色んな人に知ってもらおう
+                  Mission 1 {t("home:main-information.mission.mission1")}
                 </span>
                 {hasFinishedMission1 && <div className={styles.doneMission}>OK</div>}
               </li>
             </Link>
-            <Link href={"/search_community"} shallow >
-              <li >
+            <Link href="/search_community" shallow>
+              <li>
                 <span className={hasFinishedMission2 ? styles.doneMissionText : undefined}>
-                  Mission 2 気になるコミュニティに参加して、友達を増やそう
+                  Mission 2 {t("home:main-information.mission.mission2")}
                 </span>
                 {hasFinishedMission2 && <div className={styles.doneMission}>OK</div>}
               </li>
             </Link>
-            <Link href={"/matching?type=community"} shallow >
-              <li >
+            <Link href="/matching?type=community" shallow>
+              <li>
                 <span className={hasFinishedMission3 ? styles.doneMissionText : undefined}>
-                  Mission 3 コミュニティチャットで自己紹介をしてみよう
+                  Mission 3 {t("home:main-information.mission.mission3")}
                 </span>
                 {hasFinishedMission3 && <div className={styles.doneMission}>OK</div>}
               </li>
             </Link>
-            <Link href={`/community/${generalCommunityId}/post/create`} shallow >
-              <li >
+            <Link href={`/ community / ${generalCommunityId}/post/create`} shallow>
+              <li>
                 <span className={hasFinishedMission4 ? styles.doneMissionText : undefined}>
-                  Mission 4 コミュニティで話題を投稿して、メンバーと交流してみよう
+                  Mission 4 {t("home:main-information.mission.mission4")}
                 </span>
                 {hasFinishedMission4 && <div className={styles.doneMission}>OK</div>}
               </li>
@@ -175,4 +168,6 @@ export default function MainInfomationComponent() {
       </Grid>
     </Box>
   );
-}
+};
+
+export default MainInfomationComponent;

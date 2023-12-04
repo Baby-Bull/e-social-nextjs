@@ -11,7 +11,7 @@ import theme from "src/theme";
 // eslint-disable-next-line import/order
 import ButtonDropDownComponent from "src/components/community/post/detail/blocks/ButtonDropDownComponent";
 // eslint-disable-next-line import/order
-import { IStoreState } from "src/constants/interface";
+import { IStoreState } from "src/constants/interfaces";
 import { deleteCommunityPost } from "src/services/community";
 import TextEditor from "lib/TextEditor/TextEditor";
 

@@ -14,9 +14,10 @@ import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 
 import theme from "src/theme";
-import { IStoreState } from "src/constants/interface";
+import { IStoreState } from "src/constants/interfaces";
 import actionTypes from "src/store/actionTypes";
 import { logout } from "src/services/auth";
+import styles from "src/components/layouts/layout.module.scss";
 
 const MenuItemCustom = styled(MenuItem)({
   padding: "8px 0",
@@ -30,7 +31,7 @@ const TypoLabel = styled(Typography)({
   marginLeft: "4px",
 });
 
-const RegisterPageHeaderComponent: React.FC = () => {
+const HeaderRegisterPageComponent: React.FC = () => {
   const auth = useSelector((state: IStoreState) => state.user);
   const { t } = useTranslation();
   const router = useRouter();
@@ -82,57 +83,27 @@ const RegisterPageHeaderComponent: React.FC = () => {
   );
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar
-        position="fixed"
-        sx={{
-          background: "#fff",
-          boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-          p: { xs: 0, lg: "0 16px" },
-        }}
-      >
-        <Toolbar
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: { xs: "100%", xl: "1440px" },
-            margin: "auto",
-          }}
-        >
+    <Box className={styles["headerRegister-container"]} sx={{ flexGrow: 1 }}>
+      <AppBar className={styles["headerRegister-wrapper"]}>
+        <Toolbar className={styles["headerRegister-wrapper--toolbar"]}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Link href="/">
               <a>
                 <Box
+                  className={styles["headerRegister--toolbar--img"]}
                   component="img"
-                  sx={{
-                    width: { xs: "70px", lg: "141px" },
-                    height: { xs: "20px", lg: "42px" },
-                  }}
                   alt="avatar"
                   src="/assets/images/logo/logo2.png"
                 />
               </a>
             </Link>
           </Box>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <IconButton
-              onClick={handleOpenMenu}
-              sx={{
-                borderRadius: "50%",
-                p: "0",
-                ml: "20px",
-                height: "100%",
-              }}
-            >
+          <Box className={styles["headerRegister--toolbar--section2"]}>
+            <IconButton className={styles["headerRegister--section2--button"]} onClick={handleOpenMenu}>
               <Avatar
+                className={styles["headerRegister--section2--img"]}
                 src={auth?.profile_image || "/assets/images/svg/avatar.svg"}
                 alt={auth?.username}
-                sx={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                }}
               />
             </IconButton>
           </Box>
@@ -143,4 +114,4 @@ const RegisterPageHeaderComponent: React.FC = () => {
   );
 };
 
-export default RegisterPageHeaderComponent;
+export default HeaderRegisterPageComponent;

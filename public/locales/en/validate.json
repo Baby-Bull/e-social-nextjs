@@ -1,0 +1,164 @@
+{
+  "message_form_register": {
+    "username": {
+      "required": "Please enter your username",
+      "invalid": "Please enter a username containing hiragana, katakana, kanji, letters a to z, and numbers 0 to 9.",
+      "max_length": "You have exceeded the character count, please enter up to 50 characters."
+    },
+    "birthday": {
+      "required": "Please enter your birthdate",
+      "future_input": "Please enter a date before today (today cannot be selected)",
+      "invalid_date": "Invalid date (yyyy/MM/dd)"
+    },
+    "status": {
+      "required": "Please select a status."
+    },
+    "email": {
+      "required": "Please enter your email address in the format tanakataro@rebase.co.jp",
+      "invalid": "There is an error in your input."
+    },
+    "address": {
+      "required": "Please select your location."
+    },
+    "tags": {
+      "required": "Please enter a tag",
+      "max_length": "Please enter 20 characters per tag",
+      "min_count": "The number of tags must be greater than or equal to 2"
+    },
+    "checkbox": "Please accept the terms of use."
+  },
+  "matching_request_form": {
+    "purpose": {
+      "required": "Please select"
+    },
+    "message": {
+      "max_length": "Character limit exceeded, please enter 1000 characters or less",
+      "required": "Please enter your message"
+    },
+    "desired_match_date": {
+      "invalid_date": "Invalid date value",
+      "required_date": "Time input required"
+    },
+    "meeting_link": {
+      "required": "Please enter a link.",
+      "invalid_url": "Please enter the correct URL format"
+    }
+  },
+  "user_post_form": {
+    "reason": {
+      "required": "Please select a reason for reporting."
+    },
+    "detail": {
+      "max_length": "Please enter no more than 1000 characters per tag",
+      "required": "Do not leave blank"
+    }
+  },
+  "user_review_form": {
+    "comment": {
+      "max_length": "Please enter within 400 characters.",
+      "required": "Please enter a review message"
+    }
+  },
+  "update_profile_form": {
+    "username": {
+      "required": "Please enter your name.",
+      "max_length": "Please enter within 50 characters."
+    },
+    "hitokoto": {
+      "max_length": "Please enter within 40 characters."
+    },
+    "self_description": {
+      "max_length": "Please fill in within 1000 characters."
+    },
+    "discussion_topic": {
+      "max_length": "Please fill in within 100 characters."
+    },
+    "job_position": {
+      "max_length": "Please fill in within 1000 characters."
+    },
+    "upstream_process": {
+      "max_length": "Please fill in within 200 characters."
+    },
+    "other_language_level": {
+      "max_length": "Please fill in less than 200 characters."
+    },
+    "tags": {
+      "min_tag": "Please set two or more types.",
+      "max_size": "One tag must be no more than 20 characters."
+    },
+    "job": {
+      "select": "Please select."
+    },
+    "status": {
+      "select": "Please select."
+    },
+    "employment_status": {
+      "select": "Please select."
+    },
+    "address": {
+      "select": "Please select."
+    },
+    "english_level": {
+      "select": "Please select."
+    },
+    "experience_year": {
+      "min": "Negative values are not allowed."
+    },
+    "facebook_url": {
+      "format": "Enter a Facebook link in the format https://www.facebook.com/user_id."
+    },
+    "twitter_url": {
+      "format": "Please enter a Twitter link in https://twitter.com/user_id format."
+    },
+    "github_url": {
+      "format": "Enter a Github link in the format https://github.com/user_id."
+    },
+    "image_profile": {
+      "format": "Choose an image in png, jpg format.",
+      "max_size": "Please select a file no larger than 2MB."
+    },
+    "max_length_name_skill": "Please fill in within 40 characters.",
+    "max_length_year_skill": "Please write within 2 characters.",
+    "required_name_skill": "Please enter.",
+    "format": "Invalid user name, please enter hiragana, katakana, kanji, a-z alphabet, 0-9 characters."
+  },
+  "community_form": {
+    "name": {
+      "max_length": "Please enter within 40 characters.",
+      "required": "Please enter a community name."
+    },
+    "description": {
+      "max_length": "Please enter within 1000 characters.",
+      "required": "Please enter community details."
+    },
+    "post_permission": {
+      "required": "Please select."
+    },
+    "profile_image": {
+      "format": "Choose an image in png, jpg format.",
+      "max_size": "Please select a file no larger than 2MB."
+    },
+    "gather_url": {
+      "format": "Please enter the correct URL format"
+    }
+  },
+  "community_post_form": {
+    "title": {
+      "max_length": "Please enter within 60 characters.",
+      "required": "Please enter a community title."
+    },
+    "content": {
+      "max_length": "Please enter within 1000 characters.",
+      "required": "Please enter community details."
+    },
+    "reference_url": {
+      "format": "https://www.〇〇. Please enter a URL in the format .jp. "
+    },
+    "address": {
+      "max_length": "Please enter 100 characters or less."
+    },
+    "content_comment": {
+      "max_length": "Please enter within 1000 characters."
+    }
+  }
+}

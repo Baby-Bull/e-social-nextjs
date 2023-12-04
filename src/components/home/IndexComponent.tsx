@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState, Suspense, useCallback } from "react
 import { useQuery } from "react-query";
 import dynamic from "next/dynamic";
 
-import { REACT_QUERY_KEYS } from "src/constants/constants";
+import { REACT_QUERY_KEYS } from "src/constants";
 import {
   getUserFavoriteTags,
   getUserProvince,
@@ -20,6 +20,7 @@ import useViewport from "src/helpers/useViewport";
 
 import BannerComponent from "./blocks/BannerComponent";
 import MainInfomationComponent from "./blocks/MainInfomationComponent";
+import styles from "./home.module.scss";
 
 const NotificationComponent = dynamic(() => import("./blocks/NotificationsComponent"), {
   ssr: true,
@@ -79,9 +80,9 @@ const HomeIndexComponents = () => {
   ]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const getCommunity = async (cursor: string = "") => {
-    const res = await getListCommunityHome(LIMIT, cursor);
-    setRecommendCommunity(res?.items);
+  const getCommunity = async (page: number = 1) => {
+    const res = await getListCommunityHome(LIMIT, page);
+    setRecommendCommunity(res?.data);
     return res;
   };
 
@@ -94,7 +95,7 @@ const HomeIndexComponents = () => {
     async () => {
       setIsLoading(false);
       const res = await getUserProvince(LIMIT);
-      return res?.items?.filter((item: any) => item?.match_status !== "confirmed") || [];
+      return res?.data?.filter((item: any) => item?.match_status !== "confirmed") || [];
     },
     {
       refetchOnWindowFocus: false,
@@ -109,7 +110,7 @@ const HomeIndexComponents = () => {
     async () => {
       setIsLoading(false);
       const res = await getUserRecentlyLogin(LIMIT);
-      return res?.items?.filter((item: any) => item?.match_status !== "confirmed") || [];
+      return res?.data?.filter((item: any) => item?.match_status !== "confirmed") || [];
     },
     {
       refetchOnWindowFocus: false,
@@ -124,7 +125,7 @@ const HomeIndexComponents = () => {
     async () => {
       setIsLoading(false);
       const res = await getUserNewMembers(LIMIT);
-      return res?.items?.filter((item: any) => item?.match_status !== "confirmed") || [];
+      return res?.data?.filter((item: any) => item?.match_status !== "confirmed") || [];
     },
     {
       refetchOnWindowFocus: false,
@@ -139,7 +140,7 @@ const HomeIndexComponents = () => {
     async () => {
       setIsLoading(false);
       const res = await getUserFavoriteTags(LIMIT);
-      return res?.items?.filter((item: any) => item?.match_status !== "confirmed") || [];
+      return res?.data?.filter((item: any) => item?.match_status !== "confirmed") || [];
     },
     {
       refetchOnWindowFocus: false,
@@ -235,22 +236,9 @@ const HomeIndexComponents = () => {
           <CircularProgress color="inherit" />
         </Backdrop>
       )}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: "65px",
-        }}
-      >
+      <Box className={styles["home-screen"]}>
         <BannerComponent />
-        <Grid
-          container
-          sx={{
-            maxWidth: "1440px",
-          }}
-        >
+        <Grid className={styles["home-component"]} container>
           {isMobile && <NotificationComponent />}
           {isMobile ? <MatchingComponent /> : <MainInfomationComponent />}
 

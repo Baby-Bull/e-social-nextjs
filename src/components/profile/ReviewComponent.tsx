@@ -7,7 +7,7 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import { useSelector } from "react-redux";
 import Link from "next/link";
 
-import { IStoreState } from "src/constants/interface";
+import { IStoreState } from "src/constants/interfaces";
 
 dayjs.extend(localizedFormat);
 dayjs.locale("ja");

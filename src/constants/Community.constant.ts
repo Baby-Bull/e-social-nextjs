@@ -1,3 +1,32 @@
+// eslint-disable-next-line import/prefer-default-export
+export const HOMEPAGE_RECOMMEND_COMMUNITY_STATUS = {
+  1: {
+    label: "コミュニティに参加する",
+    mode: "green",
+    allowJoinCommunity: true,
+  },
+  2: {
+    label: "申請中",
+    mode: "default",
+  },
+  3: {
+    label: "参加申請を送る",
+    mode: "orange",
+  },
+  4: {
+    label: "メッセージを開",
+    mode: "info",
+  },
+};
+
+export const typeRoleUser = {
+  MEMBER: "member",
+  PENDING: "pending",
+  OWNER: "owner",
+  ADMIN: "admin",
+  NULL: null,
+};
+
 export const numberOfLogins = [
   {
     label: "ログイン人数",
@@ -59,11 +88,3 @@ export const typeCountMember = {
   less_than_20: 3,
   more_than_30: 4,
 };
-
-export const typeRoleUser = {
-  MEMBER: "member",
-  PENDING: "pending",
-  OWNER: "owner",
-  ADMIN: "admin",
-  NULL: null,
-}

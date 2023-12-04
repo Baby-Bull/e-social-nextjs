@@ -19,7 +19,7 @@ import "typeface-roboto";
 
 import { REGEX_RULES, VALIDATE_MESSAGE_FORM_REGISTER } from "src/messages/validate";
 import { userSettingEmail, userSettingNotification } from "src/services/user";
-import { IStoreState } from "src/constants/interface";
+import { IStoreState } from "src/constants/interfaces";
 import actionTypes from "src/store/actionTypes";
 
 import { notifyMess, notifyRecommend } from "./mockData";

@@ -16,7 +16,6 @@ import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 
 import createEmotionCache from "src/createEmotionCache";
-import { AUTH_PAGE_PATHS } from "src/constants/constants";
 import { getRefreshToken, getToken, USER_TOKEN } from "src/helpers/storage";
 // eslint-disable-next-line import/order
 import theme from "src/theme";
@@ -25,9 +24,10 @@ import "react-toastify/dist/ReactToastify.css";
 import "src/styles/index.scss";
 import * as gtag from "lib/gtag";
 import { useStore } from "src/store/store";
-import { fetchToken, setApiAuth } from "src/helpers/api";
 import socket from "src/helpers/socket";
 import ContentComponent from "src/components/layouts/ContentComponent";
+import { fetchToken, setApiAuth } from "src/utils/API-infra.util";
+import { AUTH_PAGE_PATHS } from "src/constants";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -46,7 +46,7 @@ interface MyAppProps extends AppProps {
 const SplashScreen = () => (
   <img
     alt="splash"
-    src="/assets/images/bg_loading.gif"
+    // src="/assets/images/bg_loading.gif"
     style={{ top: "40vh", bottom: 0, right: 0, left: "40%", width: "20%", position: "fixed" }}
   />
 );
@@ -128,9 +128,9 @@ const MyApp = (props: MyAppProps) => {
   return (
     <React.Fragment>
       <Head>
-        <title>goodhub</title>
+        <title>E-Social</title>
         <meta property="og:type" content="website" key="og-type" />
-        <meta property="og:title" content='ITエンジニアのための溜まり場 - "goodhub"' key="og-title" />
+        <meta property="og:title" content='ITエンジニアのための溜まり場 - "E-Social"' key="og-title" />
         <meta
           property="og:description"
           content="goodhubは業界初、新しい形のITエンジニアの憩いの場を提供するサービスです。
@@ -143,7 +143,7 @@ const MyApp = (props: MyAppProps) => {
           content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/ogp_home.png`}
           key="og-img"
         />
-        <meta property="og:site_name" content="goodhub" key="og-type" />
+        <meta property="og:site_name" content="E-Social" key="og-type" />
         <meta property="og:image:width" content="600" />
         <meta property="og:image:height" content="315" />
         <meta name="twitter:card" content="summary_large_image" key="twitter-card" />
@@ -153,7 +153,7 @@ const MyApp = (props: MyAppProps) => {
           content={`${process.env.NEXT_PUBLIC_URL_PROFILE}/assets/images/home_page/ogp_home.png`}
           key="twitter-image"
         />
-        <meta name="twitter:title" content='ITエンジニアのための溜まり場 - "goodhub"' key="twitter-title" />
+        <meta name="twitter:title" content='ITエンジニアのための溜まり場 - "E-Social"' key="twitter-title" />
         <meta
           name="twitter:description"
           content="goodhubは業界初、新しい形のITエンジニアの憩いの場を提供するサービスです。
@@ -162,13 +162,13 @@ const MyApp = (props: MyAppProps) => {
         />
         <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1" />
         <meta name="theme-color" content={theme.palette.primary.main} />
-        <meta name="title" content="GOODHUB" />
+        <meta name="title" content="E-Social" />
         <meta
           name="description"
           content="goodhubは業界初、新しい形のITエンジニアの憩いの場を提供するサービスです。
             コミュニティで新しい繋がりや仲間づくり、キャリアの相談など無料で全て使えます。"
         />
-        <meta name="keywords" content="キーワード, goodhub" />
+        <meta name="keywords" content="キーワード, E-Social" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />

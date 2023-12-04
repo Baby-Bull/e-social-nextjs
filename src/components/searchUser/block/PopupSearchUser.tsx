@@ -19,7 +19,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 
-import { jobs, employeeStatus, lastLogins, reviews } from "src/constants/searchUserConstants";
+import { jobs, employeeStatus, lastLogins, reviews } from "src/constants";
 import styles from "src/components/searchUser/search_user.module.scss";
 import theme from "src/theme";
 

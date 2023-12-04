@@ -38,11 +38,11 @@ import {
   MONTHS,
   LEVELS,
   ENGLISH_LEVEL_OPTIONS,
-  MY_PROFILE_STATUS_OPTIONS,
-} from "src/constants/constants";
+  USER_STATUS_OPTIONS,
+} from "src/constants";
 // eslint-disable-next-line import/no-duplicates
 import { getUserProfile, updateProfile } from "src/services/user";
-import { IStoreState } from "src/constants/interface";
+import { IStoreState } from "src/constants/interfaces";
 import actionTypes from "src/store/actionTypes";
 import { SERVER_ERROR, UPDATE_PROFILE } from "src/messages/notification";
 
@@ -252,7 +252,7 @@ const ProfileSkillComponent = () => {
   const [facebookUrl, setFacebookUrl] = useState(null);
   const [githubUrl, setGithubUrl] = useState(null);
   const [selfDescription, setSelfDescription] = useState(null);
-  const [status, setStatus] = useState(MY_PROFILE_STATUS_OPTIONS[0].value);
+  const [status, setStatus] = useState(USER_STATUS_OPTIONS[0].value);
   const [englishLevel, setEnglishLevel] = useState(ENGLISH_LEVEL_OPTIONS[0].value);
   const [job, setJob] = useState(JOBS[0].value);
   const [jobPosition, setJobPosition] = useState(null);
@@ -409,7 +409,7 @@ const ProfileSkillComponent = () => {
     setJobPosition(data.job_position);
     setDiscussionTopic(data.discussion_topic);
     setSelfDescription(data.self_description);
-    setStatus(data.status ? data.status : MY_PROFILE_STATUS_OPTIONS[0].value);
+    setStatus(data.status ? data.status : USER_STATUS_OPTIONS[0].value);
     setJob(data.job ? data.job : JOBS[0].value);
     setInputTags(data.tags ? data.tags : []);
     setEmployeeStatus(data.employment_status ? data.employment_status : EMPLOYEE_STATUS[0].value);
@@ -433,7 +433,7 @@ const ProfileSkillComponent = () => {
     setProfileRequest({
       hitokoto: data.hitokoto,
       self_description: data.self_description,
-      status: data.status ? data.status : MY_PROFILE_STATUS_OPTIONS[0].value,
+      status: data.status ? data.status : USER_STATUS_OPTIONS[0].value,
       job: data.job ? data.job : JOBS[0].value,
       job_position: data.job_position,
       employment_status: data.employment_status ? data.employment_status : EMPLOYEE_STATUS[0].value,
@@ -1365,7 +1365,7 @@ const ProfileSkillComponent = () => {
                       <ContentTab>
                         <FieldSelect
                           id="status"
-                          options={MY_PROFILE_STATUS_OPTIONS}
+                          options={USER_STATUS_OPTIONS}
                           onChangeValue={onChangeProfileRequest}
                           error={errorValidates.status}
                           value={status}

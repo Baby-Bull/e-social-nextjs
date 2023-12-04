@@ -1,0 +1,67 @@
+{
+  "main-information": {
+    "edit-title": "Let's improve my profile!",
+    "edit-button": "Edit your profile",
+    "info-title": "Esocial",
+    "mission": {
+      "mission-title": "Let's complete the mission!",
+      "mission1": "Improve your profile and let more people know about you",
+      "mission2": "Join communities you care about and make more friends",
+      "mission3": "Introduce yourself in the community chat",
+      "mission4": "Post topics in the community and interact with members"
+    }
+  },
+  "matching": {
+    "request": "Send request",
+    "request-m": "Send\n matching request",
+    "request-unit": "item",
+    "application": "pending request",
+    "application-m": "pending\n request",
+    "application-unit": "item",
+    "people": "List of favorite people",
+    "people-m": "List of people\n you want to talk",
+    "people-unit": "per",
+    "community": "Joined community",
+    "community-m": "joined\n community",
+    "community-unit": "unit",
+    "community_des_default":"Welcome to our community. Think outside the box and you'll see everything.",
+    "chat": "Joined",
+    "matched": "Matched",
+    "matched-m": "matched"
+  },
+  "recommend-community": "Recommended communities",
+  "register-newest": "Newly registered engineer",
+  "recent-login-member": "Engineers recently logged in",
+  "member-favorite-area": "Engineers near your area",
+  "member-favorite-tags": "Engineers with the same tags",
+  "see-more": "See more",
+  "box-community-recommend": {
+    "number-of-register": "online：%s mem",
+    "number-of-members": "members：%s mem"
+  },
+  "box-member-recommend": {
+    "last-login": "Login：%s",
+    "no-login": "Logging in",
+    "review": "reviews",
+    "label-description": "Things to talk about/What i want to hear",
+    "content-description": "Things to talk about/What i want to hear",
+    "label-talking": "Things to talk about",
+    "like-string": "Add to list favorite people"
+  },
+  "modal-matching": {
+    "purpose": "Purpose",
+    "purpose-placeholder": "Select purpose",
+    "frequency": "day",
+    "frequency-placeholder": "date",
+    "message": "message",
+    "message-placeholder": "Please include any other topics you would like to discuss.",
+    "button": "Submit request",
+    "to-user": "Matching request to"
+  },
+  "notification": {
+    "title": "Tips",
+    "content1-1": "Welcome to Esocial",
+    "content1-2": "Fill in your profile details",
+    "content1-3": "If you try, your matching rate will increase☆"
+  }
+}

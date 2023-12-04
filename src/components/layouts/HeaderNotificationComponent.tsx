@@ -9,10 +9,11 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Avatar from "@mui/material/Avatar";
 import dayjs from "dayjs";
+import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
 import styles from "src/components/layouts/layout.module.scss";
-import { CONTENT_OF_NOTIFICATIONS, REACT_QUERY_KEYS } from "src/constants/constants";
+import { CONTENT_OF_NOTIFICATIONS, REACT_QUERY_KEYS } from "src/constants";
 import { getListnotifications, readNotification } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
 
@@ -47,6 +48,7 @@ type DataRedirectNotification = {
 
 const HeaderNotificationComponent: FC<Props> = ({ anchor, notifications, updateNotifications, onClose }) => {
   const router = useRouter();
+  const { t } = useTranslation();
   const [notificationCursor, setNotificationCursor] = useState({ cursor: null });
 
   useQuery(
@@ -103,7 +105,7 @@ const HeaderNotificationComponent: FC<Props> = ({ anchor, notifications, updateN
   return (
     <Menu
       anchorEl={anchor}
-      className={styles.notificationMenu}
+      className={styles.menuChatDropDown}
       anchorOrigin={{
         vertical: "top",
         horizontal: "right",
@@ -115,12 +117,6 @@ const HeaderNotificationComponent: FC<Props> = ({ anchor, notifications, updateN
       transformOrigin={{
         vertical: "top",
         horizontal: "right",
-      }}
-      sx={{
-        zIndex: 10001,
-        ".MuiPaper-root": {
-          borderRadius: "12px !important",
-        },
       }}
     >
       <InfiniteScroll
@@ -134,7 +130,7 @@ const HeaderNotificationComponent: FC<Props> = ({ anchor, notifications, updateN
           </Box>
         }
       >
-        <div className={styles.notificationMenuHeader}>お知らせ</div>
+        <div className={styles.notificationMenuHeader}>{t("header.menu-notification.notice")}</div>
         <Box sx={{ paddingTop: "50px" }}>
           {notifications?.items?.length ? (
             notifications?.items?.map((dataMap: any) => (
@@ -196,16 +192,8 @@ const HeaderNotificationComponent: FC<Props> = ({ anchor, notifications, updateN
               </MenuItem>
             ))
           ) : (
-            <Box
-              sx={{
-                width: "328px",
-                display: "flex",
-                height: "550px",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <b>通知はありません。</b>
+            <Box className={styles["box-content--empty"]}>
+              <b>{t("header.menu-notification.empty-noti")}</b>
             </Box>
           )}
         </Box>

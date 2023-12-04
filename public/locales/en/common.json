@@ -1,3 +1,82 @@
 {
-  "header-title": "KIAI"
+  "header-title": "KIAI-JA",
+  "header": {
+    "title": "Edit your profile",
+    "search-pc": "Search by language, region, etc.",
+    "search-mb": "Language",
+    "list-engineers": "Engineer list",
+    "list-community": "Community list",
+    "input-search-placeholder": "language, hobbies, region",
+    "profile-editing": "Edit profile",
+    "message": "Message",
+    "matching-request": "Matching request",
+    "matching-you-applied-for": "Applied matching",
+    "list-people-you-want-to-talk": "List favorite people",
+    "participating-community": "Participating communities",
+    "setting": "Setting",
+    "logout": "Logout",
+    "menuchat": {
+      "title1": "Message",
+      "title2": "Group chat",
+      "placeholder-chat": "Search message",
+      "attachment": "Attachment",
+      "empty-tab": "No conversation"
+    },
+    "menu-notification": {
+      "notice": "Notice",
+      "empty-noti": "No notifications."
+    }
+  },
+  "footer": {
+    "signin": "Login",
+    "signout": "Sign up",
+    "terms-service": "Terms of service",
+    "privacy-policy": "Privacy policy",
+    "commerical-act": "Description based on Specified Commercial Transactions Law",
+    "inquiry": "Inquiry",
+    "operating-company": "Operating company",
+    "home": "Home",
+    "engineer-search": "Engineer search",
+    "community-search": "Community search",
+    "logout": "Logout"
+  },
+  "body": {
+    "is_login": "Online"
+  },
+  "showMore": "Show more",
+  "required": "Required",
+  "not_have_access": "No access.",
+  "no_info": "No information",
+  "message_notification": {
+    "user_report": "A report has been sent to management.",
+    "user_review": "You have submitted a review.",
+    "setting_email": "You have changed your email address.",
+    "setting_notification": "Changed notification.",
+    "accept_matching": "Your matching request has been approved.",
+    "reject_matching": "Your matching request was rejected.",
+    "cancel_matching": "The matching request has been canceled.",
+    "server_error": "Server Error",
+    "update_profile": "It has been saved.",
+    "copy_successful": "Copy success",
+    "email_exists": "Email is not unique",
+    "create_community": "A community has been created.",
+    "update_community": "Edited community information.",
+    "delete_community": "Community has been deleted.",
+    "block_member": "I blocked it.",
+    "blocked_member": "Unblocked.",
+    "approve_member": "Approved.",
+    "reject_member": "Rejected.",
+    "create_post": "Post created.",
+    "update_post": "Edited post.",
+    "delete_post": "Post deleted.",
+    "not_found_post": "Post not found.",
+    "forbidden": "You do not have access.",
+    "delete_comment": "Comment deleted.",
+    "create_comment": "Comment posted.",
+    "update_comment": "Comment edited.",
+    "join_community": "I joined the community.",
+    "send_request_community": "Application has been sent.",
+    "leave_community": "You have left the community.",
+    "not_found": "Data does not exist."
+  }
 }

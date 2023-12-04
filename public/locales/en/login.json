@@ -1,0 +1,31 @@
+{
+  "left": {
+    "title": "Goodhubからのお願い",
+    "box-01": {
+      "left": "エンジニアonly",
+      "right": "※エージェント様などのご登録はご遠慮ください"
+    },
+    "box-02": "Give&Givenの精神でお願いします",
+    "box-03": "気持ち良いコミュニケーションにご協力ください"
+  },
+  "login-info": {
+    "email": "Email",
+    "password": "Password",
+    "placeholder": {
+      "email": "Enter your email",
+      "password": "Enter your password"
+    }
+  },
+  "right": {
+    "title": "Login for service",
+    "description": "SNSアカウントで登録になります。SNSアカウントをお持ちでない方は、お手数ですがSNSの登録を先にお願いいたします。",
+    "register-git": "Login with Github",
+    "register-google": "Login with Google",
+    "register-twitter": "Login with Twitter",
+    "click-at": "アカウントをお持ちの方は",
+    "register": "こちら"
+  },
+  "cannot-login": "ログインができないかたは",
+  "contact-us": "からお問い合わせください。",
+  "submit": "Login"
+}

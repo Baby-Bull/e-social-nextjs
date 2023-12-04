@@ -1,4 +1,5 @@
-import { SearchFormStatus } from "src/constants/constants";
+import { SearchFormStatus } from "src/constants";
+
 import { searchUserActions } from "../actionTypes";
 
 const initState = {};
@@ -78,6 +79,6 @@ export default function (state: any = initState, action: any) {
             };
         }
         default:
-            return state;;
+            return state;
     }
 }

@@ -8,7 +8,7 @@ import TabComponent from "src/components/matching/TabComponent";
 import { getMatchingRequestReceived, getMatchingRequestSent } from "src/services/matching";
 import { getUserFavorite } from "src/services/user";
 import { getListCommunities } from "src/services/community";
-import { TAB_VALUE_BY_KEY, TYPE } from "src/constants/matching";
+import { TAB_VALUE_BY_KEY, TYPE } from "src/constants";
 
 const MatchingComponent = () => {
   const typeQuery = (useRouter()?.query?.type as string) || "received";

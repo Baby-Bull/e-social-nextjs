@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/ja";
 import relativeTime from "dayjs/plugin/relativeTime";
 import localizedFormat from "dayjs/plugin/localizedFormat";
+import { i18n } from "next-i18next";
 
 import { api } from "src/helpers/api";
 import {
@@ -14,7 +15,8 @@ import {
   UPDATE_PROFILE,
   EMAIL_EXISTS,
 } from "src/messages/notification";
-import { typeTimeLogin, typeReview } from "src/constants/searchUserConstants";
+import { typeTimeLogin, typeReview } from "src/constants";
+import { apiNestServer } from "src/utils/API-infra.util";
 
 import { setIsProfileEdited, setIsRenewal } from "../helpers/storage";
 
@@ -33,17 +35,17 @@ export const getUserFavorite = async (limit: number, cursor: string) => {
 
 export const getUserStatics = async () => {
   try {
-    const res = await api.get(`/user/stats`);
-    return res.data;
+    const res = await apiNestServer.get(`/users/stats`);
+    return res;
   } catch (error) {
     return error;
   }
 };
 
-export const getUserFavoriteTags = async (limit: number, cursor: string = "") => {
+export const getUserFavoriteTags = async (take: number, page: number = 1) => {
   try {
-    const res = await api.get(`/user/favorite/tag-users?limit=${limit}&cursor=${cursor}`);
-    return res?.data;
+    const res = await apiNestServer.get(`/users/user-tags?take=${take}&page=${page}`);
+    return res;
   } catch (error) {
     return error;
   }
@@ -58,10 +60,10 @@ export const getUserProvince = async (limit: number, cursor: string = "") => {
   }
 };
 
-export const getUserNewMembers = async (limit: number, cursor: string = "") => {
+export const getUserNewMembers = async (take: number, page: number = 1) => {
   try {
-    const res = await api.get(`/user/members-new?limit=${limit}&cursor=${cursor}`);
-    return res?.data;
+    const res = await apiNestServer.get(`/users/user-newest?take=${take}&page=${page}`);
+    return res;
   } catch (error) {
     return error;
   }
@@ -78,7 +80,7 @@ export const getUserRecentlyLogin = async (limit: number, cursor: string = "") =
 
 export const addUserFavorite = async (userId: string) => {
   try {
-    const res = await api.post(`/user/favorite/${userId}`);
+    const res = await apiNestServer.post(`/users/favorite/${userId}`);
     return res.data;
   } catch (error) {
     return error;
@@ -100,7 +102,7 @@ export const userReport = async (userId: string, body: object) => {
     if (res.data.error_code) {
       toast.error(res.data.message);
     } else {
-      toast.success(USER_REPORT);
+      toast.success(i18n.t("common:message_notification.user_report"));
     }
     return res.data;
   } catch (error) {
@@ -194,22 +196,22 @@ export const UserSearch = async (
   query +=
     params?.lastLogin === typeTimeLogin.on_day_to_week
       ? `&last_login[]=${dayjs().subtract(1, "weeks").toISOString()}&last_login[]=${dayjs()
-          .subtract(1, "days")
-          .toISOString()}`
+        .subtract(1, "days")
+        .toISOString()}`
       : "";
 
   query +=
     params?.lastLogin === typeTimeLogin.week_to_two_week
       ? `&last_login[]=${dayjs().subtract(2, "weeks").toISOString()}&last_login[]=${dayjs()
-          .subtract(1, "weeks")
-          .toISOString()}`
+        .subtract(1, "weeks")
+        .toISOString()}`
       : "";
 
   query +=
     params?.lastLogin === typeTimeLogin.two_week_to_month
       ? `&last_login[]=${dayjs().subtract(1, "months").toISOString()}&last_login[]=${dayjs()
-          .subtract(2, "weeks")
-          .toISOString()}`
+        .subtract(2, "weeks")
+        .toISOString()}`
       : "";
 
   query +=

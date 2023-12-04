@@ -13,8 +13,7 @@ import MenuItem from "@mui/material/MenuItem";
 
 import theme from "src/theme";
 import { userReport } from "src/services/user";
-import { USER_REPORT_OPTIONS } from "src/constants/constants";
-import { VALIDATE_FORM_USER_PORT } from "src/messages/validate";
+import { USER_REPORT_OPTIONS } from "src/constants";
 
 interface IReportUserProps {
   showPopup: boolean;
@@ -146,15 +145,15 @@ const popupReportUser: React.SFC<IReportUserProps> = ({ showPopup, setShowPopup,
     // validate purpose;
     if (!userReportRequest?.reason || userReportRequest?.reason?.length === 0) {
       isValidForm = false;
-      errorMessages.reason = VALIDATE_FORM_USER_PORT.reason.required;
+      errorMessages.reason = t("validate:user_post_form.reason.required");
     }
     if (userReportRequest?.detail?.length > 1000) {
       isValidForm = false;
-      errorMessages.detail = VALIDATE_FORM_USER_PORT.detail.max_length;
+      errorMessages.detail = t("validate:user_post_form.detail.max_length");
     }
     if (userReportRequest?.detail?.length === 0) {
       isValidForm = false;
-      errorMessages.detail = VALIDATE_FORM_USER_PORT.detail.required;
+      errorMessages.detail = t("validate:user_post_form.detail.required");
     }
     setErrorValidates(errorMessages);
     return isValidForm;

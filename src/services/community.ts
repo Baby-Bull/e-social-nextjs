@@ -20,7 +20,8 @@ import {
   SEND_REQUEST_COMMUNITY,
 } from "src/messages/notification";
 import { api } from "src/helpers/api";
-import { typeCountLogin, typeCountMember } from "src/constants/searchCommunityConstants";
+import { typeCountLogin, typeCountMember } from "src/constants";
+import { apiNestServer } from "src/utils/API-infra.util";
 
 // eslint-disable-next-line import/prefer-default-export
 export const getListCommunities = async (limit: number, cursor: string) => {
@@ -33,10 +34,10 @@ export const getListCommunities = async (limit: number, cursor: string) => {
   }
 };
 
-export const getListCommunityHome = async (limit: number = 10, cursor: string = "") => {
+export const getListCommunityHome = async (take: number = 10, page: number = 1) => {
   try {
-    const res = await api.get(`/community?limit=${limit}&cursor=${cursor}`);
-    return res.data;
+    const res = await apiNestServer.get(`/communities?take=${take}&page=${page}`);
+    return res;
   } catch (error) {
     toast.error(SERVER_ERROR);
     return error;

@@ -12,7 +12,6 @@ import { useTranslation } from "next-i18next";
 
 import { userReview } from "src/services/user";
 import theme from "src/theme";
-import { VALIDATE_FORM_USER_REVIEW } from "src/messages/validate";
 import TwitterShareButton from "lib/ShareButtons/TwitterShareButton";
 
 interface IReportUserProps {
@@ -144,10 +143,10 @@ const PopupReviewComponent: React.SFC<IReportUserProps> = ({ showPopup, setShowP
     let isValidForm = true;
     if (!userReviewRequest?.comment) {
       isValidForm = false;
-      errorMessages.comment = VALIDATE_FORM_USER_REVIEW.comment.required;
+      errorMessages.comment = t("validate:user_review_form.comment.required");
     } else if (userReviewRequest?.comment && userReviewRequest?.comment?.length > 400) {
       isValidForm = false;
-      errorMessages.comment = VALIDATE_FORM_USER_REVIEW.comment.max_length;
+      errorMessages.comment = t("validate:user_review_form.comment.max_length");
     }
     setErrorValidates(errorMessages);
     return isValidForm;

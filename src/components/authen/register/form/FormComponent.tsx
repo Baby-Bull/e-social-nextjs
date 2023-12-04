@@ -27,10 +27,8 @@ import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import GridLeftComponent from "src/components/authen/register/GridLeftComponent";
 import { updateProfileUseRenewal } from "src/services/user";
-import { REGEX_RULES, VALIDATE_MESSAGE_FORM_REGISTER } from "src/messages/validate";
-import { USER_STATUS_OPTIONS } from "src/components/constants/constants";
-import { JAPAN_PROVINCE_OPTIONS } from "src/constants/constants";
-import RegisterPageHeaderComponent from "src/components/layouts/RegisterPageHeaderComponent";
+import HeaderRegisterPageComponent from "src/components/layouts/HeaderRegisterPageComponent";
+import { JAPAN_PROVINCE_OPTIONS, REGEX_RULES, USER_STATUS_OPTIONS } from "src/constants";
 
 import { Field } from "./Field";
 
@@ -126,64 +124,64 @@ const FormRegisterComponents = () => {
     // validate username;
     if (!userInfo?.username || userInfo?.username?.length === 0) {
       isValidForm = false;
-      errorMessages.username = VALIDATE_MESSAGE_FORM_REGISTER.username.required;
+      errorMessages.username = t("validate:message_form_register.username.required");
     } else if (userInfo?.username?.length === 50) {
       isValidForm = false;
-      errorMessages.username = VALIDATE_MESSAGE_FORM_REGISTER.username.max_length;
+      errorMessages.username = t("validate:message_form_register.username.max_length");
     } else if (!REGEX_RULES.username_register.test(userInfo?.username)) {
       isValidForm = false;
-      errorMessages.username = VALIDATE_MESSAGE_FORM_REGISTER.username.invalid;
+      errorMessages.username = t("validate:message_form_register.username.invalid");
     }
 
     // validate birthday
     if (!userInfo?.birthday || userInfo?.birthday?.length === 0) {
       isValidForm = false;
-      errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.required;
+      errorMessages.birthday = t("validate:message_form_register.birthday.required");
     } else if (userInfo?.birthday?.length !== 0 && userInfo?.birthday?.error_invalid) {
       isValidForm = false;
-      errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.invalid_date;
+      errorMessages.birthday = t("validate:message_form_register.birthday.invalid_date");
     } else if (
       userInfo?.birthday?.length !== 0 &&
       dayjs(userInfo?.birthday?.dob_value).isAfter(dayjs().subtract(1, "day"))
     ) {
       isValidForm = false;
-      errorMessages.birthday = VALIDATE_MESSAGE_FORM_REGISTER.birthday.future_input;
+      errorMessages.birthday = t("validate:message_form_register.birthday.future_input");
     }
 
     // validate email
     if (!userInfo?.email || userInfo?.email?.length === 0) {
       isValidForm = false;
-      errorMessages.email = VALIDATE_MESSAGE_FORM_REGISTER.email.required;
+      errorMessages.email = t("validate:message_form_register.email.required");
     } else if (!REGEX_RULES.email.test(userInfo?.email)) {
       isValidForm = false;
-      errorMessages.email = VALIDATE_MESSAGE_FORM_REGISTER.email.invalid;
+      errorMessages.email = t("validate:message_form_register.email.invalid");
     }
 
     // validate address
     if (!userInfo?.address || userInfo?.address?.length === 0) {
       isValidForm = false;
-      errorMessages.address = VALIDATE_MESSAGE_FORM_REGISTER.address.required;
+      errorMessages.address = t("validate:message_form_register.address.required");
     }
 
     // validate status
     if (!userInfo?.status || userInfo?.status?.length === 0) {
       isValidForm = false;
-      errorMessages.status = VALIDATE_MESSAGE_FORM_REGISTER.status.required;
+      errorMessages.status = t("validate:message_form_register.status.required");
     }
 
     // validate tags
     if (!userInfo?.tags || userInfo?.tags?.length === 0) {
       isValidForm = false;
-      errorMessages.tags = VALIDATE_MESSAGE_FORM_REGISTER.tags.required;
+      errorMessages.tags = t("validate:message_form_register.tags.required");
     } else if (userInfo?.tags?.length < 2) {
       isValidForm = false;
-      errorMessages.tags = VALIDATE_MESSAGE_FORM_REGISTER.tags.min_count;
+      errorMessages.tags = t("validate:message_form_register.tags.min_count");
     }
 
     // validate checkbox
     if (!hasAgree) {
       isValidForm = false;
-      errorMessages.checkbox = VALIDATE_MESSAGE_FORM_REGISTER.checkbox;
+      errorMessages.checkbox = t("validate:message_form_register.checkbox");
     }
 
     setErrorValidates(errorMessages);
@@ -213,10 +211,10 @@ const FormRegisterComponents = () => {
           </Backdrop>
         )}
 
-        <RegisterPageHeaderComponent />
+        <HeaderRegisterPageComponent />
         <Box sx={{ marginTop: "55px" }}>
           <Grid container>
-            <GridLeftComponent smAndUp />
+            <GridLeftComponent />
 
             <Grid item xs={12} sm={6}>
               <Box

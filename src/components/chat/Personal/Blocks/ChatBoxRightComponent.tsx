@@ -30,9 +30,9 @@ import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupRevie
 import scrollEl from "src/helpers/scrollEl";
 import { getMessages, uploadFile } from "src/services/chat";
 import { formatChatDate, formatListMessages } from "src/helpers/helper";
-import { MESSAGE_CONTENT_TYPES, MATCHING_PURPOSE_OPTIONS, REACT_QUERY_KEYS } from "src/constants/constants";
 import "react-image-lightbox/style.css";
 import useWindowSize from "src/customHooks/UseWindowSize";
+import { MATCHING_PURPOSE_OPTIONS, MESSAGE_CONTENT_TYPES, REACT_QUERY_KEYS } from "src/constants";
 
 interface IBoxChatProps {
   allInfoMessage: any;

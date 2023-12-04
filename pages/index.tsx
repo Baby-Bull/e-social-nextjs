@@ -4,7 +4,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { parseCookies } from "nookies";
 
 import HomeIndexComponents from "src/components/home/IndexComponent";
-import { IS_PROFILE_EDITED, USER_TOKEN, IS_RENEWAL } from "src/helpers/storage";
+import { USER_TOKEN, IS_RENEWAL } from "src/helpers/storage";
 
 const Home: NextPage = () => <HomeIndexComponents />;
 
@@ -29,14 +29,14 @@ export const getServerSideProps = async (ctx) => {
     };
   }
 
-  if (cookies[IS_PROFILE_EDITED] !== "true") {
-    return {
-      redirect: {
-        destination: "/register/form",
-        permanent: false,
-      },
-    };
-  }
+  // if (cookies[IS_PROFILE_EDITED] !== "true") {
+  //   return {
+  //     redirect: {
+  //       destination: "/register/form",
+  //       permanent: false,
+  //     },
+  //   };
+  // }
   return {
     props: {
       ...(await serverSideTranslations(locale, ["common", "home", "footer"])),

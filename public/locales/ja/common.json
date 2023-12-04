@@ -13,7 +13,18 @@
     "list-people-you-want-to-talk": "話したい人リスト",
     "participating-community": "参加中のコミュニティ",
     "setting": "設定",
-    "logout": "ログアウト"
+    "logout": "ログアウト",
+    "menuchat": {
+      "title1": "メッセージ",
+      "title2": "グループチャット",
+      "placeholder-chat": "アカウントを検索",
+      "attachment": "添付ファイル",
+      "empty-tab": "会話なし"
+    },
+    "menu-notification": {
+      "notice": "お知らせ",
+      "empty-noti": "通知はありません。"
+    }
   },
   "footer": {
     "signin": "ログイン",
@@ -34,5 +45,39 @@
   "showMore": "もっと見る",
   "required": "必須",
   "not_have_access": "アクセス権がありません。",
-  "no_info": "情報なし"
+  "no_info": "情報なし",
+
+
+  "message_notification": {
+    "user_report": "運営に通報が送信されました。",
+    "user_review": "レビューを投稿しました。",
+    "setting_email": "メールアドレスを変更しました。",
+    "setting_notification": "通知を変更しました。",
+    "accept_matching": "マッチングリクエストを承認しました。",
+    "reject_matching": "マッチングリクエストを拒否しました。",
+    "cancel_matching": "マッチングリクエストをキャンセルしました。",
+    "server_error": "Server Error",
+    "update_profile": "保存されました。",
+    "copy_successful": "コピー成功",
+    "email_exists": "メールは一意ではありません",
+    "create_community": "コミュニティが作成されました。",
+    "update_community": "コミュニティの情報を編集しました。",
+    "delete_community": "コミュニティを削除しました。",
+    "block_member": "ブロックしました。",
+    "blocked_member": "ブロックを解除しました。",
+    "approve_member": "承認しました。",
+    "reject_member": "拒否しました。",
+    "create_post": "投稿を作成しました。",
+    "update_post": "投稿を編集しました。",
+    "delete_post":"投稿を削除しました。",
+    "not_found_post":"投稿が見つかりません。",
+    "forbidden":"アクセス権がありません。",
+    "delete_comment":"コメントが削除されました。",
+    "create_comment":"コメントが投稿されました。",
+    "update_comment":"コメントが編集されました。",
+    "join_community":"コミュニティに参加しました。",
+    "send_request_community":"参加申請を送りました。",
+    "leave_community": "コミュニティを退会しました。",
+    "not_found": "データが存在しません。"
+  }
 }
