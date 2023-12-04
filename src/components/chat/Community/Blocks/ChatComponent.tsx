@@ -11,17 +11,17 @@ import unionBy from "lodash/unionBy";
 import styles from "src/components/chat/chat.module.scss";
 import useViewport from "src/helpers/useViewport";
 import { getListChatRoomsCommunity } from "src/services/chat";
-import { REACT_QUERY_KEYS } from "src/constants/constants";
 import { sortListRoomChat } from "src/helpers/helper";
 import ChatBoxLeftComponent from "src/components/chat/Community/Blocks/ChatBoxLeftComponent";
 import websocket from "src/helpers/socket";
-import { IStoreState } from "src/constants/interface";
 import actionTypes from "src/store/actionTypes";
 
 import ChatBoxRightComponent from "./ChatBoxRightComponent";
 import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
 import { readMessageCommunity } from "src/services/user";
 import { getCommunity } from "src/services/community";
+import { IStoreState } from "src/constants/interfaces";
+import { REACT_QUERY_KEYS } from "src/constants";
 
 const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   const router = useRouter();

@@ -3,8 +3,8 @@ import { applyMiddleware, createStore } from "redux";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-import { SearchFormStatus } from "src/constants/constants";
-import { IStoreState } from "src/constants/interface";
+import { SearchFormStatus } from "src/constants";
+import { IStoreState } from "src/constants/interfaces";
 
 import actionTypes from "./actionTypes";
 import rootReducer, { RootState } from "./reducers/combineReducers";

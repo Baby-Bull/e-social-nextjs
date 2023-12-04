@@ -12,13 +12,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
-import { COPY_SUCCESSFUL } from "src/messages/notification";
 import theme from "src/theme";
 import styles from "src/components/profile/profile.module.scss";
 import { addUserFavorite, deleteUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
-import { IStoreState } from "src/constants/interface";
-import { USER_ONLINE_STATUS } from "src/constants/constants";
+import { IStoreState } from "src/constants/interfaces";
+import { USER_STATUS } from "src/constants";
 import TwitterShareButton from "lib/ShareButtons/TwitterShareButton";
 import FacebookShareButton from "lib/ShareButtons/FacebookShareButton";
 
@@ -134,7 +133,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
 
   const handleCopyUrl = () => {
     copy(urlProfile);
-    toast.success(COPY_SUCCESSFUL);
+    toast.success(t("common:message_notification.copy_successful"));
   };
 
   return (
@@ -344,7 +343,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                       mt: "11px",
                     }}
                   >
-                    {user?.activity_status === USER_ONLINE_STATUS
+                    {user?.activity_status === USER_STATUS.online
                       ? t("profile:login")
                       : `${t("profile:login")}：${dayjs(user?.last_login_at).fromNow()}`}
                   </Box>
@@ -660,7 +659,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                   fontSize: "10px",
                 }}
               >
-                {user?.activity_status === USER_ONLINE_STATUS
+                {user?.activity_status === USER_STATUS.online
                   ? t("profile:login")
                   : `${t("profile:login")}：${dayjs(user?.last_login_at).fromNow()}`}
               </Box>

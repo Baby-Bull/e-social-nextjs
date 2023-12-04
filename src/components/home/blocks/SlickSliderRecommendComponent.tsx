@@ -1,37 +1,29 @@
 import classNames from "classnames";
-import React, { ReactNode } from "react";
+import React from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 
 import styles from "src/components/home/home.module.scss";
+import { ISlickSliderRecommendComponentProps } from "src/constants/interfaces";
 
-interface ISlickSliderRecommendComponentProps {
-  items: Array<ReactNode>;
-}
-
-const NextArrow = (props: any) => {
-  const { className, style, onClick } = props;
+export const NextArrow = (props: any) => {
+  const { className, style, onClick, srcImg } = props;
   return (
     <div className={className} style={style} onClick={onClick}>
       <div className={styles.slickArrow}>
-        {!className?.includes("slick-disabled") && (
-          <img src="/assets/images/home_page/ic_arrow_medium.svg" alt="next" />
-        )}
+        <img src={srcImg} alt="next" />
       </div>
     </div>
   );
 };
 
-const PrevArrow = (props: any) => {
-  const { className, style, onClick } = props;
-
+export const PrevArrow = (props: any) => {
+  const { className, style, onClick, srcImg } = props;
   return (
     <div className={className} style={style} onClick={onClick}>
       <div className={styles.slickArrow}>
-        {!className?.includes("slick-disabled") && (
-          <img src="/assets/images/home_page/ic_arrow_medium.svg" alt="prev" className="rotate-180" />
-        )}
+        <img src={srcImg} alt="prev" className="rotate-180" />
       </div>
     </div>
   );
@@ -45,8 +37,8 @@ const SlickSliderRecommendComponent: React.SFC<ISlickSliderRecommendComponentPro
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 4,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow srcImg="/assets/images/home_page/ic_arrow_medium.svg" />,
+    prevArrow: <PrevArrow srcImg="/assets/images/home_page/ic_arrow_medium.svg" />,
 
     responsive: [
       {

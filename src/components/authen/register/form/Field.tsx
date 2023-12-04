@@ -24,7 +24,6 @@ import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
-import { VALIDATE_MESSAGE_FORM_REGISTER } from "src/messages/validate";
 
 type Editor = "textbox" | "dropdown" | "checkbox" | "multi-selection" | "date-picker" | "password";
 
@@ -165,7 +164,7 @@ export const Field: React.SFC<IFieldProps> = ({
     if (e.key === "Enter" && e.target.value.trim()) {
       if (onChangeValue && !value.includes(e.target.value.trim())) {
         if (e.target.value.length > 20) {
-          setErrorElement(VALIDATE_MESSAGE_FORM_REGISTER.tags.max_length);
+          setErrorElement(t("validate:message_form_register.tags.max_length"));
         } else {
           setErrorElement(null);
           onChangeValue("tags", [...value, e.target.value]);

@@ -14,25 +14,7 @@ import { useRouter } from "next/router";
 import { notificationMockData } from "../mockData/mockData";
 import styles from "../home.module.scss";
 
-const NextArrow = (props: any) => {
-  const { className, style, onClick } = props;
-  return (
-    <div className={className} style={style} onClick={onClick}>
-      <div className={styles.slickArrow}>
-        <img src="/assets/images/home_page/right_triangle.svg" alt="next" />
-      </div>
-    </div>
-  );
-};
-
-const PrevArrow = (props: any) => {
-  const { className, style, onClick } = props;
-  return (
-    <div className={className} style={style} onClick={onClick}>
-      <img src="/assets/images/home_page/left_triangle.svg" alt="prev" />
-    </div>
-  );
-};
+import { NextArrow, PrevArrow } from "./SlickSliderRecommendComponent";
 
 const BannerComponent = () => {
   const [notification] = useState(notificationMockData);
@@ -71,8 +53,8 @@ const BannerComponent = () => {
     autoplaySpeed: 2000,
     variableWidth: true,
     centerMode: true,
-    nextArrow: <NextArrow />,
-    prevArrow: <PrevArrow />,
+    nextArrow: <NextArrow srcImg="/assets/images/home_page/right_triangle.svg" />,
+    prevArrow: <PrevArrow srcImg="/assets/images/home_page/right_triangle.svg" />,
 
     responsive: [
       {

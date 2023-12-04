@@ -28,3 +28,18 @@ export interface User extends UserBasic {
   created_at: string;
   updated_at: string;
 }
+
+export interface IRecommendUserHomePage extends UserBasic {
+  last_login_at: string;
+  job: string;
+  review_count: number;
+  hitokoto: string;
+  tags: Array<string>;
+  discussion_topic: string;
+  status: string;
+  chatStatus: number;
+  is_favorite: boolean;
+  favoriteCount: number;
+  match_status: string;
+  activity_status?: string;
+}

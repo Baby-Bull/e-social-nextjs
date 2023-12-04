@@ -16,7 +16,6 @@ import { PersistGate } from "redux-persist/integration/react";
 import { Provider } from "react-redux";
 
 import createEmotionCache from "src/createEmotionCache";
-import { AUTH_PAGE_PATHS } from "src/constants/constants";
 import { getRefreshToken, getToken, USER_TOKEN } from "src/helpers/storage";
 // eslint-disable-next-line import/order
 import theme from "src/theme";
@@ -28,6 +27,7 @@ import { useStore } from "src/store/store";
 import socket from "src/helpers/socket";
 import ContentComponent from "src/components/layouts/ContentComponent";
 import { fetchToken, setApiAuth } from "src/utils/API-infra.util";
+import { AUTH_PAGE_PATHS } from "src/constants";
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();

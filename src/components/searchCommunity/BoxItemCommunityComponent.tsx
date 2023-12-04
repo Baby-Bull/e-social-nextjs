@@ -5,13 +5,12 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 
 import ButtonComponent from "src/components/common/elements/ButtonComponent";
-import { HOMEPAGE_RECOMMEND_COMMUNITY_STATUS } from "src/components/constants/constants";
 import styles from "src/components/searchCommunity/search_community.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import { joinCommunity } from "src/services/community";
-import { IStoreState } from "src/constants/interface";
-import { typeRoleUser } from "src/constants/searchCommunityConstants";
+import { IStoreState } from "src/constants/interfaces";
 import { searchCommunityActions } from "src/store/actionTypes";
+import { HOMEPAGE_RECOMMEND_COMMUNITY_STATUS, typeRoleUser } from "src/constants";
 
 interface IIBoxItemCommunityDataItem {
   id: string;

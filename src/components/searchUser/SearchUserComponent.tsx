@@ -23,7 +23,7 @@ import { connect } from "react-redux";
 
 import styles from "src/components/searchUser/search_user.module.scss";
 import theme from "src/theme";
-import { jobs, employeeStatus, lastLogins, reviews } from "src/constants/searchUserConstants";
+import { jobs, employeeStatus, lastLogins, reviews, SearchFormStatus } from "src/constants";
 import useViewport from "src/helpers/useViewport";
 import {
   UserSearch,
@@ -33,7 +33,6 @@ import {
   getUserNewMembers,
 } from "src/services/user";
 import { searchUserActions } from "src/store/actionTypes";
-import { SearchFormStatus } from "src/constants/constants";
 
 import BoxItemUserComponent from "./BoxItemUserComponent";
 import PopupSearchUser from "./block/PopupSearchUser";

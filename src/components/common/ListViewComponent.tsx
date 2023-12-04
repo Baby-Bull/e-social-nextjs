@@ -6,8 +6,8 @@ import "dayjs/locale/ja";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useSelector } from "react-redux";
 
+import { IStoreState } from "src/constants/interfaces";
 import theme from "src/theme";
-import { IStoreState } from "src/constants/interface";
 
 export interface IData {
   id?: string;

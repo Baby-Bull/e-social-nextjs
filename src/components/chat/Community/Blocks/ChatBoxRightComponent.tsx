@@ -27,10 +27,10 @@ import InputCustom from "src/components/chat/ElementCustom/InputCustom";
 import scrollEl from "src/helpers/scrollEl";
 import { getMessagesCommunity, uploadFile } from "src/services/chat";
 import { formatChatDate, formatListMessages } from "src/helpers/helper";
-import { MESSAGE_CONTENT_TYPES, REACT_QUERY_KEYS } from "src/constants/constants";
-import { IStoreState } from "src/constants/interface";
 import "react-image-lightbox/style.css";
 import useWindowSize from "src/customHooks/UseWindowSize";
+import { IStoreState } from "src/constants/interfaces";
+import { MESSAGE_CONTENT_TYPES, REACT_QUERY_KEYS } from "src/constants";
 
 interface IBoxChatProps {
   avatar?: string;

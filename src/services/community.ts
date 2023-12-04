@@ -20,7 +20,7 @@ import {
   SEND_REQUEST_COMMUNITY,
 } from "src/messages/notification";
 import { api } from "src/helpers/api";
-import { typeCountLogin, typeCountMember } from "src/constants/searchCommunityConstants";
+import { typeCountLogin, typeCountMember } from "src/constants";
 import { apiNestServer } from "src/utils/API-infra.util";
 
 // eslint-disable-next-line import/prefer-default-export

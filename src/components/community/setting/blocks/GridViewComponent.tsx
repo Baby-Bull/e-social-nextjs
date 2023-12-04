@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import "dayjs/locale/ja";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 
-import { IStoreState } from "src/constants/interface";
+import { IStoreState } from "src/constants/interfaces";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import { MemberApprove, MemberReject } from "src/services/community";

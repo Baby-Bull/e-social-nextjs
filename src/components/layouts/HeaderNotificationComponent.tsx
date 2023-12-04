@@ -13,7 +13,7 @@ import { useTranslation } from "next-i18next";
 
 import theme from "src/theme";
 import styles from "src/components/layouts/layout.module.scss";
-import { CONTENT_OF_NOTIFICATIONS, REACT_QUERY_KEYS } from "src/constants/constants";
+import { CONTENT_OF_NOTIFICATIONS, REACT_QUERY_KEYS } from "src/constants";
 import { getListnotifications, readNotification } from "src/services/user";
 import actionTypes from "src/store/actionTypes";
 

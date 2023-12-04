@@ -1,4 +1,4 @@
-import { LIMIT_ROOMS_PER_PAGE, LIMIT_MESSAGES_PER_PAGE } from "src/constants/constants";
+import { LIMIT_ROOMS_PER_PAGE, LIMIT_MESSAGES_PER_PAGE } from "src/constants";
 import { api } from "src/helpers/api";
 
 interface IParamsListChatRooms {

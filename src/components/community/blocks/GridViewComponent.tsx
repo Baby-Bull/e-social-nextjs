@@ -6,10 +6,9 @@ import dayjs from "dayjs";
 import "dayjs/locale/ja";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { JOBS } from "src/components/constants/constants";
 import theme from "src/theme";
-import { IStoreState } from "src/constants/interface";
-import { USER_ONLINE_STATUS } from "src/constants/constants";
+import { JOBS, USER_STATUS } from "src/constants";
+import { IStoreState } from "src/constants/interfaces";
 
 import styles from "./gridView.module.scss";
 
@@ -129,7 +128,7 @@ const GridViewComponent: React.SFC<IGridViewComponentProps> = ({ title, data }) 
                   color: theme.gray,
                 }}
               >
-                {item.activity_status === USER_ONLINE_STATUS ? "ログイン" : dayjs(item.last_login_at).fromNow()}
+                {item.activity_status === USER_STATUS.online ? "ログイン" : dayjs(item.last_login_at).fromNow()}
               </Typography>
             </Box>
           </React.Fragment>

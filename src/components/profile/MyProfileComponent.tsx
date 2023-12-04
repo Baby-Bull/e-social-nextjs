@@ -19,7 +19,7 @@ import BoxNoDataComponent from "src/components/profile/BoxNoDataComponent";
 import TopProfileComponent from "src/components/profile/TopProfileComponent";
 import SlickSliderRecommendComponent from "src/components/home/blocks/SlickSliderRecommendComponent";
 import theme from "src/theme";
-import { IStoreState } from "src/constants/interface";
+import { IStoreState } from "src/constants/interfaces";
 
 import ModalMatchingComponent from "../home/blocks/ModalMatchingComponent";
 import { sendMatchingRequest } from "../../services/matching";

@@ -17,16 +17,15 @@ import { getUserStatics } from "src/services/user";
 /**
  * import constants
  */
-import { REACT_QUERY_KEYS } from "src/constants/constants";
 import styles from "src/components/home/home.module.scss";
-import { IStoreState } from "src/constants/interface";
+import { IDataInfoMatching, IStoreState } from "src/constants/interfaces";
+import { REACT_QUERY_KEYS } from "src/constants";
 
 const MainInfomationComponent = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const auth = useSelector((state: IStoreState) => state.user);
-  const isProfileEdited = useSelector((state: any) => state.is_profile_edited);
-  const [generalCommunityId, setGeneralCommunityId] = React.useState("");
+  const [auth, isProfileEdited] = useSelector((state: IStoreState) => [state.user, state.is_profile_edited]);
+  const [generalCommunityId, setGeneralCommunityId] = React.useState<string>("");
   useQuery(
     [`${REACT_QUERY_KEYS.HOMEPAGE_GET_USER_STATS}`],
     async () => {
@@ -49,17 +48,14 @@ const MainInfomationComponent = () => {
   );
 
   const hasFinishedMission1 = useMemo(() => isProfileEdited, [isProfileEdited]);
-
   const hasFinishedMission2 = useMemo(
     () => auth.community_count > 0 && auth.match_request_confirmed_count + auth.match_application_confirmed_count > 0,
     [auth],
   );
-
   const hasFinishedMission3 = useMemo(() => auth.community_chat_message_count > 0, [auth]);
-
   const hasFinishedMission4 = useMemo(() => auth.community_post_count > 0, [auth]);
 
-  const dataInfoMatching = [
+  const dataInfoMatching: IDataInfoMatching[] = [
     {
       title: t("home:matching.community"),
       icon: "/assets/images/home_page/ic_star_circle.svg",

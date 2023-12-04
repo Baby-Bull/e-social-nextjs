@@ -6,15 +6,15 @@ import { useRouter } from "next/router";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import { useDispatch, useSelector } from "react-redux";
 
+import { IStoreState } from "src/constants/interfaces";
 import { infoCommunitySetting } from "src/components/community/mockData";
 import theme from "src/theme";
 import ButtonComponent from "src/components/common/ButtonComponent";
 import DialogConfirmWithAvatarComponent from "src/components/common/dialog/DialogConfirmWithAvatarComponent";
 import { joinCommunity, leaveCommunity } from "src/services/community";
 import useViewport from "src/helpers/useViewport";
-import { IStoreState } from "src/constants/interface";
 import { searchCommunityActions } from "src/store/actionTypes";
-import { typeRoleUser } from "src/constants/searchCommunityConstants";
+import { typeRoleUser } from "src/constants";
 
 import { bgColorByStatus } from "../mockData";
 

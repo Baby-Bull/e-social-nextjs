@@ -19,9 +19,9 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { styled } from "@mui/material/styles";
 import { useTranslation } from "next-i18next";
 
-import { numberOfLogins, numberOfParticipants } from "src/constants/searchCommunityConstants";
 import styles from "src/components/searchUser/search_user.module.scss";
 import theme from "src/theme";
+import { numberOfLogins, numberOfParticipants } from "src/constants";
 
 interface ISearchCommunityProps {
   inputTags: any;

@@ -12,7 +12,6 @@ import IntroCommunityComponent from "src/components/community/blocks/IntroCommun
 import TabComponent from "src/components/community/blocks/TabComponent";
 import BannerComponent from "src/components/community/blocks/BannerComponent";
 import EmptyComponent from "src/components/community/blocks/EmptyComponent";
-import { COPY_SUCCESSFUL } from "src/messages/notification";
 import { CommunityMembers, getCommunity, joinCommunity } from "src/services/community";
 
 import { tabsCommunity, status, bgColorByStatus } from "./mockData";
@@ -63,7 +62,7 @@ const CommunityComponent: FC = () => {
       : "";
     const resUrl = `${process.env.NEXT_PUBLIC_URL_PROFILE}/community/${communityId?.id}${ogpImageVersionQuery}`;
     copy(resUrl);
-    toast.success(COPY_SUCCESSFUL);
+    toast.success(t("common:message_notification.copy_successful"));
   };
 
   const fetchDataUsers = async (cursor: string = "") => {
