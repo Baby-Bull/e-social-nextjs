@@ -34,7 +34,8 @@ import {
 } from "src/services/user";
 import { searchUserActions } from "src/store/actionTypes";
 
-import BoxItemUserComponent from "./BoxItemUserComponent";
+import UserCardComponent from "../common/organisms/UserCardComponent";
+
 import PopupSearchUser from "./block/PopupSearchUser";
 
 const SelectCustom = styled(Select)({
@@ -473,7 +474,7 @@ const SearchUserComponent: FC<Props> = ({
             >
               {users?.map((item, index) => (
                 <Grid item key={index} md={4} xs={12} sm={12}>
-                  <BoxItemUserComponent data={item} />
+                  <UserCardComponent data={item} />
                 </Grid>
               ))}
             </Grid>

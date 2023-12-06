@@ -12,8 +12,8 @@ import Link from "next/link";
 
 import theme from "src/theme";
 import styles from "src/components/profile/profile.module.scss";
-import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
-import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupReviewComponent";
+import PopupReportUser from "src/components/common/organisms/PopupReportUser";
+import PopupReviewComponent from "src/components/common/organisms/PopupReviewComponent";
 import ModalMatchingComponent from "src/components/common/organisms/ModalMatchingComponent";
 import {
   rejectMatchingRequestReceived,

@@ -24,42 +24,25 @@ import { v4 as uuidv4 } from "uuid";
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/common/atom-component/InputCustom";
 // @ts-ignore
-import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
-import PopupReviewComponent from "src/components/chat/Personal/Blocks/PopupReviewComponent";
+import PopupReportUser from "src/components/common/organisms/PopupReportUser";
+import PopupReviewComponent from "src/components/common/organisms/PopupReviewComponent";
 import scrollEl from "src/helpers/scrollEl";
-import { getMessages, uploadFile } from "src/services/chat";
+import { getMessages, getPrivateMessages, uploadFile } from "src/services/chat";
 import { formatChatDate, formatListMessages } from "src/helpers/helper";
 import "react-image-lightbox/style.css";
 import useWindowSize from "src/customHooks/UseWindowSize";
 import { MATCHING_PURPOSE_OPTIONS, MESSAGE_CONTENT_TYPES, REACT_QUERY_KEYS } from "src/constants";
 import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
+import socketIO from "src/helpers/socketIO";
+import {
+  IBoxChatProps,
+  IBoxMyChatProps,
+  INameOfChatSPProps,
+  IThreadDropDownProps,
+  IThreadShowMessErrProps,
+} from "src/constants/interfaces";
 
-interface IBoxChatProps {
-  allInfoMessage: any;
-  time: string;
-  showAvatar: Boolean;
-}
-interface IBoxMyChatProps {
-  allInfoMessage: any;
-  time: string;
-  isStartOfDay?: boolean;
-  isErrorMessage?: boolean;
-  resendMessage?: Function;
-  deleteErrorMessage?: Function;
-}
-
-interface INameOfChatSPProps {
-  name: string;
-  handleClick: () => void;
-}
-
-interface IThreadDropDownProps {
-  open: boolean;
-  anchorEl: any;
-  handleClose: () => void;
-}
-
-const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({ open, handleClose, anchorEl }) => (
+const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({ open, handleClose, anchorEl, t }) => (
   <Menu
     open={open}
     className="dropdown-option-thread"
@@ -78,16 +61,10 @@ const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({ open, handleClose, an
       },
     }}
   >
-    <MenuItem onClick={handleClose}>メッセージの編集</MenuItem>
-    <MenuItem onClick={handleClose}>メッセージを削除する</MenuItem>
+    <MenuItem onClick={handleClose}>{t("chat:message-popup.edit-message")}</MenuItem>
+    <MenuItem onClick={handleClose}>{t("chat:message-popup.delete-message")}</MenuItem>
   </Menu>
 );
-
-interface IThreadShowMessErrProps {
-  open: boolean;
-  handleClose: () => void;
-  textMessageErr?: string;
-}
 
 const PopupShowMassageErr: React.SFC<IThreadShowMessErrProps> = ({ open, handleClose, textMessageErr }) => (
   <Dialog onClose={handleClose} open={open}>
@@ -119,26 +96,24 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
     <React.Fragment>
       {isStartOfDay ? (
         <div className={styles.spanStartOfDay}>
-          <span>今日</span>
+          <span>{t("chat:today")}</span>
         </div>
       ) : null}
       <Box className={styles.itemMessageMyChat}>
         <IconButton
-          sx={{
-            display: showOptionMessage ? "block" : "none",
-          }}
+          sx={{ display: showOptionMessage ? "block" : "none" }}
           onClick={handleClick}
           aria-label="more"
           aria-haspopup="true"
         >
           <img alt="more-options" src="/assets/images/chat/more_options.svg" />
         </IconButton>
-        <ThreadDropdown open={open} anchorEl={anchorEl} handleClose={handleClose} />
+        <ThreadDropdown open={open} anchorEl={anchorEl} handleClose={handleClose} t={t} />
         <Typography className="time">{time}</Typography>
         {allInfoMessage?.content_type !== "image" && allInfoMessage?.content_type !== "file" && (
           <div
             className={`message-content ${isErrorMessage ? "error-message" : ""}`}
-            // onClick={() => setShowOptionMessage(!showOptionMessage)}
+          // onClick={() => setShowOptionMessage(!showOptionMessage)}
           >
             {allInfoMessage.content_type === "first-message" ? (
               <Box className="theFirstMessage">
@@ -177,23 +152,11 @@ const BoxMyChat: React.SFC<IBoxMyChatProps> = ({
           <Lightbox mainSrc={allInfoMessage?.content} onCloseRequest={() => setOpenPopupImage(false)} />
         )}
         {allInfoMessage.content_type !== "first-message" && allInfoMessage?.content_type === "file" && (
-          <Box
-            sx={{
-              width: "200px",
-              height: "80px",
-              cursor: "pointer",
-              backgroundColor: "#ccc",
-              padding: "10px",
-              borderRadius: "10px",
-              fontSize: "12px",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
+          <Box className={styles["avatar-message--wrapper"]}>
             <Avatar
+              className={styles["avatar-message--item"]}
               src="/assets/images/icon/icon_file.jpg"
               variant="square"
-              sx={{ width: "30px", height: "30px", cursor: "pointer", mr: "10px" }}
             />
             <Box>
               <a href={allInfoMessage?.content} download className={styles.tagDownload}>
@@ -281,24 +244,8 @@ const BoxChatOthers: React.SFC<IBoxChatProps> = ({ time, allInfoMessage, showAva
       )}
       {openPopupImage && <Lightbox mainSrc={allInfoMessage?.content} onCloseRequest={() => setOpenPopupImage(false)} />}
       {allInfoMessage.content_type !== "first-message" && allInfoMessage?.content_type === "file" && (
-        <Box
-          sx={{
-            width: "200px",
-            height: "80px",
-            cursor: "pointer",
-            backgroundColor: "#ccc",
-            padding: "10px",
-            borderRadius: "10px",
-            fontSize: "12px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Avatar
-            src="/assets/images/icon/icon_file.jpg"
-            variant="square"
-            sx={{ width: "30px", height: "30px", cursor: "pointer", mr: "10px" }}
-          />
+        <Box className={styles["avatar-message--wrapper"]}>
+          <Avatar className={styles["avatar-message--item"]} src="/assets/images/icon/icon_file.jpg" variant="square" />
           <Box>
             <a href={allInfoMessage?.content} download className={styles.tagDownload}>
               <Box className={styles.boxChatFile}>
@@ -326,6 +273,7 @@ const NameOfChatSP: React.SFC<INameOfChatSPProps> = ({ name, handleClick }) => (
 const ChatBoxRightComponent = ({
   isMobile,
   toggleRenderSide,
+  roomId,
   userId,
   roomSelect,
   sendMessage,
@@ -357,17 +305,23 @@ const ChatBoxRightComponent = ({
   const { data: listMessageResQuery } = useQuery(
     [REACT_QUERY_KEYS.PERSONAL_CHAT.LIST_MESSAGES, userId],
     async () => {
-      const res = await getMessages(userId);
-      return {
-        ...res,
-        items: res?.items?.reverse() || [],
-      };
+      const res = await getPrivateMessages(roomId || 1);
+      console.log(res);
+      // return {
+      //   ...res,
+      //   items: res?.reverse() || [],
+      // };
+      return res ?? res;
     },
     {
       refetchOnWindowFocus: false,
       enabled: !!userId,
+      keepPreviousData: true,
     },
   );
+
+  console.log(listMessageResQuery);
+  console.log(listMessages);
 
   useEffect(() => {
     setListMessages([]);
@@ -375,7 +329,7 @@ const ChatBoxRightComponent = ({
       cursor: null,
       hasMore: false,
     });
-    setListMessages(listMessageResQuery?.items || []);
+    setListMessages(listMessageResQuery || []);
     setHasMoreParams({
       cursor: listMessageResQuery?.cursor,
       hasMore: listMessageResQuery?.hasMore,
@@ -389,8 +343,9 @@ const ChatBoxRightComponent = ({
 
   const fetchData = async () => {
     if (hasMoreParams?.cursor?.length && listMessages.length) {
-      const messageData = await getMessages(userId, hasMoreParams?.cursor);
-      setListMessages([...(messageData?.items?.reverse() || []), ...listMessages]);
+      // const messageData = await getMessages(userId, hasMoreParams?.cursor);
+      const messageData = await getPrivateMessages(roomId);
+      setListMessages([...(messageData?.reverse() || []), ...listMessages]);
       setHasMoreParams({
         cursor: messageData?.cursor,
         hasMore: messageData?.hasMore,
@@ -415,6 +370,8 @@ const ChatBoxRightComponent = ({
 
   const handleSendTextMessage = () => {
     const message = inputChatRef.current.value.trim();
+    console.log(message);
+
     if (message) {
       sendMessage(message);
       setListMessages([
@@ -473,8 +430,8 @@ const ChatBoxRightComponent = ({
     async (e) => {
       const heightScroll = boxMessageRef?.current?.scrollHeight;
       if (e.target.scrollTop === 0 && hasMoreParams?.cursor?.length && listMessages.length) {
-        const res = await getMessages(userId, hasMoreParams?.cursor);
-        setListMessages([...(res?.items?.reverse() || []), ...listMessages]);
+        const res = await getPrivateMessages(roomId);
+        setListMessages([...(res?.reverse() || []), ...listMessages]);
         setHasMoreParams({
           cursor: res?.cursor,
           hasMore: res?.hasMore,
@@ -552,14 +509,21 @@ const ChatBoxRightComponent = ({
     return res;
   };
 
+  const emitTyping = () => {
+    socketIO.emit("typing", { isTyping: true });
+    setTimeout(() => {
+      socketIO.emit("typing", { isTyping: false });
+    }, 3000);
+  };
+
+  const [TypingText, setTypingText] = useState("");
+  socketIO.on("typing", ({ name, isTyping }) => {
+    // eslint-disable-next-line no-unused-expressions
+    isTyping ? setTypingText(`${name} is typing ...`) : setTypingText("");
+  });
+
   return (
-    <Grid
-      item
-      className={styles.chatBoxRight}
-      sx={{
-        marginTop: isMobile ? "-80px" : "0",
-      }}
-    >
+    <Grid item className={styles.chatBoxRight} sx={{ marginTop: isMobile ? "-80px" : "0" }}>
       <Box className="box-title">
         <Typography className="username">
           {isMobile ? (
@@ -568,7 +532,7 @@ const ChatBoxRightComponent = ({
             user?.username ?? ""
           )}
         </Typography>
-        <div className="btn-report-review">
+        {/* <div className="btn-report-review">
           <ButtonComponent
             mode="info"
             size="medium"
@@ -581,7 +545,7 @@ const ChatBoxRightComponent = ({
           <ButtonComponent mode="orange" size="medium" className="btn-chat" onClick={handleShowReview}>
             {isMobile ? t("chat:btn-review-sp") : t("chat:btn-review")}
           </ButtonComponent>
-        </div>
+        </div> */}
       </Box>
       <Box className="box-content">
         <Box
@@ -629,23 +593,24 @@ const ChatBoxRightComponent = ({
             </InfiniteScroll>
           ) : null}
           <Box sx={{ display: sendFile ? "flex" : "none", justifyContent: "end" }}>
-            <Box
-              sx={{
-                width: "200px",
-                height: "200px",
-                background: "#eee",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
+            <Box className={styles["loading-circle-item"]}>
               <CircularProgress sx={{ color: "#03BCDB" }} />
             </Box>
           </Box>
         </Box>
+        <Box
+          sx={{
+            position: "absolute",
+            marginTop: "-1.5em",
+            marginLeft: "5em",
+            fontSize: "10px",
+          }}
+        >
+          {TypingText !== "" && TypingText}
+        </Box>
       </Box>
       <Box className={styles.boxChat}>
-        <Paper className="paper-chat" sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}>
+        <Paper className="paper-chat">
           <InputCustom
             multiline
             className="input-chat"
@@ -655,6 +620,7 @@ const ChatBoxRightComponent = ({
             placeholder={t("chat:input-chat-placeholder")}
             inputProps={{ "aria-label": t("chat:input-chat-placeholder") }}
             onKeyDown={onKeyUpMessageText}
+            onChange={emitTyping}
           />
           <input hidden id="icon-button-file" type="file" onChange={sendFileOnMess} />
           <label htmlFor="icon-button-file">
