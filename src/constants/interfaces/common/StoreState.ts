@@ -1,10 +1,12 @@
 import { SearchFormStatus } from "src/constants";
 
+import { IChatroom } from "../models/ChatMessage";
+
 export interface IStoreState {
   user: any;
   notifications: any;
   listrooms: {
-    itemsPersonal: Array<any>;
+    itemsPersonal: Array<IChatroom>;
     itemsCommunity: Array<any>;
     hasMorePersonal: boolean;
     hasMoreCommunity: boolean;

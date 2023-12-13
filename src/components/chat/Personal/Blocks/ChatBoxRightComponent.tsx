@@ -37,6 +37,7 @@ import socketIO from "src/helpers/socketIO";
 import {
   IBoxChatProps,
   IBoxMyChatProps,
+  IMessage,
   INameOfChatSPProps,
   IThreadDropDownProps,
   IThreadShowMessErrProps,
@@ -291,9 +292,9 @@ const ChatBoxRightComponent = ({
   const [showPopupReview, setShowPopupReview] = useState(false);
   const handleShowReview = () => setShowPopupReview(true);
 
-  const [listMessages, setListMessages] = useState([]);
+  const [listMessages, setListMessages] = useState<IMessage[]>([]);
   const [sendFile, setSendFile] = useState(false);
-  const [listMessagesShow, setListMessagesShow] = useState([]);
+  const [listMessagesShow, setListMessagesShow] = useState<IMessage[]>([]);
 
   const [hasMoreParams, setHasMoreParams] = useState({
     cursor: null,
@@ -319,9 +320,6 @@ const ChatBoxRightComponent = ({
       keepPreviousData: true,
     },
   );
-
-  console.log(listMessageResQuery);
-  console.log(listMessages);
 
   useEffect(() => {
     setListMessages([]);
@@ -566,12 +564,12 @@ const ChatBoxRightComponent = ({
                   <div className={styles.spanStartOfDay}>
                     <span>{dateText}</span>
                   </div>
-                  {listMessagesShow[dateText].map((message: any, index: number) =>
-                    message?.sender_id !== userId ? (
+                  {listMessagesShow[dateText].map((message: IMessage, index: number) =>
+                    message?.senderId != userId ? (
                       <BoxMyChat
                         key={index}
                         allInfoMessage={message}
-                        time={formatChatDate(message?.created_at)}
+                        time={formatChatDate(message?.createdAt)}
                         isErrorMessage={!!message?.isErrorMessage}
                         resendMessage={resendMessage}
                         deleteErrorMessage={deletedMessageError}
