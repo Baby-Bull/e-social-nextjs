@@ -25,7 +25,7 @@ import { formatChatDateRoom } from "src/helpers/helper";
 import theme from "src/theme";
 import useDebounce from "src/customHooks/UseDebounce";
 import useWindowSize from "src/customHooks/UseWindowSize";
-import { IThreadDropDownProps } from "src/constants/interfaces";
+import { IChatBoxLeftProps, IThreadDropDownProps } from "src/constants/interfaces";
 
 import PopupReviewComponent from "../../../common/organisms/PopupReviewComponent";
 
@@ -116,7 +116,7 @@ export const TabsCustom = styled(Tabs)(() => ({
   },
 }));
 
-const ChatBoxLeftComponent = ({
+const ChatBoxLeftComponent: React.FC<IChatBoxLeftProps> = ({
   listRooms,
   userId,
   user,

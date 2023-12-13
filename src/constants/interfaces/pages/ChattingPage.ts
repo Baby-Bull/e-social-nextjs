@@ -1,3 +1,5 @@
+import { IChatroom } from "../models/ChatMessage";
+
 export interface IBoxChatProps {
   allInfoMessage: any;
   time: string;
@@ -11,6 +13,18 @@ export interface IBoxMyChatProps {
   isErrorMessage?: boolean;
   resendMessage?: Function;
   deleteErrorMessage?: Function;
+}
+
+export interface IChatBoxLeftProps {
+  listRooms: IChatroom[];
+  userId: string;
+  user: any;
+  onSelectRoom: Function;
+  transferUserToLeftMobile: boolean;
+  setSearchChatRoom: Function;
+  hasMoreChatRoom: boolean;
+  loadMoreChatRooms: any;
+  isMobile: boolean;
 }
 
 export interface INameOfChatSPProps {

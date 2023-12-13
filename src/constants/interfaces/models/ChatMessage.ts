@@ -46,14 +46,14 @@ export interface IMessage {
 }
 
 export interface IChatroom {
-  id: number | string;
-  createdAt: string;
+  id: string;
+  createdAt?: string;
   lastestMessage: string;
   lastestMessageAt: string;
-  lastestMessageType: string;
-  members: Array<number>;
-  profileImage: string;
-  title: string;
-  updateAt: string;
+  lastestMessageType?: string;
+  members?: Array<number>;
+  profileImage?: string;
+  title?: string;
+  updateAt?: string;
   user_infos: UserBasic[];
 }
