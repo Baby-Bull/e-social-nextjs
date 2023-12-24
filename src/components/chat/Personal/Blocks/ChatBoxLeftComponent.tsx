@@ -32,6 +32,7 @@ import PopupReviewComponent from "../../../common/organisms/PopupReviewComponent
 import BlockNoDataComponent from "./NoDataComponent";
 
 const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({
+  t,
   open,
   handleClose,
   anchorEl,
@@ -65,7 +66,7 @@ const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({
   >
     <MenuItem onClick={redirectToProfile}>
       <img src="/assets/images/svg/user_chat.svg" alt="image_to_profile" />
-      プロフィールを見る
+      {t("chat:box-left.user-profile")}
     </MenuItem>
     <MenuItem
       onClick={() => {
@@ -74,11 +75,11 @@ const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({
       }}
     >
       <img src="/assets/images/svg/review_chat.svg" alt="image_review" />
-      レビューを投稿
+      {t("chat:box-left.write-review")}
     </MenuItem>
     <MenuItem disabled onClick={handleClose}>
       <img src="/assets/images/svg/block_chat.svg" alt="image_block" />
-      ブロックする
+      {t("chat:box-left.block")}
     </MenuItem>
     <MenuItem
       onClick={() => {
@@ -87,7 +88,7 @@ const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({
       }}
     >
       <img src="/assets/images/svg/report_chat.svg" alt="image_report" />
-      運営に通報
+      {t("chat:box-left.report")}
     </MenuItem>
   </Menu>
 );
@@ -118,7 +119,6 @@ export const TabsCustom = styled(Tabs)(() => ({
 
 const ChatBoxLeftComponent: React.FC<IChatBoxLeftProps> = ({
   listRooms,
-  userId,
   user,
   onSelectRoom,
   transferUserToLeftMobile,
@@ -126,6 +126,7 @@ const ChatBoxLeftComponent: React.FC<IChatBoxLeftProps> = ({
   hasMoreChatRoom,
   loadMoreChatRooms,
   isMobile,
+  roomId,
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -152,7 +153,7 @@ const ChatBoxLeftComponent: React.FC<IChatBoxLeftProps> = ({
   };
 
   const redirectToProfile = () => {
-    router.push(`/profile/${userId}`, undefined, { shallow: true });
+    router.push(`/profile/${roomId}`, undefined, { shallow: true });
     handleClose();
   };
   const [showPopupReport, setShowPopupReport] = useState(false);
@@ -208,7 +209,7 @@ const ChatBoxLeftComponent: React.FC<IChatBoxLeftProps> = ({
                       onSelectRoom(index);
                     }}
                   >
-                    <div className={`thread-item ${thread?.id === userId ? "active" : ""}`}>
+                    <div className={`thread-item ${thread?.id === roomId ? "active" : ""}`}>
                       <div className="avatar">
                         <Avatar
                           alt={thread?.title}
@@ -235,6 +236,7 @@ const ChatBoxLeftComponent: React.FC<IChatBoxLeftProps> = ({
                             <img alt="more-options" src="/assets/images/chat/more_options.svg" />
                           </IconButton>
                           <ThreadDropdown
+                            t={t}
                             open={open}
                             handleClose={handleClose}
                             setShowPopupReport={setShowPopupReport}
@@ -260,6 +262,7 @@ const ChatBoxLeftComponent: React.FC<IChatBoxLeftProps> = ({
                         <img alt="more-options" src="/assets/images/chat/more_options.svg" />
                       </IconButton>
                       <ThreadDropdown
+                        t={t}
                         open={open}
                         handleClose={handleClose}
                         setShowPopupReport={setShowPopupReport}

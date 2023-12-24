@@ -1,6 +1,12 @@
 {
   "box-left-title": "メッセージ",
   "box-left-input-search-placeholder": "アカウントを検索",
+  "box-left": {
+    "user-profile": "プロフィールを見る",
+    "write-review": "レビューを投稿",
+    "block": "ブロックする",
+    "report": "運営に通報"
+  },
   "box-right-no-data": "気になる人に\nマッチングリクエストを送ってみよう！",
   "box-right-no-data-mobile": "気になる人に\nマッチングリクエストを\n送ってみよう！",
   "box-right-button-find": "エンジニアを探す",

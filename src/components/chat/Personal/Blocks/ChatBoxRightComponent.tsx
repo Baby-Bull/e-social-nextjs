@@ -281,6 +281,8 @@ const ChatBoxRightComponent = ({
   newMessageOfRoom,
   user,
 }) => {
+  console.log(roomSelect);
+
   const { t } = useTranslation();
   const inputChatRef = useRef(null);
   const boxMessageRef = useRef(null);
@@ -304,9 +306,9 @@ const ChatBoxRightComponent = ({
   const [, windowHeight] = useWindowSize();
 
   const { data: listMessageResQuery } = useQuery(
-    [REACT_QUERY_KEYS.PERSONAL_CHAT.LIST_MESSAGES, userId],
+    [REACT_QUERY_KEYS.PERSONAL_CHAT.LIST_MESSAGES, roomId],
     async () => {
-      const res = await getPrivateMessages(roomId || 1);
+      const res = await getPrivateMessages(roomId);
       console.log(res);
       // return {
       //   ...res,
@@ -316,7 +318,7 @@ const ChatBoxRightComponent = ({
     },
     {
       refetchOnWindowFocus: false,
-      enabled: !!userId,
+      enabled: !!roomId,
       keepPreviousData: true,
     },
   );
@@ -368,7 +370,6 @@ const ChatBoxRightComponent = ({
 
   const handleSendTextMessage = () => {
     const message = inputChatRef.current.value.trim();
-    console.log(message);
 
     if (message) {
       sendMessage(message);
@@ -377,9 +378,9 @@ const ChatBoxRightComponent = ({
         {
           id: uuidv4(),
           content: message,
-          content_type: MESSAGE_CONTENT_TYPES.TEXT,
-          created_at: new Date().toISOString(),
-          sender_id: "123",
+          typeMessage: MESSAGE_CONTENT_TYPES.TEXT,
+          createdAt: new Date().toISOString(),
+          senderId: "123",
           isErrorMessage: !navigator.onLine,
         },
       ]);
@@ -565,7 +566,7 @@ const ChatBoxRightComponent = ({
                     <span>{dateText}</span>
                   </div>
                   {listMessagesShow[dateText].map((message: IMessage, index: number) =>
-                    message?.senderId != userId ? (
+                    message?.senderId !== roomSelect?.user_infos?.[0]?.id ? (
                       <BoxMyChat
                         key={index}
                         allInfoMessage={message}
@@ -578,7 +579,7 @@ const ChatBoxRightComponent = ({
                       <BoxChatOthers
                         key={index}
                         allInfoMessage={message}
-                        time={formatChatDate(message?.created_at)}
+                        time={formatChatDate(message?.createdAt)}
                         showAvatar={
                           !listMessagesShow[dateText][index + 1] ||
                           listMessagesShow[dateText][index + 1]?.user?.id !== message?.user?.id

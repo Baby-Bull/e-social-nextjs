@@ -25,6 +25,7 @@ export interface IChatBoxLeftProps {
   hasMoreChatRoom: boolean;
   loadMoreChatRooms: any;
   isMobile: boolean;
+  roomId?: string;
 }
 
 export interface INameOfChatSPProps {

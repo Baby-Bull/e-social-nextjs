@@ -1,6 +1,12 @@
 {
   "box-left-title": "Personal message",
   "box-left-input-search-placeholder": "Find an account",
+  "box-left": {
+    "user-profile": "User profile",
+    "write-review": "Write review",
+    "block": "Block",
+    "report": "Report"
+  },
   "box-right-no-data": "Let's send a \n matching request to someone you care about!",
   "box-right-no-data-mobile": "Let's send \n matching requests to people you care about!",
   "box-right-button-find": "Find an engineer",

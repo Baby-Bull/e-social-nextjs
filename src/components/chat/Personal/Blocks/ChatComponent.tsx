@@ -35,8 +35,6 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   const hasMoreChatRooms = useSelector((state: IStoreState) => state.listrooms.hasMorePersonal);
   const ListRoomsStatic = useSelector((state: IStoreState) => state.listrooms);
 
-  console.log(listRoomsChatTemp);
-
   const [userId, setUserId] = useState<string | number>(user_id || listRoomsChatTemp?.[0]?.user_infos?.[0].id);
   const [roomId, setRoomId] = useState<string>(Array.isArray(roomQuery) ? roomQuery[0] : roomQuery);
   const [user, setUser] = useState({});
@@ -56,8 +54,6 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
     async () => {
       // const personalChatRoomTemp = await getListChatRooms(searchChatRoom?.search, searchChatRoom?.cursor, 10);
       const personalChatRoomTemp = await getListPrivateChatRooms(searchChatRoom?.search, searchChatRoom?.cursor, 10);
-      console.log(personalChatRoomTemp);
-
       const updatedList = searchChatRoom?.cursor
         ? sortListRoomChat(unionBy(personalChatRoomTemp, listRoomsChatTemp, "id"))
         : personalChatRoomTemp;
@@ -279,7 +275,6 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
       {!isMobile || (isMobile && !isRenderRightSide) ? (
         <ChatBoxLeftComponent
           listRooms={listRoomsChatTemp}
-          userId={userId}
           user={user}
           onSelectRoom={onSelectRoom}
           transferUserToLeftMobile={transferUserToLeftMobile}
@@ -287,6 +282,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
           hasMoreChatRoom={hasMoreChatRooms}
           loadMoreChatRooms={loadMoreMessagePersonal}
           isMobile={isMobile}
+          roomId={roomId}
         />
       ) : null}
       {(!listRoomsChatTemp?.length && !isMobile) && <ChatBoxRightNoDataComponent />}
@@ -295,7 +291,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
         <ChatBoxRightComponent
           isMobile={isMobile}
           toggleRenderSide={toggleRenderSide}
-          roomId={roomSelect?.id}
+          roomId={roomId}
           userId={userId}
           user={user}
           roomSelect={roomSelect}
