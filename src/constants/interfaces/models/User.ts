@@ -1,7 +1,7 @@
 export interface UserBasic {
   id: string;
   username: string;
-  profile_image: string;
+  profileImage: string;
 }
 
 export interface UserSetting {

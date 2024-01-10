@@ -14,7 +14,7 @@ import dynamic from "next/dynamic";
 
 import theme from "src/theme";
 import styles from "src/components/profile/profile.module.scss";
-import { addUserFavorite, deleteUserFavorite } from "src/services/user";
+import { addUserFavorite, removeUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
 import { IStoreState } from "src/constants/interfaces";
 import { USER_STATUS } from "src/constants";
@@ -116,7 +116,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
   const handleClickFavoriteButton = () => {
     updateCommunityStateAfterClickFavouriteFn();
     if (liked) {
-      deleteUserFavorite(user?.id);
+      removeUserFavorite(user?.id);
       dispatch({ type: actionTypes.REMOVE_FAVORITE });
     } else {
       addUserFavorite(user?.id);

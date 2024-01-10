@@ -1,11 +1,35 @@
 import { LIMIT_ROOMS_PER_PAGE, LIMIT_MESSAGES_PER_PAGE } from "src/constants";
 import { api } from "src/helpers/api";
+import { apiNestServer } from "src/utils/API-infra.util";
 
 interface IParamsListChatRooms {
   search?: string;
   cursor?: string;
   limit: number;
 }
+
+export const getListPrivateChatRooms = async (
+  search: string = "",
+  cursor: string = "",
+  limit: number = LIMIT_ROOMS_PER_PAGE,
+) => {
+  try {
+    const res = await apiNestServer.get("/chatroom/private");
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const getPrivateMessages = async (chatroomId: number) => {
+  try {
+    const res = await apiNestServer.get(`/chatroom/messages/${chatroomId}`);
+    return res?.data;
+  } catch (error) {
+    return error;
+  }
+};
 
 export const getListChatRooms = async (
   search: string = "",

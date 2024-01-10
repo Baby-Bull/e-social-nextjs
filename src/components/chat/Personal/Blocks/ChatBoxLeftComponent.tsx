@@ -18,27 +18,21 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
 
-import PopupReportUser from "src/components/chat/Personal/Blocks/PopupReportUser";
+import PopupReportUser from "src/components/common/organisms/PopupReportUser";
 import InputCustom from "src/components/common/atom-component/InputCustom";
 import styles from "src/components/chat/chat.module.scss";
 import { formatChatDateRoom } from "src/helpers/helper";
 import theme from "src/theme";
 import useDebounce from "src/customHooks/UseDebounce";
 import useWindowSize from "src/customHooks/UseWindowSize";
+import { IChatBoxLeftProps, IThreadDropDownProps } from "src/constants/interfaces";
 
-import PopupReviewComponent from "./PopupReviewComponent";
+import PopupReviewComponent from "../../../common/organisms/PopupReviewComponent";
+
 import BlockNoDataComponent from "./NoDataComponent";
 
-interface IThreadDropDownProps {
-  open: boolean;
-  anchorEl: any;
-  handleClose: () => void;
-  redirectToProfile: () => void;
-  setShowPopupReport: any;
-  setShowPopupReview: any;
-}
-
 const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({
+  t,
   open,
   handleClose,
   anchorEl,
@@ -72,7 +66,7 @@ const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({
   >
     <MenuItem onClick={redirectToProfile}>
       <img src="/assets/images/svg/user_chat.svg" alt="image_to_profile" />
-      プロフィールを見る
+      {t("chat:box-left.user-profile")}
     </MenuItem>
     <MenuItem
       onClick={() => {
@@ -81,11 +75,11 @@ const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({
       }}
     >
       <img src="/assets/images/svg/review_chat.svg" alt="image_review" />
-      レビューを投稿
+      {t("chat:box-left.write-review")}
     </MenuItem>
     <MenuItem disabled onClick={handleClose}>
       <img src="/assets/images/svg/block_chat.svg" alt="image_block" />
-      ブロックする
+      {t("chat:box-left.block")}
     </MenuItem>
     <MenuItem
       onClick={() => {
@@ -94,7 +88,7 @@ const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({
       }}
     >
       <img src="/assets/images/svg/report_chat.svg" alt="image_report" />
-      運営に通報
+      {t("chat:box-left.report")}
     </MenuItem>
   </Menu>
 );
@@ -123,9 +117,8 @@ export const TabsCustom = styled(Tabs)(() => ({
   },
 }));
 
-const ChatBoxLeftComponent = ({
+const ChatBoxLeftComponent: React.FC<IChatBoxLeftProps> = ({
   listRooms,
-  userId,
   user,
   onSelectRoom,
   transferUserToLeftMobile,
@@ -133,6 +126,7 @@ const ChatBoxLeftComponent = ({
   hasMoreChatRoom,
   loadMoreChatRooms,
   isMobile,
+  roomId,
 }) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -159,7 +153,7 @@ const ChatBoxLeftComponent = ({
   };
 
   const redirectToProfile = () => {
-    router.push(`/profile/${userId}`, undefined, { shallow: true });
+    router.push(`/profile/${roomId}`, undefined, { shallow: true });
     handleClose();
   };
   const [showPopupReport, setShowPopupReport] = useState(false);
@@ -210,21 +204,21 @@ const ChatBoxLeftComponent = ({
                 <React.Fragment key={index}>
                   <li
                     onClick={() => {
-                      const newUrl = `/chat/personal?room=${thread?.user?.id}`;
+                      const newUrl = `/chat/personal?room=${thread?.id}`;
                       window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, "", newUrl);
                       onSelectRoom(index);
                     }}
                   >
-                    <div className={`thread-item ${thread?.user?.id === userId ? "active" : ""}`}>
+                    <div className={`thread-item ${thread?.id === roomId ? "active" : ""}`}>
                       <div className="avatar">
                         <Avatar
-                          alt={thread?.user?.username}
-                          src={thread?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+                          alt={thread?.title}
+                          src={thread?.user_infos?.[0]?.profile_image || "/assets/images/svg/avatar.svg"}
                           sx={{ width: "56px", height: "56px", mr: "13px" }}
                         />
                       </div>
                       <div className="thread-content">
-                        <Typography className="name">{thread?.user?.username}</Typography>
+                        <Typography className="name">{thread?.title}</Typography>
                         <Typography
                           className="message-hide"
                           sx={{
@@ -232,18 +226,17 @@ const ChatBoxLeftComponent = ({
                             fontWeight: thread?.unread_message_count > 0 ? "700!important" : "400",
                           }}
                         >
-                          {thread?.last_message_content_type === "text"
-                            ? thread?.last_chat_message_received
-                            : "添付ファイル"}
+                          {thread?.lastestMessageType === "text" ? thread?.lastestMessage : "添付ファイル"}
                         </Typography>
                       </div>
-                      <div className="thread-last-time">{formatChatDateRoom(thread?.last_chat_message_at)}</div>
+                      <div className="thread-last-time">{formatChatDateRoom(thread?.lastestMessageAt)}</div>
                       {!isMobile && (
                         <div className="more-options">
                           <IconButton onClick={handleClick} aria-label="more" aria-haspopup="true">
                             <img alt="more-options" src="/assets/images/chat/more_options.svg" />
                           </IconButton>
                           <ThreadDropdown
+                            t={t}
                             open={open}
                             handleClose={handleClose}
                             setShowPopupReport={setShowPopupReport}
@@ -269,6 +262,7 @@ const ChatBoxLeftComponent = ({
                         <img alt="more-options" src="/assets/images/chat/more_options.svg" />
                       </IconButton>
                       <ThreadDropdown
+                        t={t}
                         open={open}
                         handleClose={handleClose}
                         setShowPopupReport={setShowPopupReport}

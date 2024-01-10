@@ -29,7 +29,7 @@ const ContentComponent: React.SFC<IContentComponentProps> = ({
 }) => (
   <Box className={styles.contentLayout}>
     <Head>
-      <title>E-Social</title>
+      <title>Draw Land</title>
     </Head>
     {showHeader && !registerPage && <HeaderComponent authPage={authPage} />}
     {children}

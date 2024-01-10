@@ -10,7 +10,7 @@ import unionBy from "lodash/unionBy";
 
 import styles from "src/components/chat/chat.module.scss";
 import useViewport from "src/helpers/useViewport";
-import { getListChatRooms, getMessages } from "src/services/chat";
+import { getListChatRooms, getListPrivateChatRooms, getMessages } from "src/services/chat";
 import { sortListRoomChat } from "src/helpers/helper";
 import ChatBoxLeftComponent from "src/components/chat/Personal/Blocks/ChatBoxLeftComponent";
 import websocket from "src/helpers/socket";
@@ -19,12 +19,13 @@ import actionTypes from "src/store/actionTypes";
 import ChatBoxRightComponent from "./ChatBoxRightComponent";
 import ChatBoxRightNoDataComponent from "./ChatBoxRightNoDataComponent";
 import { getOrtherUserProfile, readMessagePersonal } from "src/services/user";
-import { IStoreState } from "src/constants/interfaces";
+import { IChatroom, IStoreState } from "src/constants/interfaces";
 import { REACT_QUERY_KEYS } from "src/constants";
+import socketIO from "src/helpers/socketIO";
 
 const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   const router = useRouter();
-  const { room: roomQuery } = router.query;
+  const { room: roomQuery, user_id } = router.query;
   // Responsive
   const viewPort = useViewport();
   const isMobile = viewPort.width <= 992;
@@ -34,9 +35,11 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   const hasMoreChatRooms = useSelector((state: IStoreState) => state.listrooms.hasMorePersonal);
   const ListRoomsStatic = useSelector((state: IStoreState) => state.listrooms);
 
-  const [userId, setUserId] = useState(roomQuery);
+  const [userId, setUserId] = useState<string | number>(user_id || listRoomsChatTemp?.[0]?.user_infos?.[0].id);
+  const [roomId, setRoomId] = useState<string>(Array.isArray(roomQuery) ? roomQuery[0] : roomQuery);
   const [user, setUser] = useState({});
-  const [roomSelect, setRoomSelect] = useState(null);
+  const [roomSelect, setRoomSelect] = useState<IChatroom>(null);
+  const auth = useSelector((state: IStoreState) => state.user);
 
   const [newMessageOfRoom, setNewMessageOfRoom] = useState(null);
 
@@ -49,10 +52,11 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   const { refetch: fetchChatrooms } = useQuery(
     [`${REACT_QUERY_KEYS.LIST_ROOMS}/personal`, searchChatRoom.search, searchChatRoom.cursor],
     async () => {
-      const personalChatRoomTemp = await getListChatRooms(searchChatRoom?.search, searchChatRoom?.cursor, 10);
+      // const personalChatRoomTemp = await getListChatRooms(searchChatRoom?.search, searchChatRoom?.cursor, 10);
+      const personalChatRoomTemp = await getListPrivateChatRooms(searchChatRoom?.search, searchChatRoom?.cursor, 10);
       const updatedList = searchChatRoom?.cursor
-        ? sortListRoomChat(unionBy(personalChatRoomTemp.items, listRoomsChatTemp, "id"))
-        : personalChatRoomTemp.items;
+        ? sortListRoomChat(unionBy(personalChatRoomTemp, listRoomsChatTemp, "id"))
+        : personalChatRoomTemp;
       dispatch({
         type: actionTypes.UPDATE_LIST_PERSONAL_CHAT_ROOMS,
         payload: {
@@ -77,18 +81,18 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
         // chatroom exists
         tempList[chatroomIndex] = {
           ...tempList[chatroomIndex],
-          last_chat_message_at: message.created_at,
-          last_chat_message_received: message.content,
-          last_message_content_type: message.content_type,
+          lastestMessageAt: message.created_at,
+          lastestMessage: message.content,
+          lastestMessageType: message.content_type,
         };
       } else {
         tempList = [
           {
             id: message.chat_room_id,
-            user: message?.user || {},
-            community: message?.community || {},
-            last_chat_message_at: message.created_at,
-            last_chat_message_received: message.content,
+            user_infos: message?.user || {},
+            // community: message?.community || {},
+            lastestMessageAt: message.created_at,
+            lastestMessage: message.content,
           },
           ...tempList,
         ];
@@ -101,7 +105,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
         },
       });
       if (roomSelect?.id === message.chat_room_id) {
-        await readMessagePersonal(roomSelect.user.id);
+        await readMessagePersonal(roomSelect.user_infos[0].id);
         dispatch({
           type: actionTypes.UPDATE_PERSONAL_CHATROOM_UNREAD_COUNT,
           payload: { chatRoomId: message.chat_room_id, count: 0 },
@@ -129,58 +133,67 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
         });
       }
     };
-    websocket.on("get.chatRoom.message", wsHandler);
-    websocket.on(`chatRoom.personal.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
+    socketIO.on('newMessage', () => { wsHandler })
+    // websocket.on("get.chatRoom.message", wsHandler);
+    // websocket.on(`chatRoom.personal.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
     return () => {
-      websocket.off("get.chatRoom.message", wsHandler);
-      websocket.off(`chatRoom.personal.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
+      socketIO.off('newMessage', () => { wsHandler })
+      // websocket.off("get.chatRoom.message", wsHandler);
+      // websocket.off(`chatRoom.personal.new_unread`, handleUpdatePersonalChatroomUnreadMessages);
     };
   }, [roomSelect?.id, updateLastMessageOfListRooms]);
 
   useLayoutEffect(() => {
-    const checkChatroomExistFn = async () => {
-      if (viewPort.width) {
-        let selectedRoom = roomSelect;
-        let tempUserResult: any, tempChatroomId: any;
-        const checkInListChatroom = listRoomsChatTemp?.findIndex((item: any) => item?.user?.id === userId);
-        if (checkInListChatroom > -1) {
-          selectedRoom = listRoomsChatTemp?.find(
-            (item: any) => item?.user?.id === userId
-          );
-        } else {
-          if (userId) {
-            tempUserResult = await getOrtherUserProfile(userId);
-            tempChatroomId = await getMessages(userId, "", 1)
+    const selectedRoom = listRoomsChatTemp?.find((item: IChatroom) => item?.id === roomQuery);
+    setUserId(selectedRoom?.user_infos?.[0]?.id);
+    setRoomSelect(selectedRoom);
+    setUser(selectedRoom?.user_infos?.[0]);
 
-            if (tempUserResult) {
-              selectedRoom = {
-                user: {
-                  id: tempUserResult?.id,
-                  username: tempUserResult?.username,
-                  profile_image: tempUserResult?.profile_image,
-                },
-                id: tempChatroomId?.chat_room_id
-              }
-            }
-          }
-        }
+    // const checkChatroomExistFn = async () => {
+    //   if (viewPort.width) {
+    //     let selectedRoom = roomSelect;
+    //     console.log(selectedRoom);
 
-        if (selectedRoom) {
-          //if (isMobile) setIsRenderRightSide(true);
-          setRoomSelect(selectedRoom);
-          setUserId(selectedRoom?.user?.id);
-          setUser(selectedRoom?.user);
-        }
-        //else if (!isMobile) {
-        else {
-          setRoomSelect(listRoomsChatTemp?.[0] || {});
-          setUserId(listRoomsChatTemp?.[0]?.user?.id);
-          setUser(listRoomsChatTemp?.[0]?.user);
-        }
-      }
-    }
-    checkChatroomExistFn();
-  }, [listRoomsChatTemp, viewPort, userId]);
+    //     let tempUserResult: any, tempChatroomId: any;
+    //     const checkInListChatroom = listRoomsChatTemp?.findIndex((item: IChatroom) => item?.user?.id === userId);
+    //     console.log(checkInListChatroom);
+
+    //     if (checkInListChatroom > -1) {
+    //       selectedRoom = listRoomsChatTemp?.find((item: IChatroom) => item?.user_infos?.[0]?.id === userId);
+    //     } else {
+    //       if (userId) {
+    //         tempUserResult = await getOrtherUserProfile(userId);
+    //         tempChatroomId = await getMessages(userId, "", 1)
+
+    //         if (tempUserResult) {
+    //           selectedRoom = {
+    //             user: {
+    //               id: tempUserResult?.id,
+    //               username: tempUserResult?.username,
+    //               profile_image: tempUserResult?.profile_image,
+    //             },
+    //             id: tempChatroomId?.chat_room_id
+    //           }
+    //         }
+    //       }
+    //     }
+
+    //     if (selectedRoom) {
+    //       //if (isMobile) setIsRenderRightSide(true);
+    //       setRoomSelect(selectedRoom);
+    //       // setUserId(selectedRoom?.user_infos?.[0]?.id);
+    //       // setUser(selectedRoom?.user_infos?.[0]);
+    //     }
+    //     //else if (!isMobile) {
+    //     else {
+    //       setRoomSelect(listRoomsChatTemp?.[0] || {});
+    //       // setUserId(listRoomsChatTemp?.[0]?.user_infos[0]?.id);
+    //       // setUser(listRoomsChatTemp?.[0]?.user_infos?.[0]);
+    //     }
+    //   }
+    // }
+    // checkChatroomExistFn();
+  }, [listRoomsChatTemp, viewPort, roomQuery]);
 
   useEffect(() => {
     fetchChatrooms();
@@ -193,20 +206,22 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
     }));
   };
 
-  const sendMessage = (message: string, type: string = "text", fileName: string = "", fileSize: any = "") => {
+  const sendMessage = async (message: string, type: string = "text", fileName: string = "", fileSize: any = "") => {
     if (message) {
       const payload = {
-        chatRoomId: roomSelect?.id,
+        chatroomId: roomSelect?.id || 1, //TO-DO: update roomId
         content: message,
-        content_type: type,
+        authUserId: auth.id,
+        contentType: type,
         meta: {
           filename: fileName,
           size: fileSize,
         },
       };
-      websocket.emit("chatRoom.message", payload);
+      await socketIO.emit('sendMessageFromClient', payload)
+      // websocket.emit("chatRoom.message", payload);
       updateLastMessageOfListRooms({
-        user: roomSelect?.user,
+        user: roomSelect?.user_infos,
         content: message,
         chat_room_id: roomSelect?.id,
         content_type: type,
@@ -219,29 +234,36 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
     }
   };
 
+
+  useEffect(() => {
+    console.log(roomId);
+  }, [roomId])
+
+
   const onSelectRoom = async (index: number) => {
     if (isMobile) setIsRenderRightSide(!isRenderRightSide);
-    if (listRoomsChatTemp?.[index]?.user?.id !== userId) {
+    if (listRoomsChatTemp?.[index]?.id !== roomId) {
+      setRoomId(listRoomsChatTemp?.[index]?.id)
       setRoomSelect(listRoomsChatTemp[index]);
-      setUserId(listRoomsChatTemp[index]?.user?.id);
-      setUser(listRoomsChatTemp[index]?.user);
+      // setUserId(listRoomsChatTemp[index]?.user?.id);
+      // setUser(listRoomsChatTemp[index]?.user);
     }
-    if (listRoomsChatTemp[index]?.unread_message_count > 0) {
-      await readMessagePersonal(listRoomsChatTemp[index].user.id);
-      dispatch({
-        type: actionTypes.UPDATE_PERSONAL_CHATROOM_UNREAD_COUNT,
-        payload: { chatRoomId: listRoomsChatTemp[index].id, count: 0 },
-      });
-      // dispatch({
-      //   type: actionTypes.UPDATE_UNREAD_LISTROOMS_COUNT,
-      //   payload: { count: ListRoomsStatic?.unread_count - 1 },
-      // });
-    }
+    // if (listRoomsChatTemp[index]?.unread_message_count > 0) {
+    //   await readMessagePersonal(listRoomsChatTemp[index].user_infos[0].id);
+    //   dispatch({
+    //     type: actionTypes.UPDATE_PERSONAL_CHATROOM_UNREAD_COUNT,
+    //     payload: { chatRoomId: listRoomsChatTemp[index].id, count: 0 },
+    //   });
+    //   // dispatch({
+    //   //   type: actionTypes.UPDATE_UNREAD_LISTROOMS_COUNT,
+    //   //   payload: { count: ListRoomsStatic?.unread_count - 1 },
+    //   // });
+    // }
   };
 
   const transferUserToLeftMobile = (index: number) => {
     if (listRoomsChatTemp[index]?.user?.id !== userId) {
-      setUserId(listRoomsChatTemp[index]?.user?.id);
+      // setUserId(listRoomsChatTemp[index]?.user?.id);
       setUser(listRoomsChatTemp[index]?.user);
     }
   };
@@ -253,7 +275,6 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
       {!isMobile || (isMobile && !isRenderRightSide) ? (
         <ChatBoxLeftComponent
           listRooms={listRoomsChatTemp}
-          userId={userId}
           user={user}
           onSelectRoom={onSelectRoom}
           transferUserToLeftMobile={transferUserToLeftMobile}
@@ -261,6 +282,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
           hasMoreChatRoom={hasMoreChatRooms}
           loadMoreChatRooms={loadMoreMessagePersonal}
           isMobile={isMobile}
+          roomId={roomId}
         />
       ) : null}
       {(!listRoomsChatTemp?.length && !isMobile) && <ChatBoxRightNoDataComponent />}
@@ -269,6 +291,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
         <ChatBoxRightComponent
           isMobile={isMobile}
           toggleRenderSide={toggleRenderSide}
+          roomId={roomId}
           userId={userId}
           user={user}
           roomSelect={roomSelect}

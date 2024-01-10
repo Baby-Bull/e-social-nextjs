@@ -33,3 +33,27 @@ export interface ChatMessage {
     size: number;
   };
 }
+
+export interface IMessage {
+  id: string | number;
+  chatroomId: string | number;
+  content: string;
+  createdAt: string;
+  senderId: string | number;
+  typeMessage: string;
+  updateAt: string;
+  user: any; // import user type
+}
+
+export interface IChatroom {
+  id: string;
+  createdAt?: string;
+  lastestMessage: string;
+  lastestMessageAt: string;
+  lastestMessageType?: string;
+  members?: Array<number>;
+  profileImage?: string;
+  title?: string;
+  updateAt?: string;
+  user_infos: UserBasic[];
+}

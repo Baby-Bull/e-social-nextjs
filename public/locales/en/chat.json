@@ -1,0 +1,68 @@
+{
+  "box-left-title": "Personal message",
+  "box-left-input-search-placeholder": "Find an account",
+  "box-left": {
+    "user-profile": "User profile",
+    "write-review": "Write review",
+    "block": "Block",
+    "report": "Report"
+  },
+  "box-right-no-data": "Let's send a \n matching request to someone you care about!",
+  "box-right-no-data-mobile": "Let's send \n matching requests to people you care about!",
+  "box-right-button-find": "Find an engineer",
+  "input-chat-placeholder": "Enter message",
+  "box-right-button-find-community": "Find a community",
+  "purpose-firstMessage": "Purpose",
+  "date-firstMessage": "Hope day",
+  "content-firstMessage": "Message",
+  "btn-report": "report",
+  "btn-review": "Do a review",
+  "btn-review-sp": "review",
+  "span-error-message": "message could not be sent",
+  "btn-resend": "resend",
+  "btn-delete": "Delete",
+  "community-box-left-title": "group chat",
+  "community-box-left-input-search-placeholder": "Search for group chats",
+  "community-no-messages-start-chat": "Let's talk!",
+  "popup": {
+    "reason-for-reporting": "reporting reason",
+    "required": "required",
+    "background-to-the-report": "How we got to the call",
+    "text-confirm-report": "Press the report button to send a notification to the operation. Do you really want to report?",
+    "send-report": "really reporting",
+    "cancel": "cancel",
+    "thanks-report1": "Thank you for your help with the call.",
+    "thanks-report2": "We will strive to improve the operation of all services.",
+    "Home": "To the Home",
+    "evaluation": "evaluation",
+    "report": "report",
+    "anonymous": "anonymous",
+    "comment": "comments",
+    "check-review": "Check reviews",
+    "post-review": "post review",
+    "review": "Review to",
+    "report_user": "Report the operation",
+    "to-fix": "to fix",
+    "twitter": "Tweet",
+    "text-thanks-review": "Thank you for your review post!",
+    "text-share-review": "Share your review on Twitter!",
+    "form": {
+      "placeholder": {
+        "reason-for-reporting": "Please select",
+        "background-to-the-report": "Please provide a reason for reporting in detail.",
+        "comment": "Please fill in no more than 400 characters."
+      },
+      "it-was-good": "good",
+      "it-was-bad": "bad",
+      "report-management": "informing operations",
+      "post-onymously": "Post anonymously",
+      "report-management-null": "not reporting",
+      "post-onymously-null": "Do not use"
+    },
+    "message-popup": {
+      "edit-message": "Edit message",
+      "delete-message": "Delete message"
+    },
+    "today": "Today"
+  }
+}

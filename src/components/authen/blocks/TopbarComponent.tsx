@@ -10,7 +10,7 @@ const TopbarComponent = () => (
         <Box className={styles.logoSection}>
           <Link href="/">
             <a>
-              <Box className={styles.logoImg} component="img" alt="avatar" src="/assets/images/logo/logo.png" />
+              <Box className={styles.logoImg} component="img" alt="avatar" src="/assets/images/brand.png" />
             </a>
           </Link>
         </Box>

@@ -12,7 +12,7 @@ import styles from "src/components/searchUser/search_user.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import ModalMatchingComponent from "src/components/common/organisms/ModalMatchingComponent";
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
-import { addUserFavorite, deleteUserFavorite } from "src/services/user";
+import { addUserFavorite, removeUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
 import { IStoreState, IUserCardInformation } from "src/constants/interfaces";
 import {
@@ -79,7 +79,7 @@ const UserCardComponent: React.SFC<{ data: IUserCardInformation }> = ({ data }) 
   };
 
   const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
-    if (isFavorite) deleteUserFavorite(tempData);
+    if (isFavorite) removeUserFavorite(tempData);
     else addUserFavorite(tempData);
   };
 

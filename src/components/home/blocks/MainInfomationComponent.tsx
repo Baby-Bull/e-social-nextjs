@@ -88,8 +88,8 @@ const MainInfomationComponent = () => {
           <Box className={styles.infoTitle}>{auth.username}</Box>
           <Avatar className={styles["avatar-section"]}>
             <Image
-              loader={() => auth?.profile_image}
-              src={auth?.profile_image || "/assets/images/avatar_user.png"}
+              loader={() => auth?.profileImage}
+              src={auth?.profileImage || "/assets/images/avatar_user.png"}
               alt="Image"
               width={106}
               height={106}

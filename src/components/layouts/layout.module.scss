@@ -3,7 +3,7 @@
   min-height: 100vh;
   flex-direction: column;
   justify-content: space-between;
-  background-color: "#F4FDFF";
+  background-color: #e1ffe6;
   color: #1A2944;
 }
 
@@ -20,7 +20,7 @@
       width: 1440px;
       margin: auto;
 
-      @media screen and (max-width: 500px) {
+      @media screen and (max-width: 1000px) {
         width: 100%;
       }
 
@@ -32,7 +32,7 @@
           width: 141px;
           height: 42px;
 
-          @media screen and (max-width: 520px) {
+          @media screen and (max-width: 809px) {
             width: 70px;
             height: 20px;
           }
@@ -291,7 +291,7 @@
 }
 
 .footerComp {
-  background-color: #1A2944;
+  background-color: #575289;
 
   .footer-container {
     display: flex;

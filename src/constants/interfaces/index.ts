@@ -11,3 +11,5 @@ export * from "./models/User";
 
 export * from "./pages/HomePage";
 export * from "./pages/Profile";
+export * from "./pages/ChattingPage";
+export * from "./pages/SearchPage";

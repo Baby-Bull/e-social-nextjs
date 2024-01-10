@@ -1,5 +1,7 @@
 /* eslint-disable no-param-reassign */
 
+import { IMessage } from "src/constants/interfaces";
+
 export const sortListRoomChat = (listRooms: any) => {
   const listRoomSort = listRooms?.filter((item: any) => item.last_chat_message_at);
   const listRoomNoSort = listRooms?.filter((item: any) => !item.last_chat_message_at);
@@ -47,16 +49,18 @@ export const formatDateToText = (date: string) => {
   return `${newDate.getFullYear()}/${newDate.getMonth() + 1}/${newDate.getDate()}`;
 };
 
-export const formatListMessages = (messages: any) => {
+export const formatListMessages = (messages: IMessage[]) => {
   let preViousDate = null;
-  return messages.reduce((prev: any, item: any) => {
-    const itemDate = new Date(item.created_at);
+  return messages.reduce((prev: any, item: IMessage) => {
+    const itemDate = new Date(item.createdAt);
     if (!preViousDate || !equalsYearMonthDate(preViousDate, itemDate)) {
-      prev[formatDateToText(item.created_at)] = [item];
+      prev[formatDateToText(item.createdAt)] = [item];
     } else {
-      prev[formatDateToText(item.created_at)] = [...prev[formatDateToText(item.created_at)], item];
+      prev[formatDateToText(item.createdAt)] = [...prev[formatDateToText(item.createdAt)], item];
     }
     preViousDate = itemDate;
+    console.log(prev);
+
     return prev;
   }, {});
 };

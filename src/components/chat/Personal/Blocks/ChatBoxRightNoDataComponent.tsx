@@ -25,14 +25,9 @@ const ChatBoxRightNoDataComponent = () => {
           </Link>
         </Box>
         <Box className="box-chat">
-          <Paper
-            component="form"
-            className="paper-chat"
-            sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: "100%" }}
-          >
+          <Paper component="form" className="paper-chat">
             <InputCustom
               className="input-chat"
-              sx={{ ml: 1, flex: 1 }}
               placeholder={t("chat:input-chat-placeholder")}
               inputProps={{ "aria-label": t("chat:input-chat-placeholder") }}
             />

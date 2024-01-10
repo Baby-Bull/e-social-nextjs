@@ -5,6 +5,11 @@ export const USER_STATUS = {
   offline: "offline",
 };
 
+export const SORT_ORDER_SEARCH = {
+  FAVORITE_COUNT: "favorite_count",
+  NEWEST: "newest",
+};
+
 export const typeMatchingStatus = {
   REJECTED: "rejected",
   SENT_PENDING: "sent_pending",

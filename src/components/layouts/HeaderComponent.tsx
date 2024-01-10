@@ -457,7 +457,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
                   className={styles["header-logo--img"]}
                   component="img"
                   alt="avatar"
-                  src="/assets/images/logo/logo.png"
+                  src="/assets/images/brand.png"
                 />
               </a>
             </Link>

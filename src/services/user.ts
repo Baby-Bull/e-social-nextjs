@@ -68,10 +68,21 @@ export const getUserNewMembers = async (take: number, page: number = 1) => {
   }
 };
 
-export const getUserRecentlyLogin = async (limit: number, cursor: string = "") => {
+export const getUserRecentlyLogin = async (take: number, page: number = 1) => {
   try {
-    const res = await api.get(`/user/logged-in?limit=${limit}&cursor=${cursor}`);
-    return res?.data;
+    const res = await apiNestServer.get(`/users/recent-login?take=${take}&page=${page}`);
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const searchUser = async (bodyParams: object, take: number, page: number = 1) => {
+  try {
+    console.log(bodyParams);
+
+    const res = await apiNestServer.get(`users/search?take=${take}&page=${page}`, bodyParams);
+    return res;
   } catch (error) {
     return error;
   }
@@ -86,10 +97,10 @@ export const addUserFavorite = async (userId: string) => {
   }
 };
 
-export const deleteUserFavorite = async (userId: string) => {
+export const removeUserFavorite = async (userId: number) => {
   try {
-    const res = await api.delete(`/user/favorite/${userId}`);
-    return res.data;
+    const res = await apiNestServer.delete(`user/favorite/${userId}`);
+    return res?.data;
   } catch (error) {
     return error;
   }
@@ -157,90 +168,90 @@ export const userSettingNotification = async (body: any) => {
   }
 };
 
-// @ts-ignore
-export const UserSearch = async (
-  params?: any,
-  inputTags?: any,
-  fullText?: string | string[],
-  isSort?: string,
-  limit?: number,
-  cursor: string = "",
-) => {
-  let query = `/user/search?limit=${limit}&cursor=${cursor}`;
-  // Query full text
-  query += fullText ? `&fulltext=${fullText}` : "";
-  // Query job
-  query += params?.job ? `&job=${params?.job}` : "";
-  // Query employment status
+// // @ts-ignore
+// export const UserSearch = async (
+//   params?: any,
+//   inputTags?: any,
+//   fullText?: string | string[],
+//   isSort?: string,
+//   limit?: number,
+//   cursor: string = "",
+// ) => {
+//   let query = `/user/search?limit=${limit}&cursor=${cursor}`;
+//   // Query full text
+//   query += fullText ? `&fulltext=${fullText}` : "";
+//   // Query job
+//   query += params?.job ? `&job=${params?.job}` : "";
+//   // Query employment status
 
-  query += params?.employeeStatus ? `&employment_status=${params?.employeeStatus}` : "";
-  // Query status
-  query += params?.statusCanTalk ? `&status[]=can-talk` : "";
-  query += params?.statusLookingForFriend ? `&status[]=looking-for-friend` : "";
-  query += params?.statusNeedConsult ? `&status[]=need-consult` : "";
+//   query += params?.employeeStatus ? `&employment_status=${params?.employeeStatus}` : "";
+//   // Query status
+//   query += params?.statusCanTalk ? `&status[]=can-talk` : "";
+//   query += params?.statusLookingForFriend ? `&status[]=looking-for-friend` : "";
+//   query += params?.statusNeedConsult ? `&status[]=need-consult` : "";
 
-  // Query last login
-  query += params?.lastLogin === typeTimeLogin.login ? `&is_online=true` : "";
+//   // Query last login
+//   query += params?.lastLogin === typeTimeLogin.login ? `&is_online=true` : "";
 
-  query +=
-    params?.lastLogin === typeTimeLogin.one_hour
-      ? `&last_login[]=${dayjs().subtract(1, "hours").toISOString()}&last_login[]=${dayjs().toISOString()}`
-      : "";
+//   query +=
+//     params?.lastLogin === typeTimeLogin.one_hour
+//       ? `&last_login[]=${dayjs().subtract(1, "hours").toISOString()}&last_login[]=${dayjs().toISOString()}`
+//       : "";
 
-  query +=
-    params?.lastLogin === typeTimeLogin.one_day
-      ? `&last_login[]=${dayjs().subtract(1, "days").toISOString()}&last_login[]=${dayjs().toISOString()}`
-      : "";
+//   query +=
+//     params?.lastLogin === typeTimeLogin.one_day
+//       ? `&last_login[]=${dayjs().subtract(1, "days").toISOString()}&last_login[]=${dayjs().toISOString()}`
+//       : "";
 
-  query +=
-    params?.lastLogin === typeTimeLogin.on_day_to_week
-      ? `&last_login[]=${dayjs().subtract(1, "weeks").toISOString()}&last_login[]=${dayjs()
-          .subtract(1, "days")
-          .toISOString()}`
-      : "";
+//   query +=
+//     params?.lastLogin === typeTimeLogin.on_day_to_week
+//       ? `&last_login[]=${dayjs().subtract(1, "weeks").toISOString()}&last_login[]=${dayjs()
+//           .subtract(1, "days")
+//           .toISOString()}`
+//       : "";
 
-  query +=
-    params?.lastLogin === typeTimeLogin.week_to_two_week
-      ? `&last_login[]=${dayjs().subtract(2, "weeks").toISOString()}&last_login[]=${dayjs()
-          .subtract(1, "weeks")
-          .toISOString()}`
-      : "";
+//   query +=
+//     params?.lastLogin === typeTimeLogin.week_to_two_week
+//       ? `&last_login[]=${dayjs().subtract(2, "weeks").toISOString()}&last_login[]=${dayjs()
+//           .subtract(1, "weeks")
+//           .toISOString()}`
+//       : "";
 
-  query +=
-    params?.lastLogin === typeTimeLogin.two_week_to_month
-      ? `&last_login[]=${dayjs().subtract(1, "months").toISOString()}&last_login[]=${dayjs()
-          .subtract(2, "weeks")
-          .toISOString()}`
-      : "";
+//   query +=
+//     params?.lastLogin === typeTimeLogin.two_week_to_month
+//       ? `&last_login[]=${dayjs().subtract(1, "months").toISOString()}&last_login[]=${dayjs()
+//           .subtract(2, "weeks")
+//           .toISOString()}`
+//       : "";
 
-  query +=
-    params?.lastLogin === typeTimeLogin.month_or_than
-      ? `&last_login[]=&last_login[]=${dayjs().subtract(1, "months").toISOString()}`
-      : "";
-  // Query count review
-  query += params?.review === typeReview.no_0 ? `&review_count[]=1&review_count[]=` : "";
-  query += params?.review === typeReview.less_than_10 ? `&review_count[]=0&review_count[]=10` : "";
-  query += params?.review === typeReview.from_11_to_50 ? `&review_count[]=11&review_count[]=50` : "";
-  query += params?.review === typeReview.from_51_to_100 ? `&review_count[]=51&review_count[]=100` : "";
-  query += params?.review === typeReview.more_than_100 ? `&review_count[]=101&review_count[]=` : "";
-  // Sort
-  query += isSort ? `&sort_order=${isSort}` : "";
-  // query input tag
-  for (let i = 0; i < inputTags.length; i++) {
-    query += `&tags[]=${inputTags[i]}`;
-  }
+//   query +=
+//     params?.lastLogin === typeTimeLogin.month_or_than
+//       ? `&last_login[]=&last_login[]=${dayjs().subtract(1, "months").toISOString()}`
+//       : "";
+//   // Query count review
+//   query += params?.review === typeReview.no_0 ? `&review_count[]=1&review_count[]=` : "";
+//   query += params?.review === typeReview.less_than_10 ? `&review_count[]=0&review_count[]=10` : "";
+//   query += params?.review === typeReview.from_11_to_50 ? `&review_count[]=11&review_count[]=50` : "";
+//   query += params?.review === typeReview.from_51_to_100 ? `&review_count[]=51&review_count[]=100` : "";
+//   query += params?.review === typeReview.more_than_100 ? `&review_count[]=101&review_count[]=` : "";
+//   // Sort
+//   query += isSort ? `&sort_order=${isSort}` : "";
+//   // query input tag
+//   for (let i = 0; i < inputTags.length; i++) {
+//     query += `&tags[]=${inputTags[i]}`;
+//   }
 
-  try {
-    const res = await api.get(query);
-    if (!res.data) {
-      toast.error(SERVER_ERROR);
-    }
-    return res.data;
-  } catch (error) {
-    toast.error(SERVER_ERROR);
-    return error;
-  }
-};
+//   try {
+//     const res = await api.get(query);
+//     if (!res.data) {
+//       toast.error(SERVER_ERROR);
+//     }
+//     return res.data;
+//   } catch (error) {
+//     toast.error(SERVER_ERROR);
+//     return error;
+//   }
+// };
 
 export const getOrtherUserProfile = async (userId: string | string[]) => {
   try {
