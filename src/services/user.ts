@@ -14,8 +14,9 @@ import {
   UPDATE_PROFILE,
   EMAIL_EXISTS,
 } from "src/messages/notification";
-import { typeTimeLogin, typeReview } from "src/constants";
+import { typeTimeLogin, typeReview, SearchFormStatus } from "src/constants";
 import { apiNestServer } from "src/utils/API-infra.util";
+import { IFormUserSearch, ISearchUserComponent } from "src/constants/interfaces";
 
 import { setIsProfileEdited, setIsRenewal } from "../helpers/storage";
 
@@ -77,11 +78,18 @@ export const getUserRecentlyLogin = async (take: number, page: number = 1) => {
   }
 };
 
-export const searchUser = async (bodyParams: object, take: number, page: number = 1) => {
+export const searchUser = async (bodyParams: IFormUserSearch, take: number, page: number = 1) => {
   try {
+    let query = ``;
     console.log(bodyParams);
+    console.log(!bodyParams?.fullText);
+    if (bodyParams?.fullText) query.concat(`&fullText=${bodyParams?.fullText}`);
+    if (bodyParams?.searchJob) query.concat(`&searchJob=${bodyParams?.searchJob}`);
+    if (bodyParams?.searchStatus) query.concat(`&searchStatus=${bodyParams?.searchStatus}`);
+    // if (bodyParams?.fullText) query.concat(`&fullText=${bodyParams?.fullText}`);
+    console.log(query);
 
-    const res = await apiNestServer.get(`users/search?take=${take}&page=${page}`, bodyParams);
+    const res = await apiNestServer.get(`users/search?take=${take}&page=${page}${query}`);
     return res;
   } catch (error) {
     return error;

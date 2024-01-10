@@ -28,7 +28,7 @@ export interface IResultSearchUser {
 
   // limit: number;
   // cursor: string;
-  // items: any[];
+  items: any[];
   // sort: string;
   // hasMore: boolean;
 }

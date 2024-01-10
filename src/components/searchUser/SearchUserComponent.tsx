@@ -102,7 +102,7 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
   const LIMIT = 9;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const fullText = router.query?.fulltext;
-  const { items: users, page, hasMore, sort } = result;
+  const { items: users, page, hasNextPage } = result;
 
   const [showPopupSearchUser, setShowPopupSearchUser] = useState<boolean>(false);
   const [valueInput, setValueInput] = useState<any>(null);
@@ -112,8 +112,6 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
   const fetchData = async (typeSort: string = "", arrayResult: Array<any> = [], page = 1, fullText: string = null) => {
     setIsLoading(true);
     const searchForm = { ...form, orderBy: typeSort, fullText };
-    console.log(searchForm);
-
     const res = await searchUser(searchForm, LIMIT, page);
     const items = arrayResult.concat(res?.data);
     setIsLoading(false);
@@ -123,7 +121,6 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
       items,
       page: res?.meta?.page,
       hasMore: res?.meta?.hasNextPage,
-      sort: typeSort,
     });
   };
 
@@ -163,8 +160,8 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
     setTriggerTheFirstFetching(false);
     if (routerQuerySort) {
       fetchDataWithOptionFromHomepage(users, page);
-    } else if (triggerTheFirstFetching) fetchData(sort, users, 1);
-    else fetchData(sort, users, page);
+    } else if (triggerTheFirstFetching) fetchData(form.orderBy, users, 1);
+    else fetchData(form.orderBy, users, page);
   };
 
   const handleSort = async (typeSort: string) => {
@@ -179,7 +176,7 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
   const onKeyPress = (e: any) => {
     if (valueInput?.length <= 20) {
       if (e.key === "Enter" && e.target.value) {
-        fetchData(sort, [], 1, e.target.value);
+        fetchData(form.orderBy, [], 1, e.target.value);
         updateForm({ fullText: e.target.value });
         // (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
       }
@@ -201,8 +198,7 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
     updateResult({
       items: res?.items,
       page: res?.meta?.page,
-      hasMore: res?.hasMore,
-      sort: SORT_ORDER_SEARCH.NEWEST,
+      hasNextPage: res?.hasMore,
     });
     setIsLoading(false);
   };
@@ -224,7 +220,7 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
         clearFormSearch();
       }
       if (formStatus === SearchFormStatus.Init) {
-        fetchData(sort, [], 1);
+        fetchData(form.orderBy, [], 1);
       }
     }
   }, [fullText, routerQuerySort]);
@@ -389,7 +385,7 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
               {t("user-search:btn-search-SP")}
             </Button>
           ) : (
-            <Button className="btn-user-search btn-search" fullWidth onClick={() => fetchData(sort, [], 1)}>
+            <Button className="btn-user-search btn-search" fullWidth onClick={() => fetchData(form.orderBy, [], 1)}>
               {t("user-search:btn-search")}
             </Button>
           )}
@@ -415,15 +411,15 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
                   <Divider orientation="vertical" flexItem />
                   <Box
                     onClick={() =>
-                      sort !== SORT_ORDER_SEARCH.FAVORITE_COUNT && handleSort(SORT_ORDER_SEARCH.FAVORITE_COUNT)
+                      form.orderBy !== SORT_ORDER_SEARCH.FAVORITE_COUNT && handleSort(SORT_ORDER_SEARCH.FAVORITE_COUNT)
                     }
-                    className={sort === SORT_ORDER_SEARCH.FAVORITE_COUNT ? "sort-link" : "sort-link active"}
+                    className={form.orderBy === SORT_ORDER_SEARCH.FAVORITE_COUNT ? "sort-link" : "sort-link active"}
                   >
                     {t("user-search:recommend-order")}
                   </Box>
                   <Box
-                    onClick={() => sort !== SORT_ORDER_SEARCH.NEWEST && handleSort(SORT_ORDER_SEARCH.NEWEST)}
-                    className={sort === SORT_ORDER_SEARCH.NEWEST ? "sort-link" : "sort-link active"}
+                    onClick={() => form.orderBy !== SORT_ORDER_SEARCH.NEWEST && handleSort(SORT_ORDER_SEARCH.NEWEST)}
+                    className={form.orderBy === SORT_ORDER_SEARCH.NEWEST ? "sort-link" : "sort-link active"}
                   >
                     {t("user-search:last-register-order")}
                   </Box>
@@ -435,15 +431,15 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
                 <Grid item xs={12} className="sort-by-block-sp">
                   <Link
                     onClick={() =>
-                      sort !== SORT_ORDER_SEARCH.FAVORITE_COUNT && handleSort(SORT_ORDER_SEARCH.FAVORITE_COUNT)
+                      form.orderBy !== SORT_ORDER_SEARCH.FAVORITE_COUNT && handleSort(SORT_ORDER_SEARCH.FAVORITE_COUNT)
                     }
-                    className={sort === SORT_ORDER_SEARCH.FAVORITE_COUNT ? "sort-link" : "sort-link active"}
+                    className={form.orderBy === SORT_ORDER_SEARCH.FAVORITE_COUNT ? "sort-link" : "sort-link active"}
                   >
                     {t("user-search:recommend-order")}
                   </Link>
                   <Link
-                    onClick={() => sort !== SORT_ORDER_SEARCH.NEWEST && handleSort(SORT_ORDER_SEARCH.NEWEST)}
-                    className={sort === SORT_ORDER_SEARCH.NEWEST ? "sort-link" : "sort-link active"}
+                    onClick={() => form.orderBy !== SORT_ORDER_SEARCH.NEWEST && handleSort(SORT_ORDER_SEARCH.NEWEST)}
+                    className={form.orderBy === SORT_ORDER_SEARCH.NEWEST ? "sort-link" : "sort-link active"}
                   >
                     {t("user-search:last-register-order")}
                   </Link>
@@ -463,7 +459,7 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
                 </Grid>
               ))}
             </Grid>
-            {hasMore ? (
+            {hasNextPage ? (
               <Box sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
                 <Button onClick={handleClickHasMore} sx={{ color: "rgb(3, 188, 219)" }}>
                   {t("common:showMore")}
@@ -474,7 +470,7 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
         </Box>
       </Box>
       <PopupSearchUser
-        isSort={sort}
+        isSort={form.orderBy}
         inputTags={form?.searchTags}
         formSearch={form}
         showPopup={showPopupSearchUser}
