@@ -13,7 +13,7 @@ import { useMutation } from "react-query";
 import { useDispatch } from "react-redux";
 
 import styles from "src/components/home/home.module.scss";
-import { addUserFavorite, deleteUserFavorite } from "src/services/user";
+import { addUserFavorite, removeUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
 import UserTag from "src/components/profile/UserTagComponent";
 import { IItemRecommendUserHomepage, ISlideRecommendUsersHomepage } from "src/constants/interfaces";
@@ -63,6 +63,8 @@ const RecommendItem: React.SFC<IItemRecommendUserHomepage> = ({
   handleAcceptMatchingRequestReceived,
   indexKey,
 }) => {
+  console.log(data);
+
   const { t } = useTranslation();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -94,7 +96,7 @@ const RecommendItem: React.SFC<IItemRecommendUserHomepage> = ({
   const mutation = useMutation({
     mutationFn: async ({ isFavorite, userId }: any) => {
       if (isFavorite) {
-        await deleteUserFavorite(userId);
+        await removeUserFavorite(userId);
         setLikeCount((value) => value - 1);
         dispatch({ type: actionTypes.REMOVE_FAVORITE });
       } else {
@@ -150,13 +152,13 @@ const RecommendItem: React.SFC<IItemRecommendUserHomepage> = ({
                 <Avatar className={styles["avatarUser-frame"]}>
                   <Image
                     loader={() =>
-                      data?.profile_image ??
+                      data?.profileImage ??
                       "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
                     }
                     width={56}
                     height={56}
                     src={
-                      data?.profile_image ??
+                      data?.profileImage ??
                       "https://www.kindpng.com/picc/m/22-223863_no-avatar-png-circle-transparent-png.png"
                     }
                     alt={data?.username}

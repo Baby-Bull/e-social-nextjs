@@ -1,6 +1,7 @@
 import { SearchFormStatus } from "src/constants";
 
 import { IChatroom } from "../models/ChatMessage";
+import { IFormUserSearch, IResultSearchUser } from "../pages/SearchPage";
 
 export interface IStoreState {
   user: any;
@@ -17,23 +18,8 @@ export interface IStoreState {
   search_users: {
     scrollPosition: number;
     formStatus: SearchFormStatus;
-    form: {
-      job: string | number;
-      employeeStatus: string | number;
-      lastLogin: number;
-      review: number;
-      statusCanTalk: boolean;
-      statusLookingForFriend: boolean;
-      statusNeedConsult: boolean;
-      tags: string[];
-    };
-    result: {
-      limit: number;
-      cursor: string;
-      items: any[];
-      sort: string;
-      hasMore: boolean;
-    };
+    form: IFormUserSearch;
+    result: IResultSearchUser;
   };
   search_community: any;
   is_profile_edited: boolean;

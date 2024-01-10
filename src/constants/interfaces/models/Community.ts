@@ -1,7 +1,7 @@
 export interface CommunityBasic {
   id: string;
   name: string;
-  profile_image: string;
+  profileImage: string;
   member_count: number;
 }
 

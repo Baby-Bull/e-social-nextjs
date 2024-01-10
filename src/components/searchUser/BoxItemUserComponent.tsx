@@ -12,7 +12,7 @@ import styles from "src/components/searchUser/search_user.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
 import ModalMatchingComponent from "src/components/common/organisms/ModalMatchingComponent";
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
-import { addUserFavorite, deleteUserFavorite } from "src/services/user";
+import { addUserFavorite, removeUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
 import { IStoreState } from "src/constants/interfaces";
 import {
@@ -102,7 +102,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
   };
 
   const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
-    if (isFavorite) deleteUserFavorite(tempData);
+    if (isFavorite) removeUserFavorite(tempData);
     else addUserFavorite(tempData);
   };
 
@@ -139,9 +139,9 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
                 {data?.activity_status === USER_STATUS.online
                   ? t("home:box-member-recommend.no-login")
                   : replaceLabelByTranslate(
-                      t("home:box-member-recommend.last-login"),
-                      dayjs(data?.last_login_at).fromNow(),
-                    )}
+                    t("home:box-member-recommend.last-login"),
+                    dayjs(data?.last_login_at).fromNow(),
+                  )}
               </span>
             </div>
 

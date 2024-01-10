@@ -37,6 +37,7 @@ const RecommendCommunityItem: React.SFC<{ data: IRecommendCommunityItemHomepage 
   //   }
   //   return res;
   // };
+  console.log(data);
 
   return (
     <Grid item xs={12} className={classNames(styles.boxRecommend, "box-recommend-community")} style={{ padding: 0 }}>
@@ -62,10 +63,10 @@ const RecommendCommunityItem: React.SFC<{ data: IRecommendCommunityItemHomepage 
           >
             <Image
               loader={() =>
-                data?.profile_image || "https://fujifilm-x.com/wp-content/uploads/2021/01/gfx100s_sample_04_thum-1.jpg"
+                data?.profileImage || "https://fujifilm-x.com/wp-content/uploads/2021/01/gfx100s_sample_04_thum-1.jpg"
               }
               src={
-                data?.profile_image || "https://fujifilm-x.com/wp-content/uploads/2021/01/gfx100s_sample_04_thum-1.jpg"
+                data?.profileImage || "https://fujifilm-x.com/wp-content/uploads/2021/01/gfx100s_sample_04_thum-1.jpg"
               }
               alt={data?.name}
               width={360}
