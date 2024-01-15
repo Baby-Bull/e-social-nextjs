@@ -80,15 +80,10 @@ export const getUserRecentlyLogin = async (take: number, page: number = 1) => {
 
 export const searchUser = async (bodyParams: IFormUserSearch, take: number, page: number = 1) => {
   try {
-    let query = ``;
-    console.log(bodyParams);
-    console.log(!bodyParams?.fullText);
-    if (bodyParams?.fullText) query.concat(`&fullText=${bodyParams?.fullText}`);
-    if (bodyParams?.searchJob) query.concat(`&searchJob=${bodyParams?.searchJob}`);
-    if (bodyParams?.searchStatus) query.concat(`&searchStatus=${bodyParams?.searchStatus}`);
-    // if (bodyParams?.fullText) query.concat(`&fullText=${bodyParams?.fullText}`);
-    console.log(query);
-
+    let query = "";
+    if (bodyParams?.fullText) query += `&fullText=${bodyParams?.fullText}`;
+    if (bodyParams?.searchJob) query += `&searchJob=${bodyParams?.searchJob}`;
+    if (bodyParams?.searchStatus) query += `&searchStatus=${bodyParams?.searchStatus}`;
     const res = await apiNestServer.get(`users/search?take=${take}&page=${page}${query}`);
     return res;
   } catch (error) {

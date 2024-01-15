@@ -131,7 +131,7 @@ const UserCardComponent: React.SFC<{ data: IUserCardInformation }> = ({ data }) 
               <div className="member-info">
                 <p className="name">{data?.username}</p>
                 {/* <p className="career">{JOBS[data?.job_position]?.label}</p> */}
-                <p className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? "情報なし"}</p>
+                <p className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? t("common:no_info")}</p>
                 <p className="review">
                   {t("home:box-member-recommend.review")}: {data?.review_count}
                 </p>
@@ -139,7 +139,7 @@ const UserCardComponent: React.SFC<{ data: IUserCardInformation }> = ({ data }) 
             </div>
 
             <div onClick={handleClickToProfile} className="introduce">
-              {data?.hitokoto ? data?.hitokoto : "情報なし"}
+              {data?.hitokoto ? data?.hitokoto : t("common:no_info")}
             </div>
 
             <div className="tags" onClick={data?.tags?.length ? null : handleClickToProfile}>
@@ -152,7 +152,7 @@ const UserCardComponent: React.SFC<{ data: IUserCardInformation }> = ({ data }) 
               </p>
 
               <p className="description">
-                {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
+                {data?.discussion_topic ?? t("home:box-member-recommend.content-description")}
               </p>
             </div>
           </Box>

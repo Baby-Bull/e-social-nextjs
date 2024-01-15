@@ -217,8 +217,7 @@ const ProfileSkillComponent: React.SFC<ProfileSkillComponentProps> = ({
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:discussion-topic")}</TitleContentTab>
                   <ContentTab>
-                    {profileIntroduceYourself ??
-                      "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
+                    {profileIntroduceYourself ?? t("home:box-member-recommend.content-description")}
                   </ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>

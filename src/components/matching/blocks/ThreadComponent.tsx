@@ -311,7 +311,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                       color: "black",
                     }}
                   >
-                    {(type === "favorite" || type === "matched" ? data?.username : data?.user?.username) ?? "情報なし"}
+                    {(type === "favorite" || type === "matched" ? data?.username : data?.user?.username) ??
+                      t("common:no_info")}
                   </a>
                 </Link>
                 <Typography
@@ -324,7 +325,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 >
                   {(type === "favorite" || type === "matched"
                     ? JOBS.find((item) => item?.value === data?.job)?.label
-                    : JOBS.find((item) => item?.value === data?.user?.job)?.label) ?? "情報なし"}
+                    : JOBS.find((item) => item?.value === data?.user?.job)?.label) ?? t("common:no_info")}
                 </Typography>
 
                 <Typography
@@ -344,7 +345,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   display: ["none!important", type === "favorite" ? "inherit!important" : "none!important"],
                 }}
               >
-                {data?.discussion_topic ?? "情報なし"}
+                {data?.discussion_topic ?? t("common:no_info")}
               </Typography>
             </Box>
             {/* End Grid right Info */}

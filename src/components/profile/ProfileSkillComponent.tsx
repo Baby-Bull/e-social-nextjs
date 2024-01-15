@@ -219,10 +219,7 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                   <TitleContentTab>{t("profile:discussion-topic")}</TitleContentTab>
                   <ContentTab>
                     <ShowTextArea
-                      value={
-                        data?.discussion_topic ??
-                        "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"
-                      }
+                      value={data?.discussion_topic ?? t("home:box-member-recommend.content-description")}
                     />
                   </ContentTab>
                 </BoxContentTab>

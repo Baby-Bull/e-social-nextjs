@@ -25,13 +25,7 @@ import styles from "src/components/searchUser/search_user.module.scss";
 import theme from "src/theme";
 import { jobs, employeeStatus, lastLogins, reviews, SearchFormStatus, SORT_ORDER_SEARCH } from "src/constants";
 import useViewport from "src/helpers/useViewport";
-import {
-  getUserFavoriteTags,
-  getUserProvince,
-  getUserRecentlyLogin,
-  getUserNewMembers,
-  searchUser,
-} from "src/services/user";
+import { getUserFavoriteTags, getUserRecentlyLogin, getUserNewMembers, searchUser } from "src/services/user";
 import { searchUserActions } from "src/store/actionTypes";
 import { ISearchUserComponent, IStoreState } from "src/constants/interfaces";
 

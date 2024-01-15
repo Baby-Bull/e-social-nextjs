@@ -14,7 +14,7 @@ import ModalMatchingComponent from "src/components/common/organisms/ModalMatchin
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
 import { addUserFavorite, removeUserFavorite } from "src/services/user";
 import actionTypes, { searchUserActions } from "src/store/actionTypes";
-import { IStoreState } from "src/constants/interfaces";
+import { IStoreState, IUserCardInformation } from "src/constants/interfaces";
 import {
   HOMEPAGE_RECOMMEND_MEMBER_STATUS,
   JOBS,
@@ -23,36 +23,13 @@ import {
   typeMatchingStatus,
 } from "src/constants";
 
-import UserTag from "../profile/UserTagComponent";
-import ButtonComponent from "../common/atom-component/ButtonComponent";
+import ButtonComponent from "../atom-component/ButtonComponent";
+import UserTag from "../molecules/UserTag";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
 
-interface IUserItemProps {
-  id: string;
-  profile_image: string;
-  last_login_at: string;
-  activity_status?: string;
-  username: string;
-  job: string;
-  job_position: string;
-  review_count: number;
-  hitokoto: string;
-  tags: Array<string>;
-  discussion_topic: string;
-  status: number;
-  chatStatus: number;
-  is_favorite: boolean;
-  match_status?: string;
-  match_request?: any;
-}
-
-interface IBoxUserComponentProps {
-  data: IUserItemProps;
-}
-
-const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
+const UserCardInSearchScreen: React.SFC<{ data: IUserCardInformation }> = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [showModalMatching, setModalMatching] = React.useState(false);
@@ -147,14 +124,14 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
 
             <div onClick={handleClickToProfile} className="info-summary">
               <Avatar
-                src={data?.profile_image}
+                src={data?.profileImage}
                 alt={data?.username}
                 sx={{ width: "56px", height: "56px", mr: "13px" }}
               />
               <div className="member-info">
                 <p className="name">{data?.username}</p>
                 {/* <p className="career">{JOBS[data?.job_position]?.label}</p> */}
-                <p className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? "情報なし"}</p>
+                <p className="career">{JOBS.find((item) => item?.value === data?.job)?.label ?? t("common:no_info")}</p>
                 <p className="review">
                   {t("home:box-member-recommend.review")}: {data?.review_count}
                 </p>
@@ -162,7 +139,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
             </div>
 
             <div onClick={handleClickToProfile} className="introduce">
-              {data?.hitokoto ? data?.hitokoto : "情報なし"}
+              {data?.hitokoto ? data?.hitokoto : t("common:no_info")}
             </div>
 
             <div className="tags" onClick={data?.tags?.length ? null : handleClickToProfile}>
@@ -175,7 +152,7 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
               </p>
 
               <p className="description">
-                {data?.discussion_topic ?? "はじめまして。色々な方とお話をしたいと考えています！よろしくお願いします。"}
+                {data?.discussion_topic ?? t("home:box-member-recommend.content-description")}
               </p>
             </div>
           </Box>
@@ -218,4 +195,4 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data }) => {
   );
 };
 
-export default BoxItemUserComponent;
+export default UserCardInSearchScreen;
