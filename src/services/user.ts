@@ -14,9 +14,8 @@ import {
   UPDATE_PROFILE,
   EMAIL_EXISTS,
 } from "src/messages/notification";
-import { typeTimeLogin, typeReview, SearchFormStatus } from "src/constants";
 import { apiNestServer } from "src/utils/API-infra.util";
-import { IFormUserSearch, ISearchUserComponent } from "src/constants/interfaces";
+import { IFormUserSearch } from "src/constants/interfaces";
 
 import { setIsProfileEdited, setIsRenewal } from "../helpers/storage";
 
@@ -84,6 +83,7 @@ export const searchUser = async (bodyParams: IFormUserSearch, take: number, page
     if (bodyParams?.fullText) query += `&fullText=${bodyParams?.fullText}`;
     if (bodyParams?.searchJob) query += `&searchJob=${bodyParams?.searchJob}`;
     if (bodyParams?.searchStatus) query += `&searchStatus=${bodyParams?.searchStatus}`;
+    if (bodyParams?.orderBy) query += `&orderBy=${bodyParams?.orderBy}`;
     const res = await apiNestServer.get(`users/search?take=${take}&page=${page}${query}`);
     return res;
   } catch (error) {

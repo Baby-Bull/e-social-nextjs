@@ -19,6 +19,8 @@
     .blockInputTag {
       :global {
         .paper-search-tag {
+          display: flex;
+          align-items: center;
           border: 1px solid #03bcdb;
           background: white;
           border-radius: 40px;
@@ -251,7 +253,7 @@
         height: 124px;
         width: 124px;
         border-radius: 50%;
-        object-fit: contain;
+        object-fit: cover;
         border: 1px solid #eee;
       }
 

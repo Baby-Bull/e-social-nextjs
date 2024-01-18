@@ -44,15 +44,6 @@ export default function abc(state: any = initState, action: any) {
           fullText: null,
           searchJob: null,
           searchStatus: null,
-
-          // job: 0,
-          // employeeStatus: 0,
-          // lastLogin: 0,
-          // review: 0,
-          // statusCanTalk: false,
-          // statusLookingForFriend: false,
-          // statusNeedConsult: false,
-          // tags: [...(action.payload || [])],
         },
       };
     }

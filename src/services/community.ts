@@ -22,6 +22,7 @@ import {
 import { api } from "src/helpers/api";
 import { typeCountLogin, typeCountMember } from "src/constants";
 import { apiNestServer } from "src/utils/API-infra.util";
+import { IFormCommunitySearch } from "src/constants/interfaces";
 
 // eslint-disable-next-line import/prefer-default-export
 export const getListCommunities = async (limit: number, cursor: string) => {
@@ -40,6 +41,21 @@ export const getListCommunityHome = async (take: number = 10, page: number = 1) 
     return res;
   } catch (error) {
     toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
+export const searchCommunity = async (bodyParams: IFormCommunitySearch, take: number, page: number = 1) => {
+  try {
+    let query = "";
+    if (bodyParams?.fullText) query += `&fullText=${bodyParams?.fullText}`;
+    if (bodyParams?.excludeJoined) query += `&excludeJoined=${bodyParams?.excludeJoined || true}`;
+    if (bodyParams?.memberCount) query += `&memberCount=${bodyParams?.memberCount}`;
+    if (bodyParams?.orderBy) query += `&orderBy=${bodyParams?.orderBy}`;
+    // if (bodyParams?.searchTags) query += `&searchTags=${bodyParams?.searchTags}`;
+    const res = await apiNestServer.get(`users/search?take=${take}&page=${page}${query}`);
+    return res;
+  } catch (error) {
     return error;
   }
 };

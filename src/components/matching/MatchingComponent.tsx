@@ -161,6 +161,7 @@ const MatchingComponent = () => {
   useEffect(() => {
     setTabValue(TAB_VALUE_BY_KEY[typeQuery]);
   }, [typeQuery]);
+
   useEffect(() => {
     const refetchData = async () => {
       let dataRefetch;

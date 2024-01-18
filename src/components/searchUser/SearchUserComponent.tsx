@@ -5,19 +5,16 @@ import {
   Checkbox,
   CircularProgress,
   Divider,
-  FormControlLabel,
   Grid,
   IconButton,
   InputBase,
   Link,
   MenuItem,
   Paper,
-  Select,
   Typography,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import React, { FC, useEffect, useLayoutEffect, useState } from "react";
-import { styled } from "@mui/material/styles";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 
@@ -28,45 +25,11 @@ import useViewport from "src/helpers/useViewport";
 import { getUserFavoriteTags, getUserRecentlyLogin, getUserNewMembers, searchUser } from "src/services/user";
 import { searchUserActions } from "src/store/actionTypes";
 import { ISearchUserComponent, IStoreState } from "src/constants/interfaces";
+import { FormControlLabelCustom, SelectCustom } from "src/styles/customComponent";
 
 import UserCardComponent from "../common/organisms/UserCardComponent";
 
 import PopupSearchUser from "./block/PopupSearchUser";
-
-const SelectCustom = styled(Select)({
-  borderRadius: 6,
-  width: "100%",
-  height: "40px",
-  color: theme.gray,
-  marginBottom: "20px",
-  "&:hover": {
-    borderRadius: 6,
-  },
-  "& .MuiSelect-select": {
-    position: "relative",
-    fontSize: 14,
-    padding: "10px 11px",
-    borderRadius: "12px",
-    fontFamily: "Noto Sans",
-    background: "white",
-  },
-  "& .MuiOutlinedInput-notchedOutline": {
-    border: "1px solid #989EA8",
-  },
-});
-
-const FormControlLabelCustom = styled(FormControlLabel)({
-  "& .MuiCheckbox-root": {
-    padding: "0 8px 0 9px",
-    color: "#989EA8",
-  },
-  "& .MuiButtonBase-root-MuiCheckbox-root": {
-    color: theme.gray,
-  },
-  "& .Mui-checked": {
-    color: "#03BCDB !important",
-  },
-});
 
 const initalFormData = {
   job: jobs[0]?.value,
@@ -111,10 +74,12 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
     setIsLoading(false);
     setRouterQuerySort(undefined);
     setTriggerTheFirstFetching(false);
+
     updateResult({
       items,
-      page: res?.meta?.page,
-      hasMore: res?.meta?.hasNextPage,
+      // eslint-disable-next-line no-unsafe-optional-chaining
+      page: res?.meta?.page + 1,
+      hasNextPage: res?.meta?.hasNextPage,
     });
   };
 
@@ -144,8 +109,9 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
       setIsLoading(false);
       updateResult({
         items,
-        page: res?.meta?.page,
-        hasMore: res?.meta?.hasNextPage,
+        // eslint-disable-next-line no-unsafe-optional-chaining
+        page: res?.meta?.page + 1,
+        hasNextPage: res?.meta?.hasNextPage,
       });
     }
   };
@@ -190,9 +156,9 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
     setIsLoading(true);
     const res = await searchUser(initalFormData, LIMIT, 1);
     updateResult({
-      items: res?.items,
+      items: res?.data,
       page: res?.meta?.page,
-      hasNextPage: res?.hasMore,
+      hasNextPage: res?.hasNextPage,
     });
     setIsLoading(false);
   };
@@ -236,11 +202,7 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
           <CircularProgress color="inherit" />
         </Backdrop>
       )}
-      <Box
-        sx={{
-          mt: { xs: "80px", lg: "0" },
-        }}
-      >
+      <Box sx={{ mt: "80px" }}>
         <Box className={styles.boxSearchLeft}>
           {!isMobile && (
             <React.Fragment>
@@ -351,12 +313,12 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
               <FormControlLabelCustom
                 control={
                   <Checkbox
-                    checked={form?.searchStatus === "needConsult"}
-                    value="needConsult"
+                    checked={form?.searchStatus === "need-consult"}
+                    value="need-consult"
                     onChange={() => {
                       const data = {
                         ...form,
-                        searchStatus: form?.searchStatus === "needConsult" ? null : "needConsult",
+                        searchStatus: form?.searchStatus === "need-consult" ? null : "need-consult",
                       };
                       updateForm(data);
                     }}

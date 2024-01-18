@@ -142,9 +142,9 @@ const BoxItemUserComponent: React.SFC<IBoxUserComponentProps> = ({ data, callbac
                 {data?.activity_status === USER_STATUS.online
                   ? t("home:box-member-recommend.no-login")
                   : replaceLabelByTranslate(
-                    t("home:box-member-recommend.last-login"),
-                    dayjs(data?.last_login_at).fromNow(),
-                  )}
+                      t("home:box-member-recommend.last-login"),
+                      dayjs(data?.last_login_at).fromNow(),
+                    )}
               </span>
             </div>
 

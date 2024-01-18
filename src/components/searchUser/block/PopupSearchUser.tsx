@@ -274,7 +274,7 @@ const PopupSearchUser: React.SFC<ISearchUserProps> = ({
                 control={
                   <Checkbox
                     checked={formSearch?.statusNeedConsult}
-                    value="needConsult"
+                    value="need-consult"
                     onChange={() => {
                       setFormSearch({ ...formSearch, statusNeedConsult: !formSearch?.statusNeedConsult });
                     }}

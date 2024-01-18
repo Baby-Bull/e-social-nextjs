@@ -5,19 +5,16 @@ import {
   CircularProgress,
   Checkbox,
   Divider,
-  FormControlLabel,
   Grid,
   IconButton,
   InputBase,
   MenuItem,
   Paper,
-  Select,
   Typography,
 } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import React, { useEffect, useState, useLayoutEffect } from "react";
 import { useRouter } from "next/router";
-import { styled } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 
 import styles from "src/components/searchCommunity/search_community.module.scss";
@@ -25,50 +22,14 @@ import theme from "src/theme";
 // eslint-disable-next-line import/order
 import useViewport from "src/helpers/useViewport";
 import { numberOfLogins, numberOfParticipants, SearchFormStatus } from "src/constants";
-import { getListCommunitySearch } from "src/services/community";
+import { getListCommunitySearch, searchCommunity } from "src/services/community";
 import { IStoreState } from "src/constants/interfaces";
 import { searchCommunityActions } from "src/store/actionTypes";
+import { FormControlLabelCustom, SelectCustom } from "src/styles/customComponent";
+
+import CommunityCardComponent from "../common/organisms/CommunityCardComponent";
 
 import PopupSearchCommunity from "./block/PopupSearchCommunity.";
-import BoxItemUserComponent from "./BoxItemCommunityComponent";
-
-const SelectCustom = styled(Select)({
-  borderRadius: 6,
-  width: "100%",
-  height: "40px",
-  color: theme.gray,
-  marginBottom: "20px",
-  "&:hover": {
-    borderRadius: 6,
-  },
-  "& .MuiSelect-select": {
-    position: "relative",
-    fontSize: 14,
-    padding: "10px 11px",
-    borderRadius: "12px",
-    fontFamily: "Noto Sans",
-    background: "white",
-  },
-  "& .MuiOutlinedInput-notchedOutline": {
-    border: "1px solid #989EA8",
-  },
-});
-
-const FormControlLabelCustom = styled(FormControlLabel)({
-  "& .MuiCheckbox-root": {
-    padding: "0 8px 0 9px",
-    color: "#989EA8",
-  },
-  "& .MuiButtonBase-root-MuiCheckbox-root": {
-    color: theme.gray,
-  },
-  "& .Mui-checked": {
-    color: "#03BCDB !important",
-  },
-  "& .MuiTypography-root": {
-    fontSize: "14px",
-  },
-});
 
 const SearchCommunityComponent = () => {
   const { t } = useTranslation();
@@ -86,25 +47,27 @@ const SearchCommunityComponent = () => {
   const [showPopupSearchCommunity, setShowPopupSearchCommunity] = useState(false);
   const dispatch = useDispatch();
   const searchCommunityState = useSelector((state: IStoreState) => state.search_community);
-  const { items: communities, cursor: nextCursor, hasMore, sort } = searchCommunityState.result;
+  const { items: communities, page, hasNextPage } = searchCommunityState.result;
   const { tags, ...formSearch } = searchCommunityState.form;
   const [valueInput, setValueInput] = useState<any>(null);
 
   const fetchCommunity = async (
+    typeSort: string = "",
     arrayResult: Array<any> = [],
-    cursor: string = "",
-    order: string = searchCommunityState.result.sort,
+    page: number = 1,
+    fullText: string = null,
   ) => {
     setIsLoading(true);
-    const res = await getListCommunitySearch(LIMIT, cursor, order, formSearch, tags, fullText);
-    const addingItems = arrayResult.concat(res?.items);
+    const searchForm = { ...searchCommunityState.form, orderBy: typeSort, fullText };
+    const res = await searchCommunity(searchForm, LIMIT, page);
+    const addingItems = arrayResult.concat(res?.data);
     dispatch({
       type: searchCommunityActions.UPDATE_RESULT,
       payload: {
         items: addingItems,
-        cursor: res?.cursor,
-        hasMore: res?.hasMore,
-        sort: order,
+        // eslint-disable-next-line no-unsafe-optional-chaining
+        page: res?.meta?.page + 1,
+        hasNextPage: res?.meta?.hasNextPage,
       },
     });
     setIsLoading(false);
@@ -125,8 +88,9 @@ const SearchCommunityComponent = () => {
   const onKeyPress = (e) => {
     if (valueInput?.length <= 20) {
       if (e.key === "Enter" && e.target.value) {
-        dispatch({ type: searchCommunityActions.UPDATE_FORM, payload: { tags: [...tags, e.target.value] } });
-        (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
+        fetchCommunity(searchCommunityState.form.orderBy, [], 1, e.target.value);
+        dispatch({ type: searchCommunityActions.UPDATE_FORM, payload: { fullText: e.target.value } });
+        // (document.getElementById("input_search_tag") as HTMLInputElement).value = "";
       }
     }
   };
@@ -179,7 +143,7 @@ const SearchCommunityComponent = () => {
     if (fullText !== undefined) {
       handleClearSearch();
     } else if (searchCommunityState.formStatus === SearchFormStatus.Init) {
-      fetchCommunity();
+      fetchCommunity(searchCommunityState.form?.orderBy, [], 1);
     }
   }, [fullText]);
 
@@ -215,10 +179,7 @@ const SearchCommunityComponent = () => {
               {!isMobile && (
                 <React.Fragment>
                   <div className={styles.blockInputTag}>
-                    <Paper
-                      className="paper-search-tag"
-                      sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: { sm: "100%", md: 240 } }}
-                    >
+                    <Paper className="paper-search-tag">
                       <IconButton sx={{ p: "10px" }} aria-label="menu">
                         <img src="/assets/images/svg/ic_search_blue.svg" alt="ic_search" width="18px" height="22px" />
                       </IconButton>
@@ -288,7 +249,7 @@ const SearchCommunityComponent = () => {
                             type: searchCommunityActions.UPDATE_FORM,
                             payload: {
                               ...formSearch,
-                              excludejoinedCommunities: !formSearch?.excludejoinedCommunities,
+                              excludeJoined: !formSearch?.excludeJoined,
                             },
                           })
                         }
@@ -311,7 +272,11 @@ const SearchCommunityComponent = () => {
                   {t("community-search:btn-search")}
                 </Button>
               ) : (
-                <Button className="btn-user-search btn-search" fullWidth onClick={() => fetchCommunity([], "", sort)}>
+                <Button
+                  className="btn-user-search btn-search"
+                  fullWidth
+                  onClick={() => fetchCommunity("", [], 1, searchCommunityState.form?.orderBy)}
+                >
                   {t("community-search:btn-search")}
                 </Button>
               )}
@@ -351,20 +316,20 @@ const SearchCommunityComponent = () => {
                   <Box
                     className="sort-link"
                     sx={{
-                      color: sort !== RECOMMENDED ? "#03BCDB !important" : theme.navy,
-                      fontWeight: sort !== RECOMMENDED ? 400 : 700,
+                      color: searchCommunityState.form?.orderBy !== RECOMMENDED ? "#03BCDB !important" : theme.navy,
+                      fontWeight: searchCommunityState.form?.orderBy !== RECOMMENDED ? 400 : 700,
                     }}
-                    onClick={() => sort !== RECOMMENDED && changeOrder(RECOMMENDED)}
+                    onClick={() => searchCommunityState.form?.orderBy !== RECOMMENDED && changeOrder(RECOMMENDED)}
                   >
                     {t("community-search:recommend-order")}
                   </Box>
                   <Box
                     className="sort-link"
                     sx={{
-                      color: sort !== LATEST ? "#03BCDB !important" : theme.navy,
+                      color: searchCommunityState.form?.orderBy !== LATEST ? "#03BCDB !important" : theme.navy,
                       fontWeight: LATEST ? 400 : 700,
                     }}
-                    onClick={() => sort !== LATEST && changeOrder(LATEST)}
+                    onClick={() => searchCommunityState.form?.orderBy !== LATEST && changeOrder(LATEST)}
                   >
                     {t("community-search:latest-order")}
                   </Box>
@@ -375,14 +340,14 @@ const SearchCommunityComponent = () => {
               {isMobile && (
                 <Grid item xs={12} className="sort-by-block-sp">
                   <Box
-                    className={sort === RECOMMENDED ? "sort-link" : "sort-link active"}
-                    onClick={() => sort !== RECOMMENDED && changeOrder(RECOMMENDED)}
+                    className={searchCommunityState.form?.orderBy === RECOMMENDED ? "sort-link" : "sort-link active"}
+                    onClick={() => searchCommunityState.form?.orderBy !== RECOMMENDED && changeOrder(RECOMMENDED)}
                   >
                     {t("community-search:recommend-order")}
                   </Box>
                   <Box
-                    className={sort === LATEST ? "sort-link" : "sort-link active"}
-                    onClick={() => sort !== LATEST && changeOrder(LATEST)}
+                    className={searchCommunityState.form?.orderBy === LATEST ? "sort-link" : "sort-link active"}
+                    onClick={() => searchCommunityState.form?.orderBy !== LATEST && changeOrder(LATEST)}
                   >
                     {t("community-search:latest-order")}
                   </Box>
@@ -392,14 +357,14 @@ const SearchCommunityComponent = () => {
             <Grid container className={styles.resultSearch} spacing={{ md: "27px", xs: "20px" }}>
               {communities?.map((item, key) => (
                 <Grid item key={key} md={4} xs={12} sm={12}>
-                  <BoxItemUserComponent data={item} />
+                  <CommunityCardComponent data={item} />
                 </Grid>
               ))}
             </Grid>
-            {hasMore ? (
+            {hasNextPage ? (
               <Box sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
                 <Button
-                  onClick={() => fetchCommunity(communities, nextCursor, sort)}
+                  onClick={() => fetchCommunity(communities, communities, page)}
                   sx={{ color: "rgb(3, 188, 219)" }}
                 >
                   {t("common:showMore")}
@@ -410,7 +375,7 @@ const SearchCommunityComponent = () => {
         </Grid>
       </Box>
       <PopupSearchCommunity
-        statusOrder={sort}
+        statusOrder={searchCommunityState.form?.orderBy}
         inputTags={tags}
         formSearch={formSearch}
         setShowPopup={setShowPopupSearchCommunity}

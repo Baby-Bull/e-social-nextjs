@@ -5,7 +5,7 @@ export interface CommunityBasic {
   member_count: number;
 }
 
-export interface IRecommendCommunityItemHomepage extends CommunityBasic {
+export interface ICommunityCardItem extends CommunityBasic {
   login_count: number;
   tags: Array<string>;
   description: string;

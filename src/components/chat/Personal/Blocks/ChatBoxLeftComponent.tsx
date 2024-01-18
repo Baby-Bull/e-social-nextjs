@@ -1,22 +1,9 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React, { useRef, useState } from "react";
-import {
-  Box,
-  Grid,
-  Paper,
-  Typography,
-  IconButton,
-  Menu,
-  MenuItem,
-  Tabs,
-  Tab,
-  Avatar,
-  CircularProgress,
-} from "@mui/material";
+import { Box, Grid, Paper, Typography, IconButton, Menu, MenuItem, Tab, Avatar, CircularProgress } from "@mui/material";
 import { useTranslation } from "next-i18next";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useRouter } from "next/router";
-import { styled } from "@mui/material/styles";
 
 import PopupReportUser from "src/components/common/organisms/PopupReportUser";
 import InputCustom from "src/components/common/atom-component/InputCustom";
@@ -26,6 +13,7 @@ import theme from "src/theme";
 import useDebounce from "src/customHooks/UseDebounce";
 import useWindowSize from "src/customHooks/UseWindowSize";
 import { IChatBoxLeftProps, IThreadDropDownProps } from "src/constants/interfaces";
+import { TabsCustom } from "src/styles/customComponent";
 
 import PopupReviewComponent from "../../../common/organisms/PopupReviewComponent";
 
@@ -92,30 +80,6 @@ const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({
     </MenuItem>
   </Menu>
 );
-
-export const TabsCustom = styled(Tabs)(() => ({
-  padding: 0,
-  color: "black",
-  fontSize: "20px",
-  fontWeight: 500,
-  position: "absolute",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-
-  "& .MuiTab-root": {
-    fontSize: "20px",
-    fontWeight: 500,
-    whiteSpace: "nowrap",
-  },
-  "& .Mui-selected": {
-    color: theme.blue,
-  },
-  "& .MuiTabs-indicator": {
-    backgroundColor: theme.blue,
-  },
-}));
 
 const ChatBoxLeftComponent: React.FC<IChatBoxLeftProps> = ({
   listRooms,

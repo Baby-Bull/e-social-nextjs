@@ -10,11 +10,11 @@ import Image from "next/image";
 import styles from "src/components/home/home.module.scss";
 import { replaceLabelByTranslate } from "src/utils/utils";
 // import { joinCommunity } from "src/services/community";
-import { IRecommendCommunityItemHomepage } from "src/constants/interfaces";
+import { ICommunityCardItem } from "src/constants/interfaces";
 
 import SlickSliderRecommendComponent from "./SlickSliderRecommendComponent";
 
-const RecommendCommunityItem: React.SFC<{ data: IRecommendCommunityItemHomepage }> = ({ data }) => {
+const RecommendCommunityItem: React.SFC<{ data: ICommunityCardItem }> = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
   // const [statusJoin, setStatusJoin] = useState(
@@ -37,7 +37,6 @@ const RecommendCommunityItem: React.SFC<{ data: IRecommendCommunityItemHomepage 
   //   }
   //   return res;
   // };
-  console.log(data);
 
   return (
     <Grid item xs={12} className={classNames(styles.boxRecommend, "box-recommend-community")} style={{ padding: 0 }}>
@@ -100,7 +99,7 @@ const RecommendCommunityItem: React.SFC<{ data: IRecommendCommunityItemHomepage 
 
 const RecommendCommunityComponent: React.SFC<{ recommendCommunity }> = memo(({ recommendCommunity }) => {
   const { t } = useTranslation();
-  const [recommendCommunityItems, setRecommendCommunityItems] = useState<IRecommendCommunityItemHomepage[]>([]);
+  const [recommendCommunityItems, setRecommendCommunityItems] = useState<ICommunityCardItem[]>([]);
 
   useEffect(() => {
     setRecommendCommunityItems(

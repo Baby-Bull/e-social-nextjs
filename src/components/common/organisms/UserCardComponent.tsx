@@ -116,15 +116,15 @@ const UserCardComponent: React.SFC<{ data: IUserCardInformation }> = ({ data }) 
                 {data?.activity_status === USER_STATUS.online
                   ? t("home:box-member-recommend.no-login")
                   : replaceLabelByTranslate(
-                      t("home:box-member-recommend.last-login"),
-                      dayjs(data?.last_login_at).fromNow(),
-                    )}
+                    t("home:box-member-recommend.last-login"),
+                    dayjs(data?.last_login_at).fromNow(),
+                  )}
               </span>
             </div>
 
             <div onClick={handleClickToProfile} className="info-summary">
               <Avatar
-                src={data?.profile_image}
+                src={data?.profileImage}
                 alt={data?.username}
                 sx={{ width: "56px", height: "56px", mr: "13px" }}
               />

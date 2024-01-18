@@ -1,7 +1,7 @@
 import { SearchFormStatus } from "src/constants";
 
 import { IChatroom } from "../models/ChatMessage";
-import { IFormUserSearch, IResultSearchUser } from "../pages/SearchPage";
+import { IFormCommunitySearch, IFormUserSearch, IResultSearch } from "../pages/SearchPage";
 
 export interface IStoreState {
   user: any;
@@ -19,8 +19,13 @@ export interface IStoreState {
     scrollPosition: number;
     formStatus: SearchFormStatus;
     form: IFormUserSearch;
-    result: IResultSearchUser;
+    result: IResultSearch;
   };
-  search_community: any;
+  search_community: {
+    scrollPosition: number;
+    formStatus: SearchFormStatus;
+    form: IFormCommunitySearch;
+    result: IResultSearch;
+  };
   is_profile_edited: boolean;
 }

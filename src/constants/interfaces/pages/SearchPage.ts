@@ -1,5 +1,9 @@
 import { SearchFormStatus } from "src/constants/Common.constant";
 
+export type TMemberCountSearch = {
+  from: number;
+  to: number;
+};
 export interface IFormUserSearch {
   searchTags: Array<string>;
   orderBy: string;
@@ -19,25 +23,27 @@ export interface IFormUserSearch {
   // orderBy: string;
 }
 
-export interface IResultSearchUser {
+export interface IFormCommunitySearch {
+  memberCount: TMemberCountSearch;
+  searchTags: Array<string>;
+  excludeJoined: boolean;
+  orderBy: string;
+  fullText: string;
+}
+
+export interface IResultSearch {
   take: number;
   page: number;
   countAll: number;
   hasPreviousPage: boolean;
   hasNextPage: boolean;
-
-  // limit: number;
-  // cursor: string;
   items: any[];
-  // sort: string;
-  // hasMore: boolean;
 }
 
-export interface ISearchUserComponent {
+export interface ISearchComponent {
   scrollPosition: number;
   formStatus: SearchFormStatus;
-  form: IFormUserSearch;
-  result: IResultSearchUser;
+  result: IResultSearch;
   // eslint-disable-next-line no-unused-vars
   updateForm: (formData: any) => void;
   // eslint-disable-next-line no-unused-vars
@@ -45,4 +51,11 @@ export interface ISearchUserComponent {
   // eslint-disable-next-line no-unused-vars
   updateScrollPosition: (position: number) => void;
   clearForm: () => void;
+}
+
+export interface ISearchUserComponent extends ISearchComponent {
+  form: IFormUserSearch;
+}
+export interface ISearchCommunityComponent extends ISearchComponent {
+  form: IFormUserSearch;
 }
