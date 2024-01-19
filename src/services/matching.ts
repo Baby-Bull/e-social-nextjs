@@ -2,14 +2,16 @@ import { toast } from "react-toastify";
 
 import { api } from "src/helpers/api";
 import { ACCEPT_MATCHING, REJECT_MATCHING, CANCEL_MATCHING, SERVER_ERROR } from "src/messages/notification";
+import { apiNestServer } from "src/utils/API-infra.util";
 
 export const sendMatchingRequest = async (userId: string | string[], body: any) => {
   try {
-    const res = await api.post(`/user/match/${userId}`, body);
+    const res = await apiNestServer.post(`/users/match/${userId}`, body);
     if (res.data.error_code) {
       toast.error(SERVER_ERROR);
     } else {
       toast.success("マッチングリクエストを送りました。");
+      toast.success("Send matching request successfully!");
     }
     return res.data;
   } catch (error) {

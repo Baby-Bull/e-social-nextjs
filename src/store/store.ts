@@ -24,7 +24,6 @@ const exampleInitialState: IStoreState = {
       searchStatus: null,
     },
     result: {
-      sort: "favorite_count",
       limit: 9,
       page: 1,
       hasNextPage: false,
@@ -36,13 +35,13 @@ const exampleInitialState: IStoreState = {
     scrollPosition: 0,
     form: {
       login_count: 0,
+      orderBy: "recommended",
       member_count: 0,
       lastLogin: 0,
       exclude_joined_communities: false,
       tags: [],
     },
     result: {
-      sort: "recommended",
       limit: 12,
       cursor: "",
       hasNextPage: false,

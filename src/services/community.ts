@@ -53,7 +53,16 @@ export const searchCommunity = async (bodyParams: IFormCommunitySearch, take: nu
     if (bodyParams?.memberCount) query += `&memberCount=${bodyParams?.memberCount}`;
     if (bodyParams?.orderBy) query += `&orderBy=${bodyParams?.orderBy}`;
     // if (bodyParams?.searchTags) query += `&searchTags=${bodyParams?.searchTags}`;
-    const res = await apiNestServer.get(`users/search?take=${take}&page=${page}${query}`);
+    const res = await apiNestServer.get(`communities/search?take=${take}&page=${page}${query}`);
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getRecommendCommunities = async (take: number, page: number = 1) => {
+  try {
+    const res = await apiNestServer.get(`/communities/recommend?take=${take}&page=${page}`);
     return res;
   } catch (error) {
     return error;

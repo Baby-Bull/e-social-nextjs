@@ -1,0 +1,19 @@
+{
+  "input-tag-placeholder": "Free Word Search",
+  "label-checkbox-1": "Can Talk Now",
+  "label-checkbox-2": "Looking for Friends",
+  "label-checkbox-3": "Need Someone to Talk To",
+  "title": "Engineer List",
+  "sort-by": "Sort By",
+  "recommend-order": "Recommended Order",
+  "last-login-order": "Login Order",
+  "last-register-order": "Newcomers Order",
+  "btn-search": "Search",
+  "btn-search-SP": "Advanced Search",
+  "btn-clear-condition": "Clear Search",
+  "btn-send-matching-request": "Send Matching Request",
+  "btn-add-favorite": "Add to Favorite",
+  "validate-search-form": {
+    "input-length": "Please enter within 20 characters."
+  }
+}

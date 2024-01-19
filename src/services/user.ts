@@ -23,14 +23,14 @@ dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
 dayjs.locale("ja");
 
-export const getUserFavorite = async (limit: number, cursor: string) => {
-  try {
-    const res = await api.get(`/user/favorite?limit=${limit}&cursor=${cursor}`);
-    return res.data;
-  } catch (error) {
-    return error;
-  }
-};
+// export const getUserFavorite = async (limit: number, cursor: string) => {
+//   try {
+//     const res = await api.get(`/user/favorite?limit=${limit}&cursor=${cursor}`);
+//     return res.data;
+//   } catch (error) {
+//     return error;
+//   }
+// };
 
 export const getUserStatics = async () => {
   try {
@@ -50,10 +50,10 @@ export const getUserFavoriteTags = async (take: number, page: number = 1) => {
   }
 };
 
-export const getUserProvince = async (limit: number, cursor: string = "") => {
+export const getRecommendUser = async (take: number, page: number = 1) => {
   try {
-    const res = await api.get(`/user/province-users?limit=${limit}&cursor=${cursor}`);
-    return res?.data;
+    const res = await apiNestServer.get(`/users/recommend?take=${take}&page=${page}`);
+    return res;
   } catch (error) {
     return error;
   }
@@ -104,6 +104,15 @@ export const removeUserFavorite = async (userId: number) => {
   try {
     const res = await apiNestServer.delete(`user/favorite/${userId}`);
     return res?.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getListUserFavorite = async (take: number, page: number) => {
+  try {
+    const res = await api.get(`/users/favorite?take=${take}&page=${page}`);
+    return res.data;
   } catch (error) {
     return error;
   }

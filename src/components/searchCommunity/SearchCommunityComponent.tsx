@@ -22,14 +22,14 @@ import theme from "src/theme";
 // eslint-disable-next-line import/order
 import useViewport from "src/helpers/useViewport";
 import { numberOfLogins, numberOfParticipants, SearchFormStatus } from "src/constants";
-import { getListCommunitySearch, searchCommunity } from "src/services/community";
 import { IStoreState } from "src/constants/interfaces";
 import { searchCommunityActions } from "src/store/actionTypes";
 import { FormControlLabelCustom, SelectCustom } from "src/styles/customComponent";
+import { getRecommendCommunities, searchCommunity } from "src/services/community";
 
 import CommunityCardComponent from "../common/organisms/CommunityCardComponent";
-
-import PopupSearchCommunity from "./block/PopupSearchCommunity.";
+import PopupSearchCommunity from "../common/organisms/PopupSearchCommunity.";
+import ButtonComponent from "../common/atom-component/ButtonComponent";
 
 const SearchCommunityComponent = () => {
   const { t } = useTranslation();
@@ -58,8 +58,13 @@ const SearchCommunityComponent = () => {
     fullText: string = null,
   ) => {
     setIsLoading(true);
-    const searchForm = { ...searchCommunityState.form, orderBy: typeSort, fullText };
-    const res = await searchCommunity(searchForm, LIMIT, page);
+    let res;
+    if (typeSort === "recommend") {
+      res = await getRecommendCommunities(LIMIT, page);
+    } else {
+      const searchForm = { ...searchCommunityState.form, orderBy: typeSort, fullText };
+      res = await searchCommunity(searchForm, LIMIT, page);
+    }
     const addingItems = arrayResult.concat(res?.data);
     dispatch({
       type: searchCommunityActions.UPDATE_RESULT,
@@ -70,12 +75,16 @@ const SearchCommunityComponent = () => {
         hasNextPage: res?.meta?.hasNextPage,
       },
     });
+    dispatch({
+      type: searchCommunityActions.UPDATE_FORM,
+      payload: { orderBy: typeSort },
+    });
     setIsLoading(false);
     return res;
   };
 
   const changeOrder = async (order: string) => {
-    fetchCommunity([], "", order);
+    fetchCommunity(order, [], 1);
   };
 
   const removeSearchTag = (indexRemove: number) => {
@@ -108,24 +117,13 @@ const SearchCommunityComponent = () => {
   const handleClearSearch = async () => {
     setIsLoading(true);
     dispatch({ type: searchCommunityActions.CLEAR_FORM });
-    const res = await getListCommunitySearch(
-      LIMIT,
-      "",
-      RECOMMENDED,
-      {
-        login_count: numberOfLogins[0]?.value,
-        member_count: numberOfParticipants[0]?.value,
-        excludejoinedCommunities: false,
-      },
-      [],
-      fullText,
-    );
+    const res = await fetchCommunity(searchCommunityState.form?.orderBy, [], 1);
     dispatch({
       type: searchCommunityActions.UPDATE_RESULT,
       payload: {
-        items: res?.items,
-        cursor: res?.cursor,
-        hasMore: res?.hasMore,
+        items: res?.data,
+        page: 1,
+        hasNextPage: res?.meta?.hasNextPage,
       },
     });
     setIsLoading(false);
@@ -305,8 +303,15 @@ const SearchCommunityComponent = () => {
                 <Typography className="title-search">
                   {t("community-search:title")}
                   <span className="item-total-result">
-                    {isMobile && <br />} 全{communities?.length}件
+                    {isMobile && <br />} {communities?.length} {t("community-search:commuinity-number")}
                   </span>
+                  <ButtonComponent
+                    mode="orange"
+                    sx={{ marginLeft: "2em", borderRadius: "10px" }}
+                    onClick={() => changeOrder("recommend")}
+                  >
+                    Recommend Users
+                  </ButtonComponent>
                 </Typography>
               </Grid>
               {!isMobile && (

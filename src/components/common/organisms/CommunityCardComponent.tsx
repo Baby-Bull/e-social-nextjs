@@ -76,7 +76,7 @@ const CommunityCardComponent: React.SFC<{ data: ICommunityCardItem }> = ({ data 
         <Grid container>
           <Grid item xs={9}>
             <div className="label-number-of-register">
-              {replaceLabelByTranslate(t("home:box-community-recommend.number-of-register"), data?.login_count ?? 0)}
+              {replaceLabelByTranslate(t("home:box-community-recommend.number-of-register"), data?.loginCount ?? 0)}
             </div>
           </Grid>
         </Grid>
@@ -86,7 +86,7 @@ const CommunityCardComponent: React.SFC<{ data: ICommunityCardItem }> = ({ data 
           </div>
           <p className="name">{data?.name}</p>
           <Typography className="number-of-participant">
-            {replaceLabelByTranslate(t("home:box-community-recommend.number-of-members"), data?.member_count ?? 0)}
+            {replaceLabelByTranslate(t("home:box-community-recommend.number-of-members"), data?.memberCount ?? 0)}
           </Typography>
           <div className="tags">
             <ul>

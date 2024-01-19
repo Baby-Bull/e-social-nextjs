@@ -38,6 +38,8 @@ const UserCardComponent: React.SFC<{ data: IUserCardInformation }> = ({ data }) 
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
 
+  console.log(data);
+
   useEffect(() => {
     setStatusMatching(data?.match_status);
     setLiked(data?.is_favorite);

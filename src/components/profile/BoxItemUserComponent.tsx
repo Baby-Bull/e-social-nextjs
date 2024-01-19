@@ -24,8 +24,7 @@ import {
 } from "src/constants";
 
 import ButtonComponent from "../common/atom-component/ButtonComponent";
-
-import UserTag from "./UserTagComponent";
+import UserTag from "../common/molecules/UserTag";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");

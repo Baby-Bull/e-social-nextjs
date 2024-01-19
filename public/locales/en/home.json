@@ -24,7 +24,7 @@
     "community": "Joined community",
     "community-m": "joined\n community",
     "community-unit": "unit",
-    "community_des_default":"Welcome to our community. Think outside the box and you'll see everything.",
+    "community_des_default": "Welcome to our community. Think outside the box and you'll see everything.",
     "chat": "Joined",
     "matched": "Matched",
     "matched-m": "matched"
@@ -32,7 +32,7 @@
   "recommend-community": "Recommended communities",
   "register-newest": "Newly registered engineer",
   "recent-login-member": "Engineers recently logged in",
-  "member-favorite-area": "Engineers near your area",
+  "member-favorite-area": "Recommend Engineers",
   "member-favorite-tags": "Engineers with the same tags",
   "see-more": "See more",
   "box-community-recommend": {

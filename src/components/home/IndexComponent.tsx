@@ -8,10 +8,10 @@ import dynamic from "next/dynamic";
 import { REACT_QUERY_KEYS } from "src/constants";
 import {
   getUserFavoriteTags,
-  getUserProvince,
   getUserRecentlyLogin,
   getUserNewMembers,
   addUserFavorite,
+  getRecommendUser,
 } from "src/services/user";
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "src/services/matching";
 import theme from "src/theme";
@@ -87,14 +87,14 @@ const HomeIndexComponents = () => {
   };
 
   const {
-    data: userProvinceData,
-    refetch: refetchUserProvince,
+    data: userRecommendData,
+    refetch: refetchUserRecommend,
     isLoading: isLoading1,
   } = useQuery(
-    REACT_QUERY_KEYS.HOMEPAGE_GET_USER_PROVINCES,
+    REACT_QUERY_KEYS.HOMEPAGE_GET_USER_RECOMMEND,
     async () => {
       setIsLoading(false);
-      const res = await getUserProvince(LIMIT);
+      const res = await getRecommendUser(LIMIT);
       return res?.data?.filter((item: any) => item?.match_status !== "confirmed") || [];
     },
     {
@@ -168,9 +168,9 @@ const HomeIndexComponents = () => {
 
   useEffect(() => {
     const memberRecommendsTmp = [...memberRecommends];
-    memberRecommendsTmp[2].data = userProvinceData || [];
+    memberRecommendsTmp[2].data = userRecommendData || [];
     setMemberRecommends(memberRecommendsTmp);
-  }, [userProvinceData]);
+  }, [userRecommendData]);
 
   useEffect(() => {
     const memberRecommendsTmp = [...memberRecommends];
@@ -191,7 +191,7 @@ const HomeIndexComponents = () => {
         refetchRecentlyLoginData();
         break;
       case 2:
-        refetchUserProvince();
+        refetchUserRecommend();
         break;
       case 3:
         refetchFavoriteTags();

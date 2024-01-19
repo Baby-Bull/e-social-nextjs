@@ -6,7 +6,7 @@ import { useTranslation } from "next-i18next";
 import useViewport from "src/helpers/useViewport";
 import TabComponent from "src/components/matching/TabComponent";
 import { getMatchingRequestReceived, getMatchingRequestSent } from "src/services/matching";
-import { getUserFavorite } from "src/services/user";
+import { getListUserFavorite } from "src/services/user";
 import { getListCommunities } from "src/services/community";
 import { TAB_VALUE_BY_KEY, TYPE } from "src/constants";
 
@@ -183,7 +183,7 @@ const MatchingComponent = () => {
             ];
             break;
           case TAB_VALUE_BY_KEY.favorite: {
-            const res = await getUserFavorite(LIMITCOUNTPERPAGE, "");
+            const res = await getListUserFavorite(LIMITCOUNTPERPAGE, 1);
             tabTemp.data = res.items || [];
             tabTemp.cursor = res.cursor || "";
             tabTemp.hasMore = res.hasMore || false;

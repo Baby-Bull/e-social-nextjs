@@ -9,12 +9,11 @@
   "latest-order": "最新順",
   "btn-search": "検索",
   "btn-clear-condition": "検索条件クリア",
-
   "box-item": {
     "number-of-participant": "参加人数：0人"
   },
-  
-  "validate-search-form":{
+  "validate-search-form": {
     "input-length": "20文字以内で記入してください。"
-  }
+  },
+  "commuinity-number": "全件"
 }

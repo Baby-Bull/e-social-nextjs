@@ -22,14 +22,20 @@ import styles from "src/components/searchUser/search_user.module.scss";
 import theme from "src/theme";
 import { jobs, employeeStatus, lastLogins, reviews, SearchFormStatus, SORT_ORDER_SEARCH } from "src/constants";
 import useViewport from "src/helpers/useViewport";
-import { getUserFavoriteTags, getUserRecentlyLogin, getUserNewMembers, searchUser } from "src/services/user";
+import {
+  getUserFavoriteTags,
+  getUserRecentlyLogin,
+  getUserNewMembers,
+  searchUser,
+  getRecommendUser,
+} from "src/services/user";
 import { searchUserActions } from "src/store/actionTypes";
 import { ISearchUserComponent, IStoreState } from "src/constants/interfaces";
 import { FormControlLabelCustom, SelectCustom } from "src/styles/customComponent";
 
 import UserCardComponent from "../common/organisms/UserCardComponent";
-
-import PopupSearchUser from "./block/PopupSearchUser";
+import PopupSearchUser from "../common/organisms/PopupSearchUser";
+import ButtonComponent from "../common/atom-component/ButtonComponent";
 
 const initalFormData = {
   job: jobs[0]?.value,
@@ -68,8 +74,13 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
 
   const fetchData = async (typeSort: string = "", arrayResult: Array<any> = [], page = 1, fullText: string = null) => {
     setIsLoading(true);
-    const searchForm = { ...form, orderBy: typeSort, fullText };
-    const res = await searchUser(searchForm, LIMIT, page);
+    let res;
+    if (typeSort === "recommend") {
+      res = await getRecommendUser(LIMIT, page);
+    } else {
+      const searchForm = { ...form, orderBy: typeSort, fullText };
+      res = await searchUser(searchForm, LIMIT, page);
+    }
     const items = arrayResult.concat(res?.data);
     setIsLoading(false);
     setRouterQuerySort(undefined);
@@ -81,6 +92,9 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
       page: res?.meta?.page + 1,
       hasNextPage: res?.meta?.hasNextPage,
     });
+    updateForm({
+      orderBy: typeSort,
+    });
   };
 
   const fetchDataWithOptionFromHomepage = async (arrayResult: Array<any> = [], page: number = 1) => {
@@ -91,9 +105,9 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
         case "sortByTags":
           res = await getUserFavoriteTags(LIMIT, page);
           break;
-        // case "sortByArea":
-        //   res = await getUserProvince(LIMIT, page);
-        //   break;
+        case "sortByArea":
+          res = await getRecommendUser(LIMIT, page);
+          break;
         case "sortByLogin":
           res = await getUserRecentlyLogin(LIMIT, page);
           break;
@@ -357,8 +371,15 @@ const SearchUserComponent: FC<ISearchUserComponent> = ({
                 <Typography className="title-search">
                   {t("user-search:title")}
                   <span className="item-total-result">
-                    {isMobile && <br />} 全{users?.length ?? 0}件
+                    {isMobile && <br />} {users?.length ?? 0} Users
                   </span>
+                  <ButtonComponent
+                    mode="orange"
+                    sx={{ marginLeft: "2em", borderRadius: "10px" }}
+                    onClick={() => handleSort(SORT_ORDER_SEARCH.RECOMMEND)}
+                  >
+                    Recommend Users
+                  </ButtonComponent>
                 </Typography>
               </Grid>
               {!isMobile && (

@@ -8,6 +8,7 @@ export const USER_STATUS = {
 export const SORT_ORDER_SEARCH = {
   FAVORITE_COUNT: "favorite_count",
   NEWEST: "newest",
+  RECOMMEND: "recommend",
 };
 
 export const typeMatchingStatus = {
