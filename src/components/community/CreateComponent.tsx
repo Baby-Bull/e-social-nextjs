@@ -99,13 +99,14 @@ const CreateComponent = () => {
   const [roleJoinSelected, setRoleJoin] = useState(infoCommunitySetting.rolesJoin[0].value);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [gatherUrl, setGatherUrl] = useState("");
+  // const [gatherUrl, setGatherUrl] = useState("");
   const [communityRequest, setCommunityRequest] = useState({
+    ownerId: auth?.id,
     name,
     description,
-    gather_url: gatherUrl,
-    post_permission: roleCreatePostSelected,
-    is_public: roleJoinSelected,
+    // gatherUrl,
+    // post_permission: roleCreatePostSelected,
+    isPublic: roleJoinSelected,
   });
   const [tagData, setTagData] = useState([]);
   const [profileImage, setProfileImage] = useState(infoCommunitySetting.avatar);
@@ -172,9 +173,9 @@ const CreateComponent = () => {
       setRoleJoin(valueInput);
     }
 
-    if (key === "gather_url") {
-      setGatherUrl(valueInput);
-    }
+    // if (key === "gather_url") {
+    //   setGatherUrl(valueInput);
+    // }
 
     setDisableBtnSubmit(false);
 
@@ -243,15 +244,15 @@ const CreateComponent = () => {
       errorMessages.description = t("validate:community_form.description.required");
     }
 
-    if (!communityRequest?.post_permission?.length) {
-      isValidForm = false;
-      errorMessages.post_permission = t("validate:community_form.post_permission.required");
-    }
+    // if (!communityRequest?.post_permission?.length) {
+    //   isValidForm = false;
+    //   errorMessages.post_permission = t("validate:community_form.post_permission.required");
+    // }
 
-    if (communityRequest?.gather_url?.length && !REGEX_RULES.url.test(communityRequest?.gather_url)) {
-      isValidForm = false;
-      errorMessages.gather_url = t("validate:community_form.gather_url.format");
-    }
+    // if (communityRequest?.gather_url?.length && !REGEX_RULES.url.test(communityRequest?.gather_url)) {
+    //   isValidForm = false;
+    //   errorMessages.gather_url = t("validate:community_form.gather_url.format");
+    // }
 
     setErrorValidates(errorMessages);
     return isValidForm;
@@ -275,16 +276,18 @@ const CreateComponent = () => {
       });
 
       if (profileImage) {
-        formData.append("profile_image", profileImage);
+        formData.append("profileImage", profileImage);
       }
       if (isDeleteImage && !profileImage) {
-        formData.append("profile_image", infoCommunitySetting.avatar);
+        formData.append("profileImage", infoCommunitySetting.avatar);
       }
-      const res = await createCommunity(formData);
-      if (!res?.error_code) {
-        setTimeout(() => router.push(`/community/${res?.id}`), 1000);
-        return res;
-      }
+      const formDataObj = {};
+      // eslint-disable-next-line no-return-assign
+      formData.forEach((value, key) => (formDataObj[key] = value));
+
+      const res = await createCommunity(formDataObj);
+      setTimeout(() => router.push(`/community/${res?.id}`), 1000);
+      return res;
     }
   };
 
@@ -527,15 +530,15 @@ const CreateComponent = () => {
                     >
                       {roleJoinSelected.toString() === "true"
                         ? infoCommunitySetting.rolesCreatePost.map((option, index) => (
-                            <MenuItem key={index.toString()} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))
+                          <MenuItem key={index.toString()} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))
                         : rolePrivateCommunity.map((option, index) => (
-                            <MenuItem key={index.toString()} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))}
+                          <MenuItem key={index.toString()} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
                     </SelectCustom>
                   </ThemeProvider>
                 </Box>

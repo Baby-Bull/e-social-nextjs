@@ -100,11 +100,9 @@ export const getCommunity = async (communityId: any) => {
 
 export const createCommunity = async (body: any) => {
   try {
-    const res = await api.post(`community`, body);
-    if (res.data) {
-      toast.success(CREATE_COMMUNITY);
-    }
-    return res.data;
+    const res = await apiNestServer.post(`communities`, body);
+    toast.success(CREATE_COMMUNITY);
+    return res;
   } catch (error) {
     toast.error(SERVER_ERROR);
     return error;
