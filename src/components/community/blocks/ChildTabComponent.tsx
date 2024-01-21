@@ -44,38 +44,40 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ maxWidth, dataC
   const [totalCommunityPost, setTotalCommunityPost] = useState(0);
   const [pagePost, setPagePost] = useState(1);
   const [perPagePost, setperPagePost] = useState(2);
-  const [valueCursorPost, setCursorPost] = useState("");
+  const [nextPagePost, setNextPagePost] = useState<number>(1);
   const [checkLoading, setCheckLoading] = useState(false);
 
   const [postsRecommended, setPostRecommended] = useState([]);
   const [totalCommunityPostRecommended, setTotalCommunityPostRecommended] = useState(0);
   const [pagePostRecommended, setPagePostRecommended] = useState(1);
   const [perPagePostRecommended, setperPagePostRecommended] = useState(2);
-  const [valueCursorPostRecommended, setCursorPostRecommended] = useState("");
+  const [nextPagePostRecommended, setNextPagePostRecommended] = useState<number>(1);
 
-  const communityPosts = async (cursor: string = "", sortOrder: string = latest) => {
+  const communityPosts = async (page: number = 1) => {
     const communityId = router.query;
-    const res = await getListCommunityPost(communityId?.id, LIMIT, cursor, sortOrder);
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    const res = await getListCommunityPost(+communityId?.id, LIMIT, page);
+    console.log(res);
+    
     setCheckLoading(true);
-    if (!res?.error_code) {
-      // eslint-disable-next-line no-unsafe-optional-chaining
-      setPost([...posts, ...res?.items]);
-      setTotalCommunityPost(res?.items_count);
-      setCursorPost(res?.cursor);
-      return res;
-    }
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    setPost([...posts, ...res?.data]);
+    setTotalCommunityPost(res?.meta?.itemCount);
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    setNextPagePost(res?.meta?.page + 1);
+    return res;
   };
 
-  const communityPostsRecomend = async (cursor: string = "", sortOrder: string = recommended) => {
+  const communityPostsRecomend = async (page: number = 1) => {
     const communityId = router.query;
-    const res = await getListCommunityPost(communityId?.id, LIMIT, cursor, sortOrder);
-    if (!res?.error_code) {
-      // eslint-disable-next-line no-unsafe-optional-chaining
-      setPostRecommended([...postsRecommended, ...res?.items]);
-      setTotalCommunityPostRecommended(res?.items_count);
-      setCursorPostRecommended(res?.cursor);
-      return res;
-    }
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    const res = await getListCommunityPost(+communityId?.id, LIMIT, page);
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    setPostRecommended([...postsRecommended, ...res?.data]);
+    setTotalCommunityPostRecommended(res?.meta?.itemCount);
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    setNextPagePostRecommended(res?.meta?.page + 1);
+    return res;
   };
 
   const onChangeChildTab = (event: React.SyntheticEvent, newValue: number) => {
@@ -86,7 +88,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ maxWidth, dataC
     setPagePost(value);
     if (perPagePost <= value) {
       setperPagePost(perPagePost + 1);
-      communityPosts(valueCursorPost ?? "");
+      communityPosts(nextPagePost);
     }
   };
 
@@ -94,7 +96,7 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ maxWidth, dataC
     setPagePostRecommended(value);
     if (perPagePostRecommended <= value) {
       setperPagePostRecommended(perPagePostRecommended + 1);
-      communityPostsRecomend(valueCursorPostRecommended ?? "");
+      communityPostsRecomend(nextPagePostRecommended);
     }
   };
 
@@ -110,8 +112,8 @@ const ChildTabComponent: React.SFC<IChildTabComponentProps> = ({ maxWidth, dataC
   useEffect(() => {
     setCheckRoleCreatPost(
       RoleAdmin.includes(dataCommunityDetail?.community_role) ||
-        dataCommunityDetail?.post_permission === dataCommunityDetail?.community_role ||
-        dataCommunityDetail?.post_permission === "all",
+      dataCommunityDetail?.post_permission === dataCommunityDetail?.community_role ||
+      dataCommunityDetail?.post_permission === "all",
     );
   }, [dataCommunityDetail?.community_role]);
 

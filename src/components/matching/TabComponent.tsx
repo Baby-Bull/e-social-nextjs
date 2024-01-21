@@ -104,15 +104,15 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
 
   // Block render user-matched ***** paginated
   const [allMatchedRef, setAllMatchedRef] = useState([]);
-  const [cursorMatched, setCursorMatched] = useState('');
+  const [cursorMatched, setCursorMatched] = useState<number>(1);
   const [hasMoreMatched, setHasMoreMatched] = useState(true);
   const [pageMatched, setPageMatched] = useState(1);
   const [countCurrentPagesMatched, setCountCurrentPagesMatched] = useState(2);
   const fetchUserMatched = async () => {
-    const res2 = await getMatchedRequest(11, cursorMatched, optionSelected);
-    setCursorMatched(JSON.stringify(res2?.cursor) === "null" ? "" : res2?.cursor);
-    setHasMoreMatched(res2?.hasMore);
-    hasMoreMatched && setAllMatchedRef([...allMatchedRef, ...res2?.items]);
+    const res2 = await getMatchedRequest(11, cursorMatched);
+    setCursorMatched(res2?.meta?.page + 1);
+    setHasMoreMatched(res2?.meta?.hasNextpage);
+    hasMoreMatched && setAllMatchedRef([...allMatchedRef, ...res2?.data]);
     return res2;
   };
   const handleCallbackChangePaginationMatched = (event, value) => {
@@ -136,6 +136,8 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
     setAllCommunityRef([...allCommunityRef, ...res3?.items]);
     return res3;
   };
+  console.log(allCommunityRef);
+
   const handleCallbackChangePaginationCommunity = (event, value) => {
     setPageCommunity(value);
     if (countCurrentPagesCommunity <= value && hasMoreCommunity) {
@@ -394,7 +396,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
                       <React.Fragment key={tabIndex.toString()}>
                         <Grid xs={6} md={3}>
                           <Box
-                            onClick={() => handleRedirectCommunity(tab?.id)}
+                            onClick={() => handleRedirectCommunity(tab?.communityId)}
                             sx={{
                               cursor: "pointer",
                               mt: [0, "40px"],
@@ -413,7 +415,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
                                 height: ["149px", "124px"],
                                 img: {
                                   objectFit:
-                                    tab?.profile_image === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                                    tab?.community?.profileImage === "/assets/images/logo/logo.png" ? "contain" : "cover",
                                   border:
                                     tab?.profile_image === "/assets/images/logo/logo.png"
                                       ? "3px #e8ecf1 solid"
@@ -421,8 +423,8 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
                                   borderRadius: "50%",
                                 },
                               }}
-                              src={tab?.profile_image}
-                              alt={tab?.username}
+                              src={tab?.community?.profileImage}
+                              alt={tab?.community?.name}
                             />
 
                             <Typography
@@ -435,7 +437,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
                                 textAlign: "center",
                               }}
                             >
-                              {tab?.name}
+                              {tab?.community?.name}
                             </Typography>
                             <Typography
                               component="span"
@@ -445,7 +447,7 @@ const TabComponent: React.SFC<ITabComponentProps> = ({
                                 color: theme.gray,
                               }}
                             >
-                              {t("matching:count-member")} {tab?.member_count} 人
+                              {t("matching:count-member")} {tab?.community?.memberCount} members
                             </Typography>
                           </Box>
                         </Grid>

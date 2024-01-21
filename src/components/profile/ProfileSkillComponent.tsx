@@ -16,7 +16,7 @@ import { useRouter } from "next/router";
 
 import theme from "src/theme";
 import { searchUserActions } from "src/store/actionTypes";
-import { EMPLOYEES, JOBS, TEXT_ENGLISH_LEVEL_OPTIONS, USER_STATUS_MATCHING } from "src/constants";
+import { EMPLOYEES, TEXT_ENGLISH_LEVEL_OPTIONS, USER_STATUS_MATCHING } from "src/constants";
 
 import { ShowTextArea } from "../common/ShowTextAreaComponent";
 
@@ -200,20 +200,20 @@ const ProfileSkillComponent: React.SFC<IProfileDataProps> = ({ data }) => {
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:self-introduction")}</TitleContentTab>
                   <ContentTab>
-                    <ShowTextArea value={data?.self_description} />
+                    <ShowTextArea value={data?.selfDescription} />
                   </ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:occupation")}</TitleContentTab>
-                  <ContentTab>{JOBS[data?.job]?.label}</ContentTab>
+                  <ContentTab>{data?.job}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:position")}</TitleContentTab>
-                  <ContentTab>{data?.job_position}</ContentTab>
+                  <ContentTab>{data?.jobPosition}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:employment-status")}</TitleContentTab>
-                  <ContentTab>{EMPLOYEES[data?.employment_status]?.label}</ContentTab>
+                  <ContentTab>{EMPLOYEES[data?.status]?.label}</ContentTab>
                 </BoxContentTab>
                 <BoxContentTab>
                   <TitleContentTab>{t("profile:discussion-topic")}</TitleContentTab>

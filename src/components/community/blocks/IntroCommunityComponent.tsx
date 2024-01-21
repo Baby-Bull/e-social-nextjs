@@ -157,7 +157,7 @@ const IntroCommunityComponent: React.SFC<ICommunityDataProps> = ({ data }) => {
         >
           {t("community:intro.title.open-date")}
         </Typography>
-        <Typography component="span">{dayjs(data?.created_at).format("LL")}</Typography>
+        <Typography component="span">{dayjs(data?.createdAt).format("LL")}</Typography>
 
         <Typography
           component="span"

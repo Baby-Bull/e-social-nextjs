@@ -166,7 +166,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
                   id: tempCommunityResult?.id,
                   member_count: tempCommunityResult?.member_count,
                   name: tempCommunityResult?.name,
-                  profile_image: tempCommunityResult?.profile_image,
+                  profile_image: tempCommunityResult?.profileImage,
                 },
                 id: tempCommunityResult?.id
               }

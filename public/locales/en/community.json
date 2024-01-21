@@ -1,0 +1,191 @@
+{
+  "matching-members": "Matching Members",
+  "community-members": "Community Members",
+  "community-is-approved": "This community requires approval for joining.",
+  "if-community-is-approved": "After applying for membership and getting approved, you can view the content.",
+  "after-join": "After applying for membership and getting approved, you can",
+  "can-approve": "view the content.",
+  "comment": "Comment",
+  "write-comment": "Write a Comment",
+  "place-holder": "Please enter within 1000 characters",
+  "url": "URL",
+  "address": "Location",
+  "banner": {
+    "count-member": "Number of Members",
+    "count-online": "Online",
+    "join": "Join this community",
+    "join-SP": "Join",
+    "withdraw": "Leave the community",
+    "withdraw-SP": "Leave",
+    "apply": "Apply for membership",
+    "applying": "Applying"
+  },
+  "button": {
+    "copy-url": "Copy URL",
+    "load-more": "Load More",
+    "create-post": "Create Post",
+    "go-to-virtual-room": "Enter Virtual Room",
+    "intro": {
+      "create-post": "Create a New Post",
+      "redirect-to-community": "Back to Community Top"
+    },
+    "dropdown": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "empty": {
+      "create-post": "Create a Post",
+      "apply": "Apply for Membership",
+      "applying": "Applying",
+      "go-to-talk-room": "Go to Chat Room",
+      "talk-to-community": "Community Chat"
+    },
+    "dialog": {
+      "cancel": "Cancel",
+      "cancel-2": "Cancel",
+      "withdraw": "Leave",
+      "delete-community": "Delete Community",
+      "stop-create-community": "Stop Creating Community",
+      "block": "Block",
+      "unblock": "Unblock",
+      "delete-comment": "Delete Comment"
+    },
+    "detail": {
+      "submit-post": "Submit Post",
+      "cancel-edit": "Cancel"
+    },
+    "setting": {
+      "save": "Save",
+      "upload": "Upload Image",
+      "participation": {
+        "approve": "Approve",
+        "reject": "Reject"
+      },
+      "member": {
+        "block": "Block",
+        "block-SP": "Block User",
+        "unblock": "Unblock",
+        "unblock-SP": "Unblock"
+      }
+    }
+  },
+  "intro": {
+    "title": {
+      "detail": "Details",
+      "administrator": "Administrator",
+      "open-date": "Opening Date",
+      "role-create-post": "Post Creation Permission"
+    }
+  },
+  "empty": {
+    "no-post": "No posts yet.",
+    "create-post": "Create a post and",
+    "talk-to-members": "Chat with community members!",
+    "withdraw-1": "Joining the community automatically adds you to the group chat.",
+    "withdraw-2": "Chat casually with members!",
+    "withdraw-3": "Note: Leaving the community also automatically exits you from the chat."
+  },
+  "dialog": {
+    "confirm": "Are you sure you want to leave the community?",
+    "note": "Leaving the community also exits you from the group chat.",
+    "confirm-delete-title": "Are you sure you want to delete the post?",
+    "note-delete-title1": "Blocking results in forced removal from this community. You won't be able to view or rejoin this community. If you want to report to the administration, please do so from the profile or personal message screen of the relevant member.",
+    "note-delete-title2": "Deleting will make the post content and associated comments inaccessible."
+  },
+  "detail": {
+    "comment": {
+      "latest-order": "Latest",
+      "posting-order": "Posted",
+      "delete-community": "Are you sure you want to delete the comment?",
+      "delete-content": "Deleted comments cannot be recovered."
+    }
+  },
+  "form": {
+    "edit": "Edit Post",
+    "create": "Post to Community",
+    "title": "Title",
+    "title-value": "Title is displayed here",
+    "detail": "Details",
+    "url": "URL (Optional)",
+    "address": "Location (Optional)",
+    "submit-edit": "Save Changes",
+    "submit-create": "Submit Post",
+    "placeholder": {
+      "title": "Please enter within 60 characters",
+      "detail": "Please enter within 1000 characters",
+      "url": "https://www.example.com",
+      "address": "Tokyo, Shibuya Ward, Shibuya-ku ◯-◯"
+    }
+  },
+  "setting": {
+    "title": "Administrator Menu",
+    "form": {
+      "back-detail-community": "Community Page",
+      "text-upload": "Please set the community image.",
+      "max-upload": "Recommended size 1200×1200px",
+      "name": "Community Name",
+      "virtual-room": "Link to Virtual Room",
+      "detail": "Community Details",
+      "representative": "Representative",
+      "administrator": "Add Administrator",
+      "role-create-post": "Post Creation Permission",
+      "role-join": "Join Community Permission",
+      "tag": "Community Tags",
+      "tag-post": "Post Tags",
+      "placeholder": {
+        "name": "Please enter within 40 characters",
+        "virtual-room": "https://www.example.com",
+        "detail": "Please enter within 1000 characters",
+        "administrator": "Select members you want to add as administrators",
+        "role-create-post": "Please select",
+        "tag": "Setting community tags makes it easier to search",
+        "tag-SP": "Makes it easier to search when set"
+      },
+      "remove": "X Remove",
+      "add": "+ Add",
+      "delete-img": "Delete current image",
+      "explain": "Administrators can perform all management tasks except deleting the community.",
+      "delete-community": "Delete Community",
+      "stop-create-community": "Stop Creating Community",
+      "dialog": {
+        "title": "Delete Community",
+        "content": "Once deleted, it cannot be recovered. Are you sure you want to delete?"
+      },
+      "save-success": "Settings saved successfully"
+    },
+    "member": {
+      "dialog-block": {
+        "title": "Block this member?",
+        "content": "Blocking this member will result in forced removal from the community. They won't be able to view or rejoin this community. If you want to report to the administration, please do so from the profile or personal message screen of the relevant member.",
+        "content1": "Blocking this member will result in forced removal from the community. They won't be able to view or rejoin this community.",
+        "content2": "If you want to report to the administration, please do so from the profile or personal message screen of the relevant member."
+      },
+      "dialog-unblock": {
+        "title": "Unblock this member?",
+        "content": "Unblocking allows the member to join this community and view its content."
+      },
+      "back-community": "Back to Community Top"
+    },
+    "participation": {
+      "title": "Join Requests",
+      "empty-private": "No join requests have been received.",
+      "empty-public1": "This community does not require approval for joining.",
+      "empty-public2": "To change this setting, go to",
+      "empty-public3": "Basic Settings",
+      "empty-public4": "in the menu",
+      "empty-public5": "and make the changes.",
+      "subject": " subjects"
+    }
+  },
+  "create": {
+    "title": "Create Community"
+  },
+  "request": " requests in the last minute",
+  "max_length_tag": "Enter a tag within 20 characters.",
+  "min_2_tag": "Set 2 or more tags.",
+  "tooltip_update": "Administrators can perform all management tasks except deleting the community.",
+  "virtual-room": "Enter Virtual Room",
+  "post": {
+    "no-data": "No comments yet."
+  }
+}

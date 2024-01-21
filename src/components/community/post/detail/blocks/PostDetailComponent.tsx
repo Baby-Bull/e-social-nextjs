@@ -135,7 +135,7 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
             height: ["32px", "54px"],
             cursor: "pointer",
           }}
-          src={data?.user?.profile_image}
+          src={data?.user?.profileImage}
           alt={data?.user?.username}
           onClick={redirectProfile}
         />
@@ -154,7 +154,7 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
               fontSize: [10, 14],
             }}
           >
-            {dayjs(data?.created_at).format("LLL")}
+            {dayjs(data?.createdAt).format("LLL")}
           </Typography>
           <Typography
             component="div"
@@ -210,12 +210,9 @@ const PostDetailComponent: React.SFC<ICommunityPostDataProps> = ({ data }) => {
       </Paper>
 
       <React.Fragment>
-        {data?.reference_url && (
-          <Box
-            onClick={() => redirectReferenceUrl(data?.reference_url)}
-            sx={{ cursor: "pointer", marginBottom: "7px" }}
-          >
-            <BoxInfo title={t("community:url")} text={data?.reference_url} textColor={theme.blue} fontWeight={500} />
+        {data?.referenceUrl && (
+          <Box onClick={() => redirectReferenceUrl(data?.referenceUrl)} sx={{ cursor: "pointer", marginBottom: "7px" }}>
+            <BoxInfo title={t("community:url")} text={data?.referenceUrl} textColor={theme.blue} fontWeight={500} />
           </Box>
         )}
 

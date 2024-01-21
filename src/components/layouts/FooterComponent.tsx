@@ -155,7 +155,7 @@ const FooterComponent: React.FC<IFooterComponentProps> = ({ authPage = false, re
             <img style={{ width: "137px" }} src="/assets/images/brand.png" alt="logo" />
           </Box>
           <Box sx={{ mt: { xs: "5px", lg: "77px" }, fontSize: "12px", textAlign: { xs: "center", lg: "right" } }}>
-            Copyright © AilaB inc. All Rights Reserved.
+            Copyright © Thangnd All Rights Reserved.
           </Box>
         </Box>
       </Box>

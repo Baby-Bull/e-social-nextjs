@@ -91,7 +91,7 @@ export const searchUser = async (bodyParams: IFormUserSearch, take: number, page
   }
 };
 
-export const addUserFavorite = async (userId: string) => {
+export const addUserFavorite = async (userId: number) => {
   try {
     const res = await apiNestServer.post(`/users/favorite/${userId}`);
     return res.data;
@@ -102,7 +102,7 @@ export const addUserFavorite = async (userId: string) => {
 
 export const removeUserFavorite = async (userId: number) => {
   try {
-    const res = await apiNestServer.delete(`user/favorite/${userId}`);
+    const res = await apiNestServer.delete(`users/favorite/${userId}`);
     return res?.data;
   } catch (error) {
     return error;
@@ -111,8 +111,17 @@ export const removeUserFavorite = async (userId: number) => {
 
 export const getListUserFavorite = async (take: number, page: number) => {
   try {
-    const res = await api.get(`/users/favorite?take=${take}&page=${page}`);
-    return res.data;
+    const res = await apiNestServer.get(`/users/favorite?take=${take}&page=${page}`);
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getUserProfile = async (userId: number) => {
+  try {
+    const res = await apiNestServer.get(`users/${userId}/profile`);
+    return res;
   } catch (error) {
     return error;
   }
@@ -317,14 +326,14 @@ export const getUserReviews = async (userId: string | string[], limit: number | 
   }
 };
 
-export const getUserProfile = async () => {
-  try {
-    const res = await api.get(`/user/profile`);
-    return res?.data;
-  } catch (error) {
-    return error;
-  }
-};
+// export const getUserProfile = async () => {
+//   try {
+//     const res = await api.get(`/user/profile`);
+//     return res?.data;
+//   } catch (error) {
+//     return error;
+//   }
+// };
 
 export const updateProfile = async (body: any, showToast = true) => {
   toast.configure();

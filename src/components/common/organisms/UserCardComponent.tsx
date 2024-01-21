@@ -38,8 +38,6 @@ const UserCardComponent: React.SFC<{ data: IUserCardInformation }> = ({ data }) 
   const dispatch = useDispatch();
   const auth = useSelector((state: IStoreState) => state.user);
 
-  console.log(data);
-
   useEffect(() => {
     setStatusMatching(data?.match_status);
     setLiked(data?.is_favorite);
@@ -80,13 +78,14 @@ const UserCardComponent: React.SFC<{ data: IUserCardInformation }> = ({ data }) 
     }
   };
 
-  const handleFavoriteAnUser = (isFavorite: boolean, tempData: string) => {
+  const handleFavoriteAnUser = (isFavorite: boolean, tempData: number) => {
     if (isFavorite) removeUserFavorite(tempData);
     else addUserFavorite(tempData);
   };
 
   const handleClickFavoriteButton = () => {
-    handleFavoriteAnUser(liked, data?.id);
+    // eslint-disable-next-line no-unsafe-optional-chaining
+    handleFavoriteAnUser(liked, +data?.id);
     if (liked) dispatch({ type: actionTypes.REMOVE_FAVORITE, payload: auth });
     else dispatch({ type: actionTypes.ADD_FAVORITE, payload: auth });
     setLiked(!liked);

@@ -16,8 +16,9 @@ import {
   getUserReviews,
   getUserRecommended,
   addUserFavorite,
+  getRecommendUser,
+  getUserProfile,
 } from "src/services/user";
-import BoxItemUserComponent from "src/components/profile/BoxItemUserComponent";
 import BoxNoDataComponent from "src/components/profile/BoxNoDataComponent";
 import TopProfileComponent from "src/components/profile/TopProfileComponent";
 import SlickSliderRecommendComponent from "src/components/home/blocks/SlickSliderRecommendComponent";
@@ -29,6 +30,8 @@ import theme from "../../theme";
 import { acceptMatchingRequestReceived, sendMatchingRequest } from "../../services/matching";
 import { searchUserActions } from "src/store/actionTypes";
 import { HOMEPAGE_RECOMMEND_MEMBER_STATUS, typeMatchingStatus } from "src/constants";
+import UserCardHomeScreen from "../common/organisms/UserCardHomeScreen";
+import { getAllCommunitiesByUser } from "src/services/community";
 interface Props {
   userId: string;
   isAuth: boolean;
@@ -47,7 +50,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
   const NumberOfCommunitiesPerPage = isMobile ? 2 : 8;
   const review_ref = useRef(null);
   const community_ref = useRef(null);
-  const userIdPathname = router.query?.userId || ""
+  const userIdPathname = +router.query?.userId
 
   const handleClickToScroll = (keyString: string) => {
     switch (keyString) {
@@ -72,6 +75,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
   const [communityCursor, setCommunityCursor] = useState("");
   const [countAllCommunities, setCountAllCommunities] = useState(0);
   const [recommended, setRecommended] = useState([]);
+  console.log(profileSkill);
 
   // Block render user-reviews ***** paginated
   const [allReviewsRef, setAllReviewsRef] = useState([]);
@@ -83,7 +87,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
     const data = await getUserReviews(userIdPathname, NumberOfReviewsPerPage, cursorReviews);
     setCursorReviews(data?.cursor);
     setCountAllReviews(data?.items_count ?? 0);
-    setAllReviewsRef([...allReviewsRef, ...data?.items]);
+    // setAllReviewsRef([...allReviewsRef, ...data?.items]);
     return data;
   };
   const handleCallbackChangePaginationReviews = (event, value) => {
@@ -96,7 +100,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
 
   const fetchProfileSkill = async () => {
     setIsLoading(true);
-    const data = await getOrtherUserProfile(userIdPathname);
+    const data = await getUserProfile(userIdPathname);
     setProfileSkill(data);
     setIsLoading(false);
     return data;
@@ -104,7 +108,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
 
   const fetchCommunities = async () => {
     setIsLoading(true);
-    const data = await getUserCommunites(userIdPathname);
+    const data = await getAllCommunitiesByUser(userIdPathname, 30, 1);
     setCommunities(data?.items);
     setCommunityCursor(data.cursor);
     setCountAllCommunities(data.items_count);
@@ -114,8 +118,8 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
 
   const fetchRecommended = async () => {
     setIsLoading(true);
-    const data = await getUserRecommended(LIMIT);
-    setRecommended(data?.items?.filter((item: any) => item?.match_status !== typeMatchingStatus.CONFIRMED));
+    const data = await getRecommendUser(LIMIT);
+    setRecommended(data?.data?.filter((item: any) => item?.match_status !== typeMatchingStatus.CONFIRMED));
     setIsLoading(false);
     return data;
   };
@@ -197,7 +201,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
   }, [userIdPathname]);
 
   const dataElements = useMemo(() => {
-    return recommended?.map((item) => <BoxItemUserComponent data={item} key={item.id} />);
+    return recommended?.map((item) => <UserCardHomeScreen data={item} indexKey={item.id} />);
   }, [recommended]);
 
   return (
@@ -299,7 +303,7 @@ const ProfileHaveDataComponent: FC<Props> = ({ userId, isAuth }) => {
             flexWrap: "wrap-reverse",
           }}
         >
-          {t("profile:title-recommen-member")}
+          {t("profile:title-recommend-member")}
         </Box>
         <Box
           sx={{

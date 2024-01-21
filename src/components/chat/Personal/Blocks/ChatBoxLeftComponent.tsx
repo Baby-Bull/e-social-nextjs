@@ -177,7 +177,7 @@ const ChatBoxLeftComponent: React.FC<IChatBoxLeftProps> = ({
                       <div className="avatar">
                         <Avatar
                           alt={thread?.title}
-                          src={thread?.user_infos?.[0]?.profile_image || "/assets/images/svg/avatar.svg"}
+                          src={thread?.user_infos?.[0]?.profileImage || "/assets/images/svg/avatar.svg"}
                           sx={{ width: "56px", height: "56px", mr: "13px" }}
                         />
                       </div>
@@ -185,10 +185,10 @@ const ChatBoxLeftComponent: React.FC<IChatBoxLeftProps> = ({
                         <Typography className="name">{thread?.title}</Typography>
                         <Typography
                           className="message-hide"
-                          sx={{
-                            color: thread?.unread_message_count > 0 ? "black!important" : "#989ea8",
-                            fontWeight: thread?.unread_message_count > 0 ? "700!important" : "400",
-                          }}
+                        // sx={{
+                        //   color: thread?.unread_message_count > 0 ? "black!important" : "#989ea8",
+                        //   fontWeight: thread?.unread_message_count > 0 ? "700!important" : "400",
+                        // }}
                         >
                           {thread?.lastestMessageType === "text" ? thread?.lastestMessage : "添付ファイル"}
                         </Typography>
@@ -218,7 +218,7 @@ const ChatBoxLeftComponent: React.FC<IChatBoxLeftProps> = ({
                         className="more-option-item"
                         onClick={(event: React.MouseEvent<HTMLElement>) => {
                           handleClick(event);
-                          transferUserToLeftMobile(index);
+                          // transferUserToLeftMobile(index);
                         }}
                         aria-label="more"
                         aria-haspopup="true"

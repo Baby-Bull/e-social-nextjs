@@ -69,6 +69,25 @@ export const getRecommendCommunities = async (take: number, page: number = 1) =>
   }
 };
 
+export const getAllCommunitiesByUser = async (userId: number, take: number, page: number = 1) => {
+  try {
+    const res = await apiNestServer.get(`/communities/${userId}/list-community?take=${take}&page=${page}`);
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getCommunityInfo = async (communityId: any) => {
+  try {
+    const res = await apiNestServer.get(`communities/${communityId}`);
+    return res;
+  } catch (error) {
+    toast.error(SERVER_ERROR);
+    return error;
+  }
+};
+
 export const getCommunity = async (communityId: any) => {
   try {
     const res = await api.get(`/community/${communityId}`);
@@ -207,25 +226,22 @@ export const checkMemberCommunity = async (communityId, memberId) => {
   }
 };
 
-export const createCommunityPost = async (communityId, body) => {
+export const createCommunityPost = async (communityId: number, body: any) => {
+  // TO-DO: import body type
   try {
-    const res = await api.post(`community/${communityId}/posts`, body);
-    if (!res.data.error_code) {
-      toast.success(CREATE_POST);
-      return res.data;
-    }
+    const res = await apiNestServer.post(`posts/`, { ...body, communityId });
+    toast.success(CREATE_POST);
+    return res;
   } catch (error) {
     toast.error(SERVER_ERROR);
     return error;
   }
 };
 
-export const detailCommunityPost = async (communityId, postId) => {
+export const detailCommunityPost = async (postId) => {
   try {
-    const res = await api.get(`community/${communityId}/posts/${postId}`);
-    if (!res.data.error_code) {
-      return res.data;
-    }
+    const res = await apiNestServer.get(`posts/${postId}`);
+    return res;
   } catch (error) {
     return error;
   }
@@ -315,16 +331,16 @@ export const deleteCommunityPostComment = async (communityId, postId, commentId)
 };
 
 export const getListCommunityPost = async (
-  communityId,
-  limit: number = 10,
-  cursor: string = "",
+  communityId: number,
+  take: number = 10,
+  page: number = 1,
   sortOrder: string = "latest",
 ) => {
   try {
-    const res = await api.get(
-      `community/${communityId}/posts/?limit=${limit}&cursor=${cursor}&sort_order=${sortOrder}`,
+    const res = await apiNestServer.get(
+      `posts/community/${communityId}?take=${take}&page=${page}&sort_order=${sortOrder}`,
     );
-    return res.data;
+    return res;
   } catch (error) {
     toast.error(SERVER_ERROR);
     return error;

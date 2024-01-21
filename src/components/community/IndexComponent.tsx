@@ -11,7 +11,7 @@ import IntroCommunityComponent from "src/components/community/blocks/IntroCommun
 import TabComponent from "src/components/community/blocks/TabComponent";
 import BannerComponent from "src/components/community/blocks/BannerComponent";
 import EmptyComponent from "src/components/community/blocks/EmptyComponent";
-import { CommunityMembers, getCommunity, joinCommunity } from "src/services/community";
+import { CommunityMembers, getCommunityInfo, joinCommunity } from "src/services/community";
 
 import ButtonComponent from "../common/atom-component/ButtonComponent";
 
@@ -42,7 +42,7 @@ interface CommunityInfo {
   owner: User;
   admins: User[];
   post_permission: "all" | "member" | "admin";
-  is_public: boolean;
+  isPublic: boolean;
   community_role: null | "pending" | "member" | "admin" | "owner";
   member_count: number;
   login_count: number;
@@ -56,6 +56,8 @@ const CommunityComponent: FC = () => {
   const [communityMembers, setCommunityMembers] = useState([]);
   const [checkLoading, setCheckLoading] = useState(false);
   const router = useRouter();
+  console.log(dataCommunityDetail);
+
   const handleCopyUrl = () => {
     const communityId = router.query;
     const ogpImageVersionQuery = dataCommunityDetail.ogp_image_version
@@ -77,15 +79,13 @@ const CommunityComponent: FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       const communityId = router.query;
-      const data = await getCommunity(communityId?.id);
-      if (!data?.error_code) {
-        setDataCommunityDetail(data);
-        setCheckLoading(true);
-        if ((data?.community_role && data?.community_role !== PENDING) || data?.is_public) {
-          fetchDataUsers();
-        }
-        return data;
+      const data = await getCommunityInfo(communityId?.id);
+      setDataCommunityDetail(data);
+      setCheckLoading(true);
+      if ((data?.community_role && data?.community_role !== PENDING) || data?.isPublic) {
+        fetchDataUsers();
       }
+      return data;
     };
     fetchData();
   }, []);
@@ -107,7 +107,7 @@ const CommunityComponent: FC = () => {
     if (res.status) {
       setDataCommunityDetail({
         ...dataCommunityDetail,
-        community_role: dataCommunityDetail?.is_public ? "member" : "pending",
+        community_role: dataCommunityDetail?.isPublic ? "member" : "pending",
       });
     }
     return res;
@@ -251,16 +251,16 @@ const CommunityComponent: FC = () => {
                 },
                 borderRadius: "12px",
                 display:
-                  !dataCommunityDetail?.is_public &&
-                  (!dataCommunityDetail?.community_role || dataCommunityDetail?.community_role === PENDING)
+                  !dataCommunityDetail?.isPublic &&
+                    (!dataCommunityDetail?.community_role || dataCommunityDetail?.community_role === PENDING)
                     ? "none"
                     : "block",
               }}
             >
               {((dataCommunityDetail?.community_role && dataCommunityDetail?.community_role !== PENDING) ||
-                dataCommunityDetail?.is_public) && (
-                <TabComponent data={tabsCommunity} dataCommunityDetail={dataCommunityDetail} />
-              )}
+                dataCommunityDetail?.isPublic) && (
+                  <TabComponent data={tabsCommunity} dataCommunityDetail={dataCommunityDetail} />
+                )}
 
               <Box display={status === "apply" || status === "applying" ? "inherit" : "none"}>
                 <EmptyComponent
@@ -284,8 +284,8 @@ const CommunityComponent: FC = () => {
             <Box
               sx={{
                 display:
-                  !dataCommunityDetail?.is_public &&
-                  (!dataCommunityDetail?.community_role || dataCommunityDetail?.community_role === PENDING)
+                  !dataCommunityDetail?.isPublic &&
+                    (!dataCommunityDetail?.community_role || dataCommunityDetail?.community_role === PENDING)
                     ? "flex"
                     : "none",
                 justifyContent: "center",

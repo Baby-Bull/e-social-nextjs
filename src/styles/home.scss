@@ -1,6 +1,6 @@
 .homepage-banner {
   .slick-next {
-    right: 25px!important;
+    right: 25px !important;
 
     &::before {
       content: none;
@@ -14,7 +14,7 @@
   }
 
   .slick-prev {
-    left: 25px!important;
+    left: 25px !important;
 
     &:before {
       content: none;
@@ -28,9 +28,9 @@
   }
 
   .slick-dots {
-    bottom: 5px!important;
+    bottom: 5px !important;
 
-    
+
     @media screen and (max-width: 992px) {
       bottom: -5px;
     }
@@ -56,24 +56,29 @@
         font-size: 7px;
       }
     }
+
     li:hover button:before {
       color: #C4C4C4;
     }
+
     li.slick-active button:before {
       color: #C4C4C4;
     }
   }
+
   .slick-arrow {
     width: 96px;
     height: 96px;
     border-radius: 50%;
     background: #F5F5F5;
     opacity: 0.8;
-    display: flex!important;
+    display: flex !important;
     justify-content: center;
     align-items: center;
     z-index: 1;
-  };
+  }
+
+  ;
 
 }
 
@@ -83,11 +88,11 @@
   }
 
   .slick-prev {
-    left: -12px!important;
+    left: -12px !important;
   }
 
   .slick-next {
-    right: -12px!important;
+    right: -12px !important;
   }
 }
 
@@ -101,16 +106,17 @@
   }
 
   .slick-prev {
-    left: -25px!important;
+    left: -25px !important;
   }
 
   .slick-next {
-    right: -25px!important;
+    right: -25px !important;
   }
 
   .slick-slider {
     width: 100%;
   }
+
   .slick-track {
     margin-left: initial;
   }
@@ -119,11 +125,11 @@
     display: flex !important;
   }
 
-  .slick-slide
-  {
+  .slick-slide {
     height: inherit !important;
-    
-    & > div {
+    padding: 0 0.5em;
+
+    &>div {
       height: 100%;
     }
   }

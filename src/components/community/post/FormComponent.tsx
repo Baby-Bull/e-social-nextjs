@@ -149,13 +149,14 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
       if (editable) {
         const res = await updateCommunityPost(communityId?.id, communityId?.updateId, communityPostRequest);
         setIsLoading(false);
-        setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${res?.slug}`), 1000);
+        setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${res?.id}`), 1000);
         return res;
       }
-      const res = await createCommunityPost(communityId?.id, communityPostRequest);
+      // eslint-disable-next-line no-unsafe-optional-chaining
+      const res = await createCommunityPost(+communityId?.id, communityPostRequest);
       setIsLoading(false);
       if (res) {
-        setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${res?.slug}`), 1000);
+        setTimeout(() => router.push(`/community/${communityId?.id}/post/detail/${res?.id}`), 1000);
         return res;
       }
     }
@@ -165,7 +166,7 @@ const FormComponent: React.SFC<ILayoutComponentProps> = ({ editable }) => {
     if (editable) {
       setIsLoading(true);
       const community = router.query;
-      const res = await detailCommunityPost(community?.id, community?.updateId);
+      const res = await detailCommunityPost(community?.updateId);
       setTitle(res?.title);
       setAddress(res?.address);
       setContent(res?.content);

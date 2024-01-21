@@ -7,9 +7,10 @@ import { useRouter } from "next/router";
 import theme from "src/theme";
 import PaginationCustomComponent from "../common/PaginationCustomComponent";
 import { getUserCommunites } from "src/services/user";
+import { getAllCommunitiesByUser } from "src/services/community";
 
 interface BoxNodataProps {
-  userId: string;
+  userId: number;
   initCountAllCommunities: number;
   NumberOfCommunitiesPerPage: number;
   initCommunities: any[];
@@ -34,10 +35,10 @@ const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({
   const [countCurrentPages, setCountCurrentPages] = useState(2);
   const fetchUserCommunities = async () => {
     //setIsLoading(true);
-    const data = await getUserCommunites(userId, NumberOfCommunitiesPerPage, cursorCommunities);
+    const data = await getAllCommunitiesByUser(userId, 30, 1);
     setCursorCommunities(data?.cursor);
-    setCountAllCommunities(data.items_count);
-    setAllCommunitiesRef([...allCommunitiesRef, ...data?.items]);
+    setCountAllCommunities(data?.meta?.itemCount);
+    setAllCommunitiesRef([...allCommunitiesRef, ...data?.data]);
     //setIsLoading(false);
     return data;
   };
@@ -53,6 +54,7 @@ const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({
       fetchUserCommunities();
     }
   }; // end block paginate for user communities
+  console.log(allCommunitiesRef);
 
   return (
     <Box
@@ -76,7 +78,7 @@ const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({
           ?.map((item, key) => (
             <Grid item xs={12} lg={3} key={key}>
               <Box
-                onClick={() => router.push(`/community/${item?.id}`)}
+                onClick={() => router.push(`/community/${item?.community?.id}`)}
                 sx={{
                   cursor: "pointer",
                   textAlign: "center",
@@ -89,12 +91,12 @@ const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({
                       width: "124px",
                       height: "124px",
                       img: {
-                        objectFit: item?.profile_image === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                        objectFit: item?.community?.profileImage === "/assets/images/logo/logo.png" ? "contain" : "cover",
                         border: item?.profile_image === "/assets/images/logo/logo.png" ? "3px #e8ecf1 solid" : "none",
                         borderRadius: "50%",
                       },
                     }}
-                    src={item?.profile_image}
+                    src={item?.community?.profileImage}
                     alt={item?.name}
                   />
                 </Box>
@@ -106,7 +108,7 @@ const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({
                     color: theme.black,
                   }}
                 >
-                  {item.name}
+                  {item?.community?.name}
                 </Typography>
                 <Typography
                   sx={{
@@ -115,7 +117,7 @@ const ParticipatingCommunityComponent: React.SFC<BoxNodataProps> = ({
                     color: theme.blue,
                   }}
                 >
-                  {t("profile:number-participants")}:{item.member_count} {t("profile:man")}
+                  {t("profile:number-participants")}:{item?.community?.memberCount} {t("profile:man")}
                 </Typography>
               </Box>
             </Grid>

@@ -23,7 +23,7 @@ import {
 } from "src/services/matching";
 import { IStoreState } from "src/constants/interfaces";
 import actionTypes from "src/store/actionTypes";
-import { JOBS, TYPE, USER_STATUS } from "src/constants";
+import { TYPE, USER_STATUS } from "src/constants";
 import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
 dayjs.extend(relativeTime);
@@ -50,13 +50,13 @@ interface IThreadComponentProps {
 const handlePurposeMatchingTab12 = (tempValue: string) => {
   switch (tempValue) {
     case "talk-casually":
-      return "カジュアルにお話ししたい";
+      return "I would like to talk casually.";
     case "technical-consultation":
-      return "技術的な相談がしたい";
+      return "I want to have a technical consultation.";
     case "work-with":
-      return "一緒に働けるエンジニアを探している";
+      return "I am looking for engineers to work together";
     default:
-      return "その他";
+      return "Other";
   }
 };
 
@@ -109,7 +109,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
     return res;
   };
 
-  const handleAcceptMatchingRequest = async (userId: string) => {
+  const handleAcceptMatchingRequest = async (userId: number) => {
     const res = await acceptMatchingRequestReceived(userId);
     if (setKeyRefetchData) {
       setKeyRefetchData({
@@ -127,9 +127,9 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
     if (tempValue === "favorite") return "";
     if (tempValue === "matched")
       return `${dayjs(data?.matchRequest?.match_date).format("lll").toString()}分にマッチング`;
-    if (tempValue === "reject") return `${dayjs(data?.updated_at).format("lll").toString()}に否承認`;
-    if (tempValue === "confirm") return `${dayjs(data?.updated_at).format("lll").toString()}にマッチング`;
-    return dayjs(data?.updated_at).format("lll").toString() + t("thread:request");
+    if (tempValue === "reject") return `${dayjs(data?.updatedAt).format("lll").toString()}に否承認`;
+    if (tempValue === "confirm") return `${dayjs(data?.updatedAt).format("lll").toString()}にマッチング`;
+    return dayjs(data?.updatedAt).format("lll").toString() + t("thread:request");
   };
 
   return (
@@ -154,7 +154,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
           }}
         >
           {type === "confirm" || type === "reject"
-            ? dayjs(data?.updated_at).format("lll").toString()
+            ? dayjs(data?.updatedAt).format("lll").toString()
             : dayjs(data?.desired_match_date).format("lll").toString()}
         </Typography>
 
@@ -196,7 +196,11 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
               }}
             >
               <Link
-                href={type === "favorite" || type === "matched" ? `/profile/${data?.id}` : `/profile/${data?.user?.id}`}
+                href={
+                  type === "favorite" || type === "matched"
+                    ? `/profile/${data?.user?.id}`
+                    : `/profile/${data?.receiver?.id}`
+                }
                 shallow
               >
                 <a
@@ -221,8 +225,12 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                         width: ["32px", isConfirmOrFavoriteOrMatched ? "54px" : "80px"],
                         height: "100%",
                       }}
-                      src={type === "favorite" || type === "matched" ? data?.profile_image : data?.user?.profile_image}
-                      alt={type === "favorite" || type === "matched" ? data?.username : data?.user?.username}
+                      src={
+                        type === "favorite" || type === "matched"
+                          ? data?.user?.profileImage
+                          : data?.receiver?.profileImage
+                      }
+                      alt={type === "favorite" || type === "matched" ? data?.user?.username : data?.receiver?.username}
                     />
 
                     <Avatar
@@ -236,7 +244,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                         width: ["15px", "24px"],
                         height: ["15px", "24px"],
                       }}
-                      src={auth?.profile_image}
+                      src={auth?.profileImage}
                       alt={auth?.username}
                     />
                     <Box
@@ -300,7 +308,9 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
               >
                 <Link
                   href={
-                    type === "favorite" || type === "matched" ? `/profile/${data?.id}` : `/profile/${data?.user?.id}`
+                    type === "favorite" || type === "matched"
+                      ? `/profile/${data?.user?.id}`
+                      : `/profile/${data?.receiver?.id}`
                   }
                   shallow
                 >
@@ -311,7 +321,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                       color: "black",
                     }}
                   >
-                    {(type === "favorite" || type === "matched" ? data?.username : data?.user?.username) ??
+                    {(type === "favorite" || type === "matched" ? data?.user?.username : data?.receiver?.username) ??
                       t("common:no_info")}
                   </a>
                 </Link>
@@ -323,9 +333,8 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                     color: theme.gray,
                   }}
                 >
-                  {(type === "favorite" || type === "matched"
-                    ? JOBS.find((item) => item?.value === data?.job)?.label
-                    : JOBS.find((item) => item?.value === data?.user?.job)?.label) ?? t("common:no_info")}
+                  {(type === "favorite" || type === "matched" ? data?.user?.job : data?.receiver?.job) ??
+                    t("common:no_info")}
                 </Typography>
 
                 <Typography
@@ -345,7 +354,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                   display: ["none!important", type === "favorite" ? "inherit!important" : "none!important"],
                 }}
               >
-                {data?.discussion_topic ?? t("common:no_info")}
+                {data?.user?.selfDescription ?? t("common:no_info")}
               </Typography>
             </Box>
             {/* End Grid right Info */}
@@ -373,7 +382,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
 
                 <ButtonComponent
                   mode="orange"
-                  onClick={() => handleAcceptMatchingRequest(data?.id)}
+                  onClick={() => handleAcceptMatchingRequest(data?.sender?.id)}
                   sx={{
                     width: "160px",
                     display: data?.receiver_id && "none",
@@ -575,7 +584,7 @@ const ThreadComponent: React.SFC<IThreadComponentProps> = ({ data, type, setKeyR
                 sx={{
                   display: data?.receiver_id && "none",
                 }}
-                onClick={() => handleAcceptMatchingRequest(data?.id)}
+                onClick={() => handleAcceptMatchingRequest(data?.sender?.id)}
               >
                 {t("thread:button.approve")}
               </ButtonComponent>

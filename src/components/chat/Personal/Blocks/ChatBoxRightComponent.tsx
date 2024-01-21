@@ -27,12 +27,11 @@ import InputCustom from "src/components/common/atom-component/InputCustom";
 import PopupReportUser from "src/components/common/organisms/PopupReportUser";
 import PopupReviewComponent from "src/components/common/organisms/PopupReviewComponent";
 import scrollEl from "src/helpers/scrollEl";
-import { getMessages, getPrivateMessages, uploadFile } from "src/services/chat";
+import { getPrivateMessages, uploadFile } from "src/services/chat";
 import { formatChatDate, formatListMessages } from "src/helpers/helper";
 import "react-image-lightbox/style.css";
 import useWindowSize from "src/customHooks/UseWindowSize";
 import { MATCHING_PURPOSE_OPTIONS, MESSAGE_CONTENT_TYPES, REACT_QUERY_KEYS } from "src/constants";
-import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 import socketIO from "src/helpers/socketIO";
 import {
   IBoxChatProps,
@@ -281,8 +280,6 @@ const ChatBoxRightComponent = ({
   newMessageOfRoom,
   user,
 }) => {
-  console.log(roomSelect);
-
   const { t } = useTranslation();
   const inputChatRef = useRef(null);
   const boxMessageRef = useRef(null);
@@ -290,7 +287,6 @@ const ChatBoxRightComponent = ({
   const [showPopup, setShowPopup] = useState(false);
   const [showPopupErr, setShowPopupErr] = useState(false);
   const [textMessageErr, setTextMessageErr] = useState("");
-  const handleShow = () => setShowPopup(true);
   const [showPopupReview, setShowPopupReview] = useState(false);
   const handleShowReview = () => setShowPopupReview(true);
 
@@ -309,7 +305,6 @@ const ChatBoxRightComponent = ({
     [REACT_QUERY_KEYS.PERSONAL_CHAT.LIST_MESSAGES, roomId],
     async () => {
       const res = await getPrivateMessages(roomId);
-      console.log(res);
       // return {
       //   ...res,
       //   items: res?.reverse() || [],

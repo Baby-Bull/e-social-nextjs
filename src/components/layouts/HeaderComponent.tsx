@@ -378,7 +378,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
     >
       <Box className={styles["menudrop-container"]}>
         <Box className={styles["menudrop-section1"]}>
-          <Avatar className={styles["menudrop-section1--avatar"]} src={auth?.profile_image} alt={auth?.username} />
+          <Avatar className={styles["menudrop-section1--avatar"]} src={auth?.profileImage} alt={auth?.username} />
           <Typography className={styles["menudrop-section1--title"]}>{t("header.title")}</Typography>
         </Box>
         <Button className={styles["menudrop-buttonEdit"]}>
@@ -526,7 +526,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
                 <IconButton className={styles["header-userAvatar--button"]} onClick={handleOpenMenu}>
                   <Avatar
                     className={styles["header-userAvatar--img"]}
-                    src={auth?.profile_image || "/assets/images/svg/avatar.svg"}
+                    src={auth?.profileImage || "/assets/images/svg/avatar.svg"}
                     alt={auth?.username}
                   />
                 </IconButton>
@@ -563,7 +563,7 @@ const HeaderComponent: React.FC<IHeaderComponentProps> = React.memo(({ authPage 
                 sx={{ p: 0, ml: "33px" }}
               >
                 <Avatar
-                  src={auth?.profile_image || "/assets/images/svg/avatar.svg"}
+                  src={auth?.profileImage || "/assets/images/svg/avatar.svg"}
                   alt={auth?.username}
                   sx={{
                     borderRadius: "50%",

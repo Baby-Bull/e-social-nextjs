@@ -9,8 +9,8 @@ export interface ISlickSliderRecommendComponentProps {
 export interface IItemRecommendUserHomepage {
   data: IUserCardInformation;
   indexKey?: number;
-  handleOpenMatchingModal: Function;
-  handleAcceptMatchingRequestReceived: Function;
+  handleOpenMatchingModal?: Function;
+  handleAcceptMatchingRequestReceived?: Function;
 }
 
 export interface ISlideRecommendUsersHomepage {

@@ -366,7 +366,7 @@ export const communityBlockMembers = [
 
 export const tabsCommunity = [
   {
-    text: "投稿",
+    text: "Posts",
     children: [
       {
         text: "新着順",
@@ -485,10 +485,10 @@ export const tabsCommunity = [
     ],
   },
   {
-    text: "チャット",
+    text: "Group Chat",
   },
   {
-    text: "参加メンバー",
+    text: "Members",
     data: communityMembers,
   },
 ];

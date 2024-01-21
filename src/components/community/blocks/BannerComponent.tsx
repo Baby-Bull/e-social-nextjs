@@ -114,7 +114,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
       >
         <Box
           sx={{
-            background: ["#fff", `url(${data?.profile_image})` || `url("/assets/images/svg/php_bg.svg")`],
+            background: ["#fff", `url(${data?.profileImage})` || `url("/assets/images/svg/php_bg.svg")`],
             backgroundSize: "cover !important",
             backgroundPosition: "center !important",
             height: "100%",
@@ -157,10 +157,10 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
                   height: ["80px", "160px"],
 
                   ".MuiAvatar-img": {
-                    objectFit: data?.profile_image === "/assets/images/logo/logo.png" ? "contain" : "cover",
+                    objectFit: data?.profileImage === "/assets/images/logo/logo.png" ? "contain" : "cover",
                   },
                 }}
-                src={data?.profile_image || infoCommunitySetting.avatar}
+                src={data?.profileImage || infoCommunitySetting.avatar}
               />
             </Box>
             <Box
@@ -214,7 +214,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
                     alignItems: "center",
                   }}
                 >
-                  {t("community:banner.count-member")}：{data?.member_count}
+                  {t("community:banner.count-member")}：{data?.memberCount}
                   <Avatar
                     sx={{
                       width: ["4px", "8px"],
@@ -224,7 +224,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
                     }}
                     src="/assets/images/svg/green_dot.svg"
                   />
-                  {t("community:banner.count-online")}：{data?.login_count}
+                  {t("community:banner.count-online")}：{data?.loginCount}
                 </Typography>
               </Box>
 
@@ -400,7 +400,7 @@ const BannerComponent: React.SFC<ICommunityDataProps> = ({ data, setDataCommunit
         isShow={open}
         handleClose={handleClose}
         handleCancel={handleClose}
-        avatar={data?.profile_image}
+        avatar={data?.profileImage}
         handleOK={handleLeaveCommunity}
       />
     </React.Fragment>

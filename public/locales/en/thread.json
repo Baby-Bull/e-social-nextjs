@@ -1,18 +1,18 @@
 {
-  "purpose": "目的",
-  "date-interview": "希望日",
-  "message": "メッセージ",
-  "request": "にリクエスト",
+  "purpose": "Purpose",
+  "date-interview": "Preferred Date",
+  "message": "Message",
+  "request": "Request",
   "button": {
-    "approve": "承認する",
-    "reject": "拒否する",
-    "canceled": "キャンセルする",
-    "review": "レビューをする",
-    "open-message": "メッセージを開く",
-    "open-message-SP": "メッセージ",
-    "reviewed": "レビュー済",
-    "report": "通報",
-    "apply-matching": "マッチング申請する",
-    "applied": "リクエスト申請済"
+    "approve": "Approve",
+    "reject": "Reject",
+    "canceled": "Cancel",
+    "review": "Write Review",
+    "open-message": "Open Message",
+    "open-message-SP": "Message",
+    "reviewed": "Reviewed",
+    "report": "Report",
+    "apply-matching": "Apply for Matching",
+    "applied": "Request Applied"
   }
 }

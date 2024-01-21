@@ -48,7 +48,7 @@ const SearchCommunityComponent = () => {
   const dispatch = useDispatch();
   const searchCommunityState = useSelector((state: IStoreState) => state.search_community);
   const { items: communities, page, hasNextPage } = searchCommunityState.result;
-  const { tags, ...formSearch } = searchCommunityState.form;
+  const { searchTags, ...formSearch } = searchCommunityState.form;
   const [valueInput, setValueInput] = useState<any>(null);
 
   const fetchCommunity = async (
@@ -90,7 +90,7 @@ const SearchCommunityComponent = () => {
   const removeSearchTag = (indexRemove: number) => {
     dispatch({
       type: searchCommunityActions.UPDATE_FORM,
-      payload: { tags: tags.filter((_, index) => index !== indexRemove) },
+      payload: { tags: searchTags.filter((_, index) => index !== indexRemove) },
     });
   };
 
@@ -197,7 +197,7 @@ const SearchCommunityComponent = () => {
                     )}
                     <div className="tags">
                       <ul>
-                        {tags?.map((tag, index) => (
+                        {searchTags?.map((tag, index) => (
                           <li key={index}>
                             {tag}{" "}
                             <IconButton className="button-remove-icon" onClick={() => removeSearchTag(index)}>
@@ -215,8 +215,8 @@ const SearchCommunityComponent = () => {
                   </div>
 
                   {/* numberOfLogin */}
-                  <SelectCustom
-                    value={formSearch?.login_count}
+                  {/* <SelectCustom
+                    value={formSearch?.loginCount}
                     onChange={(e) => handleChangeInputSearch(e, "login_count")}
                   >
                     {numberOfLogins.map((option) => (
@@ -224,10 +224,10 @@ const SearchCommunityComponent = () => {
                         {option.label}
                       </MenuItem>
                     ))}
-                  </SelectCustom>
+                  </SelectCustom> */}
 
                   {/* numberOfParticipant */}
-                  <SelectCustom
+                  {/* <SelectCustom
                     value={formSearch?.member_count}
                     onChange={(e) => handleChangeInputSearch(e, "member_count")}
                   >
@@ -236,7 +236,7 @@ const SearchCommunityComponent = () => {
                         {option.label}
                       </MenuItem>
                     ))}
-                  </SelectCustom>
+                  </SelectCustom> */}
 
                   <FormControlLabelCustom
                     control={
@@ -253,7 +253,7 @@ const SearchCommunityComponent = () => {
                         }
                       />
                     }
-                    label="参加中のコミュニティを除外"
+                    label={t("community-search:label-checkbox-1").toString()}
                   />
                 </React.Fragment>
               )}
@@ -273,7 +273,7 @@ const SearchCommunityComponent = () => {
                 <Button
                   className="btn-user-search btn-search"
                   fullWidth
-                  onClick={() => fetchCommunity("", [], 1, searchCommunityState.form?.orderBy)}
+                  onClick={() => fetchCommunity(searchCommunityState.form?.orderBy, [], 1, "")}
                 >
                   {t("community-search:btn-search")}
                 </Button>
@@ -369,7 +369,7 @@ const SearchCommunityComponent = () => {
             {hasNextPage ? (
               <Box sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
                 <Button
-                  onClick={() => fetchCommunity(communities, communities, page)}
+                  onClick={() => fetchCommunity(searchCommunityState.form.orderBy, communities, page)}
                   sx={{ color: "rgb(3, 188, 219)" }}
                 >
                   {t("common:showMore")}
@@ -381,7 +381,7 @@ const SearchCommunityComponent = () => {
       </Box>
       <PopupSearchCommunity
         statusOrder={searchCommunityState.form?.orderBy}
-        inputTags={tags}
+        inputTags={searchTags}
         formSearch={formSearch}
         setShowPopup={setShowPopupSearchCommunity}
         fetchCommunity={fetchCommunity}

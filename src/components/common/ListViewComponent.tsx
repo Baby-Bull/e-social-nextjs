@@ -13,8 +13,8 @@ export interface IData {
   id?: string;
   title?: string;
   name?: string;
-  updated_at?: string;
-  comment_count?: string;
+  updatedAt?: string;
+  commentCount?: string;
   user?: any;
 }
 interface IListViewComponentProps {
@@ -78,7 +78,7 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
             cursor: "pointer",
           }}
           onClick={redirectProfile}
-          src={data?.user?.profile_image}
+          src={data?.user?.profileImage}
           alt={data?.user?.username}
         />
 
@@ -125,7 +125,7 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
                 color: theme.gray,
               }}
             >
-              {dayjs(data?.updated_at).toNow().replace("後", "前")}
+              {dayjs(data?.updatedAt).toNow().replace("後", "前")}
             </Typography>
 
             <img src="/assets/images/svg/message.svg" alt="message" />
@@ -138,7 +138,7 @@ const ListViewComponent: React.SFC<IListViewComponentProps> = ({ data, props }) 
                 color: theme.gray,
               }}
             >
-              {data?.comment_count}
+              {data?.commentCount}
             </Typography>
           </Box>
         </Box>

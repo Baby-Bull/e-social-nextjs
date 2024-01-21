@@ -67,7 +67,7 @@ const ReviewComponent: React.SFC<reviewProps> = ({ user, hideReviewer, rating, c
                     borderRadius: "50%",
                   }}
                   alt={user?.username}
-                  src={user?.profile_image}
+                  src={user?.profileImage}
                 />
               </a>
             </Link>

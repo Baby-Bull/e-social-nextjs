@@ -22,7 +22,7 @@ import theme from "src/theme";
 import styles from "src/components/layouts/layout.module.scss";
 import actionTypes from "src/store/actionTypes";
 import { MODE_ROOM_CHAT, REACT_QUERY_KEYS } from "src/constants";
-import { getListChatRooms, getListChatRoomsCommunity, getListPrivateChatRooms } from "src/services/chat";
+import { getListChatRoomsCommunity, getListPrivateChatRooms } from "src/services/chat";
 import { formatChatDateRoom, sortListRoomChat } from "src/helpers/helper";
 import websocket from "src/helpers/socket";
 import { readMessageCommunity, readMessagePersonal } from "src/services/user";
@@ -205,6 +205,7 @@ const HeaderChatComponent: FC<Props> = ({
     },
     [communityChatRooms, personalChatRooms],
   );
+  console.log(personalChatRooms);
 
   const loadMoreMessagePersonal = () => {
     setSearchChatRoomPersonal((currentState) => ({
@@ -336,11 +337,11 @@ const HeaderChatComponent: FC<Props> = ({
                     personalChatRooms.map((thread, index: number) => (
                       <React.Fragment key={index}>
                         <li onClick={() => handleClickPersonalChatroom(thread)}>
-                          <div className={`thread-item ${thread?.user?.id === "userId" ? "active" : ""}`}>
+                          <div className={`thread-item ${thread?.user_infos?.id === "userId" ? "active" : ""}`}>
                             <div className="avatar">
                               <Avatar
                                 alt={thread?.title}
-                                src={thread?.profileImage || "/assets/images/svg/avatar.svg"}
+                                src={thread?.user_infos?.[0]?.profileImage || "/assets/images/svg/avatar.svg"}
                                 sx={{ width: "50px", height: "50px", mr: "13px" }}
                               />
                             </div>
@@ -408,12 +409,12 @@ const HeaderChatComponent: FC<Props> = ({
                             <div
                               className="avatar background"
                               style={{
-                                backgroundImage: `url(${thread?.community?.profile_image})`,
+                                backgroundImage: `url(${thread?.community?.profileImage})`,
                               }}
                             />
                             <div className="thread-content" style={{ maxWidth: "70%" }}>
                               <Typography className="name">
-                                {thread?.community?.name}({thread?.community?.member_count})
+                                {thread?.community?.name}({thread?.community?.memberCount})
                               </Typography>
                               <Typography
                                 className="message-hide"

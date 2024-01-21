@@ -1,20 +1,20 @@
 // eslint-disable-next-line import/prefer-default-export
 export const HOMEPAGE_RECOMMEND_COMMUNITY_STATUS = {
   1: {
-    label: "コミュニティに参加する",
+    label: "Join the community",
     mode: "green",
     allowJoinCommunity: true,
   },
   2: {
-    label: "申請中",
+    label: "Application in progress",
     mode: "default",
   },
   3: {
-    label: "参加申請を送る",
+    label: "Send a participation request",
     mode: "orange",
   },
   4: {
-    label: "メッセージを開",
+    label: "Open the message",
     mode: "info",
   },
 };

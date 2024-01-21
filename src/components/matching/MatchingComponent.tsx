@@ -2,18 +2,21 @@ import React, { useState, useEffect } from "react";
 import { Box } from "@mui/material";
 import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
+import { useSelector } from "react-redux";
 
 import useViewport from "src/helpers/useViewport";
 import TabComponent from "src/components/matching/TabComponent";
 import { getMatchingRequestReceived, getMatchingRequestSent } from "src/services/matching";
 import { getListUserFavorite } from "src/services/user";
-import { getListCommunities } from "src/services/community";
+import { getAllCommunitiesByUser } from "src/services/community";
 import { TAB_VALUE_BY_KEY, TYPE } from "src/constants";
+import { IStoreState } from "src/constants/interfaces";
 
 const MatchingComponent = () => {
   const typeQuery = (useRouter()?.query?.type as string) || "received";
   const { t } = useTranslation();
   const viewPort = useViewport();
+  const auth = useSelector((state: IStoreState) => state.user);
   const isMobile = viewPort.width <= 992;
   const LIMITCOUNTPERPAGE = 10;
   const LIMITCOUNTPAGECOMMUNITY = isMobile ? 4 : 8;
@@ -27,18 +30,18 @@ const MatchingComponent = () => {
       isFetched: false,
       children: [
         {
-          text: "未承認リクエスト",
+          text: "Pending",
           data: [],
-          cursor: "",
-          hasMore: false,
+          page: 1,
+          hasNextpage: false,
           count: 0,
           key: "pending",
         },
         {
-          text: "否承認リクエスト",
+          text: "Rejected",
           data: [],
-          cursor: "",
-          hasMore: false,
+          page: 1,
+          hasNextpage: false,
           count: 0,
           key: "rejected",
         },
@@ -52,18 +55,18 @@ const MatchingComponent = () => {
       isFetched: false,
       children: [
         {
-          text: "未承認",
+          text: "Pending",
           data: [],
-          cursor: "",
-          hasMore: false,
+          page: 1,
+          hasNextpage: false,
           count: 0,
           key: "pending",
         },
         {
-          text: "否承認",
+          text: "Rejected",
           data: [],
-          cursor: "",
-          hasMore: false,
+          page: 1,
+          hasNextpage: false,
           count: 0,
           key: "rejected",
         },
@@ -73,8 +76,8 @@ const MatchingComponent = () => {
       text: isMobile ? t("home:matching.people-m") : t("home:matching.people"),
       icon: <img src="/assets/images/svg/favorite.svg" alt="favorite" />,
       data: [],
-      cursor: "",
-      hasMore: false,
+      page: 1,
+      hasNextpage: false,
       type: TYPE.FAVORITE,
       tabValue: TAB_VALUE_BY_KEY.favorite,
       isFetched: false,
@@ -147,8 +150,8 @@ const MatchingComponent = () => {
       type: TYPE.COMMUNITY,
       tabValue: TAB_VALUE_BY_KEY.community,
       data: [],
-      cursor: "",
-      hasMore: false,
+      page: 1,
+      hasNextpage: false,
     },
   ]);
   const [keyRefetchData, setKeyRefetchData] = useState(null);
@@ -170,33 +173,33 @@ const MatchingComponent = () => {
         switch (tabValue) {
           case TAB_VALUE_BY_KEY.received:
             dataRefetch = [
-              getMatchingRequestReceived(LIMITCOUNTPERPAGE, "", "pending"),
+              getMatchingRequestReceived("sent_pending", LIMITCOUNTPERPAGE, 1),
               // getMatchingRequestReceived(LIMIT, "", "confirmed"),
-              getMatchingRequestReceived(LIMITCOUNTPERPAGE, "", "rejected"),
+              getMatchingRequestReceived("rejected", LIMITCOUNTPERPAGE, 1),
             ];
             break;
           case TAB_VALUE_BY_KEY.sent:
             dataRefetch = [
-              getMatchingRequestSent(LIMITCOUNTPERPAGE, "", "pending"),
+              getMatchingRequestSent("sent_pending", LIMITCOUNTPERPAGE, 1),
               // getMatchingRequestSent(LIMIT, "", "confirmed"),
-              getMatchingRequestSent(LIMITCOUNTPERPAGE, "", "rejected"),
+              getMatchingRequestSent("rejected", LIMITCOUNTPERPAGE, 1),
             ];
             break;
           case TAB_VALUE_BY_KEY.favorite: {
             const res = await getListUserFavorite(LIMITCOUNTPERPAGE, 1);
-            tabTemp.data = res.items || [];
-            tabTemp.cursor = res.cursor || "";
-            tabTemp.hasMore = res.hasMore || false;
+            tabTemp.data = res.data || [];
+            tabTemp.page = res.meta?.page || 1;
+            tabTemp.hasNextpage = res.meta?.hasNextpage || false;
             tabTemp.isFetched = true;
             setTabs(tabs.map((item) => (item?.tabValue === tabValue ? tabTemp : item)));
             setCheckLoadingFavorite(true);
             break;
           }
           case TAB_VALUE_BY_KEY.community: {
-            const res = await getListCommunities(LIMITCOUNTPAGECOMMUNITY, "");
-            tabTemp.data = res.items || [];
-            tabTemp.cursor = res.cursor || "";
-            tabTemp.hasMore = res.hasMore || false;
+            const res = await getAllCommunitiesByUser(auth?.id, LIMITCOUNTPAGECOMMUNITY, 1);
+            tabTemp.data = res.data || [];
+            tabTemp.page = res.meta?.page || 1;
+            tabTemp.hasNextpage = res.meta?.hasNextpage || false;
             tabTemp.isFetched = true;
             setTabs(tabs.map((item) => (item?.tabValue === tabValue ? tabTemp : item)));
             setCheckLoadingCommunity(true);
@@ -209,10 +212,10 @@ const MatchingComponent = () => {
           const result = await Promise.all(dataRefetch);
           tabTemp.children = tabTemp?.children?.map((item: any, index: number) => ({
             ...item,
-            data: result[index]?.items?.reverse() || [],
-            cursor: result[index]?.cursor || "",
-            hasMore: result[index]?.hasMore || false,
-            count: result[index]?.items?.length,
+            data: result[index]?.data?.reverse() || [],
+            page: result[index]?.meta?.page || 1,
+            hasNextpage: result[index]?.meta?.hasNextpage || false,
+            count: result[index]?.meta?.itemCount,
           }));
           tabTemp.isFetched = true;
           switch (tabValue) {

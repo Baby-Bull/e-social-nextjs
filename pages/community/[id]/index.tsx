@@ -3,7 +3,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Head from "next/head";
 
 import CommunityComponent from "src/components/community/IndexComponent";
-import { getCommunity } from "src/services/community";
+import { getCommunityInfo } from "src/services/community";
 
 const Community = ({ communityInfo, url }) => (
   <React.Fragment>
@@ -31,7 +31,7 @@ export const getServerSideProps = async (ctx) => {
   const { locale } = ctx;
   const { id } = ctx.params;
   const [community, translations] = await Promise.all([
-    getCommunity(id),
+    getCommunityInfo(id),
     serverSideTranslations(locale, ["common", "community"]),
   ]);
 

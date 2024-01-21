@@ -13,12 +13,12 @@ import PostDetailComponent from "src/components/community/post/detail/blocks/Pos
 import ListCommentComponent from "src/components/community/post/detail/blocks/ListCommentComponent";
 import LayoutComponent from "src/components/community/LayoutComponent";
 import {
-  getCommunity,
   detailCommunityPost,
   createPostComment,
   getListComment,
   deleteCommunityPostComment,
   searchMemberCommunity,
+  getCommunityInfo,
 } from "src/services/community";
 import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
 
@@ -130,21 +130,17 @@ const DetailPostComponent = () => {
 
   const fetchCommunity = async () => {
     const communityId = router.query;
-    const data = await getCommunity(communityId?.id);
-    if (!data?.error_code) {
-      setDataCommunityDetail(data);
-      return data;
-    }
+    const data = await getCommunityInfo(communityId?.id);
+    setDataCommunityDetail(data);
+    return data;
   };
 
   const fetchCommunityPost = async () => {
     const community = router.query;
-    const res = await detailCommunityPost(community?.id, community?.detailId);
+    const res = await detailCommunityPost(community?.detailId);
     setCheckLoading(true);
-    if (!res?.error_code) {
-      setCommunityPost(res);
-      fetchComments();
-    }
+    setCommunityPost(res);
+    fetchComments();
   };
 
   const handleCallBackPaginationIndex = (pageCallBack, perPageCallBack) => {

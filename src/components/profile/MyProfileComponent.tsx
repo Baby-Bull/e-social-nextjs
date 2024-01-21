@@ -11,10 +11,9 @@ import ParticipatingCommunityComponent from "src/components/profile/Participatin
 import {
   getUserCommunites,
   getUserReviews,
-  getUserRecommended,
   getUserProfile,
+  getRecommendUser,
 } from "src/services/user";
-import BoxItemUserComponent from "src/components/profile/BoxItemUserComponent";
 import BoxNoDataComponent from "src/components/profile/BoxNoDataComponent";
 import TopProfileComponent from "src/components/profile/TopProfileComponent";
 import SlickSliderRecommendComponent from "src/components/home/blocks/SlickSliderRecommendComponent";
@@ -25,6 +24,8 @@ import ModalMatchingComponent from "../common/organisms/ModalMatchingComponent";
 import { sendMatchingRequest } from "../../services/matching";
 import PaginationCustomComponent from "../common/PaginationCustomComponent";
 import { useRouter } from "next/router";
+import UserCardHomeScreen from "../common/organisms/UserCardHomeScreen";
+import { getAllCommunitiesByUser } from "src/services/community";
 
 const ProfileHaveDataComponent = () => {
   const { t } = useTranslation();
@@ -54,9 +55,7 @@ const ProfileHaveDataComponent = () => {
   const auth = useSelector((state: IStoreState) => state.user);
 
   const [profileSkill, setProfileSkill] = useState([]);
-
   const [recommended, setRecommended] = useState([]);
-
   const [isLoading, setIsLoading] = useState(false);
   const [showModalMatching, setModalMatching] = React.useState(false);
   const [userId] = useState(auth?.id);
@@ -72,7 +71,8 @@ const ProfileHaveDataComponent = () => {
     setIsLoading(true);
     const data = await getUserReviews(userId, NumberOfReviewsPerPage, cursorReviews);
     setCursorReviews(data?.cursor);
-    setAllReviewsRef([...allReviewsRef, ...data?.items]);
+    // setAllReviewsRef([...allReviewsRef, ...data?.items]);
+    setAllReviewsRef([...allReviewsRef]);
     setCountReviews(data?.items_count ?? 0);
     setIsLoading(false);
     return data;
@@ -90,16 +90,16 @@ const ProfileHaveDataComponent = () => {
   const [communityCursor, setCommunityCursor] = useState("");
   const [countAllCommunities, setCountAllCommunities] = useState(0);
   const fetchCommunities = async () => {
-    const data = await getUserCommunites(userId, NumberOfCommunitiesPerPage, "");
-    setCountAllCommunities(data?.items_count);
-    setCommunities(data.items);
+    const data = await getAllCommunitiesByUser(userId, 30, 1);
+    setCountAllCommunities(data?.meta?.itemCount);
+    setCommunities(data.data);
     setCommunityCursor(data.cursor);
     return data;
   };
 
   const fetchProfileSkill = async () => {
     setIsLoading(true);
-    const data = await getUserProfile();
+    const data = await getUserProfile(userId);
     setProfileSkill(data);
     setIsLoading(false);
     return data;
@@ -107,8 +107,8 @@ const ProfileHaveDataComponent = () => {
 
   const fetchRecommended = async () => {
     setIsLoading(true);
-    const data = await getUserRecommended(LIMIT);
-    setRecommended(data?.items?.filter((item) => item?.match_status !== "confirmed"));
+    const data = await getRecommendUser(LIMIT);
+    setRecommended(data?.data?.filter((item) => item?.match_status !== "confirmed"));
     setIsLoading(false);
     return data;
   };
@@ -127,7 +127,7 @@ const ProfileHaveDataComponent = () => {
   }, [userId]);
 
   const dataElements = useMemo(() => {
-    return recommended?.map((item) => <BoxItemUserComponent data={item} key={item.id} />);
+    return recommended?.map((item) => <UserCardHomeScreen data={item} indexKey={item.id} />);
   }, [recommended]);
 
   return (
@@ -228,7 +228,7 @@ const ProfileHaveDataComponent = () => {
             justifyContent: "center",
           }}
         >
-          {t("profile:title-recommen-member")}
+          {t("profile:title-recommend-member")}
         </Box>
         <Box
           sx={{

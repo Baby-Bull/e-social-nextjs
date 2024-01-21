@@ -1,0 +1,19 @@
+{
+  "button": {
+    "find-engineer": "Find Engineers",
+    "find-community": "Find Communities",
+    "create-community": "Create Community"
+  },
+  "text-empty": {
+    "tab-1.1": "No pending approval requests.",
+    "tab-1.2": "No approved requests.",
+    "tab-1.3": "No disapproved requests.",
+    "tab-2.1": "No matching requests in progress.",
+    "tab-2.2": "No matches found.",
+    "tab-2.3": "No disapproved requests.",
+    "tab-3": "No entries in the list.",
+    "tab-4": "No matches found. Try sending matching requests!",
+    "tab-5": "Not a member of any communities."
+  },
+  "count-member": "Number of Members: "
+}

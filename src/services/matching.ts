@@ -19,41 +19,43 @@ export const sendMatchingRequest = async (userId: string | string[], body: any) 
   }
 };
 
-export const getMatchingRequestSent = async (limit: number, cursor: string, status: string) => {
+export const getMatchingRequestSent = async (typeRequest: string, take: number, page: number = 1) => {
   try {
-    const res = await api.get(`/user/me/match-requests/sent?limit=${limit}&cursor=${cursor}&status=${status}`);
-    return res.data;
+    const res = await apiNestServer.get(
+      `users/me/match-requests/sent?take=${take}&page=${page}&typeRequest=${typeRequest}`,
+    );
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getMatchingRequestReceived = async (typeRequest: string, take: number, page: number = 1) => {
+  try {
+    const res = await apiNestServer.get(
+      `users/me/match-requests/received?take=${take}&page=${page}&typeRequest=${typeRequest}`,
+    );
+    return res;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const getMatchedRequest = async (take: number, page: number = 1) => {
+  try {
+    const res = await apiNestServer.get(`users/me/match-requests/matched?take=${take}&page=${page}`);
+    return res;
   } catch (error) {
     toast.error(SERVER_ERROR);
     return error;
   }
 };
 
-export const getMatchingRequestReceived = async (limit: number, cursor: string, status: string) => {
+export const acceptMatchingRequestReceived = async (userId: number) => {
   try {
-    const res = await api.get(`/user/me/match-requests/received?limit=${limit}&cursor=${cursor}&status=${status}`);
-    return res.data;
-  } catch (error) {
-    toast.error(SERVER_ERROR);
-    return error;
-  }
-};
-
-export const getMatchedRequest = async (limit: number, cursor: string, sort: string) => {
-  try {
-    const res = await api.get(`/user/match/?limit=${limit}&cursor=${cursor}&sort=${sort}`);
-    return res.data;
-  } catch (error) {
-    toast.error(SERVER_ERROR);
-    return error;
-  }
-};
-
-export const acceptMatchingRequestReceived = async (matchRequestReceivedId: string) => {
-  try {
-    const res = await api.post(`/user/match-requests/${matchRequestReceivedId}/accept`);
+    const res = await apiNestServer.post(`users/match-requests/${userId}/accept`);
     toast.success(ACCEPT_MATCHING);
-    return res.data;
+    return res;
   } catch (error) {
     toast.error(SERVER_ERROR);
     return error;

@@ -331,7 +331,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                   <Avatar
                     className={styles.avatarUser}
                     alt={user?.username}
-                    src={user?.profile_image}
+                    src={user?.profileImage}
                     sx={{
                       width: "160px",
                       height: "160px",
@@ -500,9 +500,9 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                             fontWeight: 700,
                           }}
                         >
-                          {user?.review_count ?? 0}
+                          {user?.reviewCount ?? 0}
                         </Box>{" "}
-                        <Box>件</Box>
+                        <Box>{t("profile:man")}</Box>
                       </Box>
                     </BoxInfoProfile>
                     <Link href="/matching?type=matched" shallow>
@@ -520,9 +520,9 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                               fontWeight: 700,
                             }}
                           >
-                            {user?.match_count ?? 0}
+                            {user?.favoriteCount ?? 0}
                           </Box>{" "}
-                          <Box>人</Box>
+                          <Box>{t("profile:man")}</Box>
                         </Box>
                       </BoxInfoProfile>
                     </Link>
@@ -544,9 +544,9 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
                             fontWeight: 700,
                           }}
                         >
-                          {user?.community_count ?? 0}
+                          {user?.communityCount ?? 0}
                         </Box>{" "}
-                        <Box>つ</Box>
+                        <Box>{t("home:matching.community-unit")}</Box>
                       </Box>
                     </BoxInfoProfile>
                   </Box>
@@ -614,7 +614,7 @@ const TopProfileComponent: React.SFC<TopProfileComponentProps> = ({
               >
                 <Avatar
                   alt={user?.username}
-                  src={user?.profile_image}
+                  src={user?.profileImage}
                   sx={{
                     width: "80px",
                     height: "80px",
