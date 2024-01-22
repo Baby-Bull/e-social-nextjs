@@ -400,7 +400,7 @@ const ProfileSkillComponent = () => {
       },
     ]);
     setIsLoading(true);
-    const data = await getUserProfile();
+    const data = await getUserProfile(auth?.id);
     setUsername(data.username);
     setFacebookUrl(data.facebook_url);
     setTwitterUrl(data.twitter_url);

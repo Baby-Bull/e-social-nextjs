@@ -336,9 +336,11 @@ export const getUserReviews = async (userId: string | string[], limit: number | 
 // };
 
 export const updateProfile = async (body: any, showToast = true) => {
+  console.log(body);
+
   toast.configure();
   try {
-    const res = await api.patch(`/user/profile`, body);
+    const res = await apiNestServer.patch(`/users/update`, body);
     if (!res.data) {
       toast.error(SERVER_ERROR);
     } else if (res?.data?.message?.email[0]?.message === "email is not unique") {

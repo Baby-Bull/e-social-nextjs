@@ -181,6 +181,7 @@ const FormRegisterComponents = () => {
   const submitSignUpProfile = async () => {
     if (handleValidateForm()) {
       userInfo.birthday = userInfo?.birthday?.dob_value || userInfo.birthday;
+      userInfo.profileImage = "https://picsum.photos/200/300?random=3";
       // setIsLoading(true);
       const resUpdate = await signupWithNestServer(userInfo);
       if (resUpdate?.tokens?.accessToken) {

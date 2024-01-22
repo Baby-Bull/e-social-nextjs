@@ -54,6 +54,7 @@ export interface IUserCreate {
   email: string;
   address: string;
   tags: any;
+  profileImage?: string;
 }
 
 export interface IUserTag {
