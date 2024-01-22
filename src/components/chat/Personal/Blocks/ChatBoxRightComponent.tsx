@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-
+// TO-DO rework all socket call video
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   Box,
@@ -20,6 +20,7 @@ import InfiniteScroll from "react-infinite-scroller";
 import Lightbox from "react-image-lightbox";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
+import { useSelector } from "react-redux";
 
 import styles from "src/components/chat/chat.module.scss";
 import InputCustom from "src/components/common/atom-component/InputCustom";
@@ -38,9 +39,13 @@ import {
   IBoxMyChatProps,
   IMessage,
   INameOfChatSPProps,
+  IStoreState,
   IThreadDropDownProps,
   IThreadShowMessErrProps,
 } from "src/constants/interfaces";
+import ButtonComponent from "src/components/common/atom-component/ButtonComponent";
+import PopupCalling from "src/components/common/organisms/PopupCalling";
+import PopupCallReceive from "src/components/common/organisms/PopupCallReceive";
 
 const ThreadDropdown: React.SFC<IThreadDropDownProps> = ({ open, handleClose, anchorEl, t }) => (
   <Menu
@@ -203,16 +208,16 @@ const BoxChatOthers: React.SFC<IBoxChatProps> = ({ time, allInfoMessage, showAva
         <Avatar
           className="avatar"
           alt={allInfoMessage?.user?.username}
-          src={allInfoMessage?.user?.profile_image || "/assets/images/svg/avatar.svg"}
+          src={allInfoMessage?.user?.profileImage || "/assets/images/svg/avatar.svg"}
           onClick={redirectProfile}
           sx={{ cursor: "pointer" }}
         />
       ) : (
         <div className="avatar" />
       )}
-      {allInfoMessage?.content_type !== "image" && allInfoMessage?.content_type !== "file" && (
+      {allInfoMessage?.contentType !== "image" && allInfoMessage?.contentType !== "file" && (
         <div className="message-content">
-          {allInfoMessage.content_type === "first-message" ? (
+          {allInfoMessage.contentType === "first-message" ? (
             <Box className="theFirstMessage">
               <Box>
                 <span>{t("chat:purpose-firstMessage")}</span>
@@ -234,7 +239,7 @@ const BoxChatOthers: React.SFC<IBoxChatProps> = ({ time, allInfoMessage, showAva
           )}
         </div>
       )}
-      {allInfoMessage.content_type !== "first-message" && allInfoMessage?.content_type === "image" && (
+      {allInfoMessage.contentType !== "first-message" && allInfoMessage?.contentType === "image" && (
         <Avatar
           src={allInfoMessage?.content}
           variant="square"
@@ -243,7 +248,7 @@ const BoxChatOthers: React.SFC<IBoxChatProps> = ({ time, allInfoMessage, showAva
         />
       )}
       {openPopupImage && <Lightbox mainSrc={allInfoMessage?.content} onCloseRequest={() => setOpenPopupImage(false)} />}
-      {allInfoMessage.content_type !== "first-message" && allInfoMessage?.content_type === "file" && (
+      {allInfoMessage.contentType !== "first-message" && allInfoMessage?.contentType === "file" && (
         <Box className={styles["avatar-message--wrapper"]}>
           <Avatar className={styles["avatar-message--item"]} src="/assets/images/icon/icon_file.jpg" variant="square" />
           <Box>
@@ -286,9 +291,11 @@ const ChatBoxRightComponent = ({
   // const isFirstRender = useRef(true);
   const [showPopup, setShowPopup] = useState(false);
   const [showPopupErr, setShowPopupErr] = useState(false);
+  const [showPopupCalling, setShowPopupCalling] = useState(false);
   const [textMessageErr, setTextMessageErr] = useState("");
   const [showPopupReview, setShowPopupReview] = useState(false);
   const handleShowReview = () => setShowPopupReview(true);
+  const auth = useSelector((state: IStoreState) => state.user);
 
   const [listMessages, setListMessages] = useState<IMessage[]>([]);
   const [sendFile, setSendFile] = useState(false);
@@ -503,13 +510,24 @@ const ChatBoxRightComponent = ({
     return res;
   };
 
+  const emitSendCalling = (isSendCalling: boolean) => {
+    socketIO.emit("sendCalling", { isSendCalling, user: auth ?? {} });
+    // setTimeout(() => {
+    //   socketIO.emit("sendCalling", { isSendCalling: false });
+    // }, 3000);
+  };
+  const [callingSign, setCallingSign] = useState(null);
+  socketIO.on("sendCalling", ({ user, isSendCalling }) => {
+    // eslint-disable-next-line no-unused-expressions
+    isSendCalling ? setCallingSign(user) : setCallingSign(null);
+  });
+
   const emitTyping = () => {
-    socketIO.emit("typing", { isTyping: true });
+    socketIO.emit("typing", { isTyping: true, name: auth?.username ?? "Your friend" });
     setTimeout(() => {
       socketIO.emit("typing", { isTyping: false });
     }, 3000);
   };
-
   const [TypingText, setTypingText] = useState("");
   socketIO.on("typing", ({ name, isTyping }) => {
     // eslint-disable-next-line no-unused-expressions
@@ -526,20 +544,24 @@ const ChatBoxRightComponent = ({
             user?.username ?? ""
           )}
         </Typography>
-        {/* <div className="btn-report-review">
+        <div className="btn-report-review">
           <ButtonComponent
             mode="info"
             size="medium"
             className="btn-chat"
             sx={{ marginRight: "1em" }}
-            onClick={handleShow}
+            onClick={() => {
+              setShowPopupCalling(true);
+              emitSendCalling(true);
+            }}
           >
-            {t("chat:btn-report")}
+            Call
+            {/* {t("chat:btn-report")} */}
           </ButtonComponent>
           <ButtonComponent mode="orange" size="medium" className="btn-chat" onClick={handleShowReview}>
             {isMobile ? t("chat:btn-review-sp") : t("chat:btn-review")}
           </ButtonComponent>
-        </div> */}
+        </div>
       </Box>
       <Box className="box-content">
         <Box
@@ -627,7 +649,14 @@ const ChatBoxRightComponent = ({
           </IconButton>
         </Paper>
       </Box>
-      <PopupReportUser showPopup={showPopup} setShowPopup={setShowPopup} user={user} />
+      {/* <PopupReportUser showPopup={showPopupCalling} setShowPopup={setShowPopupCalling} user={user} /> */}
+      <PopupCalling
+        showPopup={showPopupCalling && !callingSign}
+        setShowPopup={setShowPopupCalling}
+        user={auth}
+        emitSendCalling={emitSendCalling}
+      />
+      <PopupCallReceive showPopup={callingSign} setShowPopup={setCallingSign} user={auth} />
       <PopupReviewComponent showPopup={showPopupReview} setShowPopup={setShowPopupReview} user={user} />
       <PopupShowMassageErr
         open={showPopupErr}

@@ -28,7 +28,7 @@
     "i18n.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "src/components/common/organisms/PopupVideo.jsx"  ],
   "exclude": [
     "node_modules"
   ]

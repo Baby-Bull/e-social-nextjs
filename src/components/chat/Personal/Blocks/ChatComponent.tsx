@@ -35,7 +35,7 @@ const BlockChatComponent = ({ isRenderRightSide, setIsRenderRightSide }) => {
   const hasMoreChatRooms = useSelector((state: IStoreState) => state.listrooms.hasMorePersonal);
   const ListRoomsStatic = useSelector((state: IStoreState) => state.listrooms);
 
-  const [userId, setUserId] = useState<string | number>(user_id || listRoomsChatTemp?.[0]?.user_infos?.[0].id);
+  const [userId, setUserId] = useState<any>(user_id || listRoomsChatTemp?.[0]?.user_infos?.[0].id);
   const [roomId, setRoomId] = useState<string>(Array.isArray(roomQuery) ? roomQuery[0] : roomQuery);
   const [user, setUser] = useState({});
   const [roomSelect, setRoomSelect] = useState<IChatroom>(null);
